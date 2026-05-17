@@ -1,0 +1,52 @@
+# Build outputs
+/echo-elm
+/echo-elm.exe
+dist/
+
+# Go
+*.test
+*.out
+coverage.html
+coverage.txt
+
+# Go workspace (project-local only)
+go.work
+go.work.sum
+
+# Tools (downloaded at task time, not committed)
+tools/jdk/
+tools/cql-tests/
+tools/cqframework/
+
+# Taskfile downloads
+.task/
+
+# golangci-lint cache
+.golangci-cache/
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Svelte / Node
+web/workbench/node_modules/
+web/workbench/.svelte-kit/
+web/workbench/build/
+web/workbench/.env
+web/workbench/.env.local
+
+# Parity run output (generated, large)
+parity/runs/
+
+# uv Python envs
+.venv/
+__pycache__/
+*.pyc
+
+# Test fixtures generated at runtime
+test/fixtures/generated/

@@ -1,0 +1,48 @@
+linters:
+  enable-all: false
+  enable:
+    - errcheck
+    - gosimple
+    - govet
+    - ineffassign
+    - staticcheck
+    - unused
+    - gofmt
+    - goimports
+    - revive
+    - misspell
+    - bodyclose
+    - noctx
+    - gocritic
+    - prealloc
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/echo-health/echo-elm
+  revive:
+    rules:
+      - name: exported
+      - name: var-naming
+      - name: error-return
+      - name: if-return
+      - name: increment-decrement
+      - name: var-declaration
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
+
+issues:
+  exclude-rules:
+    # Allow long lines in generated files
+    - path: _gen\.go
+      linters:
+        - revive
+    # Allow unused in test helpers
+    - path: _test\.go
+      linters:
+        - unused
+
+run:
+  timeout: 5m
+  go: '1.26'

@@ -1,0 +1,139 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+vars:
+  BIN: echo-elm
+  MODULE: github.com/echo-health/echo-elm
+  JDK_VERSION: 17
+  JDK_DIR: tools/jdk
+  GOLANGCI_VERSION: v1.64.8
+
+tasks:
+  default:
+    desc: List available tasks
+    cmds:
+      - task --list
+
+  # ── Build ──────────────────────────────────────────────────────────────────
+
+  build:
+    desc: Compile echo-elm binary
+    cmds:
+      - go build -o {{.BIN}}{{exeExt}} ./cmd/echo-elm
+    sources:
+      - '**/*.go'
+    generates:
+      - '{{.BIN}}{{exeExt}}'
+
+  build:all:
+    desc: Cross-compile for linux/amd64, darwin/arm64, windows/amd64
+    cmds:
+      - GOOS=linux   GOARCH=amd64  go build -o dist/echo-elm-linux-amd64     ./cmd/echo-elm
+      - GOOS=darwin  GOARCH=arm64  go build -o dist/echo-elm-darwin-arm64    ./cmd/echo-elm
+      - GOOS=windows GOARCH=amd64  go build -o dist/echo-elm-windows-amd64.exe ./cmd/echo-elm
+
+  # ── Test ───────────────────────────────────────────────────────────────────
+
+  test:
+    desc: Run all unit tests
+    cmds:
+      - go test ./...
+
+  test:race:
+    desc: Run unit tests with data-race detector
+    cmds:
+      - go test -race ./...
+
+  test:cover:
+    desc: Run tests and emit coverage report
+    cmds:
+      - go test -coverprofile=coverage.txt ./...
+      - go tool cover -html=coverage.txt -o coverage.html
+
+  test:corpus:
+    desc: Run cqframework corpus integration tests (requires parity:jdk)
+    cmds:
+      - go test -tags=corpus -count=1 ./test/corpus/...
+
+  # ── Lint ───────────────────────────────────────────────────────────────────
+
+  lint:
+    desc: Run golangci-lint
+    cmds:
+      - golangci-lint run ./...
+
+  lint:fix:
+    desc: Run golangci-lint with auto-fix
+    cmds:
+      - golangci-lint run --fix ./...
+
+  # ── Parity ─────────────────────────────────────────────────────────────────
+
+  parity:jdk:
+    desc: Download Temurin 17 JDK into tools/jdk/
+    cmds:
+      - go run ./internal/tools/jdkinstall
+
+  parity:jar:
+    desc: Download cql-to-elm jars into tools/cqframework/
+    cmds:
+      - go run ./internal/tools/jarinstall
+
+  parity:run:
+    desc: Run parity smoke test against cqframework reference
+    cmds:
+      - go test -tags=parity -count=1 ./test/parity/...
+
+  # ── Svelte workbench ───────────────────────────────────────────────────────
+
+  ui:install:
+    desc: Install Svelte workbench npm dependencies
+    dir: web/workbench
+    cmds:
+      - npm install
+
+  ui:dev:
+    desc: Start Svelte workbench in dev mode (requires running echo-elm ui)
+    dir: web/workbench
+    cmds:
+      - npm run dev
+
+  ui:build:
+    desc: Build Svelte workbench static assets
+    dir: web/workbench
+    cmds:
+      - npm run build
+
+  # ── Demos ──────────────────────────────────────────────────────────────────
+
+  demo:0:
+    desc: Phase 0 milestone demo — project bootstrap validation
+    cmds:
+      - go run ./demo/phase0
+
+  demo:1:
+    desc: Phase 1 milestone demo — CQL lexer/parser
+    cmds:
+      - go run ./demo/phase1
+
+  demo:2:
+    desc: Phase 2 milestone demo — type system
+    cmds:
+      - go run ./demo/phase2
+
+  # ── Tools ──────────────────────────────────────────────────────────────────
+
+  tools:golangci:
+    desc: Install golangci-lint locally
+    cmds:
+      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@{{.GOLANGCI_VERSION}}
+
+  generate:
+    desc: Run go generate across the repo
+    cmds:
+      - go generate ./...
+
+  tidy:
+    desc: Tidy go.mod / go.sum
+    cmds:
+      - go mod tidy
