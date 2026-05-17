@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strings"
 )
 
 func main() {
@@ -28,8 +29,22 @@ func main() {
 		return "ok — all packages compile"
 	})
 
-	check("go vet ./...", func() string {
-		out, err := exec.Command("go", "vet", "./...").CombinedOutput()
+	check("go vet (non-generated)", func() string {
+		// Exclude ANTLR-generated packages from vet; generated code contains
+		// unreachable-code patterns that are intentional ANTLR output.
+		listOut, err := exec.Command("go", "list", "./...").Output()
+		if err != nil {
+			return "FAIL (list): " + string(listOut)
+		}
+		var pkgs []string
+		for _, p := range strings.Split(strings.TrimSpace(string(listOut)), "\n") {
+			p = strings.TrimSpace(p)
+			if p != "" && !strings.Contains(p, "/cqlparser") {
+				pkgs = append(pkgs, p)
+			}
+		}
+		args := append([]string{"vet"}, pkgs...)
+		out, err := exec.Command("go", args...).CombinedOutput()
 		if err != nil {
 			return "FAIL: " + string(out)
 		}

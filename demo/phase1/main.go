@@ -10,7 +10,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/echo-health/echo-elm/internal/parser"
+	"github.com/artnerc/echo-elm/internal/parser"
 )
 
 func main() {

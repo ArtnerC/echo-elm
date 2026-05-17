@@ -19,7 +19,7 @@ of the CQFramework `cql-to-elm` CLI (versions 3.29.0 and 4.8.0+).
 - Bundled FHIR R4 / FHIRHelpers model info; pluggable QI-Core / US Core / QDM providers
 - Modern CLI: `echo-elm translate`
 - CQFramework-compatible CLI: `echo-elm cqf translate` (byte-exact parity tests)
-- Importable Go package: `github.com/echo-health/echo-elm/pkg/echoelm`
+- Importable Go package: `github.com/artnerc/echo-elm/pkg/echoelm`
 - MCP server: `echo-elm mcp`
 - Lightweight SvelteKit workbench: `echo-elm ui` (loopback-only)
 

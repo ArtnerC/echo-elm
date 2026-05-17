@@ -14,8 +14,8 @@ package parser
 
 import (
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/echo-health/echo-elm/internal/ast"
-	"github.com/echo-health/echo-elm/internal/parser/cqlparser"
+	"github.com/artnerc/echo-elm/internal/ast"
+	"github.com/artnerc/echo-elm/internal/parser/cqlparser"
 )
 
 // Diagnostic represents a parsing error or warning with location.

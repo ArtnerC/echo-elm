@@ -4,8 +4,8 @@ import (
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
-	"github.com/echo-health/echo-elm/internal/ast"
-	"github.com/echo-health/echo-elm/internal/parser/cqlparser"
+	"github.com/artnerc/echo-elm/internal/ast"
+	"github.com/artnerc/echo-elm/internal/parser/cqlparser"
 )
 
 // astBuilder converts the ANTLR parse tree into an echo-elm AST.

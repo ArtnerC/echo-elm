@@ -1,4 +1,4 @@
-module github.com/echo-health/echo-elm
+module github.com/artnerc/echo-elm
 
 go 1.26.3
 
