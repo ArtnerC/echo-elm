@@ -66,7 +66,13 @@ func main() {
 	}
 
 	fmt.Println("Parity demo complete ✓")
-	fmt.Println("  (Expression bodies will differ until Phase 4 expression builder is complete)")
+	fmt.Println()
+	fmt.Println("  Known parity gaps (planned for Phase 5/6):")
+	fmt.Println("  • signatureLevel: echo-elm defaults to 'Overloads'; cqf CLI defaults to 'None'")
+	fmt.Println("    (use echo-elm cqf translate for cqf-compatible output)")
+	fmt.Println("  • Empty annotation arrays on defs (cqf adds annotation:[] on every node)")
+	fmt.Println("  • contexts section: Library.contexts not yet emitted")
+	fmt.Println("  • Implicit Patient accessor statement not yet generated")
 }
 
 // echoTranslate runs echo-elm on a CQL file and returns the JSON ELM.

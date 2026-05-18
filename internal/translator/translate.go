@@ -289,8 +289,21 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		contextName = lib.Context.Name
 	}
 
-	if len(lib.Statements) > 0 {
-		stmts := &elm.StatementDefs{}
+	// Contexts section
+	if contextName != "" {
+		out.Contexts = &elm.ContextDefs{
+			Def: []*elm.ContextDef{{Name: contextName}},
+		}
+	}
+
+	// Statements — prepend implicit context accessor if a context is declared.
+	var stmtDefs []*elm.StatementDef
+	if contextName != "" {
+		stmtDefs = append(stmtDefs, t.buildContextAccessor(contextName, lib))
+	}
+
+	if len(lib.Statements) > 0 || len(stmtDefs) > 0 {
+		stmts := &elm.StatementDefs{Def: stmtDefs}
 		for _, s := range lib.Statements {
 			sd := &elm.StatementDef{
 				LocalID:     t.nextID(),
@@ -332,6 +345,37 @@ func (t *Translator) modelURI(name string) string {
 		return uri
 	}
 	return name
+}
+
+// buildContextAccessor creates the implicit singleton-from-retrieve statement for the declared context.
+// For example, `context Patient` generates a Patient statement that retrieves the singleton Patient.
+func (t *Translator) buildContextAccessor(contextName string, lib *ast.Library) *elm.StatementDef {
+	// Determine the data type from the declared model.
+	modelURI := "http://hl7.org/fhir" // default to FHIR
+	for _, u := range lib.Usings {
+		if uri, ok := typesystem.ModelURIByName[u.ModelName]; ok {
+			modelURI = uri
+			break
+		}
+	}
+	dataType := "{" + modelURI + "}" + contextName
+
+	// FHIR template ID follows the StructureDefinition pattern.
+	templateID := ""
+	if modelURI == "http://hl7.org/fhir" {
+		templateID = "http://hl7.org/fhir/StructureDefinition/" + contextName
+	}
+
+	retrieve := &elm.RetrieveNode{
+		DataType:   dataType,
+		TemplateID: templateID,
+	}
+
+	return &elm.StatementDef{
+		Name:       contextName,
+		Context:    contextName,
+		Expression: &elm.SingletonFromNode{Operand: retrieve},
+	}
 }
 
 // translateTypeSpecifier converts an AST TypeSpecifier to an ELM TypeSpecifier.
@@ -628,10 +672,7 @@ func translateExpr(expr ast.Expr) elm.Expression {
 			Operand:  []elm.Expression{translateExpr(v.Source)},
 		}
 	case *ast.SingletonFromExpr:
-		return &elm.OperatorExpressionNode{
-			Operator: "SingletonFrom",
-			Operand:  []elm.Expression{translateExpr(v.Source)},
-		}
+		return &elm.SingletonFromNode{Operand: translateExpr(v.Source)}
 	case *ast.PointFromExpr:
 		return &elm.OperatorExpressionNode{
 			Operator: "PointFrom",

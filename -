@@ -1,0 +1,80 @@
+{
+   "library": {
+      "schemaIdentifier": {
+         "id": "urn:hl7-org:elm",
+         "version": "r1"
+      },
+      "identifier": {
+         "id": "IncludeTest",
+         "version": "1.0.0"
+      },
+      "annotation": [
+         {
+            "type": "CqlToElmInfo",
+            "translatorOptions": "EnableAnnotations,EnableLocators,ValidateUnits",
+            "translatorVersion": "0.0.0-dev",
+            "signatureLevel": "None"
+         }
+      ],
+      "usings": {
+         "def": [
+            {
+               "localIdentifier": "System",
+               "uri": "urn:hl7-org:elm-types:r1"
+            },
+            {
+               "localId": "1",
+               "localIdentifier": "FHIR",
+               "uri": "http://hl7.org/fhir",
+               "version": "4.0.1"
+            }
+         ]
+      },
+      "includes": {
+         "def": [
+            {
+               "localId": "2",
+               "localIdentifier": "FHIRHelpers",
+               "path": "FHIRHelpers",
+               "version": "4.0.1"
+            }
+         ]
+      },
+      "contexts": {
+         "def": [
+            {
+               "name": "Patient"
+            }
+         ]
+      },
+      "statements": {
+         "def": [
+            {
+               "type": "ExpressionDef",
+               "name": "Patient",
+               "context": "Patient",
+               "expression": {
+                  "type": "SingletonFrom",
+                  "operand": {
+                     "type": "Retrieve",
+                     "dataType": "{http://hl7.org/fhir}Patient",
+                     "templateId": "http://hl7.org/fhir/StructureDefinition/Patient"
+                  }
+               }
+            },
+            {
+               "type": "ExpressionDef",
+               "localId": "3",
+               "name": "Initial Population",
+               "context": "Patient",
+               "accessLevel": "Public",
+               "expression": {
+                  "type": "Literal",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "value": "true"
+               }
+            }
+         ]
+      }
+   }
+}

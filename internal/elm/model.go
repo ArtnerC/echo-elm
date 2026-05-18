@@ -54,6 +54,7 @@ type Library struct {
 	ValueSets        *ValueSetDefs        `json:"valueSets,omitempty"`
 	Codes            *CodeDefs            `json:"codes,omitempty"`
 	Concepts         *ConceptDefs         `json:"concepts,omitempty"`
+	Contexts         *ContextDefs         `json:"contexts,omitempty"`
 	Statements       *StatementDefs       `json:"statements,omitempty"`
 }
 
@@ -103,9 +104,21 @@ type ConceptDefs struct {
 	Def []*ConceptDef `json:"def"`
 }
 
+// ContextDefs wraps the list of context definitions.
+type ContextDefs struct {
+	Def []*ContextDef `json:"def"`
+}
+
 // StatementDefs wraps the list of statement (expression/function) definitions.
 type StatementDefs struct {
 	Def []*StatementDef `json:"def"`
+}
+
+// ContextDef is a named evaluation context definition.
+type ContextDef struct {
+	LocalID string `json:"localId,omitempty"`
+	Locator string `json:"locator,omitempty"`
+	Name    string `json:"name"`
 }
 
 // -----------------------------------------------------------------------
@@ -513,6 +526,19 @@ func (n *RetrieveNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("Retrieve", (*alias)(n))
 }
 
+// SingletonFromNode: wraps an expression to extract the single element of a list.
+type SingletonFromNode struct {
+	LocalID string     `json:"localId,omitempty"`
+	Locator string     `json:"locator,omitempty"`
+	Operand Expression `json:"operand"`
+}
+
+func (*SingletonFromNode) isExpression() {}
+func (n *SingletonFromNode) MarshalJSON() ([]byte, error) {
+	type alias SingletonFromNode
+	return marshalWithType("SingletonFrom", (*alias)(n))
+}
+
 // QuantityNode: a UCUM quantity literal.
 type QuantityNode struct {
 	LocalID string `json:"localId,omitempty"`
@@ -894,7 +920,7 @@ func (n *QueryNode) MarshalJSON() ([]byte, error) {
 
 // CqlToElmInfo is the standard translator annotation injected into the Library.
 type CqlToElmInfo struct {
-	TranslatorOptions string `json:"translatorOptions,omitempty"`
+	TranslatorOptions string `json:"translatorOptions"` // always emit even if empty
 	TranslatorVersion string `json:"translatorVersion,omitempty"`
 	SignatureLevel    string `json:"signatureLevel,omitempty"`
 }
