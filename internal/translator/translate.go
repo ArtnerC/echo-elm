@@ -76,6 +76,9 @@ func (t *Translator) nextID() string {
 }
 
 func locatorStr(loc ast.Interval) string {
+	if loc.Start.Line == 0 {
+		return ""
+	}
 	return fmt.Sprintf("%d:%d-%d:%d",
 		loc.Start.Line, loc.Start.Column,
 		loc.Stop.Line, loc.Stop.Column)
