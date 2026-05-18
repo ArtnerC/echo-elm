@@ -286,7 +286,9 @@ func (b *astBuilder) buildExpressionDef(ctx cqlparser.IExpressionDefinitionConte
 	if idc := edc.Identifier(); idc != nil {
 		ed.Name = unquoteIdentifier(idc.GetText())
 	}
-	// Expression body built out in Phase 2
+	if expr := edc.Expression(); expr != nil {
+		ed.Expression = b.buildExpr(expr)
+	}
 	return ed
 }
 
@@ -317,6 +319,11 @@ func (b *astBuilder) buildFunctionDef(ctx cqlparser.IFunctionDefinitionContext) 
 	if ts := fdc.TypeSpecifier(); ts != nil {
 		spec := b.buildTypeSpecifier(ts)
 		ed.ReturnType = &spec
+	}
+	if fb := fdc.FunctionBody(); fb != nil {
+		if expr := fb.(*cqlparser.FunctionBodyContext).Expression(); expr != nil {
+			ed.Expression = b.buildExpr(expr)
+		}
 	}
 	return ed
 }

@@ -143,3 +143,216 @@ define function Age(birthDate DateTime, asOf DateTime) returns Integer:
 		t.Errorf("expected 2 operands, got %d", len(fn.Operands))
 	}
 }
+
+// -----------------------------------------------------------------------
+// Expression body tests (Phase 4)
+// -----------------------------------------------------------------------
+
+func TestParseArithmeticExpressions(t *testing.T) {
+	src := `library Arith version '1.0.0'
+define "Sum": 2 + 3
+define "Diff": 10 - 4
+define "Mul": 3 * 4
+define "Div": 10 div 3
+define "Mod": 10 mod 3
+define "Pow": 2 ^ 8
+define "Concat": 'a' & 'b'
+`
+	result, err := parser.ParseString(src, "Arith.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	if len(result.Library.Statements) != 7 {
+		t.Errorf("expected 7 statements, got %d", len(result.Library.Statements))
+	}
+	// Each should have a non-nil expression body
+	for _, stmt := range result.Library.Statements {
+		if stmt.Expression == nil {
+			t.Errorf("statement %q has nil expression", stmt.Name)
+		}
+	}
+}
+
+func TestParseBooleanExpressions(t *testing.T) {
+	src := `library Bool version '1.0.0'
+define "And": true and false
+define "Or":  false or true
+define "Xor": true xor false
+define "Not": not true
+define "Imp": true implies false
+`
+	result, err := parser.ParseString(src, "Bool.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	for _, stmt := range result.Library.Statements {
+		if stmt.Expression == nil {
+			t.Errorf("statement %q has nil expression", stmt.Name)
+		}
+	}
+}
+
+func TestParseDateTimeLiterals(t *testing.T) {
+	src := `library DT version '1.0.0'
+define "ADate":     @2024-01-01
+define "ADateTime": @2024-01-01T08:00:00
+define "ATime":     @T08:30:00
+`
+	result, err := parser.ParseString(src, "DT.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	for _, stmt := range result.Library.Statements {
+		if stmt.Expression == nil {
+			t.Errorf("statement %q has nil expression", stmt.Name)
+		}
+	}
+}
+
+func TestParseIntervalSelector(t *testing.T) {
+	src := `library IvSel version '1.0.0'
+define "Closed": Interval[1, 10]
+define "Open":   Interval(1, 10)
+define "HalfOpen": Interval[1, 10)
+`
+	result, err := parser.ParseString(src, "IvSel.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	for _, stmt := range result.Library.Statements {
+		if stmt.Expression == nil {
+			t.Errorf("statement %q has nil expression", stmt.Name)
+		}
+	}
+}
+
+func TestParseListAndTupleSelectors(t *testing.T) {
+	src := `library SelTest version '1.0.0'
+define "IntList":  { 1, 2, 3 }
+define "StrList":  List<System.String> { 'a', 'b' }
+define "ATuple":   Tuple { name: 'Alice', age: 30 }
+`
+	result, err := parser.ParseString(src, "SelTest.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	for _, stmt := range result.Library.Statements {
+		if stmt.Expression == nil {
+			t.Errorf("statement %q has nil expression", stmt.Name)
+		}
+	}
+}
+
+func TestParseRetrieve(t *testing.T) {
+	src := `library RetTest version '1.0.0'
+using FHIR version '4.0.1'
+define "All": [Condition]
+define "FHIR": [FHIR.Condition]
+`
+	result, err := parser.ParseString(src, "RetTest.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	if len(result.Library.Statements) != 2 {
+		t.Fatalf("expected 2 statements, got %d", len(result.Library.Statements))
+	}
+	for _, stmt := range result.Library.Statements {
+		if stmt.Expression == nil {
+			t.Errorf("statement %q has nil expression", stmt.Name)
+		}
+	}
+}
+
+func TestParseQuery(t *testing.T) {
+	src := `library QTest version '1.0.0'
+using FHIR version '4.0.1'
+define "Q":
+  [Condition] C
+  where C.verificationStatus ~ 'confirmed'
+  return C.id
+`
+	result, err := parser.ParseString(src, "QTest.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	if result.Library.Statements[0].Expression == nil {
+		t.Error("query expression is nil")
+	}
+}
+
+func TestParseIfThenElse(t *testing.T) {
+	src := `library IfTest version '1.0.0'
+define "Choice": if true then 1 else 2
+`
+	result, err := parser.ParseString(src, "IfTest.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	if result.Library.Statements[0].Expression == nil {
+		t.Error("if expression is nil")
+	}
+}
+
+func TestParseCaseExpression(t *testing.T) {
+	src := `library CaseTest version '1.0.0'
+define "Rating":
+  case
+    when 1 = 1 then 'high'
+    when 2 = 2 then 'medium'
+    else 'low'
+  end
+`
+	result, err := parser.ParseString(src, "CaseTest.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	if result.Library.Statements[0].Expression == nil {
+		t.Error("case expression is nil")
+	}
+}
+
+func TestParseFunctionExpressionBody(t *testing.T) {
+	src := `library FnExpr version '1.0.0'
+define function Double(x Integer) returns Integer:
+  x * 2
+`
+	result, err := parser.ParseString(src, "FnExpr.cql")
+	if err != nil {
+		t.Fatalf("unexpected error: %v", err)
+	}
+	if result.HasErrors() {
+		t.Fatalf("unexpected parse errors")
+	}
+	fn := result.Library.Statements[0]
+	if fn.Expression == nil {
+		t.Error("function body expression is nil")
+	}
+}
+

@@ -412,48 +412,451 @@ func resolveTypeName(name string) string {
 }
 
 // translateExpr converts an AST expression to an ELM expression.
-// Most complex expression types return UnimplementedNode until Phase 4.
 func translateExpr(expr ast.Expr) elm.Expression {
 	if expr == nil {
 		return &elm.NullNode{}
 	}
 	switch v := expr.(type) {
+	// ---- Literals ----
 	case *ast.BooleanLiteral:
 		val := "false"
 		if v.Value {
 			val = "true"
 		}
-		return &elm.LiteralNode{
-			ValueType: typesystem.TypeBoolean,
-			Value:     val,
-		}
+		return &elm.LiteralNode{ValueType: typesystem.TypeBoolean, Value: val}
 	case *ast.IntegerLiteral:
-		return &elm.LiteralNode{
-			ValueType: typesystem.TypeInteger,
-			Value:     fmt.Sprintf("%d", v.Value),
-		}
+		return &elm.LiteralNode{ValueType: typesystem.TypeInteger, Value: fmt.Sprintf("%d", v.Value)}
 	case *ast.LongLiteral:
-		return &elm.LiteralNode{
-			ValueType: typesystem.TypeLong,
-			Value:     fmt.Sprintf("%d", v.Value),
-		}
+		return &elm.LiteralNode{ValueType: typesystem.TypeLong, Value: fmt.Sprintf("%d", v.Value)}
 	case *ast.DecimalLiteral:
-		return &elm.LiteralNode{
-			ValueType: typesystem.TypeDecimal,
-			Value:     v.Value,
-		}
+		return &elm.LiteralNode{ValueType: typesystem.TypeDecimal, Value: v.Value}
 	case *ast.StringLiteral:
-		return &elm.LiteralNode{
-			ValueType: typesystem.TypeString,
-			Value:     v.Value,
-		}
+		return &elm.LiteralNode{ValueType: typesystem.TypeString, Value: v.Value}
 	case *ast.NullLiteral:
 		return &elm.NullNode{}
+	case *ast.DateLiteral:
+		return &elm.LiteralNode{ValueType: typesystem.TypeDate, Value: v.Value}
+	case *ast.DateTimeLiteral:
+		return &elm.LiteralNode{ValueType: typesystem.TypeDateTime, Value: v.Value}
+	case *ast.TimeLiteral:
+		return &elm.LiteralNode{ValueType: typesystem.TypeTime, Value: v.Value}
+	case *ast.QuantityLiteral:
+		return &elm.QuantityNode{Value: v.Value, Unit: v.Unit}
+	case *ast.RatioLiteral:
+		return &elm.RatioNode{
+			Numerator:   &elm.QuantityNode{Value: v.Numerator.Value, Unit: v.Numerator.Unit},
+			Denominator: &elm.QuantityNode{Value: v.Denominator.Value, Unit: v.Denominator.Unit},
+		}
+
+	// ---- References ----
 	case *ast.IdentifierRef:
 		return &elm.ExpressionRefNode{Name: v.Name}
 	case *ast.QualifiedRef:
 		return &elm.ExpressionRefNode{Name: v.Name, LibraryName: v.LibraryName}
+	case *ast.AliasRef:
+		return &elm.AliasRefNode{Name: v.Name}
+	case *ast.LetRef:
+		return &elm.LetRefNode{Name: v.Name}
+	case *ast.ThisExpr:
+		return &elm.QueryThisRefNode{}
+	case *ast.IndexExpr:
+		return &elm.OperatorExpressionNode{Operator: "QueryIndexRef"}
+	case *ast.TotalExpr:
+		return &elm.OperatorExpressionNode{Operator: "Total"}
+	case *ast.ExternalConstantExpr:
+		return &elm.ExternalConstantNode{Name: v.Name}
+	case *ast.FunctionRef:
+		var operands []elm.Expression
+		for _, o := range v.Operands {
+			operands = append(operands, translateExpr(o))
+		}
+		return &elm.FunctionRefNode{
+			Name:        v.Name,
+			LibraryName: v.LibraryName,
+			Operand:     operands,
+		}
+	case *ast.PropertyExpr:
+		return &elm.PropertyNode{
+			Path:   v.Path,
+			Source: translateExpr(v.Source),
+		}
+	case *ast.IndexedAccessExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: "Indexer",
+			Operand:  []elm.Expression{translateExpr(v.Source), translateExpr(v.Index)},
+		}
+
+	// ---- Unary / binary ----
+	case *ast.UnaryExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: v.Op,
+			Operand:  []elm.Expression{translateExpr(v.Operand)},
+		}
+	case *ast.BinaryExpr:
+		return translateBinaryExpr(v)
+	case *ast.TernaryExpr:
+		return &elm.IfNode{
+			Condition: translateExpr(v.Condition),
+			Then:      translateExpr(v.ThenExpr),
+			Else:      translateExpr(v.ElseExpr),
+		}
+	case *ast.CaseExpr:
+		cn := &elm.CaseNode{Else: translateExpr(v.Else)}
+		if v.Comparand != nil {
+			cn.Comparand = translateExpr(v.Comparand)
+		}
+		for _, item := range v.Items {
+			cn.CaseItem = append(cn.CaseItem, &elm.CaseItem{
+				When: translateExpr(item.When),
+				Then: translateExpr(item.Then),
+			})
+		}
+		return cn
+
+	// ---- Type operators ----
+	case *ast.TypeIsExpr:
+		return translateTypeIs(v)
+	case *ast.TypeAsExpr:
+		ts := translateTypeSpecifier(v.TypeSpec)
+		return &elm.AsNode{
+			Operand:         []elm.Expression{translateExpr(v.Operand)},
+			AsTypeSpecifier: ts,
+			Strict:          v.Strict,
+		}
+	case *ast.ConvertExpr:
+		ts := translateTypeSpecifier(v.TypeSpec)
+		return &elm.ConvertNode{
+			Operand:         []elm.Expression{translateExpr(v.Operand)},
+			ToTypeSpecifier: ts,
+		}
+
+	// ---- Timing / interval ----
+	case *ast.TimingExpr:
+		return translateTimingExpr(v)
+	case *ast.BetweenExpr:
+		if v.Properly {
+			return &elm.OperatorExpressionNode{
+				Operator: "ProperBetween",
+				Operand: []elm.Expression{
+					translateExpr(v.Operand),
+					translateExpr(v.Low),
+					translateExpr(v.High),
+				},
+			}
+		}
+		return &elm.OperatorExpressionNode{
+			Operator: "Between",
+			Operand: []elm.Expression{
+				translateExpr(v.Operand),
+				translateExpr(v.Low),
+				translateExpr(v.High),
+			},
+		}
+	case *ast.DurationBetweenExpr:
+		return &elm.PrecisionOperatorNode{
+			Operator:  "DurationBetween",
+			Precision: v.Precision,
+			Operand:   []elm.Expression{translateExpr(v.Low), translateExpr(v.High)},
+		}
+	case *ast.DifferenceBetweenExpr:
+		return &elm.PrecisionOperatorNode{
+			Operator:  "DifferenceBetween",
+			Precision: v.Precision,
+			Operand:   []elm.Expression{translateExpr(v.Low), translateExpr(v.High)},
+		}
+	case *ast.IntervalExpr:
+		return &elm.IntervalNode{
+			Low:        translateExpr(v.Low),
+			High:       translateExpr(v.High),
+			LowClosed:  v.LowClosed,
+			HighClosed: v.HighClosed,
+		}
+	case *ast.TimeBoundaryExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: titleCase(v.Boundary),
+			Operand:  []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.DateTimeComponentExpr:
+		return &elm.PrecisionOperatorNode{
+			Operator:  "DateTimeComponentFrom",
+			Precision: v.Precision,
+			Operand:   []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.DurationExpr:
+		return &elm.PrecisionOperatorNode{
+			Operator:  "DurationBetween",
+			Precision: v.Precision,
+			Operand: []elm.Expression{
+				&elm.OperatorExpressionNode{
+					Operator: "Start",
+					Operand:  []elm.Expression{translateExpr(v.Source)},
+				},
+				&elm.OperatorExpressionNode{
+					Operator: "End",
+					Operand:  []elm.Expression{translateExpr(v.Source)},
+				},
+			},
+		}
+	case *ast.DifferenceExpr:
+		return &elm.PrecisionOperatorNode{
+			Operator:  "DifferenceBetween",
+			Precision: v.Precision,
+			Operand: []elm.Expression{
+				&elm.OperatorExpressionNode{
+					Operator: "Start",
+					Operand:  []elm.Expression{translateExpr(v.Source)},
+				},
+				&elm.OperatorExpressionNode{
+					Operator: "End",
+					Operand:  []elm.Expression{translateExpr(v.Source)},
+				},
+			},
+		}
+	case *ast.WidthExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: "Width",
+			Operand:  []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.SuccessorExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: "Successor",
+			Operand:  []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.PredecessorExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: "Predecessor",
+			Operand:  []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.SingletonFromExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: "SingletonFrom",
+			Operand:  []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.PointFromExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: "PointFrom",
+			Operand:  []elm.Expression{translateExpr(v.Source)},
+		}
+	case *ast.TypeExtentExpr:
+		op := "MinValue"
+		if v.Extent == "maximum" {
+			op = "MaxValue"
+		}
+		ts := translateTypeSpecifier(v.TypeSpec)
+		return &elm.IsNode{
+			IsTypeSpecifier: ts,
+			Operand:         []elm.Expression{&elm.OperatorExpressionNode{Operator: op}},
+		}
+
+	// ---- Selectors ----
+	case *ast.ListExpr:
+		ln := &elm.ListNode{}
+		for _, e := range v.Elements {
+			ln.Element = append(ln.Element, translateExpr(e))
+		}
+		return ln
+	case *ast.TupleExpr:
+		tn := &elm.TupleNode{}
+		for _, e := range v.Elements {
+			tn.Element = append(tn.Element, &elm.TupleElementNode{
+				Name:  e.Name,
+				Value: translateExpr(e.Expression),
+			})
+		}
+		return tn
+	case *ast.InstanceExpr:
+		in := &elm.InstanceNode{}
+		if v.TypeSpec != nil {
+			if nt, ok := v.TypeSpec.(*ast.NamedTypeSpecifier); ok {
+				in.ClassType = nt.Name
+			}
+		}
+		for _, e := range v.Elements {
+			in.Element = append(in.Element, &elm.TupleElementNode{
+				Name:  e.Name,
+				Value: translateExpr(e.Expression),
+			})
+		}
+		return in
+	case *ast.CodeExpr:
+		cn := &elm.CodeNode{Code: v.Code, Display: v.Display}
+		if v.System != "" {
+			cn.System = &elm.CodeSystemRef{Name: v.System}
+		}
+		return cn
+	case *ast.ConceptExpr:
+		cn := &elm.ConceptNode{Display: v.Display}
+		for _, c := range v.Codes {
+			codeNode := &elm.CodeNode{Code: c.Code, Display: c.Display}
+			if c.System != "" {
+				codeNode.System = &elm.CodeSystemRef{Name: c.System}
+			}
+			cn.Code = append(cn.Code, codeNode)
+		}
+		return cn
+
+	// ---- Aggregate ----
+	case *ast.AggregateExpr:
+		return &elm.OperatorExpressionNode{
+			Operator: v.Op,
+			Operand:  []elm.Expression{translateExpr(v.Operand)},
+		}
+	case *ast.SetAggregateExpr:
+		operands := []elm.Expression{translateExpr(v.Operand)}
+		if v.PerClause != nil {
+			operands = append(operands, translateExpr(v.PerClause))
+		}
+		return &elm.OperatorExpressionNode{Operator: v.Op, Operand: operands}
+
+	// ---- Retrieve ----
+	case *ast.RetrieveExpr:
+		return translateRetrieve(v)
+
+	// ---- Query ----
+	case *ast.QueryExpression:
+		return translateQuery(v)
+
 	default:
 		return &elm.UnimplementedNode{TypeName: fmt.Sprintf("%T", expr)}
 	}
+}
+
+func translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
+	operands := []elm.Expression{translateExpr(v.Left), translateExpr(v.Right)}
+	if v.Precision != "" {
+		return &elm.PrecisionOperatorNode{
+			Operator:  v.Op,
+			Precision: v.Precision,
+			Operand:   operands,
+		}
+	}
+	return &elm.OperatorExpressionNode{Operator: v.Op, Operand: operands}
+}
+
+func translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
+	operand := translateExpr(v.Operand)
+	if v.IsNull {
+		isNull := &elm.OperatorExpressionNode{
+			Operator: "IsNull",
+			Operand:  []elm.Expression{operand},
+		}
+		if v.Negated {
+			return &elm.OperatorExpressionNode{
+				Operator: "Not",
+				Operand:  []elm.Expression{isNull},
+			}
+		}
+		return isNull
+	}
+	if v.IsTrue {
+		op := "IsTrue"
+		node := &elm.OperatorExpressionNode{Operator: op, Operand: []elm.Expression{operand}}
+		if v.Negated {
+			return &elm.OperatorExpressionNode{Operator: "Not", Operand: []elm.Expression{node}}
+		}
+		return node
+	}
+	if v.IsFalse {
+		op := "IsFalse"
+		node := &elm.OperatorExpressionNode{Operator: op, Operand: []elm.Expression{operand}}
+		if v.Negated {
+			return &elm.OperatorExpressionNode{Operator: "Not", Operand: []elm.Expression{node}}
+		}
+		return node
+	}
+	ts := translateTypeSpecifier(v.TypeSpec)
+	return &elm.IsNode{
+		Operand:         []elm.Expression{operand},
+		IsTypeSpecifier: ts,
+	}
+}
+
+func translateTimingExpr(v *ast.TimingExpr) elm.Expression {
+	operands := []elm.Expression{translateExpr(v.Left), translateExpr(v.Right)}
+	if v.Precision != "" {
+		return &elm.PrecisionOperatorNode{
+			Operator:  v.Op,
+			Precision: v.Precision,
+			Operand:   operands,
+		}
+	}
+	return &elm.OperatorExpressionNode{Operator: v.Op, Operand: operands}
+}
+
+func translateRetrieve(v *ast.RetrieveExpr) elm.Expression {
+	r := &elm.RetrieveNode{DataType: v.DataType}
+	if v.Codes != nil {
+		r.Codes = translateExpr(v.Codes)
+		r.CodeProperty = v.CodeProperty
+	}
+	return r
+}
+
+func translateQuery(q *ast.QueryExpression) elm.Expression {
+	qn := &elm.QueryNode{}
+	for _, src := range q.Sources {
+		qn.Source = append(qn.Source, &elm.AliasedQuerySourceELM{
+			Alias:      src.Alias,
+			Expression: translateExpr(src.Expression),
+		})
+	}
+	for _, let := range q.Let {
+		qn.Let = append(qn.Let, &elm.LetClauseELM{
+			Identifier: let.Identifier,
+			Expression: translateExpr(let.Expression),
+		})
+	}
+	for _, rel := range q.Relationship {
+		kind := "With"
+		if rel.Kind == "without" {
+			kind = "Without"
+		}
+		r := &elm.RelationshipClauseELM{
+			Kind:      kind,
+			Alias:     rel.Source.Alias,
+			Expression: translateExpr(rel.Source.Expression),
+			SuchThat:  translateExpr(rel.SuchThat),
+		}
+		qn.Relationship = append(qn.Relationship, r)
+	}
+	if q.Where != nil {
+		qn.Where = translateExpr(q.Where)
+	}
+	if q.Return != nil {
+		qn.Return = &elm.ReturnClauseELM{
+			Distinct:   q.Return.Distinct,
+			Expression: translateExpr(q.Return.Expression),
+		}
+	}
+	if q.Aggregate != nil {
+		qn.Aggregate = &elm.AggregateClauseELM{
+			Distinct:   q.Aggregate.Distinct,
+			Identifier: q.Aggregate.Identifier,
+			Expression: translateExpr(q.Aggregate.Expression),
+			Starting:   translateExpr(q.Aggregate.Starting),
+		}
+	}
+	if q.Sort != nil {
+		sortClause := &elm.SortClauseELM{}
+		for _, item := range q.Sort.Items {
+			dir := "asc"
+			if item.Direction == ast.SortDesc {
+				dir = "desc"
+			}
+			sortClause.By = append(sortClause.By, &elm.SortByItemELM{
+				Direction:  dir,
+				Expression: translateExpr(item.Expression),
+			})
+		}
+		qn.Sort = sortClause
+	}
+	return qn
+}
+
+func titleCase(s string) string {
+	if len(s) == 0 {
+		return s
+	}
+	lower := strings.ToLower(s)
+	return strings.ToUpper(lower[:1]) + lower[1:]
 }

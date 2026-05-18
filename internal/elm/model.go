@@ -513,7 +513,35 @@ func (n *RetrieveNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("Retrieve", (*alias)(n))
 }
 
-// UnimplementedNode is a placeholder for expressions not yet translated.
+// QuantityNode: a UCUM quantity literal.
+type QuantityNode struct {
+	LocalID string `json:"localId,omitempty"`
+	Locator string `json:"locator,omitempty"`
+	Value   string `json:"value"`
+	Unit    string `json:"unit,omitempty"`
+}
+
+func (*QuantityNode) isExpression() {}
+func (n *QuantityNode) MarshalJSON() ([]byte, error) {
+	type alias QuantityNode
+	return marshalWithType("Quantity", (*alias)(n))
+}
+
+// RatioNode: a CQL ratio literal.
+type RatioNode struct {
+	LocalID     string        `json:"localId,omitempty"`
+	Locator     string        `json:"locator,omitempty"`
+	Numerator   *QuantityNode `json:"numerator"`
+	Denominator *QuantityNode `json:"denominator"`
+}
+
+func (*RatioNode) isExpression() {}
+func (n *RatioNode) MarshalJSON() ([]byte, error) {
+	type alias RatioNode
+	return marshalWithType("Ratio", (*alias)(n))
+}
+
+
 type UnimplementedNode struct {
 	LocalID  string `json:"localId,omitempty"`
 	Locator  string `json:"locator,omitempty"`
@@ -528,6 +556,336 @@ func (n *UnimplementedNode) MarshalJSON() ([]byte, error) {
 	}
 	type alias UnimplementedNode
 	return marshalWithType(typeName, (*alias)(n))
+}
+
+// -----------------------------------------------------------------------
+// Additional expression types
+// -----------------------------------------------------------------------
+
+// IfNode: if condition then thenClause else elseClause.
+type IfNode struct {
+	LocalID   string     `json:"localId,omitempty"`
+	Locator   string     `json:"locator,omitempty"`
+	Condition Expression `json:"condition"`
+	Then      Expression `json:"then"`
+	Else      Expression `json:"else"`
+}
+
+func (*IfNode) isExpression() {}
+func (n *IfNode) MarshalJSON() ([]byte, error) {
+	type alias IfNode
+	return marshalWithType("If", (*alias)(n))
+}
+
+// CaseItem is one when-then pair in a CaseNode.
+type CaseItem struct {
+	LocalID string     `json:"localId,omitempty"`
+	Locator string     `json:"locator,omitempty"`
+	When    Expression `json:"when"`
+	Then    Expression `json:"then"`
+}
+
+// CaseNode: case [comparand] when ... then ... else ... end.
+type CaseNode struct {
+	LocalID   string       `json:"localId,omitempty"`
+	Locator   string       `json:"locator,omitempty"`
+	Comparand Expression   `json:"comparand,omitempty"`
+	CaseItem  []*CaseItem  `json:"caseItem"`
+	Else      Expression   `json:"else"`
+}
+
+func (*CaseNode) isExpression() {}
+func (n *CaseNode) MarshalJSON() ([]byte, error) {
+	type alias CaseNode
+	return marshalWithType("Case", (*alias)(n))
+}
+
+// IsNode: x is TypeSpecifier.
+type IsNode struct {
+	LocalID         string        `json:"localId,omitempty"`
+	Locator         string        `json:"locator,omitempty"`
+	Operand         []Expression  `json:"operand,omitempty"`
+	IsTypeSpecifier TypeSpecifier `json:"isTypeSpecifier,omitempty"`
+}
+
+func (*IsNode) isExpression() {}
+func (n *IsNode) MarshalJSON() ([]byte, error) {
+	type alias IsNode
+	return marshalWithType("Is", (*alias)(n))
+}
+
+// AsNode: x as TypeSpecifier (strict=false) or cast x as TypeSpecifier (strict=true).
+type AsNode struct {
+	LocalID         string        `json:"localId,omitempty"`
+	Locator         string        `json:"locator,omitempty"`
+	Operand         []Expression  `json:"operand,omitempty"`
+	AsTypeSpecifier TypeSpecifier `json:"asTypeSpecifier,omitempty"`
+	Strict          bool          `json:"strict,omitempty"`
+}
+
+func (*AsNode) isExpression() {}
+func (n *AsNode) MarshalJSON() ([]byte, error) {
+	type alias AsNode
+	return marshalWithType("As", (*alias)(n))
+}
+
+// ConvertNode: convert x to TypeSpecifier.
+type ConvertNode struct {
+	LocalID           string        `json:"localId,omitempty"`
+	Locator           string        `json:"locator,omitempty"`
+	Operand           []Expression  `json:"operand,omitempty"`
+	ToTypeSpecifier   TypeSpecifier `json:"toTypeSpecifier,omitempty"`
+}
+
+func (*ConvertNode) isExpression() {}
+func (n *ConvertNode) MarshalJSON() ([]byte, error) {
+	type alias ConvertNode
+	return marshalWithType("Convert", (*alias)(n))
+}
+
+// IntervalNode: Interval selector.
+type IntervalNode struct {
+	LocalID    string     `json:"localId,omitempty"`
+	Locator    string     `json:"locator,omitempty"`
+	Low        Expression `json:"low,omitempty"`
+	High       Expression `json:"high,omitempty"`
+	LowClosed  bool       `json:"lowClosed,omitempty"`
+	HighClosed bool       `json:"highClosed,omitempty"`
+}
+
+func (*IntervalNode) isExpression() {}
+func (n *IntervalNode) MarshalJSON() ([]byte, error) {
+	type alias IntervalNode
+	return marshalWithType("Interval", (*alias)(n))
+}
+
+// ListNode: List selector.
+type ListNode struct {
+	LocalID  string       `json:"localId,omitempty"`
+	Locator  string       `json:"locator,omitempty"`
+	TypeSpec TypeSpecifier `json:"typeSpecifier,omitempty"`
+	Element  []Expression `json:"element,omitempty"`
+}
+
+func (*ListNode) isExpression() {}
+func (n *ListNode) MarshalJSON() ([]byte, error) {
+	type alias ListNode
+	return marshalWithType("List", (*alias)(n))
+}
+
+// TupleElementNode is a named element in a Tuple or Instance selector.
+type TupleElementNode struct {
+	Name  string     `json:"name"`
+	Value Expression `json:"value"`
+}
+
+// TupleNode: Tuple selector.
+type TupleNode struct {
+	LocalID string              `json:"localId,omitempty"`
+	Locator string              `json:"locator,omitempty"`
+	Element []*TupleElementNode `json:"element,omitempty"`
+}
+
+func (*TupleNode) isExpression() {}
+func (n *TupleNode) MarshalJSON() ([]byte, error) {
+	type alias TupleNode
+	return marshalWithType("Tuple", (*alias)(n))
+}
+
+// InstanceNode: Instance/class selector.
+type InstanceNode struct {
+	LocalID   string              `json:"localId,omitempty"`
+	Locator   string              `json:"locator,omitempty"`
+	ClassType string              `json:"classType,omitempty"`
+	Element   []*TupleElementNode `json:"element,omitempty"`
+}
+
+func (*InstanceNode) isExpression() {}
+func (n *InstanceNode) MarshalJSON() ([]byte, error) {
+	type alias InstanceNode
+	return marshalWithType("Instance", (*alias)(n))
+}
+
+// CodeNode: Code selector literal.
+type CodeNode struct {
+	LocalID string         `json:"localId,omitempty"`
+	Locator string         `json:"locator,omitempty"`
+	Code    string         `json:"code"`
+	System  *CodeSystemRef `json:"system,omitempty"`
+	Display string         `json:"display,omitempty"`
+}
+
+func (*CodeNode) isExpression() {}
+func (n *CodeNode) MarshalJSON() ([]byte, error) {
+	type alias CodeNode
+	return marshalWithType("Code", (*alias)(n))
+}
+
+// ConceptNode: Concept selector literal.
+type ConceptNode struct {
+	LocalID string     `json:"localId,omitempty"`
+	Locator string     `json:"locator,omitempty"`
+	Code    []*CodeNode `json:"code,omitempty"`
+	Display string     `json:"display,omitempty"`
+}
+
+func (*ConceptNode) isExpression() {}
+func (n *ConceptNode) MarshalJSON() ([]byte, error) {
+	type alias ConceptNode
+	return marshalWithType("Concept", (*alias)(n))
+}
+
+// QueryThisRefNode: $this — current iteration element.
+type QueryThisRefNode struct {
+	LocalID string `json:"localId,omitempty"`
+	Locator string `json:"locator,omitempty"`
+}
+
+func (*QueryThisRefNode) isExpression() {}
+func (n *QueryThisRefNode) MarshalJSON() ([]byte, error) {
+	type alias QueryThisRefNode
+	return marshalWithType("QueryThisRef", (*alias)(n))
+}
+
+// AliasRefNode: reference to a query source alias.
+type AliasRefNode struct {
+	LocalID string `json:"localId,omitempty"`
+	Locator string `json:"locator,omitempty"`
+	Name    string `json:"name"`
+}
+
+func (*AliasRefNode) isExpression() {}
+func (n *AliasRefNode) MarshalJSON() ([]byte, error) {
+	type alias AliasRefNode
+	return marshalWithType("AliasRef", (*alias)(n))
+}
+
+// LetRefNode: reference to a let clause binding.
+type LetRefNode struct {
+	LocalID string `json:"localId,omitempty"`
+	Locator string `json:"locator,omitempty"`
+	Name    string `json:"name"`
+}
+
+func (*LetRefNode) isExpression() {}
+func (n *LetRefNode) MarshalJSON() ([]byte, error) {
+	type alias LetRefNode
+	return marshalWithType("LetRef", (*alias)(n))
+}
+
+// ExternalConstantNode: %name external constant.
+type ExternalConstantNode struct {
+	LocalID string `json:"localId,omitempty"`
+	Locator string `json:"locator,omitempty"`
+	Name    string `json:"name"`
+}
+
+func (*ExternalConstantNode) isExpression() {}
+func (n *ExternalConstantNode) MarshalJSON() ([]byte, error) {
+	type alias ExternalConstantNode
+	return marshalWithType("ExternalConstant", (*alias)(n))
+}
+
+// PrecisionOperatorNode: an operator with a precision attribute (DurationBetween, DifferenceBetween, DateTimeComponentFrom, etc.).
+type PrecisionOperatorNode struct {
+	LocalID   string       `json:"localId,omitempty"`
+	Locator   string       `json:"locator,omitempty"`
+	Operator  string       `json:"-"`
+	Precision string       `json:"precision,omitempty"`
+	Operand   []Expression `json:"operand,omitempty"`
+}
+
+func (*PrecisionOperatorNode) isExpression() {}
+func (n *PrecisionOperatorNode) MarshalJSON() ([]byte, error) {
+	type alias PrecisionOperatorNode
+	return marshalWithType(n.Operator, (*alias)(n))
+}
+
+// AliasedQuerySourceELM is the ELM representation of an aliased source.
+type AliasedQuerySourceELM struct {
+	LocalID     string     `json:"localId,omitempty"`
+	Locator     string     `json:"locator,omitempty"`
+	Alias       string     `json:"alias"`
+	Expression  Expression `json:"expression"`
+	ResultType  string     `json:"resultTypeName,omitempty"`
+}
+
+// LetClauseELM is the ELM representation of a let clause.
+type LetClauseELM struct {
+	LocalID    string     `json:"localId,omitempty"`
+	Locator    string     `json:"locator,omitempty"`
+	Identifier string     `json:"identifier"`
+	Expression Expression `json:"expression"`
+}
+
+// RelationshipClauseELM is the ELM representation of a with/without clause.
+type RelationshipClauseELM struct {
+	LocalID    string                 `json:"localId,omitempty"`
+	Locator    string                 `json:"locator,omitempty"`
+	Kind       string                 `json:"-"` // "With" or "Without"
+	Alias      string                 `json:"alias"`
+	Expression Expression             `json:"expression"`
+	SuchThat   Expression             `json:"suchThat,omitempty"`
+}
+
+func (r *RelationshipClauseELM) MarshalJSON() ([]byte, error) {
+	type alias RelationshipClauseELM
+	return marshalWithType(r.Kind, (*alias)(r))
+}
+
+// ReturnClauseELM is the ELM return clause inside a query.
+type ReturnClauseELM struct {
+	LocalID    string     `json:"localId,omitempty"`
+	Locator    string     `json:"locator,omitempty"`
+	Distinct   bool       `json:"distinct,omitempty"`
+	Expression Expression `json:"expression"`
+}
+
+// AggregateClauseELM is the ELM aggregate clause inside a query.
+type AggregateClauseELM struct {
+	LocalID    string     `json:"localId,omitempty"`
+	Locator    string     `json:"locator,omitempty"`
+	Distinct   bool       `json:"distinct,omitempty"`
+	Identifier string     `json:"identifier"`
+	Expression Expression `json:"expression"`
+	Starting   Expression `json:"starting,omitempty"`
+}
+
+// SortByItemELM is one item in a sort clause.
+type SortByItemELM struct {
+	LocalID    string     `json:"localId,omitempty"`
+	Locator    string     `json:"locator,omitempty"`
+	Direction  string     `json:"direction"`
+	Expression Expression `json:"expression,omitempty"`
+}
+
+func (s *SortByItemELM) MarshalJSON() ([]byte, error) {
+	type alias SortByItemELM
+	return marshalWithType("ByExpression", (*alias)(s))
+}
+
+// SortClauseELM holds the sort directives for a query.
+type SortClauseELM struct {
+	By []*SortByItemELM `json:"by,omitempty"`
+}
+
+// QueryNode is the ELM Query expression.
+type QueryNode struct {
+	LocalID      string                   `json:"localId,omitempty"`
+	Locator      string                   `json:"locator,omitempty"`
+	Source       []*AliasedQuerySourceELM `json:"source"`
+	Let          []*LetClauseELM          `json:"let,omitempty"`
+	Relationship []*RelationshipClauseELM `json:"relationship,omitempty"`
+	Where        Expression               `json:"where,omitempty"`
+	Return       *ReturnClauseELM         `json:"return,omitempty"`
+	Aggregate    *AggregateClauseELM      `json:"aggregate,omitempty"`
+	Sort         *SortClauseELM           `json:"sort,omitempty"`
+}
+
+func (*QueryNode) isExpression() {}
+func (n *QueryNode) MarshalJSON() ([]byte, error) {
+	type alias QueryNode
+	return marshalWithType("Query", (*alias)(n))
 }
 
 // -----------------------------------------------------------------------

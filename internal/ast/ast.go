@@ -333,6 +333,33 @@ type QualifiedRef struct {
 	Name        string
 }
 
+// AliasRef: reference to a query source alias inside a query expression
+type AliasRef struct {
+	baseExpr
+	Name string
+}
+
+// LetRef: reference to a let clause binding inside a query expression
+type LetRef struct {
+	baseExpr
+	Name string
+}
+
+// ThisExpr: $this — the current iteration element
+type ThisExpr struct{ baseExpr }
+
+// IndexExpr: $index — the current iteration index
+type IndexExpr struct{ baseExpr }
+
+// TotalExpr: $total — the aggregate accumulator
+type TotalExpr struct{ baseExpr }
+
+// ExternalConstantExpr: %name
+type ExternalConstantExpr struct {
+	baseExpr
+	Name string
+}
+
 // -----------------------------------------------------------------------
 // Unary / binary / ternary
 // -----------------------------------------------------------------------
@@ -340,24 +367,281 @@ type QualifiedRef struct {
 // UnaryExpr wraps a single-operand expression.
 type UnaryExpr struct {
 	baseExpr
-	Op      string
-	Operand Expr
+	Op        string
+	Operand   Expr
+	Precision string // for date-time component ops (e.g. "Year")
 }
 
 // BinaryExpr wraps a two-operand expression.
 type BinaryExpr struct {
 	baseExpr
-	Op    string
-	Left  Expr
-	Right Expr
+	Op        string
+	Left      Expr
+	Right     Expr
+	Precision string // for membership with precision (e.g. "day of")
 }
 
-// TernaryExpr: If then else
+// TernaryExpr: if cond then thenExpr else elseExpr
 type TernaryExpr struct {
 	baseExpr
-	Condition  Expr
-	ThenExpr   Expr
-	ElseExpr   Expr
+	Condition Expr
+	ThenExpr  Expr
+	ElseExpr  Expr
+}
+
+// CaseExpr: case [comparand] when ... then ... else ... end
+type CaseExpr struct {
+	baseExpr
+	Comparand Expr // nil for multi-condition (when-clause) form
+	Items     []*CaseItem
+	Else      Expr
+}
+
+// CaseItem is one when-then pair inside a CaseExpr.
+type CaseItem struct {
+	baseNode
+	When Expr
+	Then Expr
+}
+
+// BetweenExpr: x [properly] between low and high
+type BetweenExpr struct {
+	baseExpr
+	Operand  Expr
+	Low      Expr
+	High     Expr
+	Properly bool
+}
+
+// DurationBetweenExpr: [duration in] Y between low and high
+type DurationBetweenExpr struct {
+	baseExpr
+	Precision string
+	Low       Expr
+	High      Expr
+}
+
+// DifferenceBetweenExpr: difference in Y between low and high
+type DifferenceBetweenExpr struct {
+	baseExpr
+	Precision string
+	Low       Expr
+	High      Expr
+}
+
+// -----------------------------------------------------------------------
+// Type operators
+// -----------------------------------------------------------------------
+
+// TypeIsExpr: x is null | x is not null | x is true | x is false | x is TypeSpec
+type TypeIsExpr struct {
+	baseExpr
+	Operand  Expr
+	TypeSpec TypeSpecifier // non-nil only for "is TypeSpec"
+	IsNull   bool
+	IsTrue   bool
+	IsFalse  bool
+	Negated  bool // for "is not null"
+}
+
+// TypeAsExpr: x as TypeSpec  or  cast x as TypeSpec
+type TypeAsExpr struct {
+	baseExpr
+	Operand  Expr
+	TypeSpec TypeSpecifier
+	Strict   bool // true for "cast x as T"
+}
+
+// ConvertExpr: convert x to TypeSpec
+type ConvertExpr struct {
+	baseExpr
+	Operand  Expr
+	TypeSpec TypeSpecifier
+}
+
+// -----------------------------------------------------------------------
+// Timing / interval
+// -----------------------------------------------------------------------
+
+// TimingExpr represents all CQL interval-operator-phrase expressions.
+// Op encodes the operator name (Before, After, During, Meets, etc.).
+type TimingExpr struct {
+	baseExpr
+	Op        string
+	Left      Expr
+	Right     Expr
+	Precision string // optional date-time precision qualifier
+}
+
+// IntervalExpr: Interval ( '[' | '(' ) low ',' high ( ']' | ')' )
+type IntervalExpr struct {
+	baseExpr
+	Low        Expr
+	High       Expr
+	LowClosed  bool
+	HighClosed bool
+}
+
+// TimeBoundaryExpr: start of x | end of x
+type TimeBoundaryExpr struct {
+	baseExpr
+	Boundary string // "start" or "end"
+	Source   Expr
+}
+
+// DateTimeComponentExpr: year from x | month from x | etc.
+type DateTimeComponentExpr struct {
+	baseExpr
+	Precision string // "Year", "Month", etc.
+	Source    Expr
+}
+
+// DurationExpr: duration in Y of x
+type DurationExpr struct {
+	baseExpr
+	Precision string
+	Source    Expr
+}
+
+// DifferenceExpr: difference in Y of x
+type DifferenceExpr struct {
+	baseExpr
+	Precision string
+	Source    Expr
+}
+
+// WidthExpr: width of x
+type WidthExpr struct {
+	baseExpr
+	Source Expr
+}
+
+// SuccessorExpr: successor of x
+type SuccessorExpr struct {
+	baseExpr
+	Source Expr
+}
+
+// PredecessorExpr: predecessor of x
+type PredecessorExpr struct {
+	baseExpr
+	Source Expr
+}
+
+// SingletonFromExpr: singleton from x
+type SingletonFromExpr struct {
+	baseExpr
+	Source Expr
+}
+
+// PointFromExpr: point from x
+type PointFromExpr struct {
+	baseExpr
+	Source Expr
+}
+
+// TypeExtentExpr: minimum TypeSpec | maximum TypeSpec
+type TypeExtentExpr struct {
+	baseExpr
+	Extent   string // "minimum" or "maximum"
+	TypeSpec TypeSpecifier
+}
+
+// -----------------------------------------------------------------------
+// Collection / selector expressions
+// -----------------------------------------------------------------------
+
+// ListExpr: List<T>? { exprs }
+type ListExpr struct {
+	baseExpr
+	TypeSpec TypeSpecifier // optional element type annotation
+	Elements []Expr
+}
+
+// TupleExpr: Tuple? { key: val, ... }
+type TupleExpr struct {
+	baseExpr
+	Elements []*TupleElement
+}
+
+// TupleElement is one key-value pair in a TupleExpr.
+type TupleElement struct {
+	baseNode
+	Name       string
+	Expression Expr
+}
+
+// InstanceExpr: TypeName { key: val, ... }
+type InstanceExpr struct {
+	baseExpr
+	TypeSpec TypeSpecifier
+	Elements []*TupleElement
+}
+
+// CodeExpr: Code 'code' from codesystemIdent [display 'text']
+type CodeExpr struct {
+	baseExpr
+	Code    string
+	System  string
+	Display string
+}
+
+// ConceptExpr: Concept { code selectors } [display 'text']
+type ConceptExpr struct {
+	baseExpr
+	Codes   []*CodeExpr
+	Display string
+}
+
+// -----------------------------------------------------------------------
+// Property access
+// -----------------------------------------------------------------------
+
+// PropertyExpr: source.path  (member access from an expression)
+type PropertyExpr struct {
+	baseExpr
+	Source Expr
+	Path   string
+}
+
+// IndexedAccessExpr: source[index]
+type IndexedAccessExpr struct {
+	baseExpr
+	Source Expr
+	Index  Expr
+}
+
+// -----------------------------------------------------------------------
+// Retrieve
+// -----------------------------------------------------------------------
+
+// RetrieveExpr: [context? TypeName: codeFilter?]
+type RetrieveExpr struct {
+	baseExpr
+	DataType       string // e.g. "FHIR.Condition"
+	CodeProperty   string
+	CodeComparator string // "in", "~", "="
+	Codes          Expr
+	ContextExpr    Expr
+}
+
+// -----------------------------------------------------------------------
+// Aggregate / set
+// -----------------------------------------------------------------------
+
+// AggregateExpr: distinct x | flatten x
+type AggregateExpr struct {
+	baseExpr
+	Op      string // "Distinct" or "Flatten"
+	Operand Expr
+}
+
+// SetAggregateExpr: expand x [per Y] | collapse x [per Y]
+type SetAggregateExpr struct {
+	baseExpr
+	Op        string // "Expand" or "Collapse"
+	Operand   Expr
+	PerClause Expr // optional
 }
 
 // -----------------------------------------------------------------------
@@ -381,19 +665,19 @@ type ExternalFunctionRef struct {
 }
 
 // -----------------------------------------------------------------------
-// Aggregate / query
+// Query expression
 // -----------------------------------------------------------------------
 
 // QueryExpression represents a CQL query (from ... return ...)
 type QueryExpression struct {
 	baseExpr
-	Sources    []*AliasedQuerySource
-	Let        []*LetClause
-	Relationship []Expr
-	Where      Expr
-	Return     *ReturnClause
-	Aggregate  *AggregateClause
-	Sort       *SortClause
+	Sources      []*AliasedQuerySource
+	Let          []*LetClause
+	Relationship []QueryRelationship
+	Where        Expr
+	Return       *ReturnClause
+	Aggregate    *AggregateClause
+	Sort         *SortClause
 }
 
 // AliasedQuerySource: Source A
@@ -408,6 +692,14 @@ type LetClause struct {
 	baseNode
 	Identifier string
 	Expression Expr
+}
+
+// QueryRelationship is a with/without join clause.
+type QueryRelationship struct {
+	baseNode
+	Kind     string // "with" or "without"
+	Source   *AliasedQuerySource
+	SuchThat Expr
 }
 
 // ReturnClause: return distinct? expr
