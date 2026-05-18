@@ -251,6 +251,10 @@ func (b *astBuilder) buildParameter(ctx cqlparser.IParameterDefinitionContext) *
 	if idc := pdc.Identifier(); idc != nil {
 		pd.Name = unquoteIdentifier(idc.GetText())
 	}
+	if ts := pdc.TypeSpecifier(); ts != nil {
+		spec := b.buildTypeSpecifier(ts)
+		pd.ParameterType = &spec
+	}
 	return pd
 }
 
@@ -304,7 +308,79 @@ func (b *astBuilder) buildFunctionDef(ctx cqlparser.IFunctionDefinitionContext) 
 		if idc := odc.ReferentialIdentifier(); idc != nil {
 			od.Name = idc.GetText()
 		}
+		if ts := odc.TypeSpecifier(); ts != nil {
+			spec := b.buildTypeSpecifier(ts)
+			od.Type = &spec
+		}
 		ed.Operands = append(ed.Operands, od)
 	}
+	if ts := fdc.TypeSpecifier(); ts != nil {
+		spec := b.buildTypeSpecifier(ts)
+		ed.ReturnType = &spec
+	}
 	return ed
+}
+
+// buildTypeSpecifier builds an ast.TypeSpecifier from a TypeSpecifierContext.
+func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast.TypeSpecifier {
+	if ctx == nil {
+		return nil
+	}
+	if named := ctx.NamedTypeSpecifier(); named != nil {
+		return b.buildNamedTypeSpecifier(named)
+	}
+	if list := ctx.ListTypeSpecifier(); list != nil {
+		ldc := list.(*cqlparser.ListTypeSpecifierContext)
+		lt := &ast.ListTypeSpecifier{}
+		if inner := ldc.TypeSpecifier(); inner != nil {
+			lt.ElementType = b.buildTypeSpecifier(inner)
+		}
+		return lt
+	}
+	if interval := ctx.IntervalTypeSpecifier(); interval != nil {
+		idc := interval.(*cqlparser.IntervalTypeSpecifierContext)
+		it := &ast.IntervalTypeSpecifier{}
+		if inner := idc.TypeSpecifier(); inner != nil {
+			it.PointType = b.buildTypeSpecifier(inner)
+		}
+		return it
+	}
+	if tuple := ctx.TupleTypeSpecifier(); tuple != nil {
+		tdc := tuple.(*cqlparser.TupleTypeSpecifierContext)
+		tt := &ast.TupleTypeSpecifier{}
+		for _, elem := range tdc.AllTupleElementDefinition() {
+			edc := elem.(*cqlparser.TupleElementDefinitionContext)
+			te := &ast.TupleTypeElement{}
+			if ri := edc.ReferentialIdentifier(); ri != nil {
+				te.Name = ri.GetText()
+			}
+			if ts := edc.TypeSpecifier(); ts != nil {
+				te.Type = b.buildTypeSpecifier(ts)
+			}
+			tt.Elements = append(tt.Elements, te)
+		}
+		return tt
+	}
+	if choice := ctx.ChoiceTypeSpecifier(); choice != nil {
+		cdc := choice.(*cqlparser.ChoiceTypeSpecifierContext)
+		ct := &ast.ChoiceTypeSpecifier{}
+		for _, ts := range cdc.AllTypeSpecifier() {
+			ct.Types = append(ct.Types, b.buildTypeSpecifier(ts))
+		}
+		return ct
+	}
+	return nil
+}
+
+func (b *astBuilder) buildNamedTypeSpecifier(ctx cqlparser.INamedTypeSpecifierContext) *ast.NamedTypeSpecifier {
+	ndc := ctx.(*cqlparser.NamedTypeSpecifierContext)
+	nts := &ast.NamedTypeSpecifier{}
+	qualifiers := ndc.AllQualifier()
+	if len(qualifiers) > 0 {
+		nts.Qualifier = qualifiers[0].GetText()
+	}
+	if ri := ndc.ReferentialOrTypeNameIdentifier(); ri != nil {
+		nts.Name = ri.GetText()
+	}
+	return nts
 }
