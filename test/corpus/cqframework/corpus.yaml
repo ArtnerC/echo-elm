@@ -1,0 +1,13 @@
+fixtures:
+  - path: smoke/Minimal.cql
+    description: Library header only
+    options: {}
+    expectedStatus: success
+    tags: [smoke]
+
+  - path: smoke/IncludeTest.cql
+    description: FHIR model + include + Patient context + define
+    options:
+      format: JSON
+    expectedStatus: success
+    tags: [smoke]
