@@ -8,8 +8,13 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/parser"
+	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/translator"
 )
+
+// LibrarySource provides CQL source bytes for a named/versioned library.
+// Use it to resolve `include` declarations from non-filesystem sources.
+type LibrarySource = resolver.LibrarySource
 
 // Option is a functional option for Translate.
 type Option func(*translator.Options)
@@ -34,6 +39,17 @@ func WithLocators(v bool) Option {
 // WithSignatureLevel sets the signature level.
 func WithSignatureLevel(level string) Option {
 	return func(o *translator.Options) { o.SignatureLevel = level }
+}
+
+// WithCQFMode enables CQF parity mode: empty annotation/filter arrays on all
+// defs, empty translatorOptions string — matching cqframework CLI output exactly.
+func WithCQFMode(v bool) Option {
+	return func(o *translator.Options) { o.CQFMode = v }
+}
+
+// WithLibrarySource sets a custom LibrarySource for resolving include declarations.
+func WithLibrarySource(src LibrarySource) Option {
+	return func(o *translator.Options) { o.LibrarySource = src }
 }
 
 // TranslateResult holds the ELM library and diagnostics from a translation.
@@ -88,3 +104,4 @@ func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult,
 
 	return result, nil
 }
+

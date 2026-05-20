@@ -7,6 +7,7 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
+	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/typesystem"
 )
 
@@ -24,6 +25,15 @@ type Options struct {
 	SignatureLevel       string
 	ErrorLevel           string
 	TranslatorVersion    string
+
+	// CQFMode emits cqframework-compatible output: annotation:[], signature:[],
+	// and empty filter arrays on Retrieve nodes. Also forces translatorOptions:"".
+	// Auto-set by `echo-elm cqf translate`.
+	CQFMode bool
+
+	// LibrarySource resolves CQL library includes by name and version.
+	// When nil, includes are recorded in ELM output but not resolved.
+	LibrarySource resolver.LibrarySource
 }
 
 // DefaultOptions returns the modern echo-elm defaults per spec.
@@ -38,6 +48,7 @@ func DefaultOptions() Options {
 		SignatureLevel:       "Overloads",
 		ErrorLevel:           "Info",
 		TranslatorVersion:    Version,
+		CQFMode:              false,
 	}
 }
 
@@ -92,7 +103,11 @@ func accessLevelStr(level ast.AccessLevel) string {
 }
 
 // optionsString builds the translator options string for CqlToElmInfo.
+// In CQF mode this is always empty, matching cqframework CLI behavior.
 func (t *Translator) optionsString() string {
+	if t.opts.CQFMode {
+		return ""
+	}
 	var parts []string
 	if t.opts.EnableAnnotations {
 		parts = append(parts, "EnableAnnotations")
@@ -111,6 +126,26 @@ func (t *Translator) optionsString() string {
 	}
 	return strings.Join(parts, ",")
 }
+
+// cqfAnnotation returns a json.RawMessage for an empty annotation array
+// when in CQF mode, nil otherwise.
+func (t *Translator) cqfAnnotation() json.RawMessage {
+	if t.opts.CQFMode {
+		return json.RawMessage("[]")
+	}
+	return nil
+}
+
+// cqfEmptyArrayField returns an empty JSON array when in CQF mode, nil otherwise.
+func (t *Translator) cqfEmptyArrayField() json.RawMessage {
+	if t.opts.CQFMode {
+		return cqfEmptyArray
+	}
+	return nil
+}
+
+// cqfEmptyArray is the JSON raw empty array used for CQF filter fields.
+var cqfEmptyArray = json.RawMessage("[]")
 
 // Translate converts an AST library to an ELM library.
 func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
@@ -149,6 +184,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	usings.Def = append(usings.Def, &elm.UsingDef{
 		LocalIdentifier: "System",
 		URI:             typesystem.SystemURI,
+		Annotation:      t.cqfAnnotation(),
 	})
 	for _, u := range lib.Usings {
 		ud := &elm.UsingDef{
@@ -156,6 +192,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			LocalIdentifier: u.LocalName,
 			URI:             t.modelURI(u.ModelName),
 			Version:         u.Version,
+			Annotation:      t.cqfAnnotation(),
 		}
 		if t.opts.EnableLocators {
 			ud.Locator = locatorStr(u.Loc())
@@ -173,6 +210,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				LocalIdentifier: inc.LocalName,
 				Path:            inc.Path,
 				Version:         inc.Version,
+				Annotation:      t.cqfAnnotation(),
 			}
 			if t.opts.EnableLocators {
 				id.Locator = locatorStr(inc.Loc())
@@ -292,7 +330,10 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	// Contexts section
 	if contextName != "" {
 		out.Contexts = &elm.ContextDefs{
-			Def: []*elm.ContextDef{{Name: contextName}},
+			Def: []*elm.ContextDef{{
+				Name:       contextName,
+				Annotation: t.cqfAnnotation(),
+			}},
 		}
 	}
 
@@ -312,6 +353,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				AccessLevel: accessLevelStr(s.AccessLevel),
 				IsFunction:  s.IsFunction,
 				IsFluent:    s.IsFluent,
+				Annotation:  t.cqfAnnotation(),
 			}
 			if t.opts.EnableLocators {
 				sd.Locator = locatorStr(s.Loc())
@@ -367,14 +409,23 @@ func (t *Translator) buildContextAccessor(contextName string, lib *ast.Library) 
 	}
 
 	retrieve := &elm.RetrieveNode{
-		DataType:   dataType,
-		TemplateID: templateID,
+		DataType:    dataType,
+		TemplateID:  templateID,
+		Annotation:  t.cqfAnnotation(),
+		Include:     t.cqfEmptyArrayField(),
+		CodeFilter:  t.cqfEmptyArrayField(),
+		DateFilter:  t.cqfEmptyArrayField(),
+		OtherFilter: t.cqfEmptyArrayField(),
 	}
 
 	return &elm.StatementDef{
 		Name:       contextName,
 		Context:    contextName,
-		Expression: &elm.SingletonFromNode{Operand: retrieve},
+		Annotation: t.cqfAnnotation(),
+		Expression: &elm.SingletonFromNode{
+			Annotation: t.cqfAnnotation(),
+			Operand:    retrieve,
+		},
 	}
 }
 

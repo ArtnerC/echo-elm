@@ -116,9 +116,10 @@ type StatementDefs struct {
 
 // ContextDef is a named evaluation context definition.
 type ContextDef struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Name    string `json:"name"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Name       string          `json:"name"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
 }
 
 // -----------------------------------------------------------------------
@@ -127,22 +128,24 @@ type ContextDef struct {
 
 // UsingDef corresponds to a `using` declaration.
 type UsingDef struct {
-	LocalID         string `json:"localId,omitempty"`
-	Locator         string `json:"locator,omitempty"`
-	LocalIdentifier string `json:"localIdentifier"`
-	URI             string `json:"uri"`
-	Version         string `json:"version,omitempty"`
-	AccessLevel     string `json:"accessLevel,omitempty"`
+	LocalID         string          `json:"localId,omitempty"`
+	Locator         string          `json:"locator,omitempty"`
+	LocalIdentifier string          `json:"localIdentifier"`
+	URI             string          `json:"uri"`
+	Version         string          `json:"version,omitempty"`
+	AccessLevel     string          `json:"accessLevel,omitempty"`
+	Annotation      json.RawMessage `json:"annotation,omitempty"`
 }
 
 // IncludeDef corresponds to an `include` declaration.
 type IncludeDef struct {
-	LocalID         string `json:"localId,omitempty"`
-	Locator         string `json:"locator,omitempty"`
-	LocalIdentifier string `json:"localIdentifier"`
-	Path            string `json:"path"`
-	Version         string `json:"version,omitempty"`
-	AccessLevel     string `json:"accessLevel,omitempty"`
+	LocalID         string          `json:"localId,omitempty"`
+	Locator         string          `json:"locator,omitempty"`
+	LocalIdentifier string          `json:"localIdentifier"`
+	Path            string          `json:"path"`
+	Version         string          `json:"version,omitempty"`
+	AccessLevel     string          `json:"accessLevel,omitempty"`
+	Annotation      json.RawMessage `json:"annotation,omitempty"`
 }
 
 // CodeSystemDef corresponds to a `codesystem` declaration.
@@ -226,16 +229,17 @@ type ParameterDef struct {
 // StatementDef covers both ExpressionDef and FunctionDef.
 // IsFunction controls which type name is emitted in JSON/XML.
 type StatementDef struct {
-	LocalID             string        `json:"localId,omitempty"`
-	Locator             string        `json:"locator,omitempty"`
-	Name                string        `json:"name"`
-	Context             string        `json:"context,omitempty"`
-	AccessLevel         string        `json:"accessLevel,omitempty"`
-	IsFunction          bool          `json:"-"`
-	IsFluent            bool          `json:"fluent,omitempty"`
-	Operand             []*OperandDef `json:"operand,omitempty"`
-	ResultTypeSpecifier TypeSpecifier `json:"resultTypeSpecifier,omitempty"`
-	Expression          Expression    `json:"expression,omitempty"`
+	LocalID             string          `json:"localId,omitempty"`
+	Locator             string          `json:"locator,omitempty"`
+	Name                string          `json:"name"`
+	Context             string          `json:"context,omitempty"`
+	AccessLevel         string          `json:"accessLevel,omitempty"`
+	IsFunction          bool            `json:"-"`
+	IsFluent            bool            `json:"fluent,omitempty"`
+	Operand             []*OperandDef   `json:"operand,omitempty"`
+	ResultTypeSpecifier TypeSpecifier   `json:"resultTypeSpecifier,omitempty"`
+	Annotation          json.RawMessage `json:"annotation,omitempty"`
+	Expression          Expression      `json:"expression,omitempty"`
 }
 
 func (s *StatementDef) MarshalJSON() ([]byte, error) {
@@ -354,11 +358,12 @@ type Expression interface {
 
 // LiteralNode: a typed literal value.
 type LiteralNode struct {
-	LocalID        string `json:"localId,omitempty"`
-	Locator        string `json:"locator,omitempty"`
-	ValueType      string `json:"valueType"`
-	Value          string `json:"value"`
-	ResultTypeName string `json:"resultTypeName,omitempty"`
+	LocalID        string          `json:"localId,omitempty"`
+	Locator        string          `json:"locator,omitempty"`
+	Annotation     json.RawMessage `json:"annotation,omitempty"`
+	ValueType      string          `json:"valueType"`
+	Value          string          `json:"value"`
+	ResultTypeName string          `json:"resultTypeName,omitempty"`
 }
 
 func (*LiteralNode) isExpression() {}
@@ -480,10 +485,12 @@ func (n *FunctionRefNode) MarshalJSON() ([]byte, error) {
 
 // OperatorExpressionNode: any operator expression (Add, Equal, Not, etc.).
 type OperatorExpressionNode struct {
-	LocalID  string       `json:"localId,omitempty"`
-	Locator  string       `json:"locator,omitempty"`
-	Operator string       `json:"-"`
-	Operand  []Expression `json:"operand,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Operator   string          `json:"-"`
+	Operand    []Expression    `json:"operand,omitempty"`
 }
 
 func (*OperatorExpressionNode) isExpression() {}
@@ -494,11 +501,12 @@ func (n *OperatorExpressionNode) MarshalJSON() ([]byte, error) {
 
 // PropertyNode: a property access (source.path).
 type PropertyNode struct {
-	LocalID string     `json:"localId,omitempty"`
-	Locator string     `json:"locator,omitempty"`
-	Path    string     `json:"path"`
-	Source  Expression `json:"source,omitempty"`
-	Scope   string     `json:"scope,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Path       string          `json:"path"`
+	Source     Expression      `json:"source,omitempty"`
+	Scope      string          `json:"scope,omitempty"`
 }
 
 func (*PropertyNode) isExpression() {}
@@ -509,15 +517,21 @@ func (n *PropertyNode) MarshalJSON() ([]byte, error) {
 
 // RetrieveNode: a CQL retrieve expression.
 type RetrieveNode struct {
-	LocalID      string     `json:"localId,omitempty"`
-	Locator      string     `json:"locator,omitempty"`
-	DataType     string     `json:"dataType"`
-	TemplateID   string     `json:"templateId,omitempty"`
-	CodeProperty string     `json:"codeProperty,omitempty"`
-	Codes        Expression `json:"codes,omitempty"`
-	DateProperty string     `json:"dateProperty,omitempty"`
-	DateRange    Expression `json:"dateRange,omitempty"`
-	Context      string     `json:"context,omitempty"`
+	LocalID      string          `json:"localId,omitempty"`
+	Locator      string          `json:"locator,omitempty"`
+	Annotation   json.RawMessage `json:"annotation,omitempty"`
+	DataType     string          `json:"dataType"`
+	TemplateID   string          `json:"templateId,omitempty"`
+	CodeProperty string          `json:"codeProperty,omitempty"`
+	Codes        Expression      `json:"codes,omitempty"`
+	DateProperty string          `json:"dateProperty,omitempty"`
+	DateRange    Expression      `json:"dateRange,omitempty"`
+	Context      string          `json:"context,omitempty"`
+	// CQF-mode filter arrays — emitted as [] when CQFMode=true.
+	Include     json.RawMessage `json:"include,omitempty"`
+	CodeFilter  json.RawMessage `json:"codeFilter,omitempty"`
+	DateFilter  json.RawMessage `json:"dateFilter,omitempty"`
+	OtherFilter json.RawMessage `json:"otherFilter,omitempty"`
 }
 
 func (*RetrieveNode) isExpression() {}
@@ -528,9 +542,11 @@ func (n *RetrieveNode) MarshalJSON() ([]byte, error) {
 
 // SingletonFromNode: wraps an expression to extract the single element of a list.
 type SingletonFromNode struct {
-	LocalID string     `json:"localId,omitempty"`
-	Locator string     `json:"locator,omitempty"`
-	Operand Expression `json:"operand"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Operand    Expression      `json:"operand"`
 }
 
 func (*SingletonFromNode) isExpression() {}

@@ -103,6 +103,7 @@ func runTranslate(args []string, cqfMode bool) {
 		echoelm.WithAnnotations(annotations),
 		echoelm.WithLocators(locators),
 		echoelm.WithSignatureLevel(sigLevel),
+		echoelm.WithCQFMode(cqfMode),
 	}
 
 	result, err := echoelm.Translate(src, filepath.Base(input), opts...)
