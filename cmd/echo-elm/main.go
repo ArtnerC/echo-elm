@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/artnerc/echo-elm/internal/ui"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
@@ -33,8 +34,7 @@ func main() {
 		}
 		runTranslate(os.Args[3:], true)
 	case "ui":
-		fmt.Fprintln(os.Stderr, "echo-elm ui: not yet implemented")
-		os.Exit(1)
+		runUI(os.Args[2:])
 	case "mcp":
 		fmt.Fprintln(os.Stderr, "echo-elm mcp: not yet implemented")
 		os.Exit(1)
@@ -162,6 +162,41 @@ func runTranslate(args []string, cqfMode bool) {
 		fmt.Fprintf(os.Stderr, "ELM output written to: %s\n", outPath)
 	} else {
 		fmt.Printf("%s\n", outPath)
+	}
+}
+
+// runUI starts the local workbench server.
+func runUI(args []string) {
+	fs := flag.NewFlagSet("ui", flag.ContinueOnError)
+	var (
+		addr        string
+		workspace   string
+		allowRemote bool
+	)
+	fs.StringVar(&addr, "addr", "127.0.0.1:8787", "Listen address")
+	fs.StringVar(&workspace, "workspace", "", "Workspace directory (default: cwd)")
+	fs.BoolVar(&allowRemote, "allow-remote", false, "Allow non-loopback bind (unsafe)")
+
+	if err := fs.Parse(args); err != nil {
+		os.Exit(2)
+	}
+
+	s, err := ui.NewServer(ui.ServerOptions{
+		Workspace:   workspace,
+		Version:     Version,
+		AllowRemote: allowRemote,
+	})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "echo-elm ui: %v\n", err)
+		os.Exit(1)
+	}
+
+	fmt.Fprintf(os.Stderr, "echo-elm ui  %s  workspace=%s\n", Version, workspace)
+	fmt.Fprintf(os.Stderr, "Listening on http://%s\n", addr)
+
+	if err := s.ListenAndServe(addr); err != nil {
+		fmt.Fprintf(os.Stderr, "echo-elm ui: %v\n", err)
+		os.Exit(1)
 	}
 }
 
