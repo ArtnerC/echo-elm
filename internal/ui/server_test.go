@@ -127,24 +127,27 @@ func TestLibraries(t *testing.T) {
 	if w.Code != http.StatusOK {
 		t.Fatalf("want 200, got %d: %s", w.Code, w.Body.String())
 	}
-	var libs []struct {
-		Name    string `json:"name"`
-		Version string `json:"version"`
+	var resp struct {
+		Libraries []struct {
+			Name    string `json:"name"`
+			Version string `json:"version"`
+		} `json:"libraries"`
+		Total int `json:"total"`
 	}
-	if err := json.NewDecoder(w.Body).Decode(&libs); err != nil {
+	if err := json.NewDecoder(w.Body).Decode(&resp); err != nil {
 		t.Fatalf("decode: %v", err)
 	}
-	if len(libs) < 1 {
-		t.Fatalf("want at least 1 library, got %d", len(libs))
+	if resp.Total < 1 {
+		t.Fatalf("want total >= 1, got %d", resp.Total)
 	}
 	var found bool
-	for _, lib := range libs {
+	for _, lib := range resp.Libraries {
 		if lib.Name == "Minimal" && lib.Version == "1.0.0" {
 			found = true
 		}
 	}
 	if !found {
-		t.Errorf("want Minimal 1.0.0 in libraries, got: %+v", libs)
+		t.Errorf("want Minimal 1.0.0 in libraries, got: %+v", resp.Libraries)
 	}
 }
 

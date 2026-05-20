@@ -255,7 +255,10 @@ func (s *Server) handleLibraries(w http.ResponseWriter, r *http.Request) {
 	if headers == nil {
 		headers = []libraryHeader{}
 	}
-	writeJSON(w, http.StatusOK, headers)
+	writeJSON(w, http.StatusOK, map[string]any{
+		"libraries": headers,
+		"total":     len(headers),
+	})
 }
 
 func (s *Server) handleLibraryByPath(w http.ResponseWriter, r *http.Request) {
