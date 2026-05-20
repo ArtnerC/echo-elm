@@ -2,6 +2,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/artnerc/echo-elm/internal/mcpserver"
 	"github.com/artnerc/echo-elm/internal/ui"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -36,8 +38,7 @@ func main() {
 	case "ui":
 		runUI(os.Args[2:])
 	case "mcp":
-		fmt.Fprintln(os.Stderr, "echo-elm mcp: not yet implemented")
-		os.Exit(1)
+		runMCP(os.Args[2:])
 	default:
 		usage()
 		os.Exit(2)
@@ -162,6 +163,30 @@ func runTranslate(args []string, cqfMode bool) {
 		fmt.Fprintf(os.Stderr, "ELM output written to: %s\n", outPath)
 	} else {
 		fmt.Printf("%s\n", outPath)
+	}
+}
+
+// runMCP starts the MCP server over stdio.
+func runMCP(args []string) {
+	fs := flag.NewFlagSet("mcp", flag.ContinueOnError)
+	var (
+		workdir    string
+		allowWrite bool
+	)
+	fs.StringVar(&workdir, "workdir", "", "Workspace directory (default: cwd)")
+	fs.BoolVar(&allowWrite, "allow-write", false, "Enable write-capable tools")
+
+	if err := fs.Parse(args); err != nil {
+		os.Exit(2)
+	}
+
+	if err := mcpserver.Run(context.Background(), mcpserver.Options{
+		Workdir:    workdir,
+		Version:    Version,
+		AllowWrite: allowWrite,
+	}); err != nil {
+		fmt.Fprintf(os.Stderr, "echo-elm mcp: %v\n", err)
+		os.Exit(1)
 	}
 }
 
