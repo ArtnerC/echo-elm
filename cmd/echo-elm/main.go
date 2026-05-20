@@ -9,8 +9,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/artnerc/echo-elm/internal/mcpserver"
+	"github.com/artnerc/echo-elm/internal/parity"
 	"github.com/artnerc/echo-elm/internal/ui"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -39,6 +41,8 @@ func main() {
 		runUI(os.Args[2:])
 	case "mcp":
 		runMCP(os.Args[2:])
+	case "parity":
+		runParity(os.Args[2:])
 	default:
 		usage()
 		os.Exit(2)
@@ -52,6 +56,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  cqf translate    Translate CQL to ELM (cqframework-compatible)")
 	fmt.Fprintln(os.Stderr, "  ui               Start local workbench UI")
 	fmt.Fprintln(os.Stderr, "  mcp              Start MCP server")
+	fmt.Fprintln(os.Stderr, "  parity           Run CQFramework parity harness")
 	fmt.Fprintln(os.Stderr, "  version          Print version")
 }
 
@@ -221,6 +226,86 @@ func runUI(args []string) {
 
 	if err := s.ListenAndServe(addr); err != nil {
 		fmt.Fprintf(os.Stderr, "echo-elm ui: %v\n", err)
+		os.Exit(1)
+	}
+}
+
+// runParity runs the CQFramework parity harness.
+func runParity(args []string) {
+	fs := flag.NewFlagSet("parity", flag.ContinueOnError)
+	var (
+		cqfVersion string
+		corpus     string
+		toolsDir   string
+		tag        string
+		outDir     string
+		runID      string
+	)
+	fs.StringVar(&cqfVersion, "cqf-version", "4.8.0", "CQFramework version to compare against: 3.29.0|4.8.0")
+	fs.StringVar(&corpus, "corpus", "test/corpus/cqframework", "Corpus directory containing corpus.yaml")
+	fs.StringVar(&toolsDir, "tools-dir", "tools", "Tools directory containing cqframework/ and jdk/")
+	fs.StringVar(&tag, "tag", "", "Run only fixtures with this tag (default: all)")
+	fs.StringVar(&outDir, "out", "", "Output directory for report.json and report.md (default: parity/runs/<id>)")
+	fs.StringVar(&runID, "run-id", "", "Run identifier (default: timestamp)")
+
+	if err := fs.Parse(args); err != nil {
+		os.Exit(2)
+	}
+
+	if runID == "" {
+		runID = time.Now().UTC().Format("20060102-150405")
+	}
+	if outDir == "" {
+		outDir = filepath.Join("parity", "runs", runID)
+	}
+
+	cfg := parity.Config{
+		CQFVersion: cqfVersion,
+		ToolsDir:   toolsDir,
+		CorpusDir:  corpus,
+		TagFilter:  tag,
+	}
+
+	fmt.Fprintf(os.Stderr, "echo-elm parity  run=%s  cqf=%s  corpus=%s\n", runID, cqfVersion, corpus)
+
+	results, err := parity.Run(cfg, func(cqlPath string) ([]byte, error) {
+		data, err := os.ReadFile(cqlPath)
+		if err != nil {
+			return nil, err
+		}
+		result, err := echoelm.Translate(data, filepath.Base(cqlPath), echoelm.WithAnnotations(true))
+		if err != nil {
+			return nil, err
+		}
+		return json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
+	})
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+
+	summary := parity.Summary(results)
+	for _, r := range results {
+		icon := "✓"
+		if r.Status != parity.StatusMatch {
+			icon = "≠"
+		}
+		if r.Status == parity.StatusEchoError || r.Status == parity.StatusUpstreamError {
+			icon = "✗"
+		}
+		fmt.Printf("%s  %-45s  %s\n", icon, r.Fixture, r.Status)
+	}
+	fmt.Printf("\nmatch=%d  differ=%d  error=%d  total=%d\n",
+		summary[parity.StatusMatch], summary[parity.StatusDifferJSON],
+		summary[parity.StatusEchoError]+summary[parity.StatusUpstreamError], len(results))
+
+	if err := parity.WriteReport(outDir, runID, cqfVersion, results); err != nil {
+		fmt.Fprintf(os.Stderr, "warning: could not write report: %v\n", err)
+	} else {
+		fmt.Fprintf(os.Stderr, "report written to: %s\n", outDir)
+	}
+
+	if summary[parity.StatusEchoError]+summary[parity.StatusUpstreamError] > 0 {
 		os.Exit(1)
 	}
 }

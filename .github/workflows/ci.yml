@@ -38,3 +38,37 @@ jobs:
       - uses: golangci/golangci-lint-action@v6
         with:
           version: v1.64.8
+
+  parity:
+    name: parity (${{ matrix.cqf }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        cqf: ['3.29.0', '4.8.0']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.26.3'
+          cache: true
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Build echo-elm
+        run: go build -o echo-elm ./cmd/echo-elm
+
+      - name: Download cqframework JAR (${{ matrix.cqf }})
+        run: go run ./internal/tools/jarinstall
+
+      - name: Run parity (smoke tag)
+        run: ./echo-elm parity --cqf-version ${{ matrix.cqf }} --tag smoke --out parity/runs/${{ matrix.cqf }}
+
+      - name: Upload parity report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-report-${{ matrix.cqf }}
+          path: parity/runs/${{ matrix.cqf }}/

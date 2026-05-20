@@ -11,3 +11,53 @@ fixtures:
       format: JSON
     expectedStatus: success
     tags: [smoke]
+
+  # ── CQFramework cql-to-elm test corpus (verbatim imports) ─────────────────
+
+  - path: cqf-tests/DateTimeLiteralTest.cql
+    description: "DateTime, Date, and Time literal expressions"
+    options: {}
+    expectedStatus: success
+    tags: [smoke, cqf-corpus, datetime]
+
+  - path: cqf-tests/DefaultContext.cql
+    description: Default context library with null arithmetic
+    options: {}
+    expectedStatus: success
+    tags: [smoke, cqf-corpus, context]
+
+  - path: cqf-tests/QuantityLiteralTest.cql
+    description: Quantity literals, invalid units, and conversions
+    options: {}
+    expectedStatus: success
+    tags: [smoke, cqf-corpus, quantity]
+
+  - path: cqf-tests/RatioLiteralTest.cql
+    description: Ratio literal expressions
+    options: {}
+    expectedStatus: success
+    tags: [smoke, cqf-corpus, ratio]
+
+  - path: cqf-tests/ParameterTest.cql
+    description: Tuple and list parameter types
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, parameters]
+
+  - path: cqf-tests/InTest.cql
+    description: In operator with intervals and lists
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, operators]
+
+  - path: cqf-tests/TenDividedByTwo.cql
+    description: Integer division and implicit decimal promotion
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, arithmetic]
+
+  - path: cqf-tests/TupleDifferentKeys.cql
+    description: Tuple equality with different key sets
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, tuples]
