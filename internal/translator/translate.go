@@ -19,15 +19,18 @@ const Version = "0.0.0-dev"
 
 // Options controls translation behavior.
 type Options struct {
-	EnableAnnotations    bool
-	EnableLocators       bool
-	DisableListDemotion  bool
-	DisableListPromotion bool
-	ValidateUnits        bool
-	CompatibilityLevel   string
-	SignatureLevel       string
-	ErrorLevel           string
-	TranslatorVersion    string
+	EnableAnnotations      bool
+	EnableLocators         bool
+	DisableListDemotion    bool
+	DisableListPromotion   bool
+	DisableListTraversal   bool
+	DisableMethodInvocation bool
+	RequireFromKeyword     bool
+	ValidateUnits          bool
+	CompatibilityLevel     string
+	SignatureLevel         string
+	ErrorLevel             string
+	TranslatorVersion      string
 
 	// CQFMode emits cqframework-compatible output: annotation:[], signature:[],
 	// and empty filter arrays on Retrieve nodes. Also forces translatorOptions:"".

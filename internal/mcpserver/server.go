@@ -1,6 +1,6 @@
 // Package mcpserver implements the echo-elm MCP server over stdio.
-// It exposes translation, library browsing, and parity tools as MCP tools
-// so AI agents can drive the translator directly.
+// It exposes translation and library tools as MCP tools so AI agents
+// can drive the CQL→ELM translator directly.
 //
 // Usage: echo-elm mcp [--workdir <path>] [--allow-write]
 package mcpserver
@@ -13,11 +13,11 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
+	intelm "github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
@@ -60,13 +60,59 @@ func Run(ctx context.Context, opts Options) error {
 // Tool registration
 // -----------------------------------------------------------------------
 
-func registerTools(srv *mcp.Server, opts Options) {
-	// translate_cql — translate inline CQL
-	type translateCQLIn struct {
-		Content string `json:"content" jsonschema:"CQL source text to translate"`
-		Format  string `json:"format,omitempty" jsonschema:"Output format: xml, json, or both (default: both)"`
-		CQFMode bool   `json:"cqfMode,omitempty" jsonschema:"Enable cqframework-compatible output"`
+// translatorOptions carries the full set of translator knobs an MCP caller
+// can override. All fields are optional; absent fields use the default.
+type translatorOptions struct {
+	Annotations       *bool   `json:"annotations,omitempty"`
+	Locators          *bool   `json:"locators,omitempty"`
+	SignatureLevel    string  `json:"signatureLevel,omitempty"`    // None|Differing|Overloads|All
+	CQFMode           bool    `json:"cqfMode,omitempty"`           // cqframework-compat output
+	CompatibilityLevel string `json:"compatibilityLevel,omitempty"` // 1.3|1.4|1.5
+	ValidateUnits     *bool   `json:"validateUnits,omitempty"`
+	DisableListDemotion   bool `json:"disableListDemotion,omitempty"`
+	DisableListPromotion  bool `json:"disableListPromotion,omitempty"`
+	DisableListTraversal  bool `json:"disableListTraversal,omitempty"`
+	DisableMethodInvocation bool `json:"disableMethodInvocation,omitempty"`
+	RequireFromKeyword    bool `json:"requireFromKeyword,omitempty"`
+}
+
+func applyTranslatorOptions(o *translator.Options, in translatorOptions) {
+	if in.Annotations != nil {
+		o.EnableAnnotations = *in.Annotations
 	}
+	if in.Locators != nil {
+		o.EnableLocators = *in.Locators
+	}
+	if in.SignatureLevel != "" {
+		o.SignatureLevel = in.SignatureLevel
+	}
+	if in.CQFMode {
+		o.CQFMode = true
+	}
+	if in.CompatibilityLevel != "" {
+		o.CompatibilityLevel = in.CompatibilityLevel
+	}
+	if in.ValidateUnits != nil {
+		o.ValidateUnits = *in.ValidateUnits
+	}
+	if in.DisableListDemotion {
+		o.DisableListDemotion = true
+	}
+	if in.DisableListPromotion {
+		o.DisableListPromotion = true
+	}
+	if in.DisableListTraversal {
+		o.DisableListTraversal = true
+	}
+	if in.DisableMethodInvocation {
+		o.DisableMethodInvocation = true
+	}
+	if in.RequireFromKeyword {
+		o.RequireFromKeyword = true
+	}
+}
+
+func registerTools(srv *mcp.Server, opts Options) {
 	type translateOut struct {
 		Diagnostics []diagOut `json:"diagnostics"`
 		ElmXML      string    `json:"elmXml,omitempty"`
@@ -74,20 +120,20 @@ func registerTools(srv *mcp.Server, opts Options) {
 		ParsedName  string    `json:"parsedName,omitempty"`
 		HasErrors   bool      `json:"hasErrors"`
 	}
-	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "translate_cql",
-		Description: "Translate a CQL snippet to ELM. Returns diagnostics and ELM in XML and/or JSON.",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in translateCQLIn) (*mcp.CallToolResult, translateOut, error) {
-		if in.Content == "" {
-			return nil, translateOut{}, errors.New("content is required")
+
+	doTranslate := func(src []byte, sourceName string, format string, tOpts translatorOptions) (translateOut, error) {
+		if format == "" {
+			format = "both"
 		}
-		if in.Format == "" {
-			in.Format = "both"
-		}
-		result, err := echoelm.Translate([]byte(in.Content), "input.cql",
-			echoelm.WithCQFMode(in.CQFMode))
+		baseOpts := translator.DefaultOptions()
+		applyTranslatorOptions(&baseOpts, tOpts)
+
+		result, err := echoelm.Translate(src, sourceName,
+			echoelm.WithOptions(baseOpts),
+			echoelm.WithCQFMode(tOpts.CQFMode),
+		)
 		if err != nil {
-			return nil, translateOut{}, err
+			return translateOut{}, err
 		}
 		out := translateOut{
 			Diagnostics: toDiagOuts(result.Diagnostics),
@@ -96,30 +142,55 @@ func registerTools(srv *mcp.Server, opts Options) {
 		if result.Library != nil && result.Library.Identifier.ID != "" {
 			out.ParsedName = result.Library.Identifier.ID
 		}
-		if in.Format == "xml" || in.Format == "both" {
+		if format == "xml" || format == "both" {
 			if xmlBytes, e := result.MarshalXML(); e == nil {
 				out.ElmXML = string(xmlBytes)
 			}
 		}
-		if in.Format == "json" || in.Format == "both" {
+		if format == "json" || format == "both" {
 			if jsonBytes, e := json.Marshal(result); e == nil {
 				out.ElmJSON = string(jsonBytes)
 			}
 		}
+		return out, nil
+	}
+
+	// translate_cql — translate inline CQL source
+	type translateCQLIn struct {
+		Content string            `json:"content"`
+		Format  string            `json:"format,omitempty"`
+		Options translatorOptions `json:"options,omitempty"`
+	}
+	mcp.AddTool(srv, &mcp.Tool{
+		Name: "translate_cql",
+		Description: "Translate a CQL source string to ELM. " +
+			"format: xml|json|both (default: both). " +
+			"options overrides translator defaults (annotations, locators, signatureLevel, etc.).",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in translateCQLIn) (*mcp.CallToolResult, translateOut, error) {
+		if in.Content == "" {
+			return nil, translateOut{}, errors.New("content is required")
+		}
+		out, err := doTranslate([]byte(in.Content), "input.cql", in.Format, in.Options)
+		if err != nil {
+			return nil, translateOut{}, err
+		}
 		return toolResult(out)
 	})
 
-	// translate_file — translate a .cql file under workdir
+	// translate_file — translate a .cql file
+	// Accepts workspace-relative paths when workdir is set, or absolute paths otherwise.
 	type translateFileIn struct {
-		Path    string `json:"path" jsonschema:"Workspace-relative path to a .cql file"`
-		Format  string `json:"format,omitempty" jsonschema:"Output format: xml, json, or both (default: both)"`
-		CQFMode bool   `json:"cqfMode,omitempty"`
+		Path    string            `json:"path"`
+		Format  string            `json:"format,omitempty"`
+		Options translatorOptions `json:"options,omitempty"`
 	}
 	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "translate_file",
-		Description: "Translate a .cql file under the workspace directory to ELM. Does not write output files.",
+		Name: "translate_file",
+		Description: "Translate a CQL file to ELM. " +
+			"path: workspace-relative (or absolute if no workspace is configured). " +
+			"Returns ELM without writing output files.",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in translateFileIn) (*mcp.CallToolResult, translateOut, error) {
-		abs, err := safePath(opts.Workdir, in.Path)
+		abs, err := resolvePath(opts.Workdir, in.Path)
 		if err != nil {
 			return nil, translateOut{}, err
 		}
@@ -127,30 +198,70 @@ func registerTools(srv *mcp.Server, opts Options) {
 		if err != nil {
 			return nil, translateOut{}, fmt.Errorf("read %s: %w", in.Path, err)
 		}
-		if in.Format == "" {
-			in.Format = "both"
-		}
-		result, err := echoelm.Translate(src, filepath.Base(abs), echoelm.WithCQFMode(in.CQFMode))
+		out, err := doTranslate(src, filepath.Base(abs), in.Format, in.Options)
 		if err != nil {
 			return nil, translateOut{}, err
 		}
-		out := translateOut{
-			Diagnostics: toDiagOuts(result.Diagnostics),
-			HasErrors:   hasErrors(result.Diagnostics),
+		return toolResult(out)
+	})
+
+	// validate_elm — structural ELM validation
+	type validateIn struct {
+		Content string `json:"content"`
+		Format  string `json:"format"`
+	}
+	type validateOut struct {
+		Valid  bool     `json:"valid"`
+		Issues []string `json:"issues,omitempty"`
+	}
+	mcp.AddTool(srv, &mcp.Tool{
+		Name: "validate_elm",
+		Description: "Structurally validate a serialized ELM document. " +
+			"format: xml or json. " +
+			"Checks well-formedness, root element, and ELM namespace/envelope.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in validateIn) (*mcp.CallToolResult, validateOut, error) {
+		if in.Content == "" {
+			return nil, validateOut{}, errors.New("content is required")
 		}
-		if result.Library != nil && result.Library.Identifier.ID != "" {
-			out.ParsedName = result.Library.Identifier.ID
+		err := intelm.Validate([]byte(in.Content), in.Format)
+		if err == nil {
+			return toolResult(validateOut{Valid: true})
 		}
-		if in.Format == "xml" || in.Format == "both" {
-			if xmlBytes, e := result.MarshalXML(); e == nil {
-				out.ElmXML = string(xmlBytes)
-			}
+		var ve *intelm.ValidationError
+		if errors.As(err, &ve) {
+			return toolResult(validateOut{Valid: false, Issues: ve.Issues})
 		}
-		if in.Format == "json" || in.Format == "both" {
-			if jsonBytes, e := json.Marshal(result); e == nil {
-				out.ElmJSON = string(jsonBytes)
-			}
-		}
+		return toolResult(validateOut{Valid: false, Issues: []string{err.Error()}})
+	})
+
+	// get_translator_options — return available options and their defaults
+	type optionDesc struct {
+		Name        string `json:"name"`
+		Type        string `json:"type"`
+		Default     any    `json:"default"`
+		Description string `json:"description"`
+	}
+	type getOptsOut struct {
+		Options []optionDesc `json:"options"`
+	}
+	mcp.AddTool(srv, &mcp.Tool{
+		Name:        "get_translator_options",
+		Description: "Return all available translator options with their types, defaults, and descriptions.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in struct{}) (*mcp.CallToolResult, getOptsOut, error) {
+		d := translator.DefaultOptions()
+		out := getOptsOut{Options: []optionDesc{
+			{Name: "annotations", Type: "bool", Default: d.EnableAnnotations, Description: "Emit ELM annotations (EnableAnnotations)"},
+			{Name: "locators", Type: "bool", Default: d.EnableLocators, Description: "Emit source locators (EnableLocators)"},
+			{Name: "signatureLevel", Type: "string", Default: d.SignatureLevel, Description: "Signature level: None|Differing|Overloads|All"},
+			{Name: "cqfMode", Type: "bool", Default: false, Description: "cqframework-compatible output (empty annotation arrays, no translatorOptions header)"},
+			{Name: "compatibilityLevel", Type: "string", Default: d.CompatibilityLevel, Description: "CQL compatibility level: 1.3|1.4|1.5"},
+			{Name: "validateUnits", Type: "bool", Default: d.ValidateUnits, Description: "Emit Warning diagnostics for unrecognized UCUM units"},
+			{Name: "disableListDemotion", Type: "bool", Default: d.DisableListDemotion, Description: "Disable implicit list demotion (DisableListDemotion)"},
+			{Name: "disableListPromotion", Type: "bool", Default: d.DisableListPromotion, Description: "Disable implicit list promotion (DisableListPromotion)"},
+			{Name: "disableListTraversal", Type: "bool", Default: d.DisableListTraversal, Description: "Disable implicit list traversal (DisableListTraversal)"},
+			{Name: "disableMethodInvocation", Type: "bool", Default: d.DisableMethodInvocation, Description: "Disable method-style invocation (DisableMethodInvocation)"},
+			{Name: "requireFromKeyword", Type: "bool", Default: d.RequireFromKeyword, Description: "Require 'from' keyword in queries (RequireFromKeyword)"},
+		}}
 		return toolResult(out)
 	})
 
@@ -161,12 +272,12 @@ func registerTools(srv *mcp.Server, opts Options) {
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "list_libraries",
-		Description: "Walk the workspace and return parsed CQL library headers (name, version, includes).",
+		Description: "Walk the workspace directory and return parsed CQL library headers (name, version, includes).",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in struct{}) (*mcp.CallToolResult, listLibsOut, error) {
 		files, _ := walkCQLFiles(opts.Workdir)
 		var libs []libraryHeader
 		for _, rel := range files {
-			abs, err := safePath(opts.Workdir, rel)
+			abs, err := resolvePath(opts.Workdir, rel)
 			if err != nil {
 				continue
 			}
@@ -184,7 +295,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 
 	// read_library — read a .cql file's content and parsed header
 	type readLibIn struct {
-		Path string `json:"path" jsonschema:"Workspace-relative path to a .cql file"`
+		Path string `json:"path"`
 	}
 	type readLibOut struct {
 		libraryHeader
@@ -192,9 +303,9 @@ func registerTools(srv *mcp.Server, opts Options) {
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name:        "read_library",
-		Description: "Read a .cql file from the workspace. Returns content and parsed header.",
+		Description: "Read a CQL file from the workspace. Returns the raw source and parsed header (name, version, includes).",
 	}, func(ctx context.Context, req *mcp.CallToolRequest, in readLibIn) (*mcp.CallToolResult, readLibOut, error) {
-		abs, err := safePath(opts.Workdir, in.Path)
+		abs, err := resolvePath(opts.Workdir, in.Path)
 		if err != nil {
 			return nil, readLibOut{}, err
 		}
@@ -207,74 +318,6 @@ func registerTools(srv *mcp.Server, opts Options) {
 		}
 		hdr := parseLibraryHeader(src, in.Path)
 		return toolResult(readLibOut{libraryHeader: hdr, Content: string(src)})
-	})
-
-	// list_parity_runs — list parity/runs/* newest-first
-	type parityRunSummary struct {
-		ID   string `json:"id"`
-		Path string `json:"path"`
-	}
-	type listParityOut struct {
-		Runs  []parityRunSummary `json:"runs"`
-		Total int                `json:"total"`
-	}
-	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "list_parity_runs",
-		Description: "List parity test runs under workspace/parity/runs/, newest first.",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in struct{}) (*mcp.CallToolResult, listParityOut, error) {
-		runsDir := filepath.Join(opts.Workdir, "parity", "runs")
-		entries, err := os.ReadDir(runsDir)
-		if errors.Is(err, os.ErrNotExist) {
-			return toolResult(listParityOut{Runs: []parityRunSummary{}, Total: 0})
-		}
-		if err != nil {
-			return nil, listParityOut{}, err
-		}
-		var runs []parityRunSummary
-		for _, e := range entries {
-			if !e.IsDir() {
-				continue
-			}
-			runs = append(runs, parityRunSummary{
-				ID:   e.Name(),
-				Path: filepath.Join("parity", "runs", e.Name()),
-			})
-		}
-		sort.Slice(runs, func(i, j int) bool { return runs[i].ID > runs[j].ID })
-		if runs == nil {
-			runs = []parityRunSummary{}
-		}
-		return toolResult(listParityOut{Runs: runs, Total: len(runs)})
-	})
-
-	// get_parity_report — fetch report for a specific run
-	type getParityIn struct {
-		ID string `json:"id" jsonschema:"Parity run ID (directory name under parity/runs/)"`
-	}
-	type getParityOut struct {
-		ID         string `json:"id"`
-		ReportMD   string `json:"reportMd,omitempty"`
-		ReportJSON string `json:"reportJson,omitempty"`
-	}
-	mcp.AddTool(srv, &mcp.Tool{
-		Name:        "get_parity_report",
-		Description: "Fetch the markdown and JSON summary for a parity run.",
-	}, func(ctx context.Context, req *mcp.CallToolRequest, in getParityIn) (*mcp.CallToolResult, getParityOut, error) {
-		if strings.ContainsAny(in.ID, `/\`) {
-			return nil, getParityOut{}, errors.New("invalid run ID")
-		}
-		base := filepath.Join(opts.Workdir, "parity", "runs", in.ID)
-		out := getParityOut{ID: in.ID}
-		if md, err := os.ReadFile(filepath.Join(base, "report.md")); err == nil {
-			out.ReportMD = string(md)
-		}
-		if js, err := os.ReadFile(filepath.Join(base, "report.json")); err == nil {
-			out.ReportJSON = string(js)
-		}
-		if out.ReportMD == "" && out.ReportJSON == "" {
-			return nil, getParityOut{}, fmt.Errorf("parity run %q not found", in.ID)
-		}
-		return toolResult(out)
 	})
 }
 
@@ -321,10 +364,12 @@ func toolResult[T any](v T) (*mcp.CallToolResult, T, error) {
 	return nil, v, nil
 }
 
-// safePath validates and resolves a workspace-relative path.
-func safePath(workdir, rel string) (string, error) {
+// resolvePath resolves a path for file-based tools.
+// If path is absolute, it is used directly (no sandbox restriction).
+// If path is relative, it is resolved against workdir with escape prevention.
+func resolvePath(workdir, rel string) (string, error) {
 	if filepath.IsAbs(rel) {
-		return "", errors.New("absolute path not allowed")
+		return filepath.Clean(rel), nil
 	}
 	clean := filepath.Clean(filepath.Join(workdir, rel))
 	if clean != workdir && !strings.HasPrefix(clean, workdir+string(filepath.Separator)) {

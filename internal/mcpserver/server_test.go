@@ -226,23 +226,99 @@ func TestMCPReadLibrary(t *testing.T) {
 	}
 }
 
-func TestMCPListParityRuns(t *testing.T) {
+func TestMCPGetTranslatorOptions(t *testing.T) {
 	ws := fixtureWorkspace(t)
 	session := newMCPClient(t, ws)
 
-	result := callTool(t, session, "list_parity_runs", nil)
-
+	result := callTool(t, session, "get_translator_options", nil)
 	if result.IsError {
 		t.Fatalf("tool returned error: %+v", result.Content)
 	}
 
 	var out struct {
-		Runs  []any `json:"runs"`
-		Total int   `json:"total"`
+		Options []struct {
+			Name        string `json:"name"`
+			Type        string `json:"type"`
+			Description string `json:"description"`
+		} `json:"options"`
 	}
 	decodeText(t, result, &out)
-	// Fixture has no parity runs; just verify shape is correct
-	if out.Runs == nil {
-		t.Error("expected runs to be an array (even if empty)")
+	if len(out.Options) < 5 {
+		t.Errorf("expected at least 5 options, got %d", len(out.Options))
+	}
+	var found bool
+	for _, o := range out.Options {
+		if o.Name == "signatureLevel" {
+			found = true
+		}
+	}
+	if !found {
+		t.Error("expected signatureLevel option to be present")
+	}
+}
+
+func TestMCPValidateELM(t *testing.T) {
+	ws := fixtureWorkspace(t)
+	session := newMCPClient(t, ws)
+
+	// valid minimal ELM XML
+	validELM := `<?xml version="1.0" encoding="UTF-8"?>` +
+		`<library xmlns="urn:hl7-org:elm:r1"><identifier id="T" version="1.0.0"/></library>`
+	result := callTool(t, session, "validate_elm", map[string]any{
+		"content": validELM,
+		"format":  "xml",
+	})
+	if result.IsError {
+		t.Fatalf("tool returned error: %+v", result.Content)
+	}
+	var out struct {
+		Valid  bool     `json:"valid"`
+		Issues []string `json:"issues,omitempty"`
+	}
+	decodeText(t, result, &out)
+	if !out.Valid {
+		t.Errorf("expected valid=true, issues: %v", out.Issues)
+	}
+
+	// invalid: wrong root element
+	result2 := callTool(t, session, "validate_elm", map[string]any{
+		"content": `<notlibrary xmlns="urn:hl7-org:elm:r1"/>`,
+		"format":  "xml",
+	})
+	if result2.IsError {
+		t.Fatalf("tool returned error: %+v", result2.Content)
+	}
+	var out2 struct {
+		Valid bool `json:"valid"`
+	}
+	decodeText(t, result2, &out2)
+	if out2.Valid {
+		t.Error("expected invalid result for wrong root element")
+	}
+}
+
+func TestMCPTranslateCQLWithOptions(t *testing.T) {
+	ws := fixtureWorkspace(t)
+	session := newMCPClient(t, ws)
+
+	result := callTool(t, session, "translate_cql", map[string]any{
+		"content": "library OptsLib version '1.0.0'",
+		"format":  "xml",
+		"options": map[string]any{
+			"annotations":    true,
+			"locators":       true,
+			"signatureLevel": "All",
+		},
+	})
+	if result.IsError {
+		t.Fatalf("tool returned error: %+v", result.Content)
+	}
+	var out struct {
+		ElmXML    string `json:"elmXml"`
+		HasErrors bool   `json:"hasErrors"`
+	}
+	decodeText(t, result, &out)
+	if out.ElmXML == "" {
+		t.Error("expected non-empty elmXml")
 	}
 }
