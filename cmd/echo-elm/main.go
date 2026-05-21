@@ -77,8 +77,13 @@ func runTranslate(args []string, cqfMode bool) {
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
 	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
-	fs.BoolVar(&annotations, "annotations", true, "Emit ELM annotations")
-	fs.BoolVar(&locators, "locators", true, "Emit source locators")
+
+	// Default flags differ by mode to match each mode's natural behavior.
+	annotationsDefault := !cqfMode // modern: true, CQF: false (no annotation content without --annotations)
+	locatorsDefault := !cqfMode    // modern: true, CQF: false (no localId without --locators)
+
+	fs.BoolVar(&annotations, "annotations", annotationsDefault, "Emit ELM annotations")
+	fs.BoolVar(&locators, "locators", locatorsDefault, "Emit source locators")
 
 	if cqfMode {
 		// CQF defaults match cqframework CLI behavior.
@@ -273,7 +278,9 @@ func runParity(args []string) {
 		if err != nil {
 			return nil, err
 		}
-		result, err := echoelm.Translate(data, filepath.Base(cqlPath), echoelm.WithAnnotations(true))
+		// Use CQF defaults: EnableLocators=false, EnableAnnotations=false,
+		// SignatureLevel=None, CQFMode=true — matching upstream cqframework CLI.
+		result, err := echoelm.Translate(data, filepath.Base(cqlPath), echoelm.WithCQFOptions())
 		if err != nil {
 			return nil, err
 		}

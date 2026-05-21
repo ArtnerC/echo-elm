@@ -47,6 +47,15 @@ func WithCQFMode(v bool) Option {
 	return func(o *translator.Options) { o.CQFMode = v }
 }
 
+// WithCQFOptions applies the full cqframework-compatible default option set:
+// CQFMode=true, EnableAnnotations=false, EnableLocators=false, SignatureLevel="None".
+// Use this instead of WithCQFMode for parity testing and `echo-elm cqf translate`.
+func WithCQFOptions() Option {
+	return func(o *translator.Options) {
+		*o = translator.CQFDefaultOptions()
+	}
+}
+
 // WithLibrarySource sets a custom LibrarySource for resolving include declarations.
 func WithLibrarySource(src LibrarySource) Option {
 	return func(o *translator.Options) { o.LibrarySource = src }

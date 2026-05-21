@@ -22,6 +22,9 @@ tools/jdk/
 tools/cql-tests/
 tools/cqframework/
 tools/coursier/
+# Debug/parity artifacts dumped into tools/
+tools/echo-*.json
+tools/upstream-*.json
 
 # Taskfile downloads
 .task/

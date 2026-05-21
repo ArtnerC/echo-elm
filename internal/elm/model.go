@@ -45,7 +45,7 @@ type Library struct {
 	LocalID          string               `json:"localId,omitempty"`
 	Locator          string               `json:"locator,omitempty"`
 	SchemaIdentifier *VersionedIdentifier `json:"schemaIdentifier"`
-	Identifier       *VersionedIdentifier `json:"identifier,omitempty"`
+	Identifier       VersionedIdentifier  `json:"identifier"`
 	Annotation       []json.RawMessage    `json:"annotation,omitempty"`
 	Usings           *UsingDefs           `json:"usings,omitempty"`
 	Includes         *IncludeDefs         `json:"includes,omitempty"`
@@ -60,7 +60,7 @@ type Library struct {
 
 // VersionedIdentifier holds an id and optional version string.
 type VersionedIdentifier struct {
-	ID      string `json:"id"`
+	ID      string `json:"id,omitempty"`
 	System  string `json:"system,omitempty"`
 	Version string `json:"version,omitempty"`
 }
@@ -150,34 +150,48 @@ type IncludeDef struct {
 
 // CodeSystemDef corresponds to a `codesystem` declaration.
 type CodeSystemDef struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	ID          string `json:"id"`
-	Version     string `json:"version,omitempty"`
-	AccessLevel string `json:"accessLevel,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	ID          string          `json:"id"`
+	Version     string          `json:"version,omitempty"`
+	AccessLevel string          `json:"accessLevel,omitempty"`
 }
 
 // ValueSetDef corresponds to a `valueset` declaration.
 type ValueSetDef struct {
-	LocalID     string           `json:"localId,omitempty"`
-	Locator     string           `json:"locator,omitempty"`
-	Name        string           `json:"name"`
-	ID          string           `json:"id"`
-	Version     string           `json:"version,omitempty"`
-	AccessLevel string           `json:"accessLevel,omitempty"`
-	CodeSystems []*CodeSystemRef `json:"codeSystem,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	ID          string          `json:"id"`
+	Version     string          `json:"version,omitempty"`
+	AccessLevel string          `json:"accessLevel,omitempty"`
+	CodeSystems json.RawMessage `json:"codeSystem,omitempty"`
 }
 
 // CodeDef corresponds to a `code` declaration.
 type CodeDef struct {
-	LocalID     string         `json:"localId,omitempty"`
-	Locator     string         `json:"locator,omitempty"`
-	Name        string         `json:"name"`
-	ID          string         `json:"id"`
-	Display     string         `json:"display,omitempty"`
-	AccessLevel string         `json:"accessLevel,omitempty"`
-	CodeSystem  *CodeSystemRef `json:"codeSystem,omitempty"`
+	LocalID     string                   `json:"localId,omitempty"`
+	Locator     string                   `json:"locator,omitempty"`
+	Annotation  json.RawMessage          `json:"annotation,omitempty"`
+	Name        string                   `json:"name"`
+	ID          string                   `json:"id"`
+	Display     string                   `json:"display,omitempty"`
+	AccessLevel string                   `json:"accessLevel,omitempty"`
+	CodeSystem  *CodeSystemDefinitionRef `json:"codeSystem,omitempty"`
+}
+
+// CodeSystemDefinitionRef is the structural code-system reference used inside
+// CodeDef (and ConceptDef). Unlike CodeSystemRef (an expression node), it does
+// NOT carry a "type" discriminator — upstream CQF emits {"annotation":[],"name":"LOINC"}.
+type CodeSystemDefinitionRef struct {
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
 }
 
 // CodeSystemRef is a reference to a code system by name.
@@ -218,12 +232,13 @@ func (r *CodeRef) MarshalJSON() ([]byte, error) {
 
 // ParameterDef corresponds to a `parameter` declaration.
 type ParameterDef struct {
-	LocalID                string        `json:"localId,omitempty"`
-	Locator                string        `json:"locator,omitempty"`
-	Name                   string        `json:"name"`
-	AccessLevel            string        `json:"accessLevel,omitempty"`
-	ParameterTypeSpecifier TypeSpecifier `json:"parameterTypeSpecifier,omitempty"`
-	Default                Expression    `json:"default,omitempty"`
+	LocalID                string          `json:"localId,omitempty"`
+	Locator                string          `json:"locator,omitempty"`
+	Annotation             json.RawMessage `json:"annotation,omitempty"`
+	Name                   string          `json:"name"`
+	AccessLevel            string          `json:"accessLevel,omitempty"`
+	ParameterTypeSpecifier TypeSpecifier   `json:"parameterTypeSpecifier,omitempty"`
+	Default                Expression      `json:"default,omitempty"`
 }
 
 // StatementDef covers both ExpressionDef and FunctionDef.
@@ -243,20 +258,36 @@ type StatementDef struct {
 }
 
 func (s *StatementDef) MarshalJSON() ([]byte, error) {
-	typeName := "ExpressionDef"
 	if s.IsFunction {
-		typeName = "FunctionDef"
+		type alias StatementDef
+		return marshalWithType("FunctionDef", (*alias)(s))
 	}
+	// ExpressionDef: upstream cqframework does NOT emit the "type" discriminator.
 	type alias StatementDef
-	return marshalWithType(typeName, (*alias)(s))
+	return json.Marshal((*alias)(s))
 }
 
 // OperandDef is a function parameter definition.
 type OperandDef struct {
-	LocalID              string        `json:"localId,omitempty"`
-	Locator              string        `json:"locator,omitempty"`
-	Name                 string        `json:"name"`
-	OperandTypeSpecifier TypeSpecifier `json:"operandTypeSpecifier,omitempty"`
+	LocalID              string          `json:"localId,omitempty"`
+	Locator              string          `json:"locator,omitempty"`
+	Annotation           json.RawMessage `json:"annotation,omitempty"`
+	Name                 string          `json:"name"`
+	OperandTypeSpecifier TypeSpecifier   `json:"operandTypeSpecifier,omitempty"`
+}
+
+// OperandRefNode: a reference to a function parameter (operand).
+type OperandRefNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Name       string          `json:"name"`
+}
+
+func (*OperandRefNode) isExpression() {}
+func (n *OperandRefNode) MarshalJSON() ([]byte, error) {
+	type alias OperandRefNode
+	return marshalWithType("OperandRef", (*alias)(n))
 }
 
 // -----------------------------------------------------------------------
@@ -271,9 +302,10 @@ type TypeSpecifier interface {
 
 // NamedTypeSpecifier: a named type like Integer or FHIR.Patient.
 type NamedTypeSpecifier struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Name    string `json:"name,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Name       string          `json:"name,omitempty"`
 }
 
 func (*NamedTypeSpecifier) isTypeSpecifier() {}
@@ -285,9 +317,10 @@ func (n *NamedTypeSpecifier) MarshalJSON() ([]byte, error) {
 
 // IntervalTypeSpecifier: Interval<T>.
 type IntervalTypeSpecifier struct {
-	LocalID   string        `json:"localId,omitempty"`
-	Locator   string        `json:"locator,omitempty"`
-	PointType TypeSpecifier `json:"pointType,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	PointType  TypeSpecifier   `json:"pointType,omitempty"`
 }
 
 func (*IntervalTypeSpecifier) isTypeSpecifier() {}
@@ -299,9 +332,10 @@ func (n *IntervalTypeSpecifier) MarshalJSON() ([]byte, error) {
 
 // ListTypeSpecifier: List<T>.
 type ListTypeSpecifier struct {
-	LocalID     string        `json:"localId,omitempty"`
-	Locator     string        `json:"locator,omitempty"`
-	ElementType TypeSpecifier `json:"elementType,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	ElementType TypeSpecifier   `json:"elementType,omitempty"`
 }
 
 func (*ListTypeSpecifier) isTypeSpecifier() {}
@@ -313,9 +347,10 @@ func (n *ListTypeSpecifier) MarshalJSON() ([]byte, error) {
 
 // TupleTypeSpecifier: Tuple { name Type, ... }.
 type TupleTypeSpecifier struct {
-	LocalID string                    `json:"localId,omitempty"`
-	Locator string                    `json:"locator,omitempty"`
-	Element []*TupleElementDefinition `json:"element,omitempty"`
+	LocalID    string                    `json:"localId,omitempty"`
+	Locator    string                    `json:"locator,omitempty"`
+	Annotation json.RawMessage           `json:"annotation,omitempty"`
+	Element    []*TupleElementDefinition `json:"element,omitempty"`
 }
 
 func (*TupleTypeSpecifier) isTypeSpecifier() {}
@@ -327,17 +362,19 @@ func (n *TupleTypeSpecifier) MarshalJSON() ([]byte, error) {
 
 // TupleElementDefinition is one element in a tuple type.
 type TupleElementDefinition struct {
-	LocalID string        `json:"localId,omitempty"`
-	Locator string        `json:"locator,omitempty"`
-	Name    string        `json:"name"`
-	Type    TypeSpecifier `json:"type,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	ElementType TypeSpecifier   `json:"elementType,omitempty"`
 }
 
 // ChoiceTypeSpecifier: Choice<T1, T2, ...>.
 type ChoiceTypeSpecifier struct {
-	LocalID string          `json:"localId,omitempty"`
-	Locator string          `json:"locator,omitempty"`
-	Choice  []TypeSpecifier `json:"choice,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Choice     []TypeSpecifier `json:"choice,omitempty"`
 }
 
 func (*ChoiceTypeSpecifier) isTypeSpecifier() {}
@@ -374,9 +411,10 @@ func (n *LiteralNode) MarshalJSON() ([]byte, error) {
 
 // NullNode: the null literal.
 type NullNode struct {
-	LocalID        string `json:"localId,omitempty"`
-	Locator        string `json:"locator,omitempty"`
-	ResultTypeName string `json:"resultTypeName,omitempty"`
+	LocalID        string          `json:"localId,omitempty"`
+	Locator        string          `json:"locator,omitempty"`
+	Annotation     json.RawMessage `json:"annotation,omitempty"`
+	ResultTypeName string          `json:"resultTypeName,omitempty"`
 }
 
 func (*NullNode) isExpression() {}
@@ -387,10 +425,11 @@ func (n *NullNode) MarshalJSON() ([]byte, error) {
 
 // ExpressionRefNode: a reference to a named expression.
 type ExpressionRefNode struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
 }
 
 func (*ExpressionRefNode) isExpression() {}
@@ -401,10 +440,11 @@ func (n *ExpressionRefNode) MarshalJSON() ([]byte, error) {
 
 // ParameterRefNode: a reference to a parameter.
 type ParameterRefNode struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
 }
 
 func (*ParameterRefNode) isExpression() {}
@@ -415,10 +455,12 @@ func (n *ParameterRefNode) MarshalJSON() ([]byte, error) {
 
 // ValueSetRefNode: a reference to a value set.
 type ValueSetRefNode struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
+	Preserve    *bool           `json:"preserve,omitempty"`
 }
 
 func (*ValueSetRefNode) isExpression() {}
@@ -427,12 +469,82 @@ func (n *ValueSetRefNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("ValueSetRef", (*alias)(n))
 }
 
+// InValueSetNode: tests whether a code belongs to a value set.
+// Emitted instead of In(ToList(ValueSetRef)) when the RHS is a value set.
+type InValueSetNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Code       Expression      `json:"code"`
+	ValueSet   *ValueSetRefNode `json:"valueset"`
+}
+
+func (*InValueSetNode) isExpression() {}
+func (n *InValueSetNode) MarshalJSON() ([]byte, error) {
+	// The valueset field inside InValueSet does NOT include a "type" discriminator.
+	type plainValueSetRef struct {
+		LocalID     string          `json:"localId,omitempty"`
+		Locator     string          `json:"locator,omitempty"`
+		Annotation  json.RawMessage `json:"annotation,omitempty"`
+		Name        string          `json:"name"`
+		LibraryName string          `json:"libraryName,omitempty"`
+		Preserve    *bool           `json:"preserve,omitempty"`
+	}
+	type plain struct {
+		LocalID    string          `json:"localId,omitempty"`
+		Locator    string          `json:"locator,omitempty"`
+		Annotation json.RawMessage `json:"annotation,omitempty"`
+		Signature  json.RawMessage `json:"signature,omitempty"`
+		Code       Expression      `json:"code"`
+		ValueSet   *plainValueSetRef `json:"valueset"`
+	}
+	var vs *plainValueSetRef
+	if n.ValueSet != nil {
+		vs = &plainValueSetRef{
+			LocalID:     n.ValueSet.LocalID,
+			Locator:     n.ValueSet.Locator,
+			Annotation:  n.ValueSet.Annotation,
+			Name:        n.ValueSet.Name,
+			LibraryName: n.ValueSet.LibraryName,
+			Preserve:    n.ValueSet.Preserve,
+		}
+	}
+	p := plain{
+		LocalID:    n.LocalID,
+		Locator:    n.Locator,
+		Annotation: n.Annotation,
+		Signature:  n.Signature,
+		Code:       n.Code,
+		ValueSet:   vs,
+	}
+	return marshalWithType("InValueSet", p)
+}
+
+// CalculateAgeNode: expands AgeInYears/AgeInMonths/etc. in a Patient context.
+// Extends UnaryExpression — operand is a single object (not array).
+type CalculateAgeNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Precision  string          `json:"precision,omitempty"`
+	Operand    Expression      `json:"operand"`
+}
+
+func (*CalculateAgeNode) isExpression() {}
+func (n *CalculateAgeNode) MarshalJSON() ([]byte, error) {
+	type alias CalculateAgeNode
+	return marshalWithType("CalculateAge", (*alias)(n))
+}
+
 // CodeSystemRefNode: a reference to a code system (as expression).
 type CodeSystemRefNode struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
 }
 
 func (*CodeSystemRefNode) isExpression() {}
@@ -443,10 +555,11 @@ func (n *CodeSystemRefNode) MarshalJSON() ([]byte, error) {
 
 // CodeRefNode: a reference to a code (as expression).
 type CodeRefNode struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
 }
 
 func (*CodeRefNode) isExpression() {}
@@ -457,9 +570,10 @@ func (n *CodeRefNode) MarshalJSON() ([]byte, error) {
 
 // ConceptRefNode: a reference to a concept (as expression).
 type ConceptRefNode struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Name    string `json:"name"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Name       string          `json:"name"`
 }
 
 func (*ConceptRefNode) isExpression() {}
@@ -468,13 +582,15 @@ func (n *ConceptRefNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("ConceptRef", (*alias)(n))
 }
 
-// FunctionRefNode: a function invocation.
+// FunctionRefNode: a function invocation (extends OperatorExpression — has signature[]).
 type FunctionRefNode struct {
-	LocalID     string       `json:"localId,omitempty"`
-	Locator     string       `json:"locator,omitempty"`
-	Name        string       `json:"name"`
-	LibraryName string       `json:"libraryName,omitempty"`
-	Operand     []Expression `json:"operand,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Signature   json.RawMessage `json:"signature,omitempty"`
+	Name        string          `json:"name"`
+	LibraryName string          `json:"libraryName,omitempty"`
+	Operand     []Expression    `json:"operand,omitempty"`
 }
 
 func (*FunctionRefNode) isExpression() {}
@@ -555,12 +671,13 @@ func (n *SingletonFromNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("SingletonFrom", (*alias)(n))
 }
 
-// QuantityNode: a UCUM quantity literal.
+// QuantityNode: a UCUM quantity literal expression.
 type QuantityNode struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Value   string `json:"value"`
-	Unit    string `json:"unit,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Value      json.Number     `json:"value"`
+	Unit       string          `json:"unit,omitempty"`
 }
 
 func (*QuantityNode) isExpression() {}
@@ -569,12 +686,21 @@ func (n *QuantityNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("Quantity", (*alias)(n))
 }
 
+// QuantityLiteral is a non-expression Quantity value used in Ratio sub-quantities.
+// Unlike QuantityNode (an expression), it has no type discriminator and unit is always emitted.
+type QuantityLiteral struct {
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Unit       string          `json:"unit"`
+	Value      json.Number     `json:"value"`
+}
+
 // RatioNode: a CQL ratio literal.
 type RatioNode struct {
-	LocalID     string        `json:"localId,omitempty"`
-	Locator     string        `json:"locator,omitempty"`
-	Numerator   *QuantityNode `json:"numerator"`
-	Denominator *QuantityNode `json:"denominator"`
+	LocalID     string           `json:"localId,omitempty"`
+	Locator     string           `json:"locator,omitempty"`
+	Annotation  json.RawMessage  `json:"annotation,omitempty"`
+	Numerator   *QuantityLiteral `json:"numerator"`
+	Denominator *QuantityLiteral `json:"denominator"`
 }
 
 func (*RatioNode) isExpression() {}
@@ -600,17 +726,168 @@ func (n *UnimplementedNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType(typeName, (*alias)(n))
 }
 
+// UnaryExpressionNode is an ELM operator with a single operand (e.g. Abs, Not, ToList).
+// In ELM JSON, single-operand operators emit operand as an object, not an array.
+type UnaryExpressionNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Operator   string          `json:"-"`
+	Operand    Expression      `json:"operand"`
+}
+
+func (*UnaryExpressionNode) isExpression() {}
+func (n *UnaryExpressionNode) MarshalJSON() ([]byte, error) {
+	type alias UnaryExpressionNode
+	return marshalWithType(n.Operator, (*alias)(n))
+}
+
+// AggregateExpressionNode is an ELM aggregate operator (e.g. Count, Sum, Avg).
+// Unlike UnaryExpression, the ELM schema uses "source" (single object) not "operand".
+type AggregateExpressionNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Operator   string          `json:"-"`
+	Source     Expression      `json:"source"`
+}
+
+func (*AggregateExpressionNode) isExpression() {}
+func (n *AggregateExpressionNode) MarshalJSON() ([]byte, error) {
+	type alias AggregateExpressionNode
+	return marshalWithType(n.Operator, (*alias)(n))
+}
+
+// NamedOperatorExpressionNode is an ELM operator whose operands are emitted as
+// named JSON fields (e.g. Substring → stringToSub/startIndex/length). Each
+// operand is stored with the field name CQF emits for that operator slot.
+type NamedOperatorExpressionNode struct {
+	LocalID    string
+	Locator    string
+	Annotation json.RawMessage
+	Signature  json.RawMessage
+	Operator   string
+	// Operands is an ordered list of (field-name, expression) pairs.
+	Operands []NamedOperand
+}
+
+// NamedOperand is one named slot in a NamedOperatorExpressionNode.
+type NamedOperand struct {
+	Name  string
+	Value Expression
+}
+
+func (*NamedOperatorExpressionNode) isExpression() {}
+func (n *NamedOperatorExpressionNode) MarshalJSON() ([]byte, error) {
+	var buf bytes.Buffer
+	buf.WriteString(`{"type":`)
+	typeJSON, _ := json.Marshal(n.Operator)
+	buf.Write(typeJSON)
+	if n.LocalID != "" {
+		buf.WriteString(`,"localId":`)
+		b, _ := json.Marshal(n.LocalID)
+		buf.Write(b)
+	}
+	if n.Locator != "" {
+		buf.WriteString(`,"locator":`)
+		b, _ := json.Marshal(n.Locator)
+		buf.Write(b)
+	}
+	if len(n.Annotation) > 0 {
+		buf.WriteString(`,"annotation":`)
+		buf.Write(n.Annotation)
+	}
+	if len(n.Signature) > 0 {
+		buf.WriteString(`,"signature":`)
+		buf.Write(n.Signature)
+	}
+	for _, op := range n.Operands {
+		if op.Value == nil {
+			continue
+		}
+		buf.WriteByte(',')
+		nameJSON, _ := json.Marshal(op.Name)
+		buf.Write(nameJSON)
+		buf.WriteByte(':')
+		valJSON, err := json.Marshal(op.Value)
+		if err != nil {
+			return nil, err
+		}
+		buf.Write(valJSON)
+	}
+	buf.WriteByte('}')
+	return buf.Bytes(), nil
+}
+type DateNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Year       Expression      `json:"year,omitempty"`
+	Month      Expression      `json:"month,omitempty"`
+	Day        Expression      `json:"day,omitempty"`
+}
+
+func (*DateNode) isExpression() {}
+func (n *DateNode) MarshalJSON() ([]byte, error) {
+	type alias DateNode
+	return marshalWithType("Date", (*alias)(n))
+}
+
+// DateTimeNode: a CQL datetime literal or DateTime() function call.
+type DateTimeNode struct {
+	LocalID        string          `json:"localId,omitempty"`
+	Locator        string          `json:"locator,omitempty"`
+	Annotation     json.RawMessage `json:"annotation,omitempty"`
+	Signature      json.RawMessage `json:"signature,omitempty"`
+	Year           Expression      `json:"year,omitempty"`
+	Month          Expression      `json:"month,omitempty"`
+	Day            Expression      `json:"day,omitempty"`
+	Hour           Expression      `json:"hour,omitempty"`
+	Minute         Expression      `json:"minute,omitempty"`
+	Second         Expression      `json:"second,omitempty"`
+	Millisecond    Expression      `json:"millisecond,omitempty"`
+	TimezoneOffset Expression      `json:"timezoneOffset,omitempty"`
+}
+
+func (*DateTimeNode) isExpression() {}
+func (n *DateTimeNode) MarshalJSON() ([]byte, error) {
+	type alias DateTimeNode
+	return marshalWithType("DateTime", (*alias)(n))
+}
+
+// TimeNode: a CQL time literal or Time() function call.
+type TimeNode struct {
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Signature   json.RawMessage `json:"signature,omitempty"`
+	Hour        Expression      `json:"hour,omitempty"`
+	Minute      Expression      `json:"minute,omitempty"`
+	Second      Expression      `json:"second,omitempty"`
+	Millisecond Expression      `json:"millisecond,omitempty"`
+}
+
+func (*TimeNode) isExpression() {}
+func (n *TimeNode) MarshalJSON() ([]byte, error) {
+	type alias TimeNode
+	return marshalWithType("Time", (*alias)(n))
+}
+
 // -----------------------------------------------------------------------
 // Additional expression types
 // -----------------------------------------------------------------------
 
 // IfNode: if condition then thenClause else elseClause.
 type IfNode struct {
-	LocalID   string     `json:"localId,omitempty"`
-	Locator   string     `json:"locator,omitempty"`
-	Condition Expression `json:"condition"`
-	Then      Expression `json:"then"`
-	Else      Expression `json:"else"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Condition  Expression      `json:"condition"`
+	Then       Expression      `json:"then"`
+	Else       Expression      `json:"else"`
 }
 
 func (*IfNode) isExpression() {}
@@ -629,11 +906,12 @@ type CaseItem struct {
 
 // CaseNode: case [comparand] when ... then ... else ... end.
 type CaseNode struct {
-	LocalID   string       `json:"localId,omitempty"`
-	Locator   string       `json:"locator,omitempty"`
-	Comparand Expression   `json:"comparand,omitempty"`
-	CaseItem  []*CaseItem  `json:"caseItem"`
-	Else      Expression   `json:"else"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Comparand  Expression      `json:"comparand,omitempty"`
+	CaseItem   []*CaseItem     `json:"caseItem"`
+	Else       Expression      `json:"else"`
 }
 
 func (*CaseNode) isExpression() {}
@@ -642,12 +920,14 @@ func (n *CaseNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("Case", (*alias)(n))
 }
 
-// IsNode: x is TypeSpecifier.
+// IsNode: x is TypeSpecifier (extends OperatorExpression — has signature[]).
 type IsNode struct {
-	LocalID         string        `json:"localId,omitempty"`
-	Locator         string        `json:"locator,omitempty"`
-	Operand         []Expression  `json:"operand,omitempty"`
-	IsTypeSpecifier TypeSpecifier `json:"isTypeSpecifier,omitempty"`
+	LocalID         string          `json:"localId,omitempty"`
+	Locator         string          `json:"locator,omitempty"`
+	Annotation      json.RawMessage `json:"annotation,omitempty"`
+	Signature       json.RawMessage `json:"signature,omitempty"`
+	Operand         Expression      `json:"operand"`
+	IsTypeSpecifier TypeSpecifier   `json:"isTypeSpecifier,omitempty"`
 }
 
 func (*IsNode) isExpression() {}
@@ -657,12 +937,16 @@ func (n *IsNode) MarshalJSON() ([]byte, error) {
 }
 
 // AsNode: x as TypeSpecifier (strict=false) or cast x as TypeSpecifier (strict=true).
+// Strict is a *bool: nil = omit (synthesized As), non-nil = emit (explicit CQL as/cast).
 type AsNode struct {
-	LocalID         string        `json:"localId,omitempty"`
-	Locator         string        `json:"locator,omitempty"`
-	Operand         []Expression  `json:"operand,omitempty"`
-	AsTypeSpecifier TypeSpecifier `json:"asTypeSpecifier,omitempty"`
-	Strict          bool          `json:"strict,omitempty"`
+	LocalID         string          `json:"localId,omitempty"`
+	Locator         string          `json:"locator,omitempty"`
+	Annotation      json.RawMessage `json:"annotation,omitempty"`
+	Signature       json.RawMessage `json:"signature,omitempty"`
+	Operand         Expression      `json:"operand"`
+	AsType          string          `json:"asType,omitempty"`
+	AsTypeSpecifier TypeSpecifier   `json:"asTypeSpecifier,omitempty"`
+	Strict          *bool           `json:"strict,omitempty"`
 }
 
 func (*AsNode) isExpression() {}
@@ -671,12 +955,14 @@ func (n *AsNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("As", (*alias)(n))
 }
 
-// ConvertNode: convert x to TypeSpecifier.
+// ConvertNode: convert x to TypeSpecifier (extends OperatorExpression — has signature[]).
 type ConvertNode struct {
-	LocalID           string        `json:"localId,omitempty"`
-	Locator           string        `json:"locator,omitempty"`
-	Operand           []Expression  `json:"operand,omitempty"`
-	ToTypeSpecifier   TypeSpecifier `json:"toTypeSpecifier,omitempty"`
+	LocalID         string          `json:"localId,omitempty"`
+	Locator         string          `json:"locator,omitempty"`
+	Annotation      json.RawMessage `json:"annotation,omitempty"`
+	Signature       json.RawMessage `json:"signature,omitempty"`
+	Operand         Expression      `json:"operand"`
+	ToTypeSpecifier TypeSpecifier   `json:"toTypeSpecifier,omitempty"`
 }
 
 func (*ConvertNode) isExpression() {}
@@ -687,12 +973,13 @@ func (n *ConvertNode) MarshalJSON() ([]byte, error) {
 
 // IntervalNode: Interval selector.
 type IntervalNode struct {
-	LocalID    string     `json:"localId,omitempty"`
-	Locator    string     `json:"locator,omitempty"`
-	Low        Expression `json:"low,omitempty"`
-	High       Expression `json:"high,omitempty"`
-	LowClosed  bool       `json:"lowClosed,omitempty"`
-	HighClosed bool       `json:"highClosed,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Low        Expression      `json:"low,omitempty"`
+	High       Expression      `json:"high,omitempty"`
+	LowClosed  bool            `json:"lowClosed"`
+	HighClosed bool            `json:"highClosed"`
 }
 
 func (*IntervalNode) isExpression() {}
@@ -703,16 +990,33 @@ func (n *IntervalNode) MarshalJSON() ([]byte, error) {
 
 // ListNode: List selector.
 type ListNode struct {
-	LocalID  string       `json:"localId,omitempty"`
-	Locator  string       `json:"locator,omitempty"`
-	TypeSpec TypeSpecifier `json:"typeSpecifier,omitempty"`
-	Element  []Expression `json:"element,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	TypeSpec   TypeSpecifier   `json:"typeSpecifier,omitempty"`
+	Element    []Expression    `json:"element,omitempty"`
 }
 
 func (*ListNode) isExpression() {}
 func (n *ListNode) MarshalJSON() ([]byte, error) {
-	type alias ListNode
-	return marshalWithType("List", (*alias)(n))
+	type listAlias struct {
+		LocalID    string          `json:"localId,omitempty"`
+		Locator    string          `json:"locator,omitempty"`
+		Annotation json.RawMessage `json:"annotation,omitempty"`
+		TypeSpec   TypeSpecifier   `json:"typeSpecifier,omitempty"`
+		Element    []Expression    `json:"element"`
+	}
+	elem := n.Element
+	if elem == nil {
+		elem = []Expression{}
+	}
+	return marshalWithType("List", &listAlias{
+		LocalID:    n.LocalID,
+		Locator:    n.Locator,
+		Annotation: n.Annotation,
+		TypeSpec:   n.TypeSpec,
+		Element:    elem,
+	})
 }
 
 // TupleElementNode is a named element in a Tuple or Instance selector.
@@ -723,9 +1027,10 @@ type TupleElementNode struct {
 
 // TupleNode: Tuple selector.
 type TupleNode struct {
-	LocalID string              `json:"localId,omitempty"`
-	Locator string              `json:"locator,omitempty"`
-	Element []*TupleElementNode `json:"element,omitempty"`
+	LocalID    string              `json:"localId,omitempty"`
+	Locator    string              `json:"locator,omitempty"`
+	Annotation json.RawMessage     `json:"annotation,omitempty"`
+	Element    []*TupleElementNode `json:"element,omitempty"`
 }
 
 func (*TupleNode) isExpression() {}
@@ -736,10 +1041,11 @@ func (n *TupleNode) MarshalJSON() ([]byte, error) {
 
 // InstanceNode: Instance/class selector.
 type InstanceNode struct {
-	LocalID   string              `json:"localId,omitempty"`
-	Locator   string              `json:"locator,omitempty"`
-	ClassType string              `json:"classType,omitempty"`
-	Element   []*TupleElementNode `json:"element,omitempty"`
+	LocalID    string              `json:"localId,omitempty"`
+	Locator    string              `json:"locator,omitempty"`
+	Annotation json.RawMessage     `json:"annotation,omitempty"`
+	ClassType  string              `json:"classType,omitempty"`
+	Element    []*TupleElementNode `json:"element,omitempty"`
 }
 
 func (*InstanceNode) isExpression() {}
@@ -750,11 +1056,12 @@ func (n *InstanceNode) MarshalJSON() ([]byte, error) {
 
 // CodeNode: Code selector literal.
 type CodeNode struct {
-	LocalID string         `json:"localId,omitempty"`
-	Locator string         `json:"locator,omitempty"`
-	Code    string         `json:"code"`
-	System  *CodeSystemRef `json:"system,omitempty"`
-	Display string         `json:"display,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Code       string          `json:"code"`
+	System     *CodeSystemRef  `json:"system,omitempty"`
+	Display    string          `json:"display,omitempty"`
 }
 
 func (*CodeNode) isExpression() {}
@@ -765,10 +1072,11 @@ func (n *CodeNode) MarshalJSON() ([]byte, error) {
 
 // ConceptNode: Concept selector literal.
 type ConceptNode struct {
-	LocalID string     `json:"localId,omitempty"`
-	Locator string     `json:"locator,omitempty"`
-	Code    []*CodeNode `json:"code,omitempty"`
-	Display string     `json:"display,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Code       []*CodeNode     `json:"code,omitempty"`
+	Display    string          `json:"display,omitempty"`
 }
 
 func (*ConceptNode) isExpression() {}
@@ -779,8 +1087,9 @@ func (n *ConceptNode) MarshalJSON() ([]byte, error) {
 
 // QueryThisRefNode: $this — current iteration element.
 type QueryThisRefNode struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
 }
 
 func (*QueryThisRefNode) isExpression() {}
@@ -791,9 +1100,10 @@ func (n *QueryThisRefNode) MarshalJSON() ([]byte, error) {
 
 // AliasRefNode: reference to a query source alias.
 type AliasRefNode struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Name    string `json:"name"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Name       string          `json:"name"`
 }
 
 func (*AliasRefNode) isExpression() {}
@@ -802,24 +1112,27 @@ func (n *AliasRefNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("AliasRef", (*alias)(n))
 }
 
-// LetRefNode: reference to a let clause binding.
+// LetRefNode: reference to a let clause binding inside a query.
+// Serializes as ELM "QueryLetRef" to match ELM spec.
 type LetRefNode struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Name    string `json:"name"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Name       string          `json:"name"`
 }
 
 func (*LetRefNode) isExpression() {}
 func (n *LetRefNode) MarshalJSON() ([]byte, error) {
 	type alias LetRefNode
-	return marshalWithType("LetRef", (*alias)(n))
+	return marshalWithType("QueryLetRef", (*alias)(n))
 }
 
 // ExternalConstantNode: %name external constant.
 type ExternalConstantNode struct {
-	LocalID string `json:"localId,omitempty"`
-	Locator string `json:"locator,omitempty"`
-	Name    string `json:"name"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Name       string          `json:"name"`
 }
 
 func (*ExternalConstantNode) isExpression() {}
@@ -828,13 +1141,16 @@ func (n *ExternalConstantNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("ExternalConstant", (*alias)(n))
 }
 
-// PrecisionOperatorNode: an operator with a precision attribute (DurationBetween, DifferenceBetween, DateTimeComponentFrom, etc.).
+// PrecisionOperatorNode: an operator with a precision attribute (DurationBetween, DifferenceBetween, etc.).
+// Extends OperatorExpression — has annotation[] and signature[].
 type PrecisionOperatorNode struct {
-	LocalID   string       `json:"localId,omitempty"`
-	Locator   string       `json:"locator,omitempty"`
-	Operator  string       `json:"-"`
-	Precision string       `json:"precision,omitempty"`
-	Operand   []Expression `json:"operand,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Operator   string          `json:"-"`
+	Precision  string          `json:"precision,omitempty"`
+	Operand    []Expression    `json:"operand,omitempty"`
 }
 
 func (*PrecisionOperatorNode) isExpression() {}
@@ -845,19 +1161,21 @@ func (n *PrecisionOperatorNode) MarshalJSON() ([]byte, error) {
 
 // AliasedQuerySourceELM is the ELM representation of an aliased source.
 type AliasedQuerySourceELM struct {
-	LocalID     string     `json:"localId,omitempty"`
-	Locator     string     `json:"locator,omitempty"`
-	Alias       string     `json:"alias"`
-	Expression  Expression `json:"expression"`
-	ResultType  string     `json:"resultTypeName,omitempty"`
+	LocalID     string          `json:"localId,omitempty"`
+	Locator     string          `json:"locator,omitempty"`
+	Annotation  json.RawMessage `json:"annotation,omitempty"`
+	Alias       string          `json:"alias"`
+	Expression  Expression      `json:"expression"`
+	ResultType  string          `json:"resultTypeName,omitempty"`
 }
 
 // LetClauseELM is the ELM representation of a let clause.
 type LetClauseELM struct {
-	LocalID    string     `json:"localId,omitempty"`
-	Locator    string     `json:"locator,omitempty"`
-	Identifier string     `json:"identifier"`
-	Expression Expression `json:"expression"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Identifier string          `json:"identifier"`
+	Expression Expression      `json:"expression"`
 }
 
 // RelationshipClauseELM is the ELM representation of a with/without clause.
@@ -877,10 +1195,11 @@ func (r *RelationshipClauseELM) MarshalJSON() ([]byte, error) {
 
 // ReturnClauseELM is the ELM return clause inside a query.
 type ReturnClauseELM struct {
-	LocalID    string     `json:"localId,omitempty"`
-	Locator    string     `json:"locator,omitempty"`
-	Distinct   bool       `json:"distinct,omitempty"`
-	Expression Expression `json:"expression"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Distinct   *bool           `json:"distinct,omitempty"`
+	Expression Expression      `json:"expression"`
 }
 
 // AggregateClauseELM is the ELM aggregate clause inside a query.
@@ -915,9 +1234,10 @@ type SortClauseELM struct {
 type QueryNode struct {
 	LocalID      string                   `json:"localId,omitempty"`
 	Locator      string                   `json:"locator,omitempty"`
+	Annotation   json.RawMessage          `json:"annotation,omitempty"`
 	Source       []*AliasedQuerySourceELM `json:"source"`
-	Let          []*LetClauseELM          `json:"let,omitempty"`
-	Relationship []*RelationshipClauseELM `json:"relationship,omitempty"`
+	Let          []*LetClauseELM          `json:"let"`
+	Relationship []*RelationshipClauseELM `json:"relationship"`
 	Where        Expression               `json:"where,omitempty"`
 	Return       *ReturnClauseELM         `json:"return,omitempty"`
 	Aggregate    *AggregateClauseELM      `json:"aggregate,omitempty"`
@@ -930,15 +1250,33 @@ func (n *QueryNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("Query", (*alias)(n))
 }
 
+// MinMaxValueNode: MinValue<T> or MaxValue<T> — the extent of a type.
+// These are OperatorExpression subclasses in ELM — they carry annotation and signature.
+type MinMaxValueNode struct {
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Signature  json.RawMessage `json:"signature,omitempty"`
+	Operator   string          `json:"-"` // "MinValue" or "MaxValue"
+	ValueType  string          `json:"valueType,omitempty"`
+}
+
+func (*MinMaxValueNode) isExpression() {}
+func (n *MinMaxValueNode) MarshalJSON() ([]byte, error) {
+	type alias MinMaxValueNode
+	return marshalWithType(n.Operator, (*alias)(n))
+}
+
 // -----------------------------------------------------------------------
 // Annotation types
 // -----------------------------------------------------------------------
 
 // CqlToElmInfo is the standard translator annotation injected into the Library.
 type CqlToElmInfo struct {
-	TranslatorOptions string `json:"translatorOptions"` // always emit even if empty
-	TranslatorVersion string `json:"translatorVersion,omitempty"`
-	SignatureLevel    string `json:"signatureLevel,omitempty"`
+	TranslatorOptions  string `json:"translatorOptions"` // always emit even if empty
+	TranslatorVersion  string `json:"translatorVersion,omitempty"`
+	SignatureLevel     string `json:"signatureLevel,omitempty"`
+	CompatibilityLevel string `json:"compatibilityLevel,omitempty"`
 }
 
 func (c *CqlToElmInfo) MarshalJSON() ([]byte, error) {

@@ -11,10 +11,11 @@ import (
 // astBuilder converts the ANTLR parse tree into an echo-elm AST.
 type astBuilder struct {
 	sourceName string
+	stream     *antlr.CommonTokenStream
 }
 
-func newASTBuilder(sourceName string) *astBuilder {
-	return &astBuilder{sourceName: sourceName}
+func newASTBuilder(sourceName string, stream *antlr.CommonTokenStream) *astBuilder {
+	return &astBuilder{sourceName: sourceName, stream: stream}
 }
 
 // unquoteString removes surrounding single-quotes and unescapes \' sequences.
@@ -29,7 +30,9 @@ func unquoteString(s string) string {
 func unquoteIdentifier(s string) string {
 	if len(s) >= 2 {
 		if (s[0] == '"' && s[len(s)-1] == '"') || (s[0] == '`' && s[len(s)-1] == '`') {
-			return s[1 : len(s)-1]
+			inner := s[1 : len(s)-1]
+			// Unescape \" → " inside quoted identifiers (CQL spec allows escaped quotes)
+			return strings.ReplaceAll(inner, `\"`, `"`)
 		}
 	}
 	return s
@@ -79,15 +82,23 @@ func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 	}
 
 	// Statement-level definitions (context, define, define function)
+	var currentContext string // tracks the most recently declared context name
 	for _, stmt := range lc.AllStatement() {
 		sc := stmt.(*cqlparser.StatementContext)
 		switch {
 		case sc.ContextDefinition() != nil:
-			lib.Context = b.buildContext(sc.ContextDefinition())
+			ctx := b.buildContext(sc.ContextDefinition())
+			lib.Context = ctx                                     // last (backward compat)
+			lib.Contexts = append(lib.Contexts, ctx)             // all contexts
+			currentContext = ctx.Name
 		case sc.ExpressionDefinition() != nil:
-			lib.Statements = append(lib.Statements, b.buildExpressionDef(sc.ExpressionDefinition()))
+			def := b.buildExpressionDef(sc.ExpressionDefinition())
+			def.Context = currentContext
+			lib.Statements = append(lib.Statements, def)
 		case sc.FunctionDefinition() != nil:
-			lib.Statements = append(lib.Statements, b.buildFunctionDef(sc.FunctionDefinition()))
+			def := b.buildFunctionDef(sc.FunctionDefinition())
+			def.Context = currentContext
+			lib.Statements = append(lib.Statements, def)
 		}
 	}
 
@@ -211,9 +222,15 @@ func (b *astBuilder) buildCode(ctx cqlparser.ICodeDefinitionContext) *ast.CodeDe
 	if csid := cdc.CodesystemIdentifier(); csid != nil {
 		csic := csid.(*cqlparser.CodesystemIdentifierContext)
 		if libid := csic.LibraryIdentifier(); libid != nil {
-			cd.SystemName = libid.GetText() + "." + csic.Identifier().GetText()
+			cd.SystemName = unquoteIdentifier(libid.GetText()) + "." + unquoteIdentifier(csic.Identifier().GetText())
 		} else {
-			cd.SystemName = csic.Identifier().GetText()
+			cd.SystemName = unquoteIdentifier(csic.Identifier().GetText())
+		}
+	}
+	if disp := cdc.DisplayClause(); disp != nil {
+		dc := disp.(*cqlparser.DisplayClauseContext)
+		if s := dc.STRING(); s != nil {
+			cd.Display = unquoteString(s.GetText())
 		}
 	}
 	return cd
@@ -255,6 +272,9 @@ func (b *astBuilder) buildParameter(ctx cqlparser.IParameterDefinitionContext) *
 		spec := b.buildTypeSpecifier(ts)
 		pd.ParameterType = &spec
 	}
+	if defaultExpr := pdc.Expression(); defaultExpr != nil {
+		pd.Default = b.buildExpr(defaultExpr)
+	}
 	return pd
 }
 
@@ -277,6 +297,132 @@ func (b *astBuilder) buildContext(ctx cqlparser.IContextDefinitionContext) *ast.
 // Statements
 // -----------------------------------------------------------------------
 
+// extractAnnotations extracts structured @tag annotations from block comments
+// immediately preceding the token at tokenIndex (using the hidden channel).
+func (b *astBuilder) extractAnnotations(tokenIndex int) []ast.CQLAnnotation {
+	if b.stream == nil {
+		return nil
+	}
+	hidden := b.stream.GetHiddenTokensToLeft(tokenIndex, antlr.TokenHiddenChannel)
+	if len(hidden) == 0 {
+		return nil
+	}
+	var result []ast.CQLAnnotation
+	for _, tok := range hidden {
+		text := tok.GetText()
+		if !strings.HasPrefix(text, "/*") {
+			continue
+		}
+		// Strip /* prefix and */ suffix, preserving internal content (including # markers).
+		inner := text[2:] // strip /*
+		if idx := strings.LastIndex(inner, "*/"); idx >= 0 {
+			inner = inner[:idx]
+		}
+		if !strings.Contains(inner, "@") {
+			continue
+		}
+		tags := parseBlockCommentTags(inner)
+		if len(tags) > 0 {
+			result = append(result, ast.CQLAnnotation{Tags: tags})
+		}
+	}
+	return result
+}
+
+// parseBlockCommentTags parses CQL @tag: value annotations from the raw interior
+// (already stripped of /* and */) of a CQL block comment.
+// Tags may have single-line values (`@tag: value`) or multi-line values enclosed
+// in `#...#` markers (`@tag: #multi\nline#`). The # markers are preserved verbatim
+// in the emitted value to match CQF 4.8.0 behavior.
+func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
+	var tags []ast.CQLAnnotationTag
+	var currentName string
+	var currentValue strings.Builder
+	inHash := false
+	inTag := false
+
+	lines := strings.Split(inner, "\n")
+	for _, line := range lines {
+		// Detect start of a new @tag on this line.
+		trimmed := strings.TrimSpace(line)
+		atIdx := strings.Index(trimmed, "@")
+		if !inHash && atIdx >= 0 && (atIdx == 0 || isOnlyWhitespace(trimmed[:atIdx])) {
+			// Flush previous tag.
+			if inTag {
+				tags = append(tags, ast.CQLAnnotationTag{
+					Name:  currentName,
+					Value: strings.TrimRight(currentValue.String(), " \t"),
+				})
+				currentValue.Reset()
+			}
+			// Parse "@name: value" or "@name value".
+			rest := trimmed[atIdx+1:]
+			colonIdx := strings.Index(rest, ":")
+			spaceIdx := strings.IndexByte(rest, ' ')
+			var nameEnd int
+			var afterTag string
+			if colonIdx >= 0 && (spaceIdx < 0 || colonIdx <= spaceIdx) {
+				nameEnd = colonIdx
+				afterTag = strings.TrimLeft(rest[colonIdx+1:], " \t")
+			} else if spaceIdx >= 0 {
+				nameEnd = spaceIdx
+				afterTag = strings.TrimLeft(rest[spaceIdx+1:], " \t")
+			} else {
+				nameEnd = len(rest)
+				afterTag = ""
+			}
+			currentName = strings.TrimSpace(rest[:nameEnd])
+			inTag = true
+			// Check whether the value starts with # (multi-line hash-delimited).
+			if strings.HasPrefix(afterTag, "#") && !strings.HasSuffix(afterTag, "#") {
+				// Multi-line hash value: value starts with # and end # is on a later line.
+				inHash = true
+				currentValue.WriteString(afterTag)
+			} else {
+				inHash = false
+				currentValue.WriteString(afterTag)
+			}
+			continue
+		}
+
+		if !inTag {
+			continue
+		}
+
+		// Continuation lines.
+		if inHash {
+			// Append raw line (with leading/trailing space preserved, matching CQF output).
+			currentValue.WriteByte('\n')
+			// Check if this line ends the hash block.
+			if strings.HasSuffix(trimmed, "#") {
+				currentValue.WriteString(trimmed)
+				inHash = false
+			} else {
+				currentValue.WriteString(line)
+			}
+		}
+		// Single-line tags don't have continuation lines.
+	}
+	// Flush last tag.
+	if inTag {
+		tags = append(tags, ast.CQLAnnotationTag{
+			Name:  currentName,
+			Value: strings.TrimRight(currentValue.String(), " \t"),
+		})
+	}
+	return tags
+}
+
+// isOnlyWhitespace returns true if all runes in s are whitespace.
+func isOnlyWhitespace(s string) bool {
+	for _, r := range s {
+		if r != ' ' && r != '\t' && r != '\r' && r != '\n' {
+			return false
+		}
+	}
+	return true
+}
+
 func (b *astBuilder) buildExpressionDef(ctx cqlparser.IExpressionDefinitionContext) *ast.ExpressionDefinition {
 	edc := ctx.(*cqlparser.ExpressionDefinitionContext)
 	ed := &ast.ExpressionDefinition{}
@@ -288,6 +434,10 @@ func (b *astBuilder) buildExpressionDef(ctx cqlparser.IExpressionDefinitionConte
 	}
 	if expr := edc.Expression(); expr != nil {
 		ed.Expression = b.buildExpr(expr)
+	}
+	startTok := edc.GetStart()
+	if startTok != nil {
+		ed.Annotations = b.extractAnnotations(startTok.GetTokenIndex())
 	}
 	return ed
 }
@@ -324,6 +474,10 @@ func (b *astBuilder) buildFunctionDef(ctx cqlparser.IFunctionDefinitionContext) 
 		if expr := fb.(*cqlparser.FunctionBodyContext).Expression(); expr != nil {
 			ed.Expression = b.buildExpr(expr)
 		}
+	}
+	startTok := fdc.GetStart()
+	if startTok != nil {
+		ed.Annotations = b.extractAnnotations(startTok.GetTokenIndex())
 	}
 	return ed
 }

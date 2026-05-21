@@ -3,14 +3,14 @@ fixtures:
     description: Library header only
     options: {}
     expectedStatus: success
-    tags: [smoke]
+    tags: [smoke, cqf-corpus]
 
   - path: smoke/IncludeTest.cql
     description: FHIR model + include + Patient context + define
     options:
       format: JSON
     expectedStatus: success
-    tags: [smoke]
+    tags: [smoke, cqf-corpus]
 
   # ── CQFramework cql-to-elm test corpus (verbatim imports) ─────────────────
 
@@ -28,9 +28,11 @@ fixtures:
 
   - path: cqf-tests/QuantityLiteralTest.cql
     description: Quantity literals, invalid units, and conversions
+    # CQF rejects 'shab-shab-shab' as an invalid UCUM unit at compile time.
+    # No JSON output is produced. Echo-elm should also reject it.
     options: {}
-    expectedStatus: success
-    tags: [smoke, cqf-corpus, quantity]
+    expectedStatus: failure
+    tags: [cqf-corpus, quantity]
 
   - path: cqf-tests/RatioLiteralTest.cql
     description: Ratio literal expressions
@@ -52,12 +54,74 @@ fixtures:
 
   - path: cqf-tests/TenDividedByTwo.cql
     description: Integer division and implicit decimal promotion
+    # Requires TranslationTestsCommon library not in corpus. CQF fails.
     options: {}
-    expectedStatus: success
+    expectedStatus: failure
     tags: [cqf-corpus, arithmetic]
 
   - path: cqf-tests/TupleDifferentKeys.cql
     description: Tuple equality with different key sets
+    # Requires TranslationTestsCommon library not in corpus. CQF fails.
+    options: {}
+    expectedStatus: failure
+    tags: [cqf-corpus, tuples]
+
+  - path: cqf-tests/TestComments.cql
+    description: Library with inline comments, FHIR model, queries, and function definition
     options: {}
     expectedStatus: success
-    tags: [cqf-corpus, tuples]
+    tags: [cqf-corpus, comments, fhir]
+
+  - path: cqf-tests/TestPatientContext.cql
+    description: Multiple context declarations with QDM model
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, context, qdm]
+
+  - path: cqf-tests/TranslationTests.cql
+    description: Comprehensive translation tests using QUICK model
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, translation]
+
+  - path: cqf-tests/ArithmeticOpsTest.cql
+    description: Arithmetic operators, aggregates, and math functions
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, arithmetic]
+
+  - path: cqf-tests/StringFunctionsTest.cql
+    description: String functions (Length, Upper, Lower, Substring, etc.)
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, string]
+
+  - path: cqf-tests/ConditionalExpressionsTest.cql
+    description: If/then/else, case/when, null handling
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, conditional]
+
+  - path: cqf-tests/IntervalOpsTest.cql
+    description: Interval operators, timing, union/intersect/except
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, interval]
+
+  - path: cqf-tests/ConversionFunctionsTest.cql
+    description: Conversion functions and type cast/is/as expressions
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, conversion]
+
+  - path: cqf-tests/ListOperationsTest.cql
+    description: List operators, aggregates, sort, set operations
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, list]
+
+  - path: cqf-tests/QueryExpressionsTest.cql
+    description: Query expressions, from/where/return/sort/let/with
+    options: {}
+    expectedStatus: success
+    tags: [cqf-corpus, query]

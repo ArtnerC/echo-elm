@@ -93,7 +93,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 			Diagnostics: toDiagOuts(result.Diagnostics),
 			HasErrors:   hasErrors(result.Diagnostics),
 		}
-		if result.Library != nil && result.Library.Identifier != nil {
+		if result.Library != nil && result.Library.Identifier.ID != "" {
 			out.ParsedName = result.Library.Identifier.ID
 		}
 		if in.Format == "xml" || in.Format == "both" {
@@ -138,7 +138,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 			Diagnostics: toDiagOuts(result.Diagnostics),
 			HasErrors:   hasErrors(result.Diagnostics),
 		}
-		if result.Library != nil && result.Library.Identifier != nil {
+		if result.Library != nil && result.Library.Identifier.ID != "" {
 			out.ParsedName = result.Library.Identifier.ID
 		}
 		if in.Format == "xml" || in.Format == "both" {

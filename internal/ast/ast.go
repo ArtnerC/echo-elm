@@ -70,7 +70,8 @@ type Library struct {
 	Concepts    []*ConceptDefinition
 	Parameters  []*ParameterDefinition
 	Statements  []*ExpressionDefinition
-	Context     *ContextDefinition
+	Context     *ContextDefinition   // last declared context (backward compat)
+	Contexts    []*ContextDefinition // all declared contexts in declaration order
 }
 
 // VersionedIdentifier holds a qualified name and optional version string.
@@ -153,6 +154,18 @@ type ContextDefinition struct {
 	Name string
 }
 
+// CQLAnnotationTag is a @name: value tag parsed from a CQL block comment.
+type CQLAnnotationTag struct {
+	Name  string
+	Value string
+}
+
+// CQLAnnotation is a structured annotation parsed from a CQL block comment
+// containing @tag: value pairs. Maps to ELM {"t": [...], "type": "Annotation"}.
+type CQLAnnotation struct {
+	Tags []CQLAnnotationTag
+}
+
 // ExpressionDefinition: define "Name": <expr>  or  define function ...
 type ExpressionDefinition struct {
 	baseNode
@@ -163,6 +176,8 @@ type ExpressionDefinition struct {
 	Operands    []*OperandDef // non-nil when IsFunction=true
 	ReturnType  *TypeSpecifier
 	IsFluent    bool
+	Context     string          // active context name at declaration time (empty = Unfiltered)
+	Annotations []CQLAnnotation // parsed @tag: value annotations from preceding block comments
 }
 
 // OperandDef is a function parameter.
@@ -702,10 +717,12 @@ type QueryRelationship struct {
 	SuchThat Expr
 }
 
-// ReturnClause: return distinct? expr
+// ReturnClause: return (distinct|all)? expr
+// Distinct is nil for plain 'return' (default distinct), true for 'return distinct',
+// false for 'return all'. Only 'return all' maps to ELM distinct:false.
 type ReturnClause struct {
 	baseNode
-	Distinct   bool
+	Distinct   *bool
 	Expression Expr
 }
 

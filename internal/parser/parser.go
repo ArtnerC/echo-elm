@@ -80,6 +80,7 @@ func parseInput(input antlr.CharStream, sourceName string) (*Result, error) {
 	lexer.AddErrorListener(errListener)
 
 	stream := antlr.NewCommonTokenStream(lexer, antlr.TokenDefaultChannel)
+	stream.Fill() // populate all channels including hidden (for comment extraction)
 
 	p := cqlparser.NewcqlParser(stream)
 	p.RemoveErrorListeners()
@@ -109,7 +110,7 @@ func parseInput(input antlr.CharStream, sourceName string) (*Result, error) {
 	}
 
 	// Build AST from parse tree
-	builder := newASTBuilder(sourceName)
+	builder := newASTBuilder(sourceName, stream)
 	result.Library = builder.buildLibrary(tree)
 	result.Diagnostics = append(result.Diagnostics, errListener.diagnostics...)
 

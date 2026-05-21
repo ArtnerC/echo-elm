@@ -9,6 +9,9 @@ import (
 	"runtime"
 	"strings"
 	"time"
+
+	"github.com/artnerc/echo-elm/internal/resolver"
+	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
 // Status classifies the outcome of a single fixture run.
@@ -57,6 +60,28 @@ func DefaultConfig(version string) Config {
 	}
 }
 
+// CQFTranslateFunc returns a translateFn that runs echo-elm in CQF-compatible mode
+// (CQFMode=true, SignatureLevel=None, no annotations, no locators) using a
+// DirSource rooted at the input file's directory for library resolution.
+// This matches the options used by the upstream cqframework CLI.
+func CQFTranslateFunc() func(cqlPath string) ([]byte, error) {
+	return func(cqlPath string) ([]byte, error) {
+		src, err := os.ReadFile(cqlPath)
+		if err != nil {
+			return nil, fmt.Errorf("read %s: %w", cqlPath, err)
+		}
+		libSrc := resolver.NewDirSource(filepath.Dir(cqlPath))
+		result, err := echoelm.Translate(src, filepath.Base(cqlPath),
+			echoelm.WithCQFOptions(),
+			echoelm.WithLibrarySource(libSrc),
+		)
+		if err != nil {
+			return nil, err
+		}
+		return json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "  ")
+	}
+}
+
 // Run executes all (or filtered) fixtures in the corpus and returns results.
 func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]FixtureResult, error) {
 	corpus, err := LoadCorpus(cfg.CorpusDir)
@@ -90,6 +115,13 @@ func runFixture(fix Fixture, corpusRoot, launcher string, translateFn func(strin
 	upJSON, upStderr, err := runUpstream(launcher, cqlPath)
 	r.UpstreamStderr = upStderr
 	if err != nil {
+		// If the corpus marks this fixture as expected-failure, treat it as skipped.
+		if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
+			r.Status = StatusSkipped
+			r.Error = fmt.Sprintf("upstream (expected): %v", err)
+			r.Duration = time.Since(start)
+			return r
+		}
 		r.Status = StatusUpstreamError
 		r.Error = fmt.Sprintf("upstream: %v", err)
 		r.Duration = time.Since(start)
@@ -177,12 +209,25 @@ func normalizeJSON(s string) string {
 func stripVolatileFields(m map[string]interface{}) {
 	if lib, ok := m["library"].(map[string]interface{}); ok {
 		if anns, ok := lib["annotation"].([]interface{}); ok {
+			// Filter to keep only CqlToElmInfo entries (strip diagnostic/warning annotations).
+			var kept []interface{}
 			for _, a := range anns {
 				if ann, ok := a.(map[string]interface{}); ok {
+					// Strip version-specific and implementation-specific fields from CqlToElmInfo.
 					delete(ann, "translatorVersion")
 					delete(ann, "translatorOptions")
+					delete(ann, "signatureLevel")
+					delete(ann, "compatibilityLevel")
+					// Drop diagnostic entries (CqlToElmError) — these are compiler
+					// warnings/errors that vary by resolver depth (e.g. FHIRHelpers
+					// overload warnings). Keep only structural annotations.
+					if t, _ := ann["type"].(string); t == "CqlToElmError" {
+						continue
+					}
 				}
+				kept = append(kept, a)
 			}
+			lib["annotation"] = kept
 		}
 	}
 }

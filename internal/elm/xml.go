@@ -66,7 +66,7 @@ func writeLibraryXML(enc *xml.Encoder, lib *Library) error {
 	}
 
 	// identifier
-	if lib.Identifier != nil {
+	if lib.Identifier.ID != "" || lib.Identifier.Version != "" {
 		id := xml.StartElement{Name: xml.Name{Local: "identifier"}, Attr: []xml.Attr{
 			{Name: xml.Name{Local: "id"}, Value: lib.Identifier.ID},
 		}}
@@ -460,8 +460,8 @@ func writeTypeSpecifierXML(enc *xml.Encoder, elementName string, ts TypeSpecifie
 			if err := enc.EncodeToken(elemEl); err != nil {
 				return err
 			}
-			if elem.Type != nil {
-				if err := writeTypeSpecifierXML(enc, "elementType", elem.Type); err != nil {
+			if elem.ElementType != nil {
+				if err := writeTypeSpecifierXML(enc, "elementType", elem.ElementType); err != nil {
 					return err
 				}
 			}

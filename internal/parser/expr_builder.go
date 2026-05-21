@@ -715,9 +715,9 @@ func (b *astBuilder) buildRetrieve(ctx cqlparser.IRetrieveContext) ast.Expr {
 	if nts := rc.NamedTypeSpecifier(); nts != nil {
 		ntsc := nts.(*cqlparser.NamedTypeSpecifierContext)
 		qualifiers := ntsc.AllQualifier()
-		typeName := ntsc.ReferentialOrTypeNameIdentifier().GetText()
+		typeName := unquoteIdentifier(ntsc.ReferentialOrTypeNameIdentifier().GetText())
 		if len(qualifiers) > 0 {
-			re.DataType = qualifiers[0].GetText() + "." + typeName
+			re.DataType = unquoteIdentifier(qualifiers[0].GetText()) + "." + typeName
 		} else {
 			re.DataType = typeName
 		}
@@ -795,8 +795,17 @@ func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
 	if rc := qc.ReturnClause(); rc != nil {
 		rcc := rc.(*cqlparser.ReturnClauseContext)
 		text := strings.ToLower(rcc.GetText())
+		var distinct *bool
+		if strings.Contains(text, "returndistinct") {
+			t := true
+			distinct = &t
+		} else if strings.Contains(text, "returnall") {
+			f := false
+			distinct = &f
+		}
+		// plain 'return' → distinct stays nil (default distinct, no ELM field emitted)
 		q.Return = &ast.ReturnClause{
-			Distinct:   strings.Contains(text, "distinct"),
+			Distinct:   distinct,
 			Expression: b.buildExpr(rcc.Expression()),
 		}
 	}
@@ -1015,9 +1024,9 @@ func (b *astBuilder) timingOp(ctx cqlparser.IIntervalOperatorPhraseContext) (op,
 			prec = b.singularizePrecision(strings.TrimSuffix(dp.GetText(), "of"))
 		}
 		if properly {
-			return "ProperIn", prec
+			return "ProperIncludedIn", prec
 		}
-		return "In", prec
+		return "IncludedIn", prec
 
 	case *cqlparser.MeetsIntervalOperatorPhraseContext:
 		prec := ""

@@ -2,14 +2,12 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 
 	"github.com/artnerc/echo-elm/internal/parity"
-	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
 func main() {
@@ -27,13 +25,15 @@ func main() {
 	}
 	fmt.Println()
 
+	translateFn := parity.CQFTranslateFunc()
+
 	for _, version := range []string{"3.29.0", "4.8.0"} {
 		fmt.Printf("── Parity vs cqframework %s ──\n\n", version)
 
 		cfg := parity.DefaultConfig(version)
 		cfg.TagFilter = "smoke"
 
-		results, err := parity.Run(cfg, echoTranslate)
+		results, err := parity.Run(cfg, translateFn)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)
 			os.Exit(1)
@@ -66,29 +66,6 @@ func main() {
 	}
 
 	fmt.Println("Parity demo complete ✓")
-	fmt.Println()
-	fmt.Println("  Known parity gaps (planned for Phase 5/6):")
-	fmt.Println("  • signatureLevel: echo-elm defaults to 'Overloads'; cqf CLI defaults to 'None'")
-	fmt.Println("    (use echo-elm cqf translate for cqf-compatible output)")
-	fmt.Println("  • Empty annotation arrays on defs (cqf adds annotation:[] on every node)")
-	fmt.Println("  • contexts section: Library.contexts not yet emitted")
-	fmt.Println("  • Implicit Patient accessor statement not yet generated")
-}
-
-// echoTranslate runs echo-elm on a CQL file and returns the JSON ELM.
-func echoTranslate(cqlPath string) ([]byte, error) {
-	data, err := os.ReadFile(cqlPath)
-	if err != nil {
-		return nil, fmt.Errorf("read %s: %w", cqlPath, err)
-	}
-
-	sourceName := filepath.Base(cqlPath)
-	result, err := echoelm.Translate(data, sourceName, echoelm.WithAnnotations(true))
-	if err != nil {
-		return nil, err
-	}
-
-	return json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "   ")
 }
 
 func launcherPath(version string) string {

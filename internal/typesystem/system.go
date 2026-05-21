@@ -34,6 +34,7 @@ var ModelURIByName = map[string]string{
 	"QDM":    "urn:healthit-gov:qdm:v5_6",
 	"QICore": "http://hl7.org/fhir/us/qicore",
 	"USCore": "http://hl7.org/fhir/us/core",
+	"QUICK":  "http://hl7.org/fhir",
 }
 
 // InferLiteralType returns the ELM type name for a literal given its kind.
