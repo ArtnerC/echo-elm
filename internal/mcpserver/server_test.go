@@ -322,3 +322,72 @@ func TestMCPTranslateCQLWithOptions(t *testing.T) {
 		t.Error("expected non-empty elmXml")
 	}
 }
+
+// TestMCPCompareWithCQF tests the compare_with_cqf tool.
+// No external CQF is required — the fallback (echo-elm CQF-mode) is used.
+func TestMCPCompareWithCQF(t *testing.T) {
+	ws := fixtureWorkspace(t)
+	session := newMCPClient(t, ws)
+
+	result := callTool(t, session, "compare_with_cqf", map[string]any{
+		"content": "library CompareTest version '1.0.0'",
+	})
+	if result.IsError {
+		t.Fatalf("tool returned error: %+v", result.Content)
+	}
+	var out struct {
+		Status      string `json:"status"`
+		EchoElmJSON string `json:"echoElmJson"`
+		CqfMode     string `json:"cqfMode"`
+		Shareable   string `json:"shareable"`
+	}
+	decodeText(t, result, &out)
+	if out.Status == "echo-error" || out.Status == "cqf-error" {
+		t.Errorf("unexpected error status %q", out.Status)
+	}
+	if out.EchoElmJSON == "" {
+		t.Error("expected non-empty echoElmJson")
+	}
+	if out.Shareable == "" {
+		t.Error("expected non-empty shareable block")
+	}
+	if out.CqfMode != "echo-elm-cqf-mode" {
+		t.Errorf("expected cqfMode=echo-elm-cqf-mode, got %q", out.CqfMode)
+	}
+}
+
+// TestMCPCompareWithCQFPreSupplied tests the cqfElm pre-supplied path.
+func TestMCPCompareWithCQFPreSupplied(t *testing.T) {
+	ws := fixtureWorkspace(t)
+	session := newMCPClient(t, ws)
+
+	// Get ELM from translate to use as the "CQF side".
+	r1 := callTool(t, session, "translate_cql", map[string]any{
+		"content": "library PreSupplied version '1.0.0'",
+		"format":  "json",
+	})
+	if r1.IsError {
+		t.Fatalf("translate failed: %+v", r1.Content)
+	}
+	var tr struct{ ElmJSON string `json:"elmJson"` }
+	decodeText(t, r1, &tr)
+
+	r2 := callTool(t, session, "compare_with_cqf", map[string]any{
+		"content": "library PreSupplied version '1.0.0'",
+		"cqfElm":  tr.ElmJSON,
+	})
+	if r2.IsError {
+		t.Fatalf("compare failed: %+v", r2.Content)
+	}
+	var out struct {
+		Status  string `json:"status"`
+		CqfMode string `json:"cqfMode"`
+	}
+	decodeText(t, r2, &out)
+	if out.CqfMode != "pre-supplied" {
+		t.Errorf("expected cqfMode=pre-supplied, got %q", out.CqfMode)
+	}
+	if out.Status == "echo-error" || out.Status == "cqf-error" {
+		t.Errorf("unexpected error status %q", out.Status)
+	}
+}

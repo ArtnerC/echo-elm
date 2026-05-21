@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -19,6 +20,7 @@ import (
 
 	intelm "github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/parser"
+	"github.com/artnerc/echo-elm/internal/parity"
 	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -319,11 +321,198 @@ func registerTools(srv *mcp.Server, opts Options) {
 		hdr := parseLibraryHeader(src, in.Path)
 		return toolResult(readLibOut{libraryHeader: hdr, Content: string(src)})
 	})
+	// compare_with_cqf — translate CQL with echo-elm and compare against CQF output
+	type compareIn struct {
+		// CQL source — provide exactly one of content or path.
+		Content string `json:"content,omitempty"`
+		Path    string `json:"path,omitempty"`
+		// CQF side — provide one of: cqfJar, cqfScript, cqfElm, or none (fallback to CQF-mode echo-elm).
+		CqfJar    string `json:"cqfJar,omitempty"`    // absolute path to cql-to-elm.jar (java must be on PATH)
+		CqfScript string `json:"cqfScript,omitempty"` // absolute path to run.bat / run.sh wrapper
+		CqfElm    string `json:"cqfElm,omitempty"`    // pre-computed ELM JSON from CQF (paste-in)
+		// Translator options for the echo-elm side.
+		Options translatorOptions `json:"options,omitempty"`
+	}
+	mcp.AddTool(srv, &mcp.Tool{
+		Name: "compare_with_cqf",
+		Description: "Translate CQL with echo-elm, optionally run against a local cqframework installation, " +
+			"and compare the ELM outputs. " +
+			"Supply cqfJar (path to cql-to-elm.jar, needs java on PATH), " +
+			"cqfScript (path to run.bat/run.sh wrapper), " +
+			"cqfElm (pre-computed ELM JSON you already ran through CQF), " +
+			"or nothing (falls back to echo-elm in CQF-compatibility mode). " +
+			"Returns structured diff and a shareable text block for bug reports.",
+	}, func(ctx context.Context, req *mcp.CallToolRequest, in compareIn) (*mcp.CallToolResult, compareOut, error) {
+		// 1. Resolve CQL source.
+		var src []byte
+		var sourceName = "input.cql"
+		switch {
+		case in.Content != "":
+			src = []byte(in.Content)
+		case in.Path != "":
+			abs, err := resolvePath(opts.Workdir, in.Path)
+			if err != nil {
+				return nil, compareOut{}, err
+			}
+			data, err := os.ReadFile(abs)
+			if err != nil {
+				return nil, compareOut{}, fmt.Errorf("read %s: %w", in.Path, err)
+			}
+			src = data
+			sourceName = filepath.Base(abs)
+		default:
+			return nil, compareOut{}, errors.New("provide content or path")
+		}
+
+		// 2. Run echo-elm.
+		baseOpts := translator.DefaultOptions()
+		applyTranslatorOptions(&baseOpts, in.Options)
+		result, err := echoelm.Translate(src, sourceName,
+			echoelm.WithOptions(baseOpts),
+			echoelm.WithCQFMode(in.Options.CQFMode),
+		)
+		if err != nil {
+			return toolResult(compareOut{
+				Status:    "echo-error",
+				Shareable: fmt.Sprintf("echo-elm translation error: %v", err),
+			})
+		}
+		echoBytes, _ := json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "  ")
+		echoNorm := parity.NormalizeForGolden(string(echoBytes))
+		diags := toDiagOuts(result.Diagnostics)
+
+		// 3. Get CQF-side ELM.
+		var cqfRaw string
+		var cqfMode string
+		switch {
+		case in.CqfElm != "":
+			cqfRaw = in.CqfElm
+			cqfMode = "pre-supplied"
+		case in.CqfJar != "" || in.CqfScript != "":
+			// Write CQL to a temp file so cqframework can read it.
+			tmpDir, err := os.MkdirTemp("", "echo-elm-compare-*")
+			if err != nil {
+				return nil, compareOut{}, fmt.Errorf("tempdir: %w", err)
+			}
+			defer os.RemoveAll(tmpDir)
+			tmpCQL := filepath.Join(tmpDir, sourceName)
+			if err := os.WriteFile(tmpCQL, src, 0o644); err != nil {
+				return nil, compareOut{}, fmt.Errorf("write temp cql: %w", err)
+			}
+			var launcher string
+			if in.CqfJar != "" {
+				launcher = "jar:" + in.CqfJar
+				cqfMode = "jar:" + filepath.Base(in.CqfJar)
+			} else {
+				launcher = in.CqfScript
+				cqfMode = "script:" + filepath.Base(in.CqfScript)
+			}
+			raw, stderr, runErr := runCQF(launcher, tmpCQL)
+			if runErr != nil {
+				out := buildCompareOut("cqf-error", echoNorm, "", cqfMode, diags,
+					fmt.Sprintf("CQF error: %v\nstderr: %s", runErr, stderr), in.Content+in.Path, sourceName)
+				return toolResult(out)
+			}
+			cqfRaw = raw
+		default:
+			// Fallback: translate with echo-elm in CQF-compatibility mode.
+			cqfResult, cqfErr := echoelm.Translate(src, sourceName, echoelm.WithCQFOptions())
+			if cqfErr != nil {
+				return toolResult(compareOut{
+					Status:    "cqf-unavailable",
+					EchoElmJSON: echoNorm,
+					CqfMode:   "cqf-mode-fallback",
+					Diagnostics: diags,
+					Shareable: "No CQF instance available. Provide cqfJar, cqfScript, or cqfElm.",
+				})
+			}
+			cqfBytes, _ := json.MarshalIndent(map[string]interface{}{"library": cqfResult.Library}, "", "  ")
+			cqfRaw = string(cqfBytes)
+			cqfMode = "echo-elm-cqf-mode"
+		}
+
+		cqfNorm := parity.NormalizeForGolden(cqfRaw)
+		var status string
+		var diff string
+		if echoNorm == cqfNorm {
+			status = "match"
+		} else {
+			status = "differ"
+			diff = parity.SimpleDiff(cqfNorm, echoNorm)
+		}
+
+		out := buildCompareOut(status, echoNorm, cqfNorm, cqfMode, diags, diff, string(src), sourceName)
+		return toolResult(out)
+	})
 }
 
-// -----------------------------------------------------------------------
-// Shared helpers
-// -----------------------------------------------------------------------
+// buildCompareOut assembles the compareOut struct including the shareable text block.
+func buildCompareOut(status, echoNorm, cqfNorm, cqfMode string, diags []diagOut, diff, cqlSrc, sourceName string) compareOut {
+	var sb strings.Builder
+	fmt.Fprintf(&sb, "=== echo-elm CQF parity report ===\n")
+	fmt.Fprintf(&sb, "File:   %s\n", sourceName)
+	fmt.Fprintf(&sb, "Status: %s\n", status)
+	fmt.Fprintf(&sb, "CQF:    %s\n", cqfMode)
+	if len(diags) > 0 {
+		fmt.Fprintf(&sb, "\nDiagnostics:\n")
+		for _, d := range diags {
+			fmt.Fprintf(&sb, "  [%s] %s\n", d.Severity, d.Message)
+		}
+	}
+	if diff != "" {
+		fmt.Fprintf(&sb, "\nDiff (- CQF, + echo-elm):\n```diff\n%s```\n", diff)
+	}
+	if cqlSrc != "" && len(cqlSrc) < 4000 {
+		fmt.Fprintf(&sb, "\nCQL source:\n```cql\n%s\n```\n", strings.TrimSpace(cqlSrc))
+	}
+	return compareOut{
+		Status:      status,
+		EchoElmJSON: echoNorm,
+		CqfJSON:     cqfNorm,
+		CqfMode:     cqfMode,
+		Diff:        diff,
+		Diagnostics: diags,
+		Shareable:   sb.String(),
+	}
+}
+
+// runCQF invokes the cqframework tool (JAR or script) on the given .cql file.
+// launcher prefix "jar:<path>" invokes java -jar; otherwise treats it as a script.
+func runCQF(launcher, cqlPath string) (jsonOut, stderr string, err error) {
+	dir := filepath.Dir(cqlPath)
+	base := strings.TrimSuffix(filepath.Base(cqlPath), ".cql")
+	outJSON := filepath.Join(dir, base+".json")
+	os.Remove(outJSON)
+
+	var cmd *exec.Cmd
+	if strings.HasPrefix(launcher, "jar:") {
+		jar := strings.TrimPrefix(launcher, "jar:")
+		cmd = exec.Command("java", "-jar", jar, "--input", cqlPath, "--format", "JSON")
+	} else {
+		if isWindowsPath(launcher) {
+			cmd = exec.Command("cmd", "/C", launcher, "--input", cqlPath, "--format", "JSON")
+		} else {
+			cmd = exec.Command(launcher, "--input", cqlPath, "--format", "JSON")
+		}
+	}
+
+	var stderrBuf strings.Builder
+	cmd.Stderr = &stderrBuf
+	if runErr := cmd.Run(); runErr != nil {
+		return "", stderrBuf.String(), fmt.Errorf("cqf exit: %w", runErr)
+	}
+
+	data, err := os.ReadFile(outJSON)
+	if err != nil {
+		// Some versions write to stdout instead of a file; not currently handled.
+		return "", stderrBuf.String(), fmt.Errorf("read cqf output %s: %w", outJSON, err)
+	}
+	return string(data), stderrBuf.String(), nil
+}
+
+func isWindowsPath(p string) bool {
+	return strings.HasSuffix(strings.ToLower(p), ".bat") || strings.HasSuffix(strings.ToLower(p), ".cmd")
+}
 
 type diagOut struct {
 	Severity string `json:"severity"`
@@ -336,6 +525,17 @@ type libraryHeader struct {
 	Version  string   `json:"version"`
 	Path     string   `json:"path"`
 	Includes []string `json:"includes"`
+}
+
+// compareOut is the structured output of compare_with_cqf.
+type compareOut struct {
+	Status      string    `json:"status"`              // "match"|"differ"|"echo-error"|"cqf-unavailable"|"cqf-error"
+	EchoElmJSON string    `json:"echoElmJson"`         // normalized JSON from echo-elm
+	CqfJSON     string    `json:"cqfJson"`             // normalized JSON from CQF side (empty if unavailable)
+	CqfMode     string    `json:"cqfMode"`             // how CQF side was obtained
+	Diff        string    `json:"diff,omitempty"`
+	Diagnostics []diagOut `json:"diagnostics,omitempty"`
+	Shareable   string    `json:"shareable"`           // compact text block for bug reports
 }
 
 func toDiagOuts(diags []translator.Diagnostic) []diagOut {
