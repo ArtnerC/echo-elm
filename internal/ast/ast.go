@@ -746,6 +746,8 @@ type SortByItem struct {
 	baseNode
 	Expression Expr
 	Direction  SortDirection
+	// DirectionText preserves the original keyword form (asc/ascending/desc/descending).
+	DirectionText string
 }
 
 // SortDirection is asc or desc.

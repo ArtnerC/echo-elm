@@ -898,10 +898,11 @@ func (n *IfNode) MarshalJSON() ([]byte, error) {
 
 // CaseItem is one when-then pair in a CaseNode.
 type CaseItem struct {
-	LocalID string     `json:"localId,omitempty"`
-	Locator string     `json:"locator,omitempty"`
-	When    Expression `json:"when"`
-	Then    Expression `json:"then"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	When       Expression      `json:"when"`
+	Then       Expression      `json:"then"`
 }
 
 // CaseNode: case [comparand] when ... then ... else ... end.
@@ -1182,6 +1183,7 @@ type LetClauseELM struct {
 type RelationshipClauseELM struct {
 	LocalID    string                 `json:"localId,omitempty"`
 	Locator    string                 `json:"locator,omitempty"`
+	Annotation json.RawMessage        `json:"annotation,omitempty"`
 	Kind       string                 `json:"-"` // "With" or "Without"
 	Alias      string                 `json:"alias"`
 	Expression Expression             `json:"expression"`
@@ -1214,20 +1216,29 @@ type AggregateClauseELM struct {
 
 // SortByItemELM is one item in a sort clause.
 type SortByItemELM struct {
-	LocalID    string     `json:"localId,omitempty"`
-	Locator    string     `json:"locator,omitempty"`
-	Direction  string     `json:"direction"`
-	Expression Expression `json:"expression,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Direction  string          `json:"direction"`
+	Path       string          `json:"path,omitempty"`
+	Expression Expression      `json:"expression,omitempty"`
 }
 
 func (s *SortByItemELM) MarshalJSON() ([]byte, error) {
 	type alias SortByItemELM
-	return marshalWithType("ByExpression", (*alias)(s))
+	typeName := "ByExpression"
+	if s.Path != "" && s.Expression == nil {
+		typeName = "ByColumn"
+	} else if s.Expression == nil {
+		typeName = "ByDirection"
+	}
+	return marshalWithType(typeName, (*alias)(s))
 }
 
 // SortClauseELM holds the sort directives for a query.
 type SortClauseELM struct {
-	By []*SortByItemELM `json:"by,omitempty"`
+	Annotation json.RawMessage  `json:"annotation,omitempty"`
+	By         []*SortByItemELM `json:"by,omitempty"`
 }
 
 // QueryNode is the ELM Query expression.

@@ -52,8 +52,21 @@ func (b *astBuilder) buildExpr(ctx cqlparser.IExpressionContext) ast.Expr {
 	case *cqlparser.TypeExpressionContext:
 		operand := b.buildExpr(c.Expression())
 		ts := b.buildTypeSpecifier(c.TypeSpecifier())
-		text := strings.ToLower(c.GetText())
-		if strings.Contains(text, " is ") || strings.HasPrefix(text, "is") {
+		// Determine whether this is "is" or "as" by inspecting the terminal node
+		// children — c.GetText() strips whitespace so " is " substring matching
+		// is unreliable (it would also match e.g. "isInteger" tokens).
+		isExpr := false
+		for _, child := range c.GetChildren() {
+			if tn, ok := child.(antlr.TerminalNode); ok {
+				switch strings.ToLower(tn.GetText()) {
+				case "is":
+					isExpr = true
+				case "as":
+					isExpr = false
+				}
+			}
+		}
+		if isExpr {
 			return &ast.TypeIsExpr{Operand: operand, TypeSpec: ts}
 		}
 		return &ast.TypeAsExpr{Operand: operand, TypeSpec: ts, Strict: false}
@@ -326,17 +339,13 @@ func (b *astBuilder) buildExprTerm(ctx cqlparser.IExpressionTermContext) ast.Exp
 		exprs := c.AllExpression()
 		items := c.AllCaseExpressionItem()
 		ce := &ast.CaseExpr{}
-		// If exprs count > len(items)+1, the first expr is the comparand.
 		// Grammar: 'case' expression? caseItem+ 'else' expression 'end'
-		// exprs[0..n-2] are within case items when-then, exprs[n-1] is else
-		// If no comparand: only case items + else = (2*n + 1) exprs for n items
-		// If comparand: (2*n + 2) exprs
-		numItems := len(items)
-		hasComparand := len(exprs) == 2*numItems+2
-		idx := 0
-		if hasComparand {
-			ce.Comparand = b.buildExpr(exprs[idx])
-			idx++
+		// AllExpression returns only the direct expression children of the
+		// case rule (case items have their own context). So:
+		//   - no comparand: [else]            (len == 1)
+		//   - with comparand: [comparand, else] (len == 2)
+		if len(exprs) >= 2 {
+			ce.Comparand = b.buildExpr(exprs[0])
 		}
 		for _, item := range items {
 			itemExprs := item.(*cqlparser.CaseExpressionItemContext).AllExpression()
@@ -349,7 +358,6 @@ func (b *astBuilder) buildExprTerm(ctx cqlparser.IExpressionTermContext) ast.Exp
 			}
 			ce.Items = append(ce.Items, ci)
 		}
-		// Last expression is the else
 		ce.Else = b.buildExpr(exprs[len(exprs)-1])
 		return ce
 
@@ -865,16 +873,35 @@ func (b *astBuilder) buildSortClause(ctx cqlparser.ISortClauseContext) *ast.Sort
 	}
 	sc := ctx.(*cqlparser.SortClauseContext)
 	sortClause := &ast.SortClause{}
+	// `sort asc` / `sort desc` (direction-only, no by-items): emit a single
+	// item with no expression so the translator can produce ByDirection.
+	if items := sc.AllSortByItem(); len(items) == 0 {
+		if sd := sc.SortDirection(); sd != nil {
+			dir := ast.SortAsc
+			txt := strings.ToLower(sd.GetText())
+			if txt == "desc" || txt == "descending" {
+				dir = ast.SortDesc
+			}
+			sortClause.Items = append(sortClause.Items, &ast.SortByItem{Direction: dir, DirectionText: txt})
+		}
+		return sortClause
+	}
 	for _, item := range sc.AllSortByItem() {
 		sbi := item.(*cqlparser.SortByItemContext)
 		dir := ast.SortAsc
-		if sd := sbi.SortDirection(); sd != nil && strings.ToLower(sd.GetText()) == "desc" {
-			dir = ast.SortDesc
+		dirText := "asc"
+		if sd := sbi.SortDirection(); sd != nil {
+			txt := strings.ToLower(sd.GetText())
+			dirText = txt
+			if txt == "desc" || txt == "descending" {
+				dir = ast.SortDesc
+			}
 		}
 		expr := b.buildExprTerm(sbi.ExpressionTerm())
 		sortClause.Items = append(sortClause.Items, &ast.SortByItem{
-			Expression: expr,
-			Direction:  dir,
+			Expression:    expr,
+			Direction:     dir,
+			DirectionText: dirText,
 		})
 	}
 	return sortClause

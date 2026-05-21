@@ -823,7 +823,7 @@ var unarySystemOps = map[string]bool{
 	// Collection
 	"Exists": true, "SingletonFrom": true,
 	"Distinct": true, "Flatten": true,
-	"First": true, "Last": true, "Tail": true, "Length": true,
+	"Length": true,
 	// String
 	"Upper": true, "Lower": true,
 	// Type conversions
@@ -848,6 +848,7 @@ var aggregateSystemOps = map[string]bool{
 	"StdDev": true, "PopulationStdDev": true,
 	"Variance": true, "PopulationVariance": true,
 	"AllTrue": true, "AnyTrue": true,
+	"First": true, "Last": true,
 }
 
 // decimalAggregateOps are aggregate functions that CQF always wraps their argument
@@ -865,9 +866,7 @@ var namedOperatorOps = map[string][]string{
 	"Split":          {"stringToSplit", "separator"},
 	"PositionOf":     {"pattern", "string"},
 	"LastPositionOf": {"pattern", "string"},
-	"ReplaceMatches": {"operand", "pattern", "substitution"},
 	"Round":          {"operand", "precision"},
-	"Log":            {"operand", "base"},
 	"IndexOf":        {"source", "element"},
 }
 
@@ -875,7 +874,31 @@ var namedOperatorOps = map[string][]string{
 // as a generic operator expression (no named fields).
 var binaryOperandOps = map[string]bool{
 	"StartsWith": true, "EndsWith": true, "Matches": true,
-	"Power": true, "Skip": true, "Take": true,
+	"Power": true, "Log": true,
+	"Contains": true,
+}
+
+// naryOperandOps are CQL built-in operators emitted as "operand": [a, b, ...]
+// for any arity.
+var naryOperandOps = map[string]bool{
+	"ReplaceMatches": true,
+}
+
+// convertToOps maps a System named type to the ELM unary operator emitted by
+// CQF for `convert x to <Type>` syntax. Built-in types are normalized to their
+// operator-specific form instead of a generic Convert node.
+var convertToOps = map[string]string{
+	"Boolean":  "ToBoolean",
+	"Integer":  "ToInteger",
+	"Long":     "ToLong",
+	"Decimal":  "ToDecimal",
+	"String":   "ToString",
+	"Date":     "ToDate",
+	"DateTime": "ToDateTime",
+	"Time":     "ToTime",
+	"Quantity": "ToQuantity",
+	"Ratio":    "ToRatio",
+	"Concept":  "ToConcept",
 }
 
 // intLiteral builds an Integer literal ELM node from an int value.
@@ -1276,10 +1299,58 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 					Operand:    t.translateExpr(v.Operands[0]),
 				}
 			}
+			// Tail(list) → Slice(source: list, startIndex: 1, endIndex: Null)
+			if v.Name == "Tail" && len(v.Operands) == 1 {
+				return &elm.NamedOperatorExpressionNode{
+					Annotation: ann,
+					Signature:  sig,
+					Operator:   "Slice",
+					Operands: []elm.NamedOperand{
+						{Name: "source", Value: t.translateExpr(v.Operands[0])},
+						{Name: "startIndex", Value: t.intLiteral(1)},
+						{Name: "endIndex", Value: &elm.NullNode{Annotation: t.cqfAnnotation()}},
+					},
+				}
+			}
+			// Skip(list, n) → Slice(source: list, startIndex: n, endIndex: Null)
+			if v.Name == "Skip" && len(v.Operands) == 2 {
+				return &elm.NamedOperatorExpressionNode{
+					Annotation: ann,
+					Signature:  sig,
+					Operator:   "Slice",
+					Operands: []elm.NamedOperand{
+						{Name: "source", Value: t.translateExpr(v.Operands[0])},
+						{Name: "startIndex", Value: t.translateExpr(v.Operands[1])},
+						{Name: "endIndex", Value: &elm.NullNode{Annotation: t.cqfAnnotation()}},
+					},
+				}
+			}
+			// Take(list, n) → Slice(source: list, startIndex: 0, endIndex: Coalesce(n, 0))
+			if v.Name == "Take" && len(v.Operands) == 2 {
+				coalesce := &elm.OperatorExpressionNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  t.cqfEmptyArrayField(),
+					Operator:   "Coalesce",
+					Operand: []elm.Expression{
+						t.translateExpr(v.Operands[1]),
+						t.intLiteral(0),
+					},
+				}
+				return &elm.NamedOperatorExpressionNode{
+					Annotation: ann,
+					Signature:  sig,
+					Operator:   "Slice",
+					Operands: []elm.NamedOperand{
+						{Name: "source", Value: t.translateExpr(v.Operands[0])},
+						{Name: "startIndex", Value: t.intLiteral(0)},
+						{Name: "endIndex", Value: coalesce},
+					},
+				}
+			}
 			// Map aggregate system operators to AggregateExpressionNode (uses "source" field).
 			if aggregateSystemOps[v.Name] && len(v.Operands) == 1 {
 				src := t.translateExpr(v.Operands[0])
-				if decimalAggregateOps[v.Name] {
+				if decimalAggregateOps[v.Name] && !t.isDecimalListExpr(v.Operands[0]) {
 					src = t.wrapInDecimalQuery(src)
 				}
 				return &elm.AggregateExpressionNode{
@@ -1293,9 +1364,33 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			if slots, ok := namedOperatorOps[v.Name]; ok && len(v.Operands) > 0 && len(v.Operands) <= len(slots) {
 				operands := make([]elm.NamedOperand, 0, len(v.Operands))
 				for i, o := range v.Operands {
+					val := t.translateExpr(o)
+					// Log requires Decimal operands; CQF promotes integer literals.
+					if v.Name == "Log" {
+						if _, isInt := o.(*ast.IntegerLiteral); isInt {
+							val = &elm.UnaryExpressionNode{
+								Annotation: t.cqfAnnotation(),
+								Signature:  t.cqfEmptyArrayField(),
+								Operator:   "ToDecimal",
+								Operand:    val,
+							}
+						}
+					}
+					// IndexOf has only List<T> overload in ELM; for String args
+					// CQF wraps the source in ToList (String → List<String>).
+					if v.Name == "IndexOf" && i == 0 {
+						if _, isStr := o.(*ast.StringLiteral); isStr {
+							val = &elm.UnaryExpressionNode{
+								Annotation: t.cqfAnnotation(),
+								Signature:  t.cqfEmptyArrayField(),
+								Operator:   "ToList",
+								Operand:    val,
+							}
+						}
+					}
 					operands = append(operands, elm.NamedOperand{
 						Name:  slots[i],
-						Value: t.translateExpr(o),
+						Value: val,
 					})
 				}
 				return &elm.NamedOperatorExpressionNode{
@@ -1307,30 +1402,74 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			}
 			// Map binary system operators (operand: [a, b]) to generic OperatorExpressionNode.
 			if binaryOperandOps[v.Name] && len(v.Operands) == 2 {
+				ops := []elm.Expression{
+					t.translateExpr(v.Operands[0]),
+					t.translateExpr(v.Operands[1]),
+				}
+				// Log requires Decimal operands; CQF promotes integer literals.
+				if v.Name == "Log" {
+					for i, o := range v.Operands {
+						if _, isInt := o.(*ast.IntegerLiteral); isInt {
+							ops[i] = &elm.UnaryExpressionNode{
+								Annotation: t.cqfAnnotation(),
+								Signature:  t.cqfEmptyArrayField(),
+								Operator:   "ToDecimal",
+								Operand:    ops[i],
+							}
+						}
+					}
+				}
+				// Contains has only List<T> overload in ELM; for String args CQF
+				// wraps the source string in ToList.
+				if v.Name == "Contains" {
+					if _, isStr := v.Operands[0].(*ast.StringLiteral); isStr {
+						ops[0] = &elm.UnaryExpressionNode{
+							Annotation: t.cqfAnnotation(),
+							Signature:  t.cqfEmptyArrayField(),
+							Operator:   "ToList",
+							Operand:    ops[0],
+						}
+					}
+				}
 				return &elm.OperatorExpressionNode{
 					Annotation: ann,
 					Signature:  sig,
 					Operator:   v.Name,
-					Operand: []elm.Expression{
-						t.translateExpr(v.Operands[0]),
-						t.translateExpr(v.Operands[1]),
-					},
+					Operand:    ops,
 				}
 			}
-			// Coalesce is a native ELM n-ary operator; wrap null operands in As(T, null)
-			// where T is inferred from the first non-null operand.
+			// N-ary positional operators (e.g. ReplaceMatches) emit operand: [...]
+			if naryOperandOps[v.Name] && len(v.Operands) > 0 {
+				ops := make([]elm.Expression, len(v.Operands))
+				for i, o := range v.Operands {
+					ops[i] = t.translateExpr(o)
+				}
+				return &elm.OperatorExpressionNode{
+					Annotation: ann,
+					Signature:  sig,
+					Operator:   v.Name,
+					Operand:    ops,
+				}
+			}
+			// Coalesce is a native ELM n-ary operator. CQF leaves leading nulls bare
+			// and wraps later nulls in As(T, null) once an earlier operand has
+			// established a concrete type.
 			if v.Name == "Coalesce" {
 				var operands []elm.Expression
-				nullType := t.inferListElementType(v.Operands)
+				var inferredType string
 				for _, o := range v.Operands {
 					elem := t.translateExpr(o)
-					if _, isNull := o.(*ast.NullLiteral); isNull && nullType != "" {
-						elem = &elm.AsNode{
-							Annotation: t.cqfAnnotation(),
-							Signature:  t.cqfEmptyArrayField(),
-							Operand:    elem,
-							AsType:     nullType,
+					if _, isNull := o.(*ast.NullLiteral); isNull {
+						if inferredType != "" {
+							elem = &elm.AsNode{
+								Annotation: t.cqfAnnotation(),
+								Signature:  t.cqfEmptyArrayField(),
+								Operand:    elem,
+								AsType:     inferredType,
+							}
 						}
+					} else if inferredType == "" {
+						inferredType = t.inferListElementType([]ast.Expr{o})
 					}
 					operands = append(operands, elem)
 				}
@@ -1427,9 +1566,19 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 	case *ast.BinaryExpr:
 		return t.translateBinaryExpr(v)
 	case *ast.TernaryExpr:
+		condition := t.translateExpr(v.Condition)
+		// CQF wraps a bare-null condition in As(Boolean, null) since if requires Boolean.
+		if _, isNull := v.Condition.(*ast.NullLiteral); isNull {
+			condition = &elm.AsNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  json.RawMessage("[]"),
+				Operand:    condition,
+				AsType:     "{urn:hl7-org:elm-types:r1}Boolean",
+			}
+		}
 		return &elm.IfNode{
 			Annotation: ann,
-			Condition:  t.translateExpr(v.Condition),
+			Condition:  condition,
 			Then:       t.translateExpr(v.ThenExpr),
 			Else:       t.translateExpr(v.ElseExpr),
 		}
@@ -1440,8 +1589,9 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		}
 		for _, item := range v.Items {
 			cn.CaseItem = append(cn.CaseItem, &elm.CaseItem{
-				When: t.translateExpr(item.When),
-				Then: t.translateExpr(item.Then),
+				Annotation: t.cqfAnnotation(),
+				When:       t.translateExpr(item.When),
+				Then:       t.translateExpr(item.Then),
 			})
 		}
 		return cn
@@ -1459,6 +1609,23 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			Strict:          &v.Strict,
 		}
 	case *ast.ConvertExpr:
+		// CQF normalizes `convert x to Integer` to ToInteger(x) for built-in system
+		// types (Integer, Decimal, String, Boolean, Date, DateTime, Time, Long,
+		// Quantity, Ratio, Concept, Code). Use the operator-specific form when the
+		// target type is a bare System named type.
+		if nts, ok := v.TypeSpec.(*ast.NamedTypeSpecifier); ok && nts != nil {
+			qualifier := nts.Qualifier
+			if qualifier == "" || qualifier == "System" {
+				if elmOp, ok := convertToOps[nts.Name]; ok {
+					return &elm.UnaryExpressionNode{
+						Annotation: ann,
+						Signature:  sig,
+						Operator:   elmOp,
+						Operand:    t.translateExpr(v.Operand),
+					}
+				}
+			}
+		}
 		ts := t.translateTypeSpecifier(v.TypeSpec)
 		return &elm.ConvertNode{
 			Annotation:      ann,
@@ -1732,8 +1899,36 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 	}
 }
 
+// isStringLikeExpr is true when expr is a string literal or a chain of
+// string-concatenation Add operators producing a string.
+func isStringLikeExpr(expr ast.Expr) bool {
+	switch e := expr.(type) {
+	case *ast.StringLiteral:
+		return true
+	case *ast.BinaryExpr:
+		return e.Op == "Add" && isStringLikeExpr(e.Left) && isStringLikeExpr(e.Right)
+	}
+	return false
+}
+
 func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	// InValueSet: when "In" operator's RHS is a declared value set, emit InValueSet
+	// with preserve:true on the ValueSetRef (runtime terminology evaluation).
+	if v.Op == "In" {
+		if ref, ok := v.Right.(*ast.IdentifierRef); ok && t.syms[ref.Name] == symValueSet {
+			preserve := true
+			return &elm.InValueSetNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.cqfEmptyArrayField(),
+				Code:       t.translateExpr(v.Left),
+				ValueSet: &elm.ValueSetRefNode{
+					Annotation: t.cqfAnnotation(),
+					Name:       ref.Name,
+					Preserve:   &preserve,
+				},
+			}
+		}
+	}
 	// with preserve:true on the ValueSetRef (runtime terminology evaluation).
 	if v.Op == "In" {
 		if ref, ok := v.Right.(*ast.IdentifierRef); ok && t.syms[ref.Name] == symValueSet {
@@ -1794,10 +1989,28 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	}
 
 	// String concatenation: CQL `'a' + 'b'` maps to ELM Concatenate (not Add).
-	if op == "Add" {
-		if _, lStr := v.Left.(*ast.StringLiteral); lStr {
-			if _, rStr := v.Right.(*ast.StringLiteral); rStr {
-				op = "Concatenate"
+	if op == "Add" && isStringLikeExpr(v.Left) && isStringLikeExpr(v.Right) {
+		op = "Concatenate"
+	}
+
+	// Implicit Integer→Decimal promotion for `/` (Divide), which is decimal-only
+	// in CQL. CQF wraps Integer literal operands in ToDecimal. (Power has an
+	// integer overload, so we don't promote there.)
+	if op == "Divide" {
+		if _, ok := v.Left.(*ast.IntegerLiteral); ok {
+			lhs = &elm.UnaryExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.cqfEmptyArrayField(),
+				Operator:   "ToDecimal",
+				Operand:    lhs,
+			}
+		}
+		if _, ok := v.Right.(*ast.IntegerLiteral); ok {
+			rhs = &elm.UnaryExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.cqfEmptyArrayField(),
+				Operator:   "ToDecimal",
+				Operand:    rhs,
 			}
 		}
 	}
@@ -1979,6 +2192,11 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			aliases[src.Alias] = true
 		}
 	}
+	for _, rel := range q.Relationship {
+		if rel.Source != nil && rel.Source.Alias != "" {
+			aliases[rel.Source.Alias] = true
+		}
+	}
 	t.queryAliases = append(t.queryAliases, aliases)
 	defer func() { t.queryAliases = t.queryAliases[:len(t.queryAliases)-1] }()
 
@@ -2034,6 +2252,7 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			kind = "Without"
 		}
 		r := &elm.RelationshipClauseELM{
+			Annotation: t.cqfAnnotation(),
 			Kind:       kind,
 			Alias:      rel.Source.Alias,
 			Expression: t.translateExpr(rel.Source.Expression),
@@ -2066,20 +2285,53 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		}
 	}
 	if q.Sort != nil {
-		sortClause := &elm.SortClauseELM{}
+		sortClause := &elm.SortClauseELM{Annotation: t.cqfAnnotation()}
 		for _, item := range q.Sort.Items {
-			dir := "ascending"
-			if item.Direction == ast.SortDesc {
-				dir = "descending"
+			dir := item.DirectionText
+			if dir == "" {
+				dir = "ascending"
+				if item.Direction == ast.SortDesc {
+					dir = "descending"
+				}
 			}
-			sortClause.By = append(sortClause.By, &elm.SortByItemELM{
+			sortItem := &elm.SortByItemELM{
+				Annotation: t.cqfAnnotation(),
 				Direction:  dir,
-				Expression: t.translateExpr(item.Expression),
-			})
+			}
+			if item.Expression == nil {
+				// `sort asc` / `sort desc` — direction only, no by-expression.
+			} else if id, ok := item.Expression.(*ast.IdentifierRef); ok && id != nil {
+				sortItem.Path = id.Name
+			} else {
+				sortItem.Expression = t.translateExpr(item.Expression)
+			}
+			sortClause.By = append(sortClause.By, sortItem)
 		}
 		qn.Sort = sortClause
 	}
 	return qn
+}
+
+// isDecimalListExpr reports whether expr is a list literal whose elements
+// are all Decimal literals (or Null). CQF only coerces Avg/Median/etc. sources
+// via a ToDecimal query when the element type isn't already Decimal.
+func (t *Translator) isDecimalListExpr(expr ast.Expr) bool {
+	le, ok := expr.(*ast.ListExpr)
+	if !ok || len(le.Elements) == 0 {
+		return false
+	}
+	sawDecimal := false
+	for _, e := range le.Elements {
+		switch e.(type) {
+		case *ast.DecimalLiteral:
+			sawDecimal = true
+		case *ast.NullLiteral:
+			// permitted, but doesn't establish type on its own
+		default:
+			return false
+		}
+	}
+	return sawDecimal
 }
 
 // wrapInDecimalQuery wraps a list expression in a Query that maps each element
