@@ -72,11 +72,13 @@ func runTranslate(args []string, cqfMode bool) {
 		annotations bool
 		locators    bool
 		sigLevel   string
+		validate   bool
 	)
 
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
 	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
+	fs.BoolVar(&validate, "validate", false, "Run structural validation on the serialized ELM before writing it")
 
 	// Default flags differ by mode to match each mode's natural behavior.
 	annotationsDefault := !cqfMode // modern: true, CQF: false (no annotation content without --annotations)
@@ -162,6 +164,16 @@ func runTranslate(args []string, cqfMode bool) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: marshal: %v\n", err)
 		os.Exit(1)
+	}
+
+	if validate {
+		vfmt := "json"
+		if strings.EqualFold(format, "XML") {
+			vfmt = "xml"
+		}
+		if verr := echoelm.Validate(outBytes, vfmt); verr != nil {
+			fmt.Fprintf(os.Stderr, "Warning:[n/a] ELM validation: %v\n", verr)
+		}
 	}
 
 	if err := os.WriteFile(outPath, outBytes, 0o644); err != nil {

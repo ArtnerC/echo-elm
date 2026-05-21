@@ -111,3 +111,55 @@ func TestTranslate_ParseError(t *testing.T) {
 		t.Errorf("expected error diagnostics for invalid CQL")
 	}
 }
+
+func TestTranslate_UCUMWarning(t *testing.T) {
+	cql := "library U version '1.0'\ndefine Q: 5 'shab-shab-shab'"
+	res, err := echoelm.Translate([]byte(cql), "U.cql")
+	if err != nil {
+		t.Fatalf("translate: %v", err)
+	}
+	gotWarning := false
+	for _, d := range res.Diagnostics {
+		if strings.EqualFold(d.Severity, "Warning") && strings.Contains(d.Message, "UCUM") {
+			gotWarning = true
+		}
+	}
+	if !gotWarning {
+		t.Errorf("expected UCUM warning, got diagnostics: %v", res.Diagnostics)
+	}
+}
+
+func TestTranslate_UCUMNoWarningForValid(t *testing.T) {
+	cql := "library U version '1.0'\ndefine Q: 5 'mg/dL'"
+	res, err := echoelm.Translate([]byte(cql), "U.cql")
+	if err != nil {
+		t.Fatalf("translate: %v", err)
+	}
+	for _, d := range res.Diagnostics {
+		if strings.Contains(d.Message, "UCUM") {
+			t.Errorf("unexpected UCUM diagnostic for valid unit: %v", d)
+		}
+	}
+}
+
+func TestValidate_RoundTrip(t *testing.T) {
+	cql := "library R version '1.0'\ndefine X: 1 + 1"
+	res, err := echoelm.Translate([]byte(cql), "R.cql")
+	if err != nil {
+		t.Fatalf("translate: %v", err)
+	}
+	xmlBytes, err := res.MarshalXML()
+	if err != nil {
+		t.Fatalf("xml: %v", err)
+	}
+	if err := echoelm.Validate(xmlBytes, "xml"); err != nil {
+		t.Errorf("xml validate: %v", err)
+	}
+	jsonBytes, err := json.Marshal(res)
+	if err != nil {
+		t.Fatalf("json: %v", err)
+	}
+	if err := echoelm.Validate(jsonBytes, "json"); err != nil {
+		t.Errorf("json validate: %v", err)
+	}
+}

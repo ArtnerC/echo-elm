@@ -8,8 +8,10 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
+	"github.com/artnerc/echo-elm/internal/elmops"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/typesystem"
+	"github.com/artnerc/echo-elm/internal/ucum"
 )
 
 // Version is the translator version string embedded in output.
@@ -105,6 +107,7 @@ type Translator struct {
 	opts               Options
 	counter            int
 	source             string
+	diags              []Diagnostic
 	syms               map[string]symKind // symbol table built before statement pass
 	paramTypes         map[string]string  // maps parameter name → ELM qualified type name
 	queryAliases       []map[string]bool  // stack of alias sets for current query scopes
@@ -145,6 +148,26 @@ func locatorStr(loc ast.Interval) string {
 	return fmt.Sprintf("%d:%d-%d:%d",
 		loc.Start.Line, loc.Start.Column,
 		loc.Stop.Line, loc.Stop.Column)
+}
+
+// checkUnit validates a CQL Quantity unit against UCUM when the
+// ValidateUnits option is enabled. Following CQF behavior, an unparseable
+// unit produces a Warning diagnostic but does not fail the translation.
+// Empty units and CQL calendar-duration keywords are always accepted.
+func (t *Translator) checkUnit(unit string, loc ast.Interval) {
+	if !t.opts.ValidateUnits {
+		return
+	}
+	if unit == "" || ucum.IsCQLTemporalKeyword(unit) {
+		return
+	}
+	if err := ucum.Validate(unit); err != nil {
+		t.diags = append(t.diags, Diagnostic{
+			Severity: "Warning",
+			Locator:  locatorStr(loc),
+			Message:  fmt.Sprintf("Could not validate UCUM unit %q: %s", unit, err.Error()),
+		})
+	}
 }
 
 func accessLevelStr(level ast.AccessLevel) string {
@@ -203,6 +226,7 @@ var cqfEmptyArray = json.RawMessage("[]")
 func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	t.source = sourceName
 	t.counter = 0
+	t.diags = nil
 	t.fhirHelpersLocalName = ""
 
 	// Build symbol table so expression translation can emit the correct Ref types.
@@ -536,6 +560,9 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	}
 
 	result.Library = out
+	if len(t.diags) > 0 {
+		result.Diagnostics = append(result.Diagnostics, t.diags...)
+	}
 	return result
 }
 
@@ -901,6 +928,33 @@ var convertToOps = map[string]string{
 	"Concept":  "ToConcept",
 }
 
+// Init-time consistency check: every entry in the translator's local maps
+// must be present (or be an explicit translator-internal alias) in the
+// shared elmops registry. This keeps internal/elmops as the single source
+// of truth and surfaces drift as a build failure.
+func init() {
+	for name := range unarySystemOps {
+		if !elmops.IsUnary(name) {
+			panic("translator: unarySystemOps drift; missing/wrong kind in elmops: " + name)
+		}
+	}
+	for name := range aggregateSystemOps {
+		if !elmops.IsAggregate(name) {
+			panic("translator: aggregateSystemOps drift; missing/wrong kind in elmops: " + name)
+		}
+	}
+	for name := range namedOperatorOps {
+		if elmops.NamedFields(name) == nil {
+			panic("translator: namedOperatorOps drift; missing NamedFields in elmops: " + name)
+		}
+	}
+	for from, to := range convertToOps {
+		if elmops.SystemConvertToOps[from] != to {
+			panic("translator: convertToOps drift for " + from + " → " + to)
+		}
+	}
+}
+
 // intLiteral builds an Integer literal ELM node from an int value.
 func (t *Translator) intLiteral(v int) elm.Expression {
 	return &elm.LiteralNode{
@@ -1167,6 +1221,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 	case *ast.TimeLiteral:
 		return t.parseTimeLiteral(v.Value)
 	case *ast.QuantityLiteral:
+		t.checkUnit(v.Unit, v.Loc())
 		return &elm.QuantityNode{Annotation: ann, Value: json.Number(v.Value), Unit: v.Unit}
 	case *ast.RatioLiteral:
 		numUnit := v.Numerator.Unit
@@ -1177,6 +1232,8 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		if denomUnit == "" {
 			denomUnit = "1"
 		}
+		t.checkUnit(v.Numerator.Unit, v.Loc())
+		t.checkUnit(v.Denominator.Unit, v.Loc())
 		return &elm.RatioNode{
 			Annotation:  ann,
 			Numerator:   &elm.QuantityLiteral{Annotation: t.cqfAnnotation(), Unit: numUnit, Value: json.Number(v.Numerator.Value)},

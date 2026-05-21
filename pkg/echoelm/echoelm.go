@@ -104,6 +104,14 @@ func (r *TranslateResult) MarshalXML() ([]byte, error) {
 	return elm.MarshalXML(r.Library, elm.XMLOptions{Indent: true})
 }
 
+// Validate performs a pragmatic structural check on serialized ELM bytes.
+// format must be "xml" or "json". This is not a full XSD validation —
+// use a libxml2-based pipeline for that — but it catches well-formedness
+// errors, wrong root elements, and missing namespaces.
+func Validate(data []byte, format string) error {
+	return elm.Validate(data, format)
+}
+
 // Translate parses CQL source and translates it to an ELM library.
 func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult, error) {
 	parseResult, err := parser.ParseBytes(src, sourceName)
