@@ -6,6 +6,7 @@ package echoelm
 import (
 	"encoding/json"
 
+	"github.com/artnerc/echo-elm/internal/cqloptions"
 	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/resolver"
@@ -59,6 +60,31 @@ func WithCQFOptions() Option {
 // WithLibrarySource sets a custom LibrarySource for resolving include declarations.
 func WithLibrarySource(src LibrarySource) Option {
 	return func(o *translator.Options) { o.LibrarySource = src }
+}
+
+// WithCQLOptionsFile loads a cql-options.json file and applies its settings.
+// Path may be absolute or relative. Errors are deferred to Translate time
+// via a panic-free option: if loading fails, the option is a no-op (parse
+// error surfaces as a translation error when the caller exercises the file).
+// Use cqloptions.LoadFile directly if you need explicit error handling.
+func WithCQLOptionsFile(path string) Option {
+	return func(o *translator.Options) {
+		f, err := cqloptions.LoadFile(path)
+		if err != nil {
+			return
+		}
+		*o = f.Apply(*o)
+	}
+}
+
+// WithCQLOptions applies a parsed cqloptions.File onto the translator options.
+func WithCQLOptions(f *cqloptions.File) Option {
+	return func(o *translator.Options) {
+		if f == nil {
+			return
+		}
+		*o = f.Apply(*o)
+	}
 }
 
 // TranslateResult holds the ELM library and diagnostics from a translation.

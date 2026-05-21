@@ -1576,22 +1576,71 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 				AsType:     "{urn:hl7-org:elm-types:r1}Boolean",
 			}
 		}
+		thenExpr := t.translateExpr(v.ThenExpr)
+		elseExpr := t.translateExpr(v.ElseExpr)
+		// CQF types a bare-null branch with the inferred type of the other branch.
+		if _, elseIsNull := v.ElseExpr.(*ast.NullLiteral); elseIsNull {
+			if typ := t.inferListElementType([]ast.Expr{v.ThenExpr}); typ != "" {
+				elseExpr = &elm.AsNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  json.RawMessage("[]"),
+					Operand:    elseExpr,
+					AsType:     typ,
+				}
+			}
+		}
+		if _, thenIsNull := v.ThenExpr.(*ast.NullLiteral); thenIsNull {
+			if typ := t.inferListElementType([]ast.Expr{v.ElseExpr}); typ != "" {
+				thenExpr = &elm.AsNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  json.RawMessage("[]"),
+					Operand:    thenExpr,
+					AsType:     typ,
+				}
+			}
+		}
 		return &elm.IfNode{
 			Annotation: ann,
 			Condition:  condition,
-			Then:       t.translateExpr(v.ThenExpr),
-			Else:       t.translateExpr(v.ElseExpr),
+			Then:       thenExpr,
+			Else:       elseExpr,
 		}
 	case *ast.CaseExpr:
-		cn := &elm.CaseNode{Annotation: ann, Else: t.translateExpr(v.Else)}
+		// Infer the result type by scanning all branches for the first typed literal.
+		var inferred string
+		probe := make([]ast.Expr, 0, len(v.Items)+1)
+		for _, item := range v.Items {
+			probe = append(probe, item.Then)
+		}
+		probe = append(probe, v.Else)
+		inferred = t.inferListElementType(probe)
+		elseExpr := t.translateExpr(v.Else)
+		if _, isNull := v.Else.(*ast.NullLiteral); isNull && inferred != "" {
+			elseExpr = &elm.AsNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  json.RawMessage("[]"),
+				Operand:    elseExpr,
+				AsType:     inferred,
+			}
+		}
+		cn := &elm.CaseNode{Annotation: ann, Else: elseExpr}
 		if v.Comparand != nil {
 			cn.Comparand = t.translateExpr(v.Comparand)
 		}
 		for _, item := range v.Items {
+			thenExpr := t.translateExpr(item.Then)
+			if _, isNull := item.Then.(*ast.NullLiteral); isNull && inferred != "" {
+				thenExpr = &elm.AsNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  json.RawMessage("[]"),
+					Operand:    thenExpr,
+					AsType:     inferred,
+				}
+			}
 			cn.CaseItem = append(cn.CaseItem, &elm.CaseItem{
 				Annotation: t.cqfAnnotation(),
 				When:       t.translateExpr(item.When),
-				Then:       t.translateExpr(item.Then),
+				Then:       thenExpr,
 			})
 		}
 		return cn
@@ -2006,6 +2055,32 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 			}
 		}
 		if _, ok := v.Right.(*ast.IntegerLiteral); ok {
+			rhs = &elm.UnaryExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.cqfEmptyArrayField(),
+				Operator:   "ToDecimal",
+				Operand:    rhs,
+			}
+		}
+	}
+
+	// Implicit Integer→Decimal promotion for mixed-type arithmetic:
+	// Add/Subtract/Multiply/Modulo with one Integer literal and one Decimal
+	// literal. CQF wraps the Integer side in ToDecimal so both operands match.
+	arithMixedOps := map[string]bool{"Add": true, "Subtract": true, "Multiply": true, "Modulo": true}
+	if arithMixedOps[op] {
+		_, leftInt := v.Left.(*ast.IntegerLiteral)
+		_, leftDec := v.Left.(*ast.DecimalLiteral)
+		_, rightInt := v.Right.(*ast.IntegerLiteral)
+		_, rightDec := v.Right.(*ast.DecimalLiteral)
+		if leftInt && rightDec {
+			lhs = &elm.UnaryExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.cqfEmptyArrayField(),
+				Operator:   "ToDecimal",
+				Operand:    lhs,
+			}
+		} else if rightInt && leftDec {
 			rhs = &elm.UnaryExpressionNode{
 				Annotation: t.cqfAnnotation(),
 				Signature:  t.cqfEmptyArrayField(),
