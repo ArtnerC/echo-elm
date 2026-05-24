@@ -271,3 +271,42 @@ func Summary(results []FixtureResult) map[Status]int {
 	}
 	return m
 }
+
+// GenerateGoldens runs the upstream CQF CLI for every non-failure fixture and
+// writes the normalized JSON output to outputDir/<version>/<fixture-path>.json.
+// It is intended to be called once (e.g. via demo/goldens) to produce or
+// refresh the committed golden files used by TestGoldenCorpus.
+func GenerateGoldens(cfg Config, outputDir string) (int, error) {
+	corpus, err := LoadCorpus(cfg.CorpusDir)
+	if err != nil {
+		return 0, err
+	}
+
+	launcher := upstreamLauncher(cfg.ToolsDir, cfg.CQFVersion)
+	written := 0
+
+	for _, fix := range corpus.Fixtures {
+		cqlPath := filepath.Join(corpus.Root, fix.Path)
+		outPath := filepath.Join(outputDir, cfg.CQFVersion,
+			strings.TrimSuffix(fix.Path, ".cql")+".json")
+
+		if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
+			return written, fmt.Errorf("mkdir %s: %w", filepath.Dir(outPath), err)
+		}
+
+		jsonOut, _, err := runUpstream(launcher, cqlPath)
+		if err != nil {
+			if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
+				continue // no golden for expected-failure fixtures
+			}
+			return written, fmt.Errorf("upstream %s: %w", fix.Path, err)
+		}
+
+		normalized := normalizeJSON(jsonOut)
+		if err := os.WriteFile(outPath, []byte(normalized), 0o644); err != nil {
+			return written, fmt.Errorf("write %s: %w", outPath, err)
+		}
+		written++
+	}
+	return written, nil
+}

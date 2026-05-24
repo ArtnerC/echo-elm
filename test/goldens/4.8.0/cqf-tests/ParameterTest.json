@@ -1,0 +1,133 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "x",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "NamedTypeSpecifier"
+                },
+                "name": "x"
+              }
+            ],
+            "type": "TupleTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "a",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "a",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Indexer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "b"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "name": "b",
+              "type": "ExpressionRef"
+            },
+            "else": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "no",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "then": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "yes",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "name": "c"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

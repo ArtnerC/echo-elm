@@ -80,9 +80,14 @@ tasks:
       - go run ./internal/tools/jarinstall
 
   parity:run:
-    desc: Run parity smoke test against cqframework reference
+    desc: Run parity smoke test against both cqframework 3.29.0 and 4.8.0 (requires parity:jdk + parity:jar)
     cmds:
-      - go test -tags=parity -count=1 ./test/parity/...
+      - go run ./demo/parity_full
+
+  parity:goldens:
+    desc: Generate committed golden files for both CQF versions (requires parity:jdk + parity:jar)
+    cmds:
+      - go run ./demo/goldens
 
   # ── Svelte workbench ───────────────────────────────────────────────────────
 
@@ -129,9 +134,19 @@ tasks:
       - go install github.com/golangci/golangci-lint/cmd/golangci-lint@{{.GOLANGCI_VERSION}}
 
   generate:
-    desc: Run go generate across the repo
+    desc: Run go generate across the repo (parser must exist; use generate:grammar to regenerate)
     cmds:
       - go generate ./...
+
+  generate:grammar:
+    desc: Download ANTLR 4.13.2 and regenerate CQL parser from grammar/cql.g4
+    vars:
+      ANTLR_JAR: tools/antlr/antlr-4.13.2-complete.jar
+      ANTLR_URL: https://www.antlr.org/download/antlr-4.13.2-complete.jar
+    cmds:
+      - mkdir -p tools/antlr
+      - curl -L -o {{.ANTLR_JAR}} {{.ANTLR_URL}}
+      - go generate ./internal/parser/cqlparser/...
 
   tidy:
     desc: Tidy go.mod / go.sum

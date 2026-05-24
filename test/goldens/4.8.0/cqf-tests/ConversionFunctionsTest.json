@@ -1,0 +1,430 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "ConversionFunctionsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToInteger"
+          },
+          "name": "ToIntFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDecimal"
+          },
+          "name": "ToDecFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "ToStringFromInt"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "ToStringFromDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToBoolean"
+          },
+          "name": "ToBoolFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "ToStringFromBool"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2020-01-15",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDate"
+          },
+          "name": "ToDateFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2020-01-15T10:30:00",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDateTime"
+          },
+          "name": "ToDateTimeFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10:30:00",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToTime"
+          },
+          "name": "ToTimeFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "ToStringFromDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "ToStringFromDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToInteger"
+          },
+          "name": "ConvertToInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDecimal"
+          },
+          "name": "ConvertToDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2020-01-15",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDate"
+          },
+          "name": "ConvertToDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "isTypeSpecifier": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "name": "IsInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "isTypeSpecifier": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "NamedTypeSpecifier"
+            },
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "name": "IsDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "isTypeSpecifier": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "hello",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "name": "IsString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "isTypeSpecifier": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "NamedTypeSpecifier"
+            },
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "name": "IsBoolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "asTypeSpecifier": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "strict": false,
+            "type": "As"
+          },
+          "name": "AsInteger"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

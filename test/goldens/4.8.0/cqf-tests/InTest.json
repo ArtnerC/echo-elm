@@ -1,0 +1,487 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "AnyParameter",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "name": "{urn:hl7-org:elm-types:r1}Any",
+            "type": "NamedTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Null"
+          },
+          "name": "AnyExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "annotation": [],
+                  "name": "AnyParameter",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "AnyTest"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "name": "Add",
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "Add"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "high": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "test1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "X",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "7",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "9",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "name": "X",
+                  "type": "AliasRef"
+                },
+                {
+                  "annotation": [],
+                  "high": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                }
+              ],
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "test2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "X",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "7",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "9",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "high": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                {
+                  "annotation": [],
+                  "name": "X",
+                  "type": "AliasRef"
+                }
+              ],
+              "signature": [],
+              "type": "Contains"
+            }
+          },
+          "name": "test3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "ToList"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "test4"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Negate"
+              },
+              {
+                "annotation": [],
+                "high": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "NegInfBegContainsInt"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "day": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "hour": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "millisecond": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "minute": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "second": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "DateTime",
+                "year": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1900",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "annotation": [],
+                "high": {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2013",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": false,
+                "low": {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "NegInfBegContainsDate"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

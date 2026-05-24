@@ -1,0 +1,690 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "ArithmeticOpsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "AddIntegers"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "SubtractIntegers"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "7",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "name": "MultiplyIntegers"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              }
+            ],
+            "signature": [],
+            "type": "Divide"
+          },
+          "name": "DivideIntegers"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Modulo"
+          },
+          "name": "ModuloIntegers"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "TruncatedDivide"
+          },
+          "name": "TruncatedDivide"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "NegateInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "7",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Negate"
+            },
+            "signature": [],
+            "type": "Abs"
+          },
+          "name": "AbsInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1.5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2.5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "AddDecimals"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2.5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "4.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "name": "MultiplyDecimals"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "7.5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2.5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Divide"
+          },
+          "name": "DivideDecimals"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "PowerOf"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Negate"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "MinInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Negate"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "MaxInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Sum"
+          },
+          "name": "SumInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "element": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "4",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "6",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "8",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "10",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Avg"
+          },
+          "name": "AvgInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.7",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Floor"
+          },
+          "name": "Floor3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Ceiling"
+          },
+          "name": "Ceiling3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.567",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "precision": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Round"
+          },
+          "name": "Round3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3.9",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Truncate"
+          },
+          "name": "Truncate3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Ln"
+          },
+          "name": "Ln3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Exp"
+          },
+          "name": "Exp3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "100.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              }
+            ],
+            "signature": [],
+            "type": "Log"
+          },
+          "name": "Log3"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

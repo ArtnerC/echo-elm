@@ -1,0 +1,1383 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "type": "Date",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "YearLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateTimeYearLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCYearLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Date",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "YearMonthLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateTimeYearMonthLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCYearMonthLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "31",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Date",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "31",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateTimeDateLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "31",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCDateLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "23",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Time"
+          },
+          "name": "HourLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Time"
+          },
+          "name": "HourMinuteLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Time"
+          },
+          "name": "HourMinuteSecondLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "millisecond": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Time"
+          },
+          "name": "TimeLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "23",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateHourLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "23",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCDateHourLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "23",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "-7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZoneDateHourLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "23",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZonePositiveDateHourLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateHourMinuteLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCDateHourMinuteLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "-7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZoneDateHourMinuteLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZonePositiveDateHourMinuteLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateHourMinuteSecondLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCDateHourMinuteSecondLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "-7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZoneDateHourMinuteSecondLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZonePositiveDateHourMinuteSecondLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "millisecond": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "DateTimeLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "millisecond": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "UTCDateTimeLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "millisecond": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "-7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZoneDateTimeLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "millisecond": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "30",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "7.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZonePositiveDateTimeLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "day": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "hour": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "12",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "millisecond": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "955",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "minute": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "second": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "timezoneOffset": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1.5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "DateTime",
+            "year": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2014",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "TimeZoneHalfHourLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "year",
+            "value": 1
+          },
+          "name": "YearExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "years",
+            "value": 10
+          },
+          "name": "YearsExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "month",
+            "value": 1
+          },
+          "name": "MonthExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "months",
+            "value": 10
+          },
+          "name": "MonthsExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "week",
+            "value": 1
+          },
+          "name": "WeekExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "weeks",
+            "value": 10
+          },
+          "name": "WeeksExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "day",
+            "value": 1
+          },
+          "name": "DayExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "days",
+            "value": 10
+          },
+          "name": "DaysExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "hour",
+            "value": 1
+          },
+          "name": "HourExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "hours",
+            "value": 10
+          },
+          "name": "HoursExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "minute",
+            "value": 1
+          },
+          "name": "MinuteExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "minutes",
+            "value": 10
+          },
+          "name": "MinutesExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "second",
+            "value": 1
+          },
+          "name": "SecondExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "seconds",
+            "value": 10
+          },
+          "name": "SecondsExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "millisecond",
+            "value": 1
+          },
+          "name": "MillisecondExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Quantity",
+            "unit": "milliseconds",
+            "value": 10
+          },
+          "name": "MillisecondsExpression"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

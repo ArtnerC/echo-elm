@@ -1,0 +1,1350 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "ListOperationsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "MyList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "TypedList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "First"
+          },
+          "name": "ListFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Last"
+          },
+          "name": "ListLast"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "ListCount"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "name": "ListDistinct"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                },
+                {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "4",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                },
+                {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              ],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Flatten"
+          },
+          "name": "ListFlatten"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "ListExists"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "element": [],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "ListExistsEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "element": [],
+                "type": "List"
+              },
+              "signature": [],
+              "type": "Exists"
+            },
+            "signature": [],
+            "type": "Not"
+          },
+          "name": "ListNotEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "endIndex": {
+              "annotation": [],
+              "type": "Null"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "Slice"
+          },
+          "name": "ListTail"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "endIndex": {
+              "annotation": [],
+              "type": "Null"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "Slice"
+          },
+          "name": "ListSkip"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "endIndex": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Coalesce"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "Slice"
+          },
+          "name": "ListTake"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "element": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "20",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "20",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "30",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "IndexOf"
+          },
+          "name": "ListIndexOf"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Contains"
+          },
+          "name": "ListContains"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "annotation": [],
+              "by": [
+                {
+                  "annotation": [],
+                  "direction": "asc",
+                  "type": "ByDirection"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "L",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "4",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortedAsc"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "annotation": [],
+              "by": [
+                {
+                  "annotation": [],
+                  "direction": "desc",
+                  "type": "ByDirection"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "L",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "4",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortedDesc"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "ListUnion"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "6",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Intersect"
+          },
+          "name": "ListIntersect"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Except"
+          },
+          "name": "ListExcept"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "MinList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "MaxList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Sum"
+          },
+          "name": "SumList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "6.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Avg"
+          },
+          "name": "AvgList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "element": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "3",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "4",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "5",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "name": "MedianList"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

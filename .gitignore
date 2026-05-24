@@ -22,6 +22,9 @@ tools/jdk/
 tools/cql-tests/
 tools/cqframework/
 tools/coursier/
+# ANTLR grammar tool — downloaded on demand by `task generate:grammar`
+# NOT committed: run `task generate:grammar` to regenerate the CQL parser.
+tools/antlr/
 # Debug/parity artifacts dumped into tools/
 tools/echo-*.json
 tools/upstream-*.json
