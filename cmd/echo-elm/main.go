@@ -13,6 +13,7 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/mcpserver"
 	"github.com/artnerc/echo-elm/internal/parity"
+	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/internal/ui"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -66,13 +67,21 @@ func runTranslate(args []string, cqfMode bool) {
 	fs := flag.NewFlagSet("translate", flag.ContinueOnError)
 
 	var (
-		input      string
-		output     string
-		format     string
-		annotations bool
-		locators    bool
-		sigLevel   string
-		validate   bool
+		input                   string
+		output                  string
+		format                  string
+		annotations             bool
+		locators                bool
+		sigLevel                string
+		validate                bool
+		disableListDemotion     bool
+		disableListPromotion    bool
+		disableListTraversal    bool
+		disableMethodInvocation bool
+		requireFromKeyword      bool
+		enableIntervalDemotion  bool
+		enableIntervalPromotion bool
+		compatLevel             string
 	)
 
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
@@ -86,16 +95,29 @@ func runTranslate(args []string, cqfMode bool) {
 
 	fs.BoolVar(&annotations, "annotations", annotationsDefault, "Emit ELM annotations")
 	fs.BoolVar(&locators, "locators", locatorsDefault, "Emit source locators")
+	fs.BoolVar(&disableListDemotion, "disable-list-demotion", false, "Disable implicit list demotion")
+	fs.BoolVar(&disableListPromotion, "disable-list-promotion", false, "Disable implicit list promotion")
+	fs.BoolVar(&disableListTraversal, "disable-list-traversal", false, "Disable implicit list traversal")
+	fs.BoolVar(&disableMethodInvocation, "disable-method-invocation", false, "Disable method-style invocation syntax")
+	fs.BoolVar(&requireFromKeyword, "require-from-keyword", false, "Require explicit 'from' in queries")
+	fs.BoolVar(&enableIntervalDemotion, "enable-interval-demotion", false, "Enable implicit interval demotion")
+	fs.BoolVar(&enableIntervalPromotion, "enable-interval-promotion", false, "Enable implicit interval promotion")
 
 	if cqfMode {
-		// CQF defaults match cqframework CLI behavior.
 		sigLevel = "None"
+		compatLevel = "1.5"
 		fs.StringVar(&sigLevel, "signatures", sigLevel, "Signature level: None|Differing|Overloads|All")
-		// --disable-list-demotion, etc. omitted for now (add in later phase)
+		fs.StringVar(&compatLevel, "compatibility-level", compatLevel, "Compatibility level: 1.3|1.4|1.5")
 	} else {
 		sigLevel = "Overloads"
+		compatLevel = "1.5"
 		fs.StringVar(&sigLevel, "signatures", sigLevel, "Signature level: None|Differing|Overloads|All")
+		fs.StringVar(&compatLevel, "compatibility-level", compatLevel, "Compatibility level: 1.3|1.4|1.5")
 	}
+
+	// --strict expands: disable-list-traversal + demotion + promotion + method-invocation + require-from-keyword
+	var strict bool
+	fs.BoolVar(&strict, "strict", false, "Strict mode (disables list traversal, demotion, promotion, method invocation; requires from keyword)")
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
@@ -117,6 +139,24 @@ func runTranslate(args []string, cqfMode bool) {
 		echoelm.WithLocators(locators),
 		echoelm.WithSignatureLevel(sigLevel),
 		echoelm.WithCQFMode(cqfMode),
+		echoelm.WithIntervalDemotion(enableIntervalDemotion),
+		echoelm.WithIntervalPromotion(enableIntervalPromotion),
+		func(o *translator.Options) {
+			if strict {
+				o.DisableListTraversal = true
+				o.DisableListDemotion = true
+				o.DisableListPromotion = true
+				o.DisableMethodInvocation = true
+				o.RequireFromKeyword = true
+			} else {
+				o.DisableListDemotion = disableListDemotion
+				o.DisableListPromotion = disableListPromotion
+				o.DisableListTraversal = disableListTraversal
+				o.DisableMethodInvocation = disableMethodInvocation
+				o.RequireFromKeyword = requireFromKeyword
+			}
+			o.CompatibilityLevel = compatLevel
+		},
 	}
 
 	result, err := echoelm.Translate(src, filepath.Base(input), opts...)
@@ -348,4 +388,3 @@ func resolveOutput(input, output, format string) string {
 	}
 	return output
 }
-

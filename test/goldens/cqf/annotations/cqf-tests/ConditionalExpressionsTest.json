@@ -1,0 +1,1189 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "318",
+          "s": [
+            {
+              "value": [
+                "",
+                "library ConditionalExpressionsTest"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "ConditionalExpressionsTest"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IfThenElse",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "209",
+                    "s": [
+                      {
+                        "r": "210",
+                        "value": [
+                          "if ",
+                          "true",
+                          " then ",
+                          "1",
+                          " else ",
+                          "0"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "localId": "210",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "else": {
+              "localId": "212",
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "localId": "209",
+            "then": {
+              "localId": "211",
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "If"
+          },
+          "localId": "208",
+          "name": "IfThenElse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "215",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IfNull",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "216",
+                    "s": [
+                      {
+                        "r": "217",
+                        "value": [
+                          "if ",
+                          "null",
+                          " then "
+                        ]
+                      },
+                      {
+                        "r": "218",
+                        "s": [
+                          {
+                            "value": [
+                              "'was null'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " else "
+                        ]
+                      },
+                      {
+                        "r": "220",
+                        "s": [
+                          {
+                            "value": [
+                              "'not null'"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+              "localId": "222",
+              "operand": {
+                "localId": "217",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "else": {
+              "localId": "220",
+              "type": "Literal",
+              "value": "not null",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "localId": "216",
+            "then": {
+              "localId": "218",
+              "type": "Literal",
+              "value": "was null",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "localId": "215",
+          "name": "IfNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "225",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "NestedIf",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "226",
+                    "s": [
+                      {
+                        "value": [
+                          "if "
+                        ]
+                      },
+                      {
+                        "r": "227",
+                        "s": [
+                          {
+                            "r": "228",
+                            "value": [
+                              "5",
+                              " ",
+                              "\u003e",
+                              " ",
+                              "10"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " then "
+                        ]
+                      },
+                      {
+                        "r": "230",
+                        "s": [
+                          {
+                            "value": [
+                              "'big'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " else "
+                        ]
+                      },
+                      {
+                        "r": "232",
+                        "s": [
+                          {
+                            "value": [
+                              "if "
+                            ]
+                          },
+                          {
+                            "r": "233",
+                            "s": [
+                              {
+                                "r": "234",
+                                "value": [
+                                  "5",
+                                  " ",
+                                  "\u003e",
+                                  " ",
+                                  "3"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " then "
+                            ]
+                          },
+                          {
+                            "r": "236",
+                            "s": [
+                              {
+                                "value": [
+                                  "'medium'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " else "
+                            ]
+                          },
+                          {
+                            "r": "238",
+                            "s": [
+                              {
+                                "value": [
+                                  "'small'"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "localId": "227",
+              "operand": [
+                {
+                  "localId": "228",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "229",
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            },
+            "else": {
+              "condition": {
+                "localId": "233",
+                "operand": [
+                  {
+                    "localId": "234",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "235",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Greater"
+              },
+              "else": {
+                "localId": "238",
+                "type": "Literal",
+                "value": "small",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              "localId": "232",
+              "then": {
+                "localId": "236",
+                "type": "Literal",
+                "value": "medium",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              "type": "If"
+            },
+            "localId": "226",
+            "then": {
+              "localId": "230",
+              "type": "Literal",
+              "value": "big",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "localId": "225",
+          "name": "NestedIf"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "242",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CaseSimple",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "243",
+                    "s": [
+                      {
+                        "value": [
+                          "case\n    "
+                        ]
+                      },
+                      {
+                        "r": "244",
+                        "s": [
+                          {
+                            "value": [
+                              "when "
+                            ]
+                          },
+                          {
+                            "r": "245",
+                            "s": [
+                              {
+                                "r": "246",
+                                "s": [
+                                  {
+                                    "r": "247",
+                                    "value": [
+                                      "1",
+                                      " + ",
+                                      "1"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "r": "249",
+                                "value": [
+                                  " ",
+                                  "=",
+                                  " ",
+                                  "2"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " then "
+                            ]
+                          },
+                          {
+                            "r": "250",
+                            "s": [
+                              {
+                                "value": [
+                                  "'correct'"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "252",
+                        "s": [
+                          {
+                            "value": [
+                              "when "
+                            ]
+                          },
+                          {
+                            "r": "253",
+                            "s": [
+                              {
+                                "r": "254",
+                                "s": [
+                                  {
+                                    "r": "255",
+                                    "value": [
+                                      "1",
+                                      " + ",
+                                      "1"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "r": "257",
+                                "value": [
+                                  " ",
+                                  "=",
+                                  " ",
+                                  "3"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " then "
+                            ]
+                          },
+                          {
+                            "r": "258",
+                            "s": [
+                              {
+                                "value": [
+                                  "'wrong'"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    else "
+                        ]
+                      },
+                      {
+                        "r": "260",
+                        "s": [
+                          {
+                            "value": [
+                              "'unknown'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n  end"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "caseItem": [
+              {
+                "localId": "244",
+                "then": {
+                  "localId": "250",
+                  "type": "Literal",
+                  "value": "correct",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "localId": "245",
+                  "operand": [
+                    {
+                      "localId": "246",
+                      "operand": [
+                        {
+                          "localId": "247",
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        {
+                          "localId": "248",
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    {
+                      "localId": "249",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                }
+              },
+              {
+                "localId": "252",
+                "then": {
+                  "localId": "258",
+                  "type": "Literal",
+                  "value": "wrong",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "localId": "253",
+                  "operand": [
+                    {
+                      "localId": "254",
+                      "operand": [
+                        {
+                          "localId": "255",
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        {
+                          "localId": "256",
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    {
+                      "localId": "257",
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                }
+              }
+            ],
+            "else": {
+              "localId": "260",
+              "type": "Literal",
+              "value": "unknown",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "localId": "243",
+            "type": "Case"
+          },
+          "localId": "242",
+          "name": "CaseSimple"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "264",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CaseComparand",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "265",
+                    "s": [
+                      {
+                        "r": "266",
+                        "value": [
+                          "case ",
+                          "3",
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "267",
+                        "s": [
+                          {
+                            "r": "268",
+                            "value": [
+                              "when ",
+                              "1",
+                              " then "
+                            ]
+                          },
+                          {
+                            "r": "269",
+                            "s": [
+                              {
+                                "value": [
+                                  "'one'"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "271",
+                        "s": [
+                          {
+                            "r": "272",
+                            "value": [
+                              "when ",
+                              "2",
+                              " then "
+                            ]
+                          },
+                          {
+                            "r": "273",
+                            "s": [
+                              {
+                                "value": [
+                                  "'two'"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "275",
+                        "s": [
+                          {
+                            "r": "276",
+                            "value": [
+                              "when ",
+                              "3",
+                              " then "
+                            ]
+                          },
+                          {
+                            "r": "277",
+                            "s": [
+                              {
+                                "value": [
+                                  "'three'"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    else "
+                        ]
+                      },
+                      {
+                        "r": "279",
+                        "s": [
+                          {
+                            "value": [
+                              "'other'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n  end"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "caseItem": [
+              {
+                "localId": "267",
+                "then": {
+                  "localId": "269",
+                  "type": "Literal",
+                  "value": "one",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "localId": "268",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "localId": "271",
+                "then": {
+                  "localId": "273",
+                  "type": "Literal",
+                  "value": "two",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "localId": "272",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "localId": "275",
+                "then": {
+                  "localId": "277",
+                  "type": "Literal",
+                  "value": "three",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "localId": "276",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "comparand": {
+              "localId": "266",
+              "type": "Literal",
+              "value": "3",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "else": {
+              "localId": "279",
+              "type": "Literal",
+              "value": "other",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "localId": "265",
+            "type": "Case"
+          },
+          "localId": "264",
+          "name": "CaseComparand"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "283",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsNullExpr",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "285",
+                    "s": [
+                      {
+                        "r": "284",
+                        "value": [
+                          "null",
+                          " is null"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "285",
+            "operand": {
+              "localId": "284",
+              "type": "Null"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "localId": "283",
+          "name": "IsNullExpr"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "288",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsNotNullExpr",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "291",
+                    "s": [
+                      {
+                        "r": "289",
+                        "value": [
+                          "5",
+                          " is not null"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "291",
+            "operand": {
+              "localId": "290",
+              "operand": {
+                "localId": "289",
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "IsNull"
+            },
+            "signature": [],
+            "type": "Not"
+          },
+          "localId": "288",
+          "name": "IsNotNullExpr"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "294",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsNullFunc",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "298",
+                    "s": [
+                      {
+                        "r": "295",
+                        "value": [
+                          "IsNull",
+                          "(",
+                          "null",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "298",
+            "operand": {
+              "localId": "295",
+              "type": "Null"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "localId": "294",
+          "name": "IsNullFunc"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "301",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsNotNullFunc",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "302",
+                    "s": [
+                      {
+                        "value": [
+                          "not "
+                        ]
+                      },
+                      {
+                        "r": "306",
+                        "s": [
+                          {
+                            "r": "303",
+                            "value": [
+                              "IsNull",
+                              "(",
+                              "5",
+                              ")"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "302",
+            "operand": {
+              "localId": "306",
+              "operand": {
+                "localId": "303",
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "IsNull"
+            },
+            "signature": [],
+            "type": "Not"
+          },
+          "localId": "301",
+          "name": "IsNotNullFunc"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "309",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CoalesceExpr",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "315",
+                    "s": [
+                      {
+                        "r": "310",
+                        "value": [
+                          "Coalesce",
+                          "(",
+                          "null",
+                          ", ",
+                          "null",
+                          ", ",
+                          "42",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "315",
+            "operand": [
+              {
+                "localId": "310",
+                "type": "Null"
+              },
+              {
+                "localId": "311",
+                "type": "Null"
+              },
+              {
+                "localId": "312",
+                "type": "Literal",
+                "value": "42",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "localId": "309",
+          "name": "CoalesceExpr"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "318",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IfNullExpr",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "319",
+                    "s": [
+                      {
+                        "value": [
+                          "if "
+                        ]
+                      },
+                      {
+                        "r": "321",
+                        "s": [
+                          {
+                            "r": "320",
+                            "value": [
+                              "null",
+                              " is null"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "322",
+                        "value": [
+                          " then ",
+                          "0",
+                          " else ",
+                          "1"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "localId": "321",
+              "operand": {
+                "localId": "320",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "IsNull"
+            },
+            "else": {
+              "localId": "323",
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "localId": "319",
+            "then": {
+              "localId": "322",
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "If"
+          },
+          "localId": "318",
+          "name": "IfNullExpr"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

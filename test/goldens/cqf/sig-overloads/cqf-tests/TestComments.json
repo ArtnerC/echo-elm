@@ -1,0 +1,567 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "id": "http://loinc.org",
+          "name": "LOINC"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Blood pressure",
+          "id": "55284-4",
+          "name": "Blood Pressure"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Systolic blood pressure",
+          "id": "8480-6",
+          "name": "Systolic Blood Pressure"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Diastolic blood pressure",
+          "id": "8462-4",
+          "name": "Diastolic Blood Pressure"
+        }
+      ]
+    },
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TestComments"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "name": "MeasurementPeriod",
+          "parameterTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "author",
+                  "value": "Chopin"
+                },
+                {
+                  "name": "description",
+                  "value": "Defines whether the patient is included in the initial population"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "operand": [
+                      {
+                        "operand": [
+                          {
+                            "operand": {
+                              "path": "birthDate.value",
+                              "source": {
+                                "name": "Patient",
+                                "type": "ExpressionRef"
+                              },
+                              "type": "Property"
+                            },
+                            "signature": [
+                              {
+                                "name": "{urn:hl7-org:elm-types:r1}Date",
+                                "type": "NamedTypeSpecifier"
+                              }
+                            ],
+                            "type": "ToDateTime"
+                          },
+                          {
+                            "operand": {
+                              "name": "MeasurementPeriod",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "Start"
+                          }
+                        ],
+                        "precision": "Year",
+                        "signature": [
+                          {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          }
+                        ],
+                        "type": "CalculateAgeAt"
+                      },
+                      {
+                        "type": "Literal",
+                        "value": "16",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "signature": [
+                      {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      }
+                    ],
+                    "type": "GreaterOrEqual"
+                  },
+                  {
+                    "operand": [
+                      {
+                        "operand": [
+                          {
+                            "operand": {
+                              "path": "birthDate.value",
+                              "source": {
+                                "name": "Patient",
+                                "type": "ExpressionRef"
+                              },
+                              "type": "Property"
+                            },
+                            "signature": [
+                              {
+                                "name": "{urn:hl7-org:elm-types:r1}Date",
+                                "type": "NamedTypeSpecifier"
+                              }
+                            ],
+                            "type": "ToDateTime"
+                          },
+                          {
+                            "operand": {
+                              "name": "MeasurementPeriod",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "Start"
+                          }
+                        ],
+                        "precision": "Year",
+                        "signature": [
+                          {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          }
+                        ],
+                        "type": "CalculateAgeAt"
+                      },
+                      {
+                        "type": "Literal",
+                        "value": "24",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "signature": [
+                      {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      }
+                    ],
+                    "type": "Less"
+                  }
+                ],
+                "signature": [],
+                "type": "And"
+              },
+              {
+                "code": {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToString",
+                  "operand": [
+                    {
+                      "path": "gender",
+                      "source": {
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [
+                    {
+                      "name": "{http://hl7.org/fhir}AdministrativeGender",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "FunctionRef"
+                },
+                "signature": [
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "InValueSet",
+                "valueset": {
+                  "name": "Female Administrative Sex",
+                  "preserve": true
+                }
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "InInitialPopulation"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "author",
+                  "value": "Beethoven"
+                },
+                {
+                  "name": "description",
+                  "value": "Determines the cumulative duration of a list of intervals"
+                },
+                {
+                  "name": "comment",
+                  "value": "#This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "signature": [
+              {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            ],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "operand": [
+                    {
+                      "operand": {
+                        "name": "X",
+                        "type": "AliasRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "operand": {
+                        "name": "X",
+                        "type": "AliasRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    }
+                  ],
+                  "precision": "Day",
+                  "signature": [
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "DurationBetween"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "operand": [
+                      {
+                        "name": "Intervals",
+                        "type": "OperandRef"
+                      },
+                      {
+                        "type": "Null"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Collapse"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Sum"
+          },
+          "name": "CumulativeDuration",
+          "operand": [
+            {
+              "name": "Intervals",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "path": "start",
+                        "source": {
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [
+                      {
+                        "name": "{http://hl7.org/fhir}dateTime",
+                        "type": "NamedTypeSpecifier"
+                      }
+                    ],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "name": "MeasurementPeriod",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "boolIpp"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "path": "start",
+                        "source": {
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [
+                      {
+                        "name": "{http://hl7.org/fhir}dateTime",
+                        "type": "NamedTypeSpecifier"
+                      }
+                    ],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "name": "MeasurementPeriod",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "singleLineCommentTest"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.464.1003.102.12.1011",
+          "name": "Acute Pharyngitis"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.464.1003.102.12.1012",
+          "name": "Acute Tonsillitis"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.464.1003.101.12.1061",
+          "name": "Ambulatory/ED Visit"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.560.100.2",
+          "name": "Female Administrative Sex"
+        }
+      ]
+    }
+  }
+}

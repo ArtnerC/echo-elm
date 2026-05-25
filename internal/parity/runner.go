@@ -7,10 +7,12 @@ import (
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 	"time"
 
 	"github.com/artnerc/echo-elm/internal/resolver"
+	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
@@ -18,16 +20,17 @@ import (
 type Status string
 
 const (
-	StatusMatch          Status = "match"
-	StatusDifferJSON     Status = "differ-json"
-	StatusEchoError      Status = "echo-error"
-	StatusUpstreamError  Status = "upstream-error"
-	StatusSkipped        Status = "skipped"
+	StatusMatch         Status = "match"
+	StatusDifferJSON    Status = "differ-json"
+	StatusEchoError     Status = "echo-error"
+	StatusUpstreamError Status = "upstream-error"
+	StatusSkipped       Status = "skipped"
 )
 
 // FixtureResult holds the outcome of running one fixture through both translators.
 type FixtureResult struct {
 	Fixture        string
+	Profile        string
 	Description    string
 	Status         Status
 	UpstreamJSON   string
@@ -49,6 +52,8 @@ type Config struct {
 	TagFilter string
 	// CorpusDir is the corpus root dir.
 	CorpusDir string
+	// ProfileFilter, if non-empty, runs only this profile name.
+	ProfileFilter string
 }
 
 // DefaultConfig returns a Config pointing at the default corpus.
@@ -60,29 +65,90 @@ func DefaultConfig(version string) Config {
 	}
 }
 
+// profileOptions converts an OptionProfile”s translatorOptions map into
+// a translator.Options overlay applied on top of CQFDefaultOptions.
+func profileOptions(profile OptionProfile) translator.Options {
+	opts := translator.CQFDefaultOptions()
+	m := profile.TranslatorOptions
+	if v, ok := m["enableAnnotations"]; ok {
+		opts.EnableAnnotations, _ = v.(bool)
+	}
+	if v, ok := m["enableLocators"]; ok {
+		opts.EnableLocators, _ = v.(bool)
+	}
+	if v, ok := m["signatureLevel"]; ok {
+		if s, ok := v.(string); ok {
+			opts.SignatureLevel = s
+		}
+	}
+	if v, ok := m["disableListDemotion"]; ok {
+		opts.DisableListDemotion, _ = v.(bool)
+	}
+	if v, ok := m["disableListPromotion"]; ok {
+		opts.DisableListPromotion, _ = v.(bool)
+	}
+	if v, ok := m["disableListTraversal"]; ok {
+		opts.DisableListTraversal, _ = v.(bool)
+	}
+	if v, ok := m["disableMethodInvocation"]; ok {
+		opts.DisableMethodInvocation, _ = v.(bool)
+	}
+	if v, ok := m["requireFromKeyword"]; ok {
+		opts.RequireFromKeyword, _ = v.(bool)
+	}
+	if v, ok := m["enableIntervalDemotion"]; ok {
+		opts.EnableIntervalDemotion, _ = v.(bool)
+	}
+	if v, ok := m["enableIntervalPromotion"]; ok {
+		opts.EnableIntervalPromotion, _ = v.(bool)
+	}
+	if v, ok := m["compatibilityLevel"]; ok {
+		if s, ok := v.(string); ok {
+			opts.CompatibilityLevel = s
+		}
+	}
+	return opts
+}
+
+// translateWithProfile returns an echo-elm translation using the given profile options.
+func translateWithProfile(cqlPath string, opts translator.Options) ([]byte, error) {
+	src, err := os.ReadFile(cqlPath)
+	if err != nil {
+		return nil, fmt.Errorf("read %s: %w", cqlPath, err)
+	}
+	libSrc := resolver.NewDirSource(filepath.Dir(cqlPath))
+	result, err := echoelm.Translate(src, filepath.Base(cqlPath),
+		echoelm.WithOptions(opts),
+		echoelm.WithLibrarySource(libSrc),
+	)
+	if err != nil {
+		return nil, err
+	}
+	return json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "  ")
+}
+
 // CQFTranslateFunc returns a translateFn that runs echo-elm in CQF-compatible mode
 // (CQFMode=true, SignatureLevel=None, no annotations, no locators) using a
-// DirSource rooted at the input file's directory for library resolution.
-// This matches the options used by the upstream cqframework CLI.
+// DirSource rooted at the input file”s directory for library resolution.
+// This matches the options used by the upstream cqframework CLI”s default profile.
 func CQFTranslateFunc() func(cqlPath string) ([]byte, error) {
+	opts := translator.CQFDefaultOptions()
 	return func(cqlPath string) ([]byte, error) {
-		src, err := os.ReadFile(cqlPath)
-		if err != nil {
-			return nil, fmt.Errorf("read %s: %w", cqlPath, err)
-		}
-		libSrc := resolver.NewDirSource(filepath.Dir(cqlPath))
-		result, err := echoelm.Translate(src, filepath.Base(cqlPath),
-			echoelm.WithCQFOptions(),
-			echoelm.WithLibrarySource(libSrc),
-		)
-		if err != nil {
-			return nil, err
-		}
-		return json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "  ")
+		return translateWithProfile(cqlPath, opts)
 	}
 }
 
 // Run executes all (or filtered) fixtures in the corpus and returns results.
+// Each fixture runs against every applicable option profile.
+// ProfileTranslateFunc returns a translateFn that applies the given OptionProfile
+// on top of CQFDefaultOptions. Use in golden tests to drive each profile.
+func ProfileTranslateFunc(profile OptionProfile) func(cqlPath string) ([]byte, error) {
+	opts := profileOptions(profile)
+	return func(cqlPath string) ([]byte, error) {
+		return translateWithProfile(cqlPath, opts)
+	}
+}
+
 func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]FixtureResult, error) {
 	corpus, err := LoadCorpus(cfg.CorpusDir)
 	if err != nil {
@@ -91,18 +157,34 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 
 	launcher := upstreamLauncher(cfg.ToolsDir, cfg.CQFVersion)
 
+	// Sort profile names for deterministic output.
+	profileNames := sortedProfileNames(corpus.OptionProfiles)
+
 	var results []FixtureResult
 	for _, fix := range corpus.Fixtures {
 		if cfg.TagFilter != "" && !fix.HasTag(cfg.TagFilter) {
 			continue
 		}
-		r := runFixture(fix, corpus.Root, launcher, translateFn)
-		results = append(results, r)
+
+		fixProfiles := resolveProfileNames(fix.ProfileNames(corpus.OptionProfiles), profileNames)
+		for _, profileName := range fixProfiles {
+			if cfg.ProfileFilter != "" && profileName != cfg.ProfileFilter {
+				continue
+			}
+			profile := corpus.OptionProfiles[profileName]
+			opts := profileOptions(profile)
+			translateProfileFn := func(cqlPath string) ([]byte, error) {
+				return translateWithProfile(cqlPath, opts)
+			}
+			r := runFixture(fix, corpus.Root, launcher, profile.CLIFlags, translateProfileFn)
+			r.Profile = profileName
+			results = append(results, r)
+		}
 	}
 	return results, nil
 }
 
-func runFixture(fix Fixture, corpusRoot, launcher string, translateFn func(string) ([]byte, error)) FixtureResult {
+func runFixture(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error)) FixtureResult {
 	start := time.Now()
 	cqlPath := filepath.Join(corpusRoot, fix.Path)
 
@@ -112,10 +194,9 @@ func runFixture(fix Fixture, corpusRoot, launcher string, translateFn func(strin
 	}
 
 	// Run upstream cqframework CLI.
-	upJSON, upStderr, err := runUpstream(launcher, cqlPath)
+	upJSON, upStderr, err := runUpstream(launcher, cqlPath, extraFlags)
 	r.UpstreamStderr = upStderr
 	if err != nil {
-		// If the corpus marks this fixture as expected-failure, treat it as skipped.
 		if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
 			r.Status = StatusSkipped
 			r.Error = fmt.Sprintf("upstream (expected): %v", err)
@@ -151,21 +232,22 @@ func runFixture(fix Fixture, corpusRoot, launcher string, translateFn func(strin
 	return r
 }
 
-// runUpstream invokes the launcher and captures the output JSON file.
-func runUpstream(launcher, cqlPath string) (jsonOut, stderr string, err error) {
-	// Determine output path: cqframework writes <name>.json next to input.
+// runUpstream invokes the launcher with optional extra flags and captures the output JSON file.
+func runUpstream(launcher, cqlPath string, extraFlags []string) (jsonOut, stderr string, err error) {
 	dir := filepath.Dir(cqlPath)
 	base := strings.TrimSuffix(filepath.Base(cqlPath), ".cql")
 	outJSON := filepath.Join(dir, base+".json")
 
-	// Remove any stale output.
 	os.Remove(outJSON)
+
+	args := append([]string{"--input", cqlPath, "--format", "JSON"}, extraFlags...)
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/C", launcher, "--input", cqlPath, "--format", "JSON")
+		cmd = exec.Command("cmd", "/C", launcher)
+		cmd.Args = append(cmd.Args, args...)
 	} else {
-		cmd = exec.Command(launcher, "--input", cqlPath, "--format", "JSON")
+		cmd = exec.Command(launcher, args...)
 	}
 
 	var stderrBuf strings.Builder
@@ -190,18 +272,137 @@ func upstreamLauncher(toolsDir, version string) string {
 	return filepath.Join(toolsDir, "cqframework", version, "run.sh")
 }
 
+// GenerateGoldens runs the upstream CQF CLI for every non-failure fixture × profile
+// and writes the normalized JSON output to outputDir/<version>/<profile>/<fixture>.json.
+// It is intended to be called once (e.g. via demo/goldens) to produce or refresh
+// the committed golden files used by TestGoldenCorpus.
+// Returns the number of golden files written and a version-diff report.
+func GenerateGoldens(cfg Config, outputDir string) (written int, versionDiff []string, err error) {
+	return generateGoldensInner(cfg, filepath.Join(outputDir, cfg.CQFVersion))
+}
+
+// GenerateGoldensTo runs the upstream CQF CLI for every non-failure fixture × profile
+// and writes normalized JSON to targetDir/<profile>/<fixture>.json (no version subdirectory).
+// Use this to write the canonical collapsed golden set.
+func GenerateGoldensTo(cfg Config, targetDir string) (int, error) {
+	n, _, err := generateGoldensInner(cfg, targetDir)
+	return n, err
+}
+
+func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff []string, err error) {
+	corpus, err := LoadCorpus(cfg.CorpusDir)
+	if err != nil {
+		return 0, nil, err
+	}
+
+	launcher := upstreamLauncher(cfg.ToolsDir, cfg.CQFVersion)
+	profileNames := sortedProfileNames(corpus.OptionProfiles)
+
+	for _, fix := range corpus.Fixtures {
+		fixProfiles := resolveProfileNames(fix.ProfileNames(corpus.OptionProfiles), profileNames)
+		for _, profileName := range fixProfiles {
+			profile := corpus.OptionProfiles[profileName]
+			outPath := filepath.Join(baseDir, profileName,
+				strings.TrimSuffix(fix.Path, ".cql")+".json")
+
+			if err2 := os.MkdirAll(filepath.Dir(outPath), 0o755); err2 != nil {
+				return written, nil, fmt.Errorf("mkdir %s: %w", filepath.Dir(outPath), err2)
+			}
+
+			jsonOut, upStderr, upErr := runUpstream(launcher, filepath.Join(corpus.Root, fix.Path), profile.CLIFlags)
+			if upErr != nil {
+				// Skip expected failures silently.
+				if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
+					continue
+				}
+				// For unexpected upstream failures (e.g. a profile flag rejects valid code)
+				// skip writing a golden and log a warning — don't abort the whole run.
+				_ = upStderr
+				fmt.Fprintf(os.Stderr, "  SKIP %s/%s: upstream error (%v)\n", profileName, fix.Path, upErr)
+				continue
+			}
+
+			normalized := normalizeJSON(jsonOut)
+			if err2 := os.WriteFile(outPath, []byte(normalized), 0o644); err2 != nil {
+				return written, nil, fmt.Errorf("write %s: %w", outPath, err2)
+			}
+			written++
+		}
+	}
+	return written, nil, nil
+}
+
+// CompareVersionGoldens walks two version golden trees and reports any files
+// that differ. Returns a list of differing paths (relative to the golden root).
+func CompareVersionGoldens(outputDir, versionA, versionB string) ([]string, error) {
+	dirA := filepath.Join(outputDir, versionA)
+	var diffs []string
+
+	err := filepath.Walk(dirA, func(pathA string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() {
+			return err
+		}
+		rel, _ := filepath.Rel(dirA, pathA)
+		pathB := filepath.Join(outputDir, versionB, rel)
+
+		aBytes, err := os.ReadFile(pathA)
+		if err != nil {
+			return err
+		}
+		bBytes, err := os.ReadFile(pathB)
+		if os.IsNotExist(err) {
+			diffs = append(diffs, rel+" (missing in "+versionB+")")
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		if string(aBytes) != string(bBytes) {
+			diffs = append(diffs, rel)
+		}
+		return nil
+	})
+	return diffs, err
+}
+
 // normalizeJSON re-marshals JSON with sorted keys and consistent spacing.
 func normalizeJSON(s string) string {
 	var v interface{}
 	if err := json.Unmarshal([]byte(s), &v); err != nil {
 		return strings.TrimSpace(s)
 	}
-	// Strip translator-version-specific fields before comparison.
 	if m, ok := v.(map[string]interface{}); ok {
 		stripVolatileFields(m)
 	}
+	stripEmptyAnnotations(v)
 	b, _ := json.MarshalIndent(v, "", "  ")
 	return string(b)
+}
+
+// stripEmptyAnnotations recursively removes version-format-only empty arrays
+// from the JSON tree so 3.29.0 and 4.8.0 goldens can collapse:
+//   - "annotation": []  on any ELM node (4.8.0 emits it, 3.29.0 omits it)
+//   - "t": []           inside Annotation objects (tag array, same asymmetry)
+func stripEmptyAnnotations(v interface{}) {
+	switch node := v.(type) {
+	case map[string]interface{}:
+		if arr, ok := node["annotation"].([]interface{}); ok && len(arr) == 0 {
+			delete(node, "annotation")
+		}
+		// Strip empty tag array from Annotation nodes
+		if t, _ := node["type"].(string); t == "Annotation" {
+			if arr, ok := node["t"].([]interface{}); ok && len(arr) == 0 {
+				delete(node, "t")
+			}
+		}
+		for _, child := range node {
+			stripEmptyAnnotations(child)
+		}
+	case []interface{}:
+		for _, item := range node {
+			stripEmptyAnnotations(item)
+		}
+	}
 }
 
 // stripVolatileFields removes fields that differ between translators/runs
@@ -209,18 +410,13 @@ func normalizeJSON(s string) string {
 func stripVolatileFields(m map[string]interface{}) {
 	if lib, ok := m["library"].(map[string]interface{}); ok {
 		if anns, ok := lib["annotation"].([]interface{}); ok {
-			// Filter to keep only CqlToElmInfo entries (strip diagnostic/warning annotations).
 			var kept []interface{}
 			for _, a := range anns {
 				if ann, ok := a.(map[string]interface{}); ok {
-					// Strip version-specific and implementation-specific fields from CqlToElmInfo.
 					delete(ann, "translatorVersion")
 					delete(ann, "translatorOptions")
 					delete(ann, "signatureLevel")
 					delete(ann, "compatibilityLevel")
-					// Drop diagnostic entries (CqlToElmError) — these are compiler
-					// warnings/errors that vary by resolver depth (e.g. FHIRHelpers
-					// overload warnings). Keep only structural annotations.
 					if t, _ := ann["type"].(string); t == "CqlToElmError" {
 						continue
 					}
@@ -272,41 +468,30 @@ func Summary(results []FixtureResult) map[Status]int {
 	return m
 }
 
-// GenerateGoldens runs the upstream CQF CLI for every non-failure fixture and
-// writes the normalized JSON output to outputDir/<version>/<fixture-path>.json.
-// It is intended to be called once (e.g. via demo/goldens) to produce or
-// refresh the committed golden files used by TestGoldenCorpus.
-func GenerateGoldens(cfg Config, outputDir string) (int, error) {
-	corpus, err := LoadCorpus(cfg.CorpusDir)
-	if err != nil {
-		return 0, err
+// sortedProfileNames returns profile keys in sorted order.
+func sortedProfileNames(profiles map[string]OptionProfile) []string {
+	names := make([]string, 0, len(profiles))
+	for k := range profiles {
+		names = append(names, k)
 	}
+	sort.Strings(names)
+	return names
+}
 
-	launcher := upstreamLauncher(cfg.ToolsDir, cfg.CQFVersion)
-	written := 0
-
-	for _, fix := range corpus.Fixtures {
-		cqlPath := filepath.Join(corpus.Root, fix.Path)
-		outPath := filepath.Join(outputDir, cfg.CQFVersion,
-			strings.TrimSuffix(fix.Path, ".cql")+".json")
-
-		if err := os.MkdirAll(filepath.Dir(outPath), 0o755); err != nil {
-			return written, fmt.Errorf("mkdir %s: %w", filepath.Dir(outPath), err)
-		}
-
-		jsonOut, _, err := runUpstream(launcher, cqlPath)
-		if err != nil {
-			if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
-				continue // no golden for expected-failure fixtures
-			}
-			return written, fmt.Errorf("upstream %s: %w", fix.Path, err)
-		}
-
-		normalized := normalizeJSON(jsonOut)
-		if err := os.WriteFile(outPath, []byte(normalized), 0o644); err != nil {
-			return written, fmt.Errorf("write %s: %w", outPath, err)
-		}
-		written++
+// resolveProfileNames filters the fixture”s profile names to those present
+// in the corpus”s option_profiles map, preserving order.
+func resolveProfileNames(fixProfiles, allProfiles []string) []string {
+	allSet := make(map[string]bool, len(allProfiles))
+	for _, p := range allProfiles {
+		allSet[p] = true
 	}
-	return written, nil
+	var out []string
+	seen := map[string]bool{}
+	for _, p := range fixProfiles {
+		if allSet[p] && !seen[p] {
+			out = append(out, p)
+			seen[p] = true
+		}
+	}
+	return out
 }

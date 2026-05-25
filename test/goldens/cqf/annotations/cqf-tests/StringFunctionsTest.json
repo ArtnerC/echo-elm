@@ -1,0 +1,1529 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "378",
+          "s": [
+            {
+              "value": [
+                "",
+                "library StringFunctionsTest"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "StringFunctionsTest"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringLen",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "213",
+                    "s": [
+                      {
+                        "value": [
+                          "Length",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "209",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "213",
+            "operand": {
+              "localId": "209",
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Length"
+          },
+          "localId": "208",
+          "name": "StringLen"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "216",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringUpper",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "221",
+                    "s": [
+                      {
+                        "value": [
+                          "Upper",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "217",
+                        "s": [
+                          {
+                            "value": [
+                              "'hello'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "221",
+            "operand": {
+              "localId": "217",
+              "type": "Literal",
+              "value": "hello",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "localId": "216",
+          "name": "StringUpper"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "224",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringLower",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "229",
+                    "s": [
+                      {
+                        "value": [
+                          "Lower",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "225",
+                        "s": [
+                          {
+                            "value": [
+                              "'HELLO'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "229",
+            "operand": {
+              "localId": "225",
+              "type": "Literal",
+              "value": "HELLO",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "localId": "224",
+          "name": "StringLower"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "232",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringSubstring",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "238",
+                    "s": [
+                      {
+                        "value": [
+                          "Substring",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "233",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "235",
+                        "value": [
+                          ", ",
+                          "6",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "238",
+            "signature": [],
+            "startIndex": {
+              "localId": "235",
+              "type": "Literal",
+              "value": "6",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "localId": "233",
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "localId": "232",
+          "name": "StringSubstring"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "241",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringSubstringLen",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "248",
+                    "s": [
+                      {
+                        "value": [
+                          "Substring",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "242",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "244",
+                        "value": [
+                          ", ",
+                          "6",
+                          ", ",
+                          "5",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "length": {
+              "localId": "245",
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "localId": "248",
+            "signature": [],
+            "startIndex": {
+              "localId": "244",
+              "type": "Literal",
+              "value": "6",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "localId": "242",
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "localId": "241",
+          "name": "StringSubstringLen"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "251",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringIndexOf",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "259",
+                    "s": [
+                      {
+                        "value": [
+                          "IndexOf",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "252",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "254",
+                        "s": [
+                          {
+                            "value": [
+                              "'World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "element": {
+              "localId": "254",
+              "type": "Literal",
+              "value": "World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "localId": "259",
+            "signature": [],
+            "source": {
+              "localId": "260",
+              "operand": {
+                "localId": "252",
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              "signature": [],
+              "type": "ToList"
+            },
+            "type": "IndexOf"
+          },
+          "localId": "251",
+          "name": "StringIndexOf"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "263",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringStartsWith",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "270",
+                    "s": [
+                      {
+                        "value": [
+                          "StartsWith",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "264",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "266",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "270",
+            "operand": [
+              {
+                "localId": "264",
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "localId": "266",
+                "type": "Literal",
+                "value": "Hello",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "localId": "263",
+          "name": "StringStartsWith"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "273",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringEndsWith",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "280",
+                    "s": [
+                      {
+                        "value": [
+                          "EndsWith",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "274",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "276",
+                        "s": [
+                          {
+                            "value": [
+                              "'World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "280",
+            "operand": [
+              {
+                "localId": "274",
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "localId": "276",
+                "type": "Literal",
+                "value": "World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "EndsWith"
+          },
+          "localId": "273",
+          "name": "StringEndsWith"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "283",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringContains",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "291",
+                    "s": [
+                      {
+                        "value": [
+                          "Contains",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "284",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "286",
+                        "s": [
+                          {
+                            "value": [
+                              "'lo W'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "291",
+            "operand": [
+              {
+                "localId": "292",
+                "operand": {
+                  "localId": "284",
+                  "type": "Literal",
+                  "value": "Hello World",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "signature": [],
+                "type": "ToList"
+              },
+              {
+                "localId": "286",
+                "type": "Literal",
+                "value": "lo W",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Contains"
+          },
+          "localId": "283",
+          "name": "StringContains"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "295",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringMatches",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "302",
+                    "s": [
+                      {
+                        "value": [
+                          "Matches",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "296",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello123'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "298",
+                        "s": [
+                          {
+                            "value": [
+                              "'[A-Za-z]+[0-9]+'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "302",
+            "operand": [
+              {
+                "localId": "296",
+                "type": "Literal",
+                "value": "Hello123",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "localId": "298",
+                "type": "Literal",
+                "value": "[A-Za-z]+[0-9]+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "localId": "295",
+          "name": "StringMatches"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "305",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringConcat",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "315",
+                    "s": [
+                      {
+                        "r": "312",
+                        "s": [
+                          {
+                            "r": "308",
+                            "s": [
+                              {
+                                "value": [
+                                  "'Hello'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " + "
+                            ]
+                          },
+                          {
+                            "r": "310",
+                            "s": [
+                              {
+                                "value": [
+                                  "' '"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " + "
+                        ]
+                      },
+                      {
+                        "r": "313",
+                        "s": [
+                          {
+                            "value": [
+                              "'World'"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "315",
+            "operand": [
+              {
+                "localId": "312",
+                "operand": [
+                  {
+                    "localId": "308",
+                    "type": "Literal",
+                    "value": "Hello",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "localId": "310",
+                    "type": "Literal",
+                    "value": " ",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Concatenate"
+              },
+              {
+                "localId": "313",
+                "type": "Literal",
+                "value": "World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "localId": "305",
+          "name": "StringConcat"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "318",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CombineList",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "328",
+                    "s": [
+                      {
+                        "value": [
+                          "Combine",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "319",
+                        "s": [
+                          {
+                            "value": [
+                              "{"
+                            ]
+                          },
+                          {
+                            "r": "320",
+                            "s": [
+                              {
+                                "value": [
+                                  "'a'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "r": "322",
+                            "s": [
+                              {
+                                "value": [
+                                  "'b'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "r": "324",
+                            "s": [
+                              {
+                                "value": [
+                                  "'c'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "328",
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "localId": "320",
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "localId": "322",
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "localId": "324",
+                  "type": "Literal",
+                  "value": "c",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "localId": "319",
+              "type": "List"
+            },
+            "type": "Combine"
+          },
+          "localId": "318",
+          "name": "CombineList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "331",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CombineWithSep",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "343",
+                    "s": [
+                      {
+                        "value": [
+                          "Combine",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "332",
+                        "s": [
+                          {
+                            "value": [
+                              "{"
+                            ]
+                          },
+                          {
+                            "r": "333",
+                            "s": [
+                              {
+                                "value": [
+                                  "'a'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "r": "335",
+                            "s": [
+                              {
+                                "value": [
+                                  "'b'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "r": "337",
+                            "s": [
+                              {
+                                "value": [
+                                  "'c'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "339",
+                        "s": [
+                          {
+                            "value": [
+                              "', '"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "343",
+            "separator": {
+              "localId": "339",
+              "type": "Literal",
+              "value": ", ",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "localId": "333",
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "localId": "335",
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "localId": "337",
+                  "type": "Literal",
+                  "value": "c",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "localId": "332",
+              "type": "List"
+            },
+            "type": "Combine"
+          },
+          "localId": "331",
+          "name": "CombineWithSep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "346",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "SplitStr",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "353",
+                    "s": [
+                      {
+                        "value": [
+                          "Split",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "347",
+                        "s": [
+                          {
+                            "value": [
+                              "'a,b,c'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "349",
+                        "s": [
+                          {
+                            "value": [
+                              "','"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "353",
+            "separator": {
+              "localId": "349",
+              "type": "Literal",
+              "value": ",",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "localId": "347",
+              "type": "Literal",
+              "value": "a,b,c",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Split"
+          },
+          "localId": "346",
+          "name": "SplitStr"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "356",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ReplaceStr",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "365",
+                    "s": [
+                      {
+                        "value": [
+                          "ReplaceMatches",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "357",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "359",
+                        "s": [
+                          {
+                            "value": [
+                              "'World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "361",
+                        "s": [
+                          {
+                            "value": [
+                              "'CQL'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "365",
+            "operand": [
+              {
+                "localId": "357",
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "localId": "359",
+                "type": "Literal",
+                "value": "World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "localId": "361",
+                "type": "Literal",
+                "value": "CQL",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "ReplaceMatches"
+          },
+          "localId": "356",
+          "name": "ReplaceStr"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "368",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "PositionOf",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "375",
+                    "s": [
+                      {
+                        "value": [
+                          "PositionOf",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "369",
+                        "s": [
+                          {
+                            "value": [
+                              "'l'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "371",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "375",
+            "pattern": {
+              "localId": "369",
+              "type": "Literal",
+              "value": "l",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "localId": "371",
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "PositionOf"
+          },
+          "localId": "368",
+          "name": "PositionOf"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "378",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "LastPositionOf",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "385",
+                    "s": [
+                      {
+                        "value": [
+                          "LastPositionOf",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "379",
+                        "s": [
+                          {
+                            "value": [
+                              "'l'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "381",
+                        "s": [
+                          {
+                            "value": [
+                              "'Hello World'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "385",
+            "pattern": {
+              "localId": "379",
+              "type": "Literal",
+              "value": "l",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "localId": "381",
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "LastPositionOf"
+          },
+          "localId": "378",
+          "name": "LastPositionOf"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

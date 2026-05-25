@@ -1,0 +1,163 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "217",
+          "s": [
+            {
+              "value": [
+                "// test for https://github.com/cqframework/clinical_quality_language/issues/1293\n",
+                "library DefaultContext"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "DefaultContext"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "\"AbsNull Input\"",
+                      ":\n\t"
+                    ]
+                  },
+                  {
+                    "r": "214",
+                    "s": [
+                      {
+                        "value": [
+                          "Abs",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "209",
+                        "s": [
+                          {
+                            "r": "210",
+                            "value": [
+                              "null",
+                              " as "
+                            ]
+                          },
+                          {
+                            "r": "211",
+                            "s": [
+                              {
+                                "value": [
+                                  "Integer"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "214",
+            "locator": "5:2-5:21",
+            "operand": {
+              "asTypeSpecifier": {
+                "localId": "211",
+                "locator": "5:14-5:20",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "localId": "209",
+              "locator": "5:6-5:20",
+              "operand": {
+                "localId": "210",
+                "locator": "5:6-5:9",
+                "type": "Null"
+              },
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "signature": [],
+            "type": "Abs"
+          },
+          "localId": "208",
+          "locator": "4:1-5:21",
+          "name": "AbsNull Input"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "217",
+                "s": [
+                  {
+                    "r": "218",
+                    "value": [
+                      "",
+                      "define ",
+                      "\"AbsNull Output\"",
+                      ":\n\t",
+                      "null"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "218",
+            "locator": "7:2-7:5",
+            "type": "Null"
+          },
+          "localId": "217",
+          "locator": "6:1-7:5",
+          "name": "AbsNull Output"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

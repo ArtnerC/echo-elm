@@ -1,0 +1,420 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "ConversionFunctionsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "3:25-3:39",
+            "operand": {
+              "locator": "3:35-3:38",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToInteger"
+          },
+          "locator": "3:1-3:39",
+          "name": "ToIntFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "4:25-4:41",
+            "operand": {
+              "locator": "4:35-4:40",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDecimal"
+          },
+          "locator": "4:1-4:41",
+          "name": "ToDecFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "5:25-5:36",
+            "operand": {
+              "locator": "5:34-5:35",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "locator": "5:1-5:36",
+          "name": "ToStringFromInt"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "6:29-6:42",
+            "operand": {
+              "locator": "6:38-6:41",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "locator": "6:1-6:42",
+          "name": "ToStringFromDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "7:26-7:42",
+            "operand": {
+              "locator": "7:36-7:41",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToBoolean"
+          },
+          "locator": "7:1-7:42",
+          "name": "ToBoolFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "8:26-8:39",
+            "operand": {
+              "locator": "8:35-8:38",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "locator": "8:1-8:39",
+          "name": "ToStringFromBool"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "10:26-10:45",
+            "operand": {
+              "locator": "10:33-10:44",
+              "type": "Literal",
+              "value": "2020-01-15",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDate"
+          },
+          "locator": "10:1-10:45",
+          "name": "ToDateFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "11:30-11:62",
+            "operand": {
+              "locator": "11:41-11:61",
+              "type": "Literal",
+              "value": "2020-01-15T10:30:00",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDateTime"
+          },
+          "locator": "11:1-11:62",
+          "name": "ToDateTimeFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "12:26-12:43",
+            "operand": {
+              "locator": "12:33-12:42",
+              "type": "Literal",
+              "value": "10:30:00",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToTime"
+          },
+          "locator": "12:1-12:43",
+          "name": "ToTimeFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "14:26-14:46",
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "14:35-14:45",
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "locator": "14:1-14:46",
+          "name": "ToStringFromDate"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "15:30-15:59",
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "15:39-15:58",
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "locator": "15:1-15:59",
+          "name": "ToStringFromDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "17:26-17:48",
+            "operand": {
+              "locator": "17:34-17:37",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToInteger"
+          },
+          "locator": "17:1-17:48",
+          "name": "ConvertToInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "18:26-18:50",
+            "operand": {
+              "locator": "18:34-18:39",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDecimal"
+          },
+          "locator": "18:1-18:50",
+          "name": "ConvertToDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "19:23-19:50",
+            "operand": {
+              "locator": "19:31-19:42",
+              "type": "Literal",
+              "value": "2020-01-15",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDate"
+          },
+          "locator": "19:1-19:50",
+          "name": "ConvertToDate"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "locator": "21:25-21:31",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "locator": "21:19-21:31",
+            "operand": {
+              "locator": "21:19-21:20",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "locator": "21:1-21:31",
+          "name": "IsInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "locator": "22:27-22:33",
+              "name": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "NamedTypeSpecifier"
+            },
+            "locator": "22:19-22:33",
+            "operand": {
+              "locator": "22:19-22:22",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "locator": "22:1-22:33",
+          "name": "IsDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "locator": "23:29-23:34",
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "locator": "23:18-23:34",
+            "operand": {
+              "locator": "23:18-23:24",
+              "type": "Literal",
+              "value": "hello",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "locator": "23:1-23:34",
+          "name": "IsString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "locator": "24:27-24:33",
+              "name": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "NamedTypeSpecifier"
+            },
+            "locator": "24:19-24:33",
+            "operand": {
+              "locator": "24:19-24:22",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "locator": "24:1-24:33",
+          "name": "IsBoolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "asTypeSpecifier": {
+              "locator": "26:25-26:31",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "locator": "26:19-26:31",
+            "operand": {
+              "locator": "26:19-26:20",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "strict": false,
+            "type": "As"
+          },
+          "locator": "26:1-26:31",
+          "name": "AsInteger"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,407 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "StringFunctionsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Length"
+          },
+          "name": "StringLen"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "type": "Literal",
+              "value": "hello",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "name": "StringUpper"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "type": "Literal",
+              "value": "HELLO",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "name": "StringLower"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "startIndex": {
+              "type": "Literal",
+              "value": "6",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "StringSubstring"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "length": {
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "startIndex": {
+              "type": "Literal",
+              "value": "6",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "StringSubstringLen"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "element": {
+              "type": "Literal",
+              "value": "World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "source": {
+              "operand": {
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              "signature": [],
+              "type": "ToList"
+            },
+            "type": "IndexOf"
+          },
+          "name": "StringIndexOf"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "type": "Literal",
+                "value": "Hello",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "name": "StringStartsWith"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "type": "Literal",
+                "value": "World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "EndsWith"
+          },
+          "name": "StringEndsWith"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "operand": {
+                  "type": "Literal",
+                  "value": "Hello World",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "signature": [],
+                "type": "ToList"
+              },
+              {
+                "type": "Literal",
+                "value": "lo W",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Contains"
+          },
+          "name": "StringContains"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "Hello123",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "type": "Literal",
+                "value": "[A-Za-z]+[0-9]+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "StringMatches"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "type": "Literal",
+                    "value": "Hello",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": " ",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Concatenate"
+              },
+              {
+                "type": "Literal",
+                "value": "World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "StringConcat"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "type": "Literal",
+                  "value": "c",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Combine"
+          },
+          "name": "CombineList"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "separator": {
+              "type": "Literal",
+              "value": ", ",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "type": "Literal",
+                  "value": "c",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Combine"
+          },
+          "name": "CombineWithSep"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "separator": {
+              "type": "Literal",
+              "value": ",",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "type": "Literal",
+              "value": "a,b,c",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Split"
+          },
+          "name": "SplitStr"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "Hello World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "type": "Literal",
+                "value": "World",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "type": "Literal",
+                "value": "CQL",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "ReplaceMatches"
+          },
+          "name": "ReplaceStr"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "pattern": {
+              "type": "Literal",
+              "value": "l",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "pattern": {
+              "type": "Literal",
+              "value": "l",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "type": "Literal",
+              "value": "Hello World",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "LastPositionOf"
+          },
+          "name": "LastPositionOf"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

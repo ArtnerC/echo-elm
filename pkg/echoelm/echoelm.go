@@ -57,6 +57,18 @@ func WithCQFOptions() Option {
 	}
 }
 
+// WithIntervalDemotion enables implicit demotion of Interval<T> to T.
+// CQF flag: --enable-interval-demotion. Default off.
+func WithIntervalDemotion(v bool) Option {
+	return func(o *translator.Options) { o.EnableIntervalDemotion = v }
+}
+
+// WithIntervalPromotion enables implicit promotion of T to Interval<T>.
+// CQF flag: --enable-interval-promotion. Default off.
+func WithIntervalPromotion(v bool) Option {
+	return func(o *translator.Options) { o.EnableIntervalPromotion = v }
+}
+
 // WithLibrarySource sets a custom LibrarySource for resolving include declarations.
 func WithLibrarySource(src LibrarySource) Option {
 	return func(o *translator.Options) { o.LibrarySource = src }
@@ -147,4 +159,3 @@ func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult,
 
 	return result, nil
 }
-

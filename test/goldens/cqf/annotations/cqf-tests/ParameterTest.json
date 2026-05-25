@@ -1,0 +1,368 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "localId": "0",
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "206",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "parameter ",
+                      "x",
+                      " "
+                    ]
+                  },
+                  {
+                    "r": "207",
+                    "s": [
+                      {
+                        "value": [
+                          "Tuple { "
+                        ]
+                      },
+                      {
+                        "r": "208",
+                        "s": [
+                          {
+                            "value": [
+                              "x",
+                              " "
+                            ]
+                          },
+                          {
+                            "r": "209",
+                            "s": [
+                              {
+                                "value": [
+                                  "Boolean"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " }"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localId": "206",
+          "name": "x",
+          "parameterTypeSpecifier": {
+            "element": [
+              {
+                "elementType": {
+                  "localId": "209",
+                  "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "NamedTypeSpecifier"
+                },
+                "localId": "208",
+                "name": "x"
+              }
+            ],
+            "localId": "207",
+            "type": "TupleTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "211",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "parameter ",
+                      "a",
+                      " "
+                    ]
+                  },
+                  {
+                    "r": "212",
+                    "s": [
+                      {
+                        "value": [
+                          "List\u003c"
+                        ]
+                      },
+                      {
+                        "r": "213",
+                        "s": [
+                          {
+                            "value": [
+                              "List\u003c"
+                            ]
+                          },
+                          {
+                            "r": "214",
+                            "s": [
+                              {
+                                "value": [
+                                  "Boolean"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "\u003e"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\u003e"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localId": "211",
+          "name": "a",
+          "parameterTypeSpecifier": {
+            "elementType": {
+              "elementType": {
+                "localId": "214",
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              },
+              "localId": "213",
+              "type": "ListTypeSpecifier"
+            },
+            "localId": "212",
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "218",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "b",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "219",
+                    "s": [
+                      {
+                        "r": "220",
+                        "s": [
+                          {
+                            "r": "221",
+                            "s": [
+                              {
+                                "value": [
+                                  "a"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "r": "222",
+                            "value": [
+                              "[",
+                              "1",
+                              "]"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "223",
+                        "value": [
+                          "[",
+                          "1",
+                          "]"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "219",
+            "operand": [
+              {
+                "localId": "220",
+                "operand": [
+                  {
+                    "localId": "221",
+                    "name": "a",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "localId": "222",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Indexer"
+              },
+              {
+                "localId": "223",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "localId": "218",
+          "name": "b"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "226",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "c",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "227",
+                    "s": [
+                      {
+                        "value": [
+                          "if "
+                        ]
+                      },
+                      {
+                        "r": "228",
+                        "s": [
+                          {
+                            "value": [
+                              "b"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " then "
+                        ]
+                      },
+                      {
+                        "r": "229",
+                        "s": [
+                          {
+                            "value": [
+                              "'yes'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " else "
+                        ]
+                      },
+                      {
+                        "r": "231",
+                        "s": [
+                          {
+                            "value": [
+                              "'no'"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "localId": "228",
+              "name": "b",
+              "type": "ExpressionRef"
+            },
+            "else": {
+              "localId": "231",
+              "type": "Literal",
+              "value": "no",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "localId": "227",
+            "then": {
+              "localId": "229",
+              "type": "Literal",
+              "value": "yes",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "localId": "226",
+          "name": "c"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

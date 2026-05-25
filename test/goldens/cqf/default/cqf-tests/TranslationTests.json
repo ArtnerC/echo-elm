@@ -1,0 +1,1151 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "PropertyTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "patient-qicore-qicore-patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "type": "Literal",
+            "value": "This string's escaped",
+            "valueType": "{urn:hl7-org:elm-types:r1}String"
+          },
+          "name": "EscapedString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "type": "Literal",
+            "value": "This identifier's escaped",
+            "valueType": "{urn:hl7-org:elm-types:r1}String"
+          },
+          "name": "Escaped\"Identifier"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "operand": {
+                      "operand": {
+                        "path": "birthDate",
+                        "source": {
+                          "name": "Patient",
+                          "type": "ExpressionRef"
+                        },
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "type": "ToDate"
+                    },
+                    "precision": "Year",
+                    "signature": [],
+                    "type": "CalculateAge"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "18",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "GreaterOrEqual"
+              },
+              {
+                "code": {
+                  "path": "gender",
+                  "source": {
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "InValueSet",
+                "valueset": {
+                  "name": "Female Administrative Sex",
+                  "preserve": true
+                }
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "InDemographic"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "operand": {
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "element": [
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "operand": {
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      },
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "operand": {
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      },
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "operand": {
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      }
+                    ],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "name": "MedianAny"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "operand": {
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "element": [
+                      {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "type": "Literal",
+                        "value": "3",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "name": "MedianInt"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "b",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "c",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "ListsOfLists"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "element": [
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "name": "LotsOfDups"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "IncludedIn"
+          },
+          "name": "IsIncluded"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "ProperIncludes"
+          },
+          "name": "IsProperlyIncludes"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "ProperIncludedIn"
+          },
+          "name": "IsProperlyIncluded"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "EqInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "EqIntervals"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "element": [
+                        {
+                          "name": "c",
+                          "value": {
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "type": "Tuple"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "element": [
+                        {
+                          "name": "c",
+                          "value": {
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "type": "Tuple"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "EqTuples"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "EqLists"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "name": "IsNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "StringConcat"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "CoalesceExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "CoalesceWithNulls"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "HasNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "element": [],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "Empty"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "TypedHasNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "element": [],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "TypedEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "operand": [
+                    {
+                      "path": "value",
+                      "scope": "X",
+                      "type": "Property"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "A"
+              },
+              {
+                "expression": {
+                  "operand": [
+                    {
+                      "name": "A",
+                      "type": "QueryLetRef"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "B"
+              }
+            ],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "path": "id",
+                      "scope": "X",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "value": {
+                      "path": "value",
+                      "scope": "X",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "a",
+                    "value": {
+                      "name": "A",
+                      "type": "QueryLetRef"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "name": "B",
+                      "type": "QueryLetRef"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              }
+            },
+            "source": [
+              {
+                "alias": "X",
+                "expression": {
+                  "element": [
+                    {
+                      "element": [
+                        {
+                          "name": "id",
+                          "value": {
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "type": "Literal",
+                            "value": "10",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "type": "Tuple"
+                    },
+                    {
+                      "element": [
+                        {
+                          "name": "id",
+                          "value": {
+                            "type": "Literal",
+                            "value": "2",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "type": "Literal",
+                            "value": "20",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "type": "Tuple"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "NestedLet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "QUICK",
+          "uri": "http://hl7.org/fhir"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "2.16.840.1.113883.3.560.100.2",
+          "name": "Female Administrative Sex"
+        }
+      ]
+    }
+  }
+}

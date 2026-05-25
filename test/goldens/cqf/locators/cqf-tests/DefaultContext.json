@@ -1,0 +1,64 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "DefaultContext"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "5:2-5:21",
+            "operand": {
+              "asTypeSpecifier": {
+                "locator": "5:14-5:20",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "locator": "5:6-5:20",
+              "operand": {
+                "locator": "5:6-5:9",
+                "type": "Null"
+              },
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "signature": [],
+            "type": "Abs"
+          },
+          "locator": "4:1-5:21",
+          "name": "AbsNull Input"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "7:2-7:5",
+            "type": "Null"
+          },
+          "locator": "6:1-7:5",
+          "name": "AbsNull Output"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

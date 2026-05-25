@@ -1,79 +1,142 @@
 package parity_test
 
 import (
-"os"
-"path/filepath"
-"strings"
-"testing"
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"sort"
+	"strings"
+	"testing"
 
-"github.com/artnerc/echo-elm/internal/parity"
+	"github.com/artnerc/echo-elm/internal/parity"
 )
 
-// TestGoldenCorpus runs every corpus fixture through echo-elm in CQF-compatible
-// mode and compares the JSON against the committed CQFramework reference outputs
-// in test/goldens/<version>/. This test does NOT invoke the Java CQF CLI — it
-// uses pre-generated golden files as the reference.
+// TestGoldenCorpus runs every corpus fixture × every applicable option profile
+// through echo-elm and compares normalized JSON against the committed CQF reference
+// goldens in test/goldens/cqf/<profile>/<fixture>.json.
+//
+// This test does NOT invoke the Java CQF CLI — it uses pre-generated golden files.
 //
 // Goldens are produced/refreshed by running:
 //
-//task parity:goldens
+// task parity:goldens
 //
-// which DOES invoke the Java CLI for each supported CQF version. If goldens for
-// a version are not present the sub-test is skipped with an informative message.
+// If goldens for a profile are not present the sub-test is skipped.
 func TestGoldenCorpus(t *testing.T) {
-corpusDir := filepath.Join("..", "..", "test", "corpus", "cqframework")
-goldensDir := filepath.Join("..", "..", "test", "goldens")
+	corpusDir := filepath.Join("..", "..", "test", "corpus", "cqframework")
+	goldensDir := filepath.Join("..", "..", "test", "goldens", "cqf")
 
-corpus, err := parity.LoadCorpus(corpusDir)
-if err != nil {
-t.Fatalf("load corpus: %v", err)
+	corpus, err := parity.LoadCorpus(corpusDir)
+	if err != nil {
+		t.Fatalf("load corpus: %v", err)
+	}
+
+	if _, statErr := os.Stat(goldensDir); os.IsNotExist(statErr) {
+		t.Skip("no canonical goldens — run: task parity:goldens")
+	}
+
+	profileNames := sortedKeys(corpus.OptionProfiles)
+
+	for _, profileName := range profileNames {
+		profileName := profileName
+		profile := corpus.OptionProfiles[profileName]
+
+		profileDir := filepath.Join(goldensDir, profileName)
+		if _, statErr := os.Stat(profileDir); os.IsNotExist(statErr) {
+			t.Run(profileName, func(t *testing.T) {
+				t.Skipf("no goldens for profile %s — run: task parity:goldens", profileName)
+			})
+			continue
+		}
+
+		t.Run(profileName, func(t *testing.T) {
+			if profile.PendingImplementation {
+				t.Skipf("profile %s pending implementation — not yet emitted by echo-elm", profileName)
+			}
+			translateFn := parity.ProfileTranslateFunc(profile)
+			for _, fix := range corpus.Fixtures {
+				fix := fix
+
+				// Skip fixtures that exclude this profile.
+				fixProfiles := fix.ProfileNames(corpus.OptionProfiles)
+				if !contains(fixProfiles, profileName) {
+					continue
+				}
+
+				name := strings.TrimSuffix(strings.ReplaceAll(fix.Path, "/", "_"), ".cql")
+				t.Run(name, func(t *testing.T) {
+					cqlPath := filepath.Join(corpusDir, fix.Path)
+					goldenPath := filepath.Join(profileDir,
+						strings.TrimSuffix(fix.Path, ".cql")+".json")
+
+					goldenBytes, err := os.ReadFile(goldenPath)
+					if err != nil {
+						if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
+							t.Skipf("no golden (expected: %s)", fix.ExpectedStatus)
+						}
+						t.Fatalf("read golden %s: %v\n  run: task parity:goldens", goldenPath, err)
+					}
+
+					echoBytes, err := translateFn(cqlPath)
+					if err != nil {
+						t.Fatalf("translate %s: %v", cqlPath, err)
+					}
+
+					gotJSON := parity.NormalizeForGolden(string(echoBytes))
+					wantJSON := parity.NormalizeForGolden(string(goldenBytes))
+
+					if gotJSON != wantJSON {
+						diff := parity.SimpleDiff(wantJSON, gotJSON)
+						t.Errorf("golden mismatch %s %s:\n%s",
+							profileName, fix.Path, diff)
+					}
+				})
+			}
+		})
+	}
 }
 
-translateFn := parity.CQFTranslateFunc()
+// TestGoldenJSONWellFormed verifies every committed golden is valid JSON.
+func TestGoldenJSONWellFormed(t *testing.T) {
+	goldensDir := filepath.Join("..", "..", "test", "goldens", "cqf")
+	if _, err := os.Stat(goldensDir); os.IsNotExist(err) {
+		t.Skip("no goldens committed yet — run: task parity:goldens")
+	}
 
-// Test against every CQF version for which committed goldens exist.
-for _, version := range []string{"3.29.0", "4.8.0"} {
-version := version
-versionDir := filepath.Join(goldensDir, version)
-
-if _, statErr := os.Stat(versionDir); os.IsNotExist(statErr) {
-t.Run("cqf-"+version, func(t *testing.T) {
-t.Skipf("no goldens for cqf %s — run: task parity:goldens", version)
-})
-continue
+	err := filepath.Walk(goldensDir, func(path string, info os.FileInfo, err error) error {
+		if err != nil || info.IsDir() || !strings.HasSuffix(path, ".json") {
+			return err
+		}
+		data, err := os.ReadFile(path)
+		if err != nil {
+			return fmt.Errorf("read %s: %w", path, err)
+		}
+		var v interface{}
+		if err := json.Unmarshal(data, &v); err != nil {
+			return fmt.Errorf("invalid JSON in %s: %w", path, err)
+		}
+		return nil
+	})
+	if err != nil {
+		t.Errorf("malformed golden: %v", err)
+	}
 }
 
-t.Run("cqf-"+version, func(t *testing.T) {
-for _, fix := range corpus.Fixtures {
-fix := fix
-name := strings.TrimSuffix(strings.ReplaceAll(fix.Path, "/", "_"), ".cql")
-t.Run(name, func(t *testing.T) {
-cqlPath := filepath.Join(corpusDir, fix.Path)
-goldenPath := filepath.Join(versionDir,
-strings.TrimSuffix(fix.Path, ".cql")+".json")
-
-goldenBytes, err := os.ReadFile(goldenPath)
-if err != nil {
-if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
-t.Skipf("no golden (expected: %s)", fix.ExpectedStatus)
-}
-t.Fatalf("read golden %s: %v", goldenPath, err)
+func sortedKeys(m map[string]parity.OptionProfile) []string {
+	keys := make([]string, 0, len(m))
+	for k := range m {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	return keys
 }
 
-echoBytes, err := translateFn(cqlPath)
-if err != nil {
-t.Fatalf("translate %s: %v", cqlPath, err)
-}
-
-gotJSON := parity.NormalizeForGolden(string(echoBytes))
-wantJSON := parity.NormalizeForGolden(string(goldenBytes))
-
-if gotJSON != wantJSON {
-diff := parity.SimpleDiff(wantJSON, gotJSON)
-t.Errorf("golden mismatch for cqf-%s %s:\n%s", version, fix.Path, diff)
-}
-})
-}
-})
-}
+func contains(ss []string, s string) bool {
+	for _, x := range ss {
+		if x == s {
+			return true
+		}
+	}
+	return false
 }

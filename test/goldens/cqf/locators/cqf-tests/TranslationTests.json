@@ -1,0 +1,1349 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "PropertyTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "7:1-7:15",
+              "otherFilter": [],
+              "templateId": "patient-qicore-qicore-patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "9:23-9:46",
+            "type": "Literal",
+            "value": "This string's escaped",
+            "valueType": "{urn:hl7-org:elm-types:r1}String"
+          },
+          "locator": "9:1-9:46",
+          "name": "EscapedString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "10:31-10:58",
+            "type": "Literal",
+            "value": "This identifier's escaped",
+            "valueType": "{urn:hl7-org:elm-types:r1}String"
+          },
+          "locator": "10:1-10:58",
+          "name": "Escaped\"Identifier"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "13:5-14:57",
+            "operand": [
+              {
+                "locator": "13:5-13:22",
+                "operand": [
+                  {
+                    "locator": "13:5-13:16",
+                    "operand": {
+                      "operand": {
+                        "path": "birthDate",
+                        "source": {
+                          "name": "Patient",
+                          "type": "ExpressionRef"
+                        },
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "type": "ToDate"
+                    },
+                    "precision": "Year",
+                    "signature": [],
+                    "type": "CalculateAge"
+                  },
+                  {
+                    "locator": "13:21-13:22",
+                    "type": "Literal",
+                    "value": "18",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "GreaterOrEqual"
+              },
+              {
+                "code": {
+                  "locator": "14:13-14:26",
+                  "path": "gender",
+                  "source": {
+                    "locator": "14:13-14:19",
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "locator": "14:13-14:57",
+                "signature": [],
+                "type": "InValueSet",
+                "valueset": {
+                  "locator": "14:31-14:57",
+                  "name": "Female Administrative Sex",
+                  "preserve": true
+                }
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "locator": "12:1-14:57",
+          "name": "InDemographic"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "16:19-16:59",
+            "signature": [],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "operand": {
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "element": [
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "operand": {
+                          "locator": "16:41-16:44",
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      },
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "operand": {
+                          "locator": "16:47-16:50",
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      },
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "operand": {
+                          "locator": "16:53-16:56",
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      }
+                    ],
+                    "locator": "16:26-16:58",
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "locator": "16:1-16:59",
+          "name": "MedianAny"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "17:19-17:37",
+            "signature": [],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "operand": {
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "element": [
+                      {
+                        "locator": "17:28",
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "locator": "17:31",
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "locator": "17:34",
+                        "type": "Literal",
+                        "value": "3",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "locator": "17:26-17:36",
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "locator": "17:1-17:37",
+          "name": "MedianInt"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "locator": "19:39-19:41",
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "locator": "19:43-19:45",
+                    "type": "Literal",
+                    "value": "b",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "locator": "19:47-19:49",
+                    "type": "Literal",
+                    "value": "c",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "locator": "19:38-19:50",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "locator": "19:53",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "19:55",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "19:57",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "19:52-19:58",
+                "type": "List"
+              }
+            ],
+            "locator": "19:22-19:59",
+            "type": "List"
+          },
+          "locator": "19:1-19:59",
+          "name": "ListsOfLists"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "20:20-20:85",
+            "operand": {
+              "element": [
+                {
+                  "locator": "20:30",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:33",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:36",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:39",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:42",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:45",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:48",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:51",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:54",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:57",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:60",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:63",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:66",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:69",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:72",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:75",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:78",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:81",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "20:84",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "locator": "20:29-20:85",
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "locator": "20:1-20:85",
+          "name": "LotsOfDups"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "21:20-21:56",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "locator": "21:21",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:24",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:27",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "21:20-21:28",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "locator": "21:43",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:46",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:49",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:52",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:55",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "21:42-21:56",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "IncludedIn"
+          },
+          "locator": "21:1-21:56",
+          "name": "IsIncluded"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "22:28-22:73",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "locator": "22:29",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:32",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:35",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:38",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:41",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "22:28-22:42",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "locator": "22:63",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:66",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:69",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "22:72",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "22:62-22:73",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "ProperIncludes"
+          },
+          "locator": "22:1-22:73",
+          "name": "IsProperlyIncludes"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "23:28-23:73",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "locator": "23:29",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "23:32",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "23:35",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "23:28-23:36",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "locator": "23:60",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "23:63",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "23:66",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "23:69",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "23:72",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "23:59-23:73",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "ProperIncludedIn"
+          },
+          "locator": "23:1-23:73",
+          "name": "IsProperlyIncluded"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "24:19-24:23",
+            "operand": [
+              {
+                "locator": "24:19",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "24:23",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "24:1-24:23",
+          "name": "EqInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "25:21-25:51",
+            "operand": [
+              {
+                "high": {
+                  "locator": "25:33",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "locator": "25:21-25:34",
+                "low": {
+                  "locator": "25:30",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "locator": "25:50",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "locator": "25:38-25:51",
+                "low": {
+                  "locator": "25:47",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "25:1-25:51",
+          "name": "EqIntervals"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "26:18-26:74",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "locator": "26:27",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "element": [
+                        {
+                          "name": "c",
+                          "value": {
+                            "locator": "26:42",
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "locator": "26:33-26:43",
+                      "type": "Tuple"
+                    }
+                  }
+                ],
+                "locator": "26:18-26:44",
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "locator": "26:57",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "element": [
+                        {
+                          "name": "c",
+                          "value": {
+                            "locator": "26:72",
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "locator": "26:63-26:73",
+                      "type": "Tuple"
+                    }
+                  }
+                ],
+                "locator": "26:48-26:74",
+                "type": "Tuple"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "26:1-26:74",
+          "name": "EqTuples"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "27:17-27:41",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "locator": "27:19",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "27:22",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "27:25",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "27:17-27:27",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "locator": "27:33",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "27:36",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "27:39",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "27:31-27:41",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "27:1-27:41",
+          "name": "EqLists"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "29:16-29:24",
+            "operand": {
+              "locator": "29:16",
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "locator": "29:1-29:24",
+          "name": "IsNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "30:22-30:30",
+            "operand": [
+              {
+                "locator": "30:22-30:24",
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "locator": "30:28-30:30",
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "locator": "30:1-30:30",
+          "name": "StringConcat"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "31:28-31:50",
+            "operand": [
+              {
+                "locator": "31:37",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "31:40",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "31:43",
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "31:46",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "31:49",
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "locator": "31:1-31:50",
+          "name": "CoalesceExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "32:27-32:55",
+            "operand": [
+              {
+                "locator": "32:36",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "locator": "32:39-32:42",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "locator": "32:45-32:48",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "locator": "32:51",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "32:54",
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "locator": "32:1-32:55",
+          "name": "CoalesceWithNulls"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "34:17-34:49",
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "locator": "34:25",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "34:28-34:31",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "34:34-34:37",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "34:40-34:43",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "locator": "34:46",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "locator": "34:23-34:48",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "locator": "34:1-34:49",
+          "name": "HasNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "35:15-35:24",
+            "signature": [],
+            "source": {
+              "element": [],
+              "locator": "35:21-35:23",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "locator": "35:1-35:24",
+          "name": "Empty"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "37:22-37:68",
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "locator": "37:44",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "37:47-37:50",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "37:53-37:56",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "37:59-37:62",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "locator": "37:65",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "locator": "37:28-37:67",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "locator": "37:1-37:68",
+          "name": "TypedHasNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "38:20-38:43",
+            "signature": [],
+            "source": {
+              "element": [],
+              "locator": "38:26-38:42",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "locator": "38:1-38:43",
+          "name": "TypedEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "locator": "43:10-43:23",
+                  "operand": [
+                    {
+                      "locator": "43:11-43:17",
+                      "path": "value",
+                      "scope": "X",
+                      "type": "Property"
+                    },
+                    {
+                      "locator": "43:21-43:22",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "A",
+                "locator": "43:7-43:23"
+              },
+              {
+                "expression": {
+                  "locator": "44:10-44:15",
+                  "operand": [
+                    {
+                      "locator": "44:10",
+                      "name": "A",
+                      "type": "QueryLetRef"
+                    },
+                    {
+                      "locator": "44:14-44:15",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "B",
+                "locator": "44:7-44:15"
+              }
+            ],
+            "locator": "41:3-50:5",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "locator": "46:11-46:14",
+                      "path": "id",
+                      "scope": "X",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "value": {
+                      "locator": "47:14-47:20",
+                      "path": "value",
+                      "scope": "X",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "a",
+                    "value": {
+                      "locator": "48:10",
+                      "name": "A",
+                      "type": "QueryLetRef"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "locator": "49:10",
+                      "name": "B",
+                      "type": "QueryLetRef"
+                    }
+                  }
+                ],
+                "locator": "45:12-50:5",
+                "type": "Tuple"
+              },
+              "locator": "45:5-50:5"
+            },
+            "source": [
+              {
+                "alias": "X",
+                "expression": {
+                  "element": [
+                    {
+                      "element": [
+                        {
+                          "name": "id",
+                          "value": {
+                            "locator": "41:12",
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "locator": "41:22-41:23",
+                            "type": "Literal",
+                            "value": "10",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "locator": "41:6-41:25",
+                      "type": "Tuple"
+                    },
+                    {
+                      "element": [
+                        {
+                          "name": "id",
+                          "value": {
+                            "locator": "41:34",
+                            "type": "Literal",
+                            "value": "2",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "locator": "41:44-41:45",
+                            "type": "Literal",
+                            "value": "20",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "locator": "41:28-41:47",
+                      "type": "Tuple"
+                    }
+                  ],
+                  "locator": "41:3-41:50",
+                  "type": "List"
+                },
+                "locator": "41:3-41:52"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "40:1-50:5",
+          "name": "NestedLet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "QUICK",
+          "locator": "3:1-3:11",
+          "uri": "http://hl7.org/fhir"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "2.16.840.1.113883.3.560.100.2",
+          "locator": "5:1-5:69",
+          "name": "Female Administrative Sex"
+        }
+      ]
+    }
+  }
+}

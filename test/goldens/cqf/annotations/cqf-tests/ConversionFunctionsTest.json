@@ -1,0 +1,1236 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "350",
+          "s": [
+            {
+              "value": [
+                "",
+                "library ConversionFunctionsTest"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "ConversionFunctionsTest"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToIntFromString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "213",
+                    "s": [
+                      {
+                        "value": [
+                          "ToInteger",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "209",
+                        "s": [
+                          {
+                            "value": [
+                              "'42'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "213",
+            "operand": {
+              "localId": "209",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToInteger"
+          },
+          "localId": "208",
+          "name": "ToIntFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "216",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToDecFromString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "221",
+                    "s": [
+                      {
+                        "value": [
+                          "ToDecimal",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "217",
+                        "s": [
+                          {
+                            "value": [
+                              "'3.14'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "221",
+            "operand": {
+              "localId": "217",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDecimal"
+          },
+          "localId": "216",
+          "name": "ToDecFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "224",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToStringFromInt",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "228",
+                    "s": [
+                      {
+                        "r": "225",
+                        "value": [
+                          "ToString",
+                          "(",
+                          "42",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "228",
+            "operand": {
+              "localId": "225",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "localId": "224",
+          "name": "ToStringFromInt"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "231",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToStringFromDecimal",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "235",
+                    "s": [
+                      {
+                        "r": "232",
+                        "value": [
+                          "ToString",
+                          "(",
+                          "3.14",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "235",
+            "operand": {
+              "localId": "232",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "localId": "231",
+          "name": "ToStringFromDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "238",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToBoolFromString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "243",
+                    "s": [
+                      {
+                        "value": [
+                          "ToBoolean",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "239",
+                        "s": [
+                          {
+                            "value": [
+                              "'true'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "243",
+            "operand": {
+              "localId": "239",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToBoolean"
+          },
+          "localId": "238",
+          "name": "ToBoolFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "246",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToStringFromBool",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "250",
+                    "s": [
+                      {
+                        "r": "247",
+                        "value": [
+                          "ToString",
+                          "(",
+                          "true",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "250",
+            "operand": {
+              "localId": "247",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "localId": "246",
+          "name": "ToStringFromBool"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "253",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToDateFromString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "258",
+                    "s": [
+                      {
+                        "value": [
+                          "ToDate",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "254",
+                        "s": [
+                          {
+                            "value": [
+                              "'2020-01-15'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "258",
+            "operand": {
+              "localId": "254",
+              "type": "Literal",
+              "value": "2020-01-15",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDate"
+          },
+          "localId": "253",
+          "name": "ToDateFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "261",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToDateTimeFromString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "266",
+                    "s": [
+                      {
+                        "value": [
+                          "ToDateTime",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "262",
+                        "s": [
+                          {
+                            "value": [
+                              "'2020-01-15T10:30:00'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "266",
+            "operand": {
+              "localId": "262",
+              "type": "Literal",
+              "value": "2020-01-15T10:30:00",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDateTime"
+          },
+          "localId": "261",
+          "name": "ToDateTimeFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "269",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToTimeFromString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "274",
+                    "s": [
+                      {
+                        "value": [
+                          "ToTime",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "270",
+                        "s": [
+                          {
+                            "value": [
+                              "'10:30:00'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "274",
+            "operand": {
+              "localId": "270",
+              "type": "Literal",
+              "value": "10:30:00",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToTime"
+          },
+          "localId": "269",
+          "name": "ToTimeFromString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "277",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToStringFromDate",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "285",
+                    "s": [
+                      {
+                        "r": "282",
+                        "value": [
+                          "ToString",
+                          "(",
+                          "@2020-01-15",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "285",
+            "operand": {
+              "day": {
+                "localId": "281",
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "localId": "282",
+              "month": {
+                "localId": "280",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "localId": "279",
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "localId": "277",
+          "name": "ToStringFromDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "288",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ToStringFromDateTime",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "298",
+                    "s": [
+                      {
+                        "r": "289",
+                        "value": [
+                          "ToString",
+                          "(",
+                          "@2020-01-15T10:30:00",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "298",
+            "operand": {
+              "day": {
+                "localId": "292",
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "localId": "293",
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "localId": "289",
+              "minute": {
+                "localId": "294",
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "localId": "291",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "localId": "295",
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "localId": "290",
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "localId": "288",
+          "name": "ToStringFromDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "301",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ConvertToInteger",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "306",
+                    "s": [
+                      {
+                        "value": [
+                          "convert "
+                        ]
+                      },
+                      {
+                        "r": "303",
+                        "s": [
+                          {
+                            "value": [
+                              "'42'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " to "
+                        ]
+                      },
+                      {
+                        "r": "302",
+                        "s": [
+                          {
+                            "value": [
+                              "Integer"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "306",
+            "operand": {
+              "localId": "303",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToInteger"
+          },
+          "localId": "301",
+          "name": "ConvertToInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "309",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ConvertToDecimal",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "314",
+                    "s": [
+                      {
+                        "value": [
+                          "convert "
+                        ]
+                      },
+                      {
+                        "r": "311",
+                        "s": [
+                          {
+                            "value": [
+                              "'3.14'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " to "
+                        ]
+                      },
+                      {
+                        "r": "310",
+                        "s": [
+                          {
+                            "value": [
+                              "Decimal"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "314",
+            "operand": {
+              "localId": "311",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDecimal"
+          },
+          "localId": "309",
+          "name": "ConvertToDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "317",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ConvertToDate",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "322",
+                    "s": [
+                      {
+                        "value": [
+                          "convert "
+                        ]
+                      },
+                      {
+                        "r": "319",
+                        "s": [
+                          {
+                            "value": [
+                              "'2020-01-15'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " to "
+                        ]
+                      },
+                      {
+                        "r": "318",
+                        "s": [
+                          {
+                            "value": [
+                              "Date"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "322",
+            "operand": {
+              "localId": "319",
+              "type": "Literal",
+              "value": "2020-01-15",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "ToDate"
+          },
+          "localId": "317",
+          "name": "ConvertToDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "325",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsInteger",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "326",
+                    "s": [
+                      {
+                        "r": "327",
+                        "value": [
+                          "42",
+                          " is "
+                        ]
+                      },
+                      {
+                        "r": "328",
+                        "s": [
+                          {
+                            "value": [
+                              "Integer"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "localId": "328",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "localId": "326",
+            "operand": {
+              "localId": "327",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "localId": "325",
+          "name": "IsInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "331",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsDecimal",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "332",
+                    "s": [
+                      {
+                        "r": "333",
+                        "value": [
+                          "3.14",
+                          " is "
+                        ]
+                      },
+                      {
+                        "r": "334",
+                        "s": [
+                          {
+                            "value": [
+                              "Decimal"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "localId": "334",
+              "name": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "NamedTypeSpecifier"
+            },
+            "localId": "332",
+            "operand": {
+              "localId": "333",
+              "type": "Literal",
+              "value": "3.14",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "localId": "331",
+          "name": "IsDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "337",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "338",
+                    "s": [
+                      {
+                        "r": "339",
+                        "s": [
+                          {
+                            "value": [
+                              "'hello'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " is "
+                        ]
+                      },
+                      {
+                        "r": "341",
+                        "s": [
+                          {
+                            "value": [
+                              "String"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "localId": "341",
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "localId": "338",
+            "operand": {
+              "localId": "339",
+              "type": "Literal",
+              "value": "hello",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "localId": "337",
+          "name": "IsString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "344",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsBoolean",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "345",
+                    "s": [
+                      {
+                        "r": "346",
+                        "value": [
+                          "true",
+                          " is "
+                        ]
+                      },
+                      {
+                        "r": "347",
+                        "s": [
+                          {
+                            "value": [
+                              "Boolean"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "isTypeSpecifier": {
+              "localId": "347",
+              "name": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "NamedTypeSpecifier"
+            },
+            "localId": "345",
+            "operand": {
+              "localId": "346",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "Is"
+          },
+          "localId": "344",
+          "name": "IsBoolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "350",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "AsInteger",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "351",
+                    "s": [
+                      {
+                        "r": "352",
+                        "value": [
+                          "42",
+                          " as "
+                        ]
+                      },
+                      {
+                        "r": "353",
+                        "s": [
+                          {
+                            "value": [
+                              "Integer"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "asTypeSpecifier": {
+              "localId": "353",
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "localId": "351",
+            "operand": {
+              "localId": "352",
+              "type": "Literal",
+              "value": "42",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "strict": false,
+            "type": "As"
+          },
+          "localId": "350",
+          "name": "AsInteger"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,3479 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "511",
+          "s": [
+            {
+              "value": [
+                "",
+                "library PropertyTest"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "localId": "213",
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "PropertyTest"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "localId": "212",
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "localId": "210",
+              "locator": "7:1-7:15",
+              "otherFilter": [],
+              "templateId": "patient-qicore-qicore-patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "localId": "211",
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "216",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "EscapedString",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "217",
+                    "s": [
+                      {
+                        "value": [
+                          "'This string\\'s escaped'"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "217",
+            "locator": "9:23-9:46",
+            "type": "Literal",
+            "value": "This string's escaped",
+            "valueType": "{urn:hl7-org:elm-types:r1}String"
+          },
+          "localId": "216",
+          "locator": "9:1-9:46",
+          "name": "EscapedString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "221",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "\"Escaped\\\"Identifier\"",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "222",
+                    "s": [
+                      {
+                        "value": [
+                          "'This identifier\\'s escaped'"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "222",
+            "locator": "10:31-10:58",
+            "type": "Literal",
+            "value": "This identifier's escaped",
+            "valueType": "{urn:hl7-org:elm-types:r1}String"
+          },
+          "localId": "221",
+          "locator": "10:1-10:58",
+          "name": "Escaped\"Identifier"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "226",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "InDemographic",
+                      ":\n    "
+                    ]
+                  },
+                  {
+                    "r": "227",
+                    "s": [
+                      {
+                        "r": "228",
+                        "s": [
+                          {
+                            "r": "235",
+                            "s": [
+                              {
+                                "value": [
+                                  "AgeInYears",
+                                  "()"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "r": "236",
+                            "value": [
+                              " ",
+                              "\u003e=",
+                              " ",
+                              "18"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n        and "
+                        ]
+                      },
+                      {
+                        "r": "240",
+                        "s": [
+                          {
+                            "r": "238",
+                            "s": [
+                              {
+                                "r": "237",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "Patient"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  "."
+                                ]
+                              },
+                              {
+                                "r": "238",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "gender"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " in "
+                            ]
+                          },
+                          {
+                            "r": "239",
+                            "s": [
+                              {
+                                "value": [
+                                  "\"Female Administrative Sex\""
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "227",
+            "locator": "13:5-14:57",
+            "operand": [
+              {
+                "localId": "228",
+                "locator": "13:5-13:22",
+                "operand": [
+                  {
+                    "localId": "235",
+                    "locator": "13:5-13:16",
+                    "operand": {
+                      "localId": "234",
+                      "operand": {
+                        "localId": "232",
+                        "path": "birthDate",
+                        "source": {
+                          "localId": "231",
+                          "name": "Patient",
+                          "type": "ExpressionRef"
+                        },
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "type": "ToDate"
+                    },
+                    "precision": "Year",
+                    "signature": [],
+                    "type": "CalculateAge"
+                  },
+                  {
+                    "localId": "236",
+                    "locator": "13:21-13:22",
+                    "type": "Literal",
+                    "value": "18",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "GreaterOrEqual"
+              },
+              {
+                "code": {
+                  "localId": "238",
+                  "locator": "14:13-14:26",
+                  "path": "gender",
+                  "source": {
+                    "localId": "237",
+                    "locator": "14:13-14:19",
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "localId": "240",
+                "locator": "14:13-14:57",
+                "signature": [],
+                "type": "InValueSet",
+                "valueset": {
+                  "localId": "239",
+                  "locator": "14:31-14:57",
+                  "name": "Female Administrative Sex",
+                  "preserve": true
+                }
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "localId": "226",
+          "locator": "12:1-14:57",
+          "name": "InDemographic"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "243",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "MedianAny",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "261",
+                    "s": [
+                      {
+                        "value": [
+                          "Median",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "245",
+                        "s": [
+                          {
+                            "value": [
+                              "List\u003c"
+                            ]
+                          },
+                          {
+                            "r": "244",
+                            "s": [
+                              {
+                                "value": [
+                                  "Integer"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "r": "247",
+                            "value": [
+                              "\u003e{ ",
+                              "null",
+                              ", ",
+                              "null",
+                              ", ",
+                              "null",
+                              " }"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "261",
+            "locator": "16:19-16:59",
+            "signature": [],
+            "source": {
+              "let": [],
+              "localId": "262",
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "localId": "267",
+                  "operand": {
+                    "localId": "265",
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                },
+                "localId": "264"
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "element": [
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "localId": "250",
+                        "operand": {
+                          "localId": "247",
+                          "locator": "16:41-16:44",
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      },
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "localId": "251",
+                        "operand": {
+                          "localId": "248",
+                          "locator": "16:47-16:50",
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      },
+                      {
+                        "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                        "localId": "252",
+                        "operand": {
+                          "localId": "249",
+                          "locator": "16:53-16:56",
+                          "type": "Null"
+                        },
+                        "signature": [],
+                        "type": "As"
+                      }
+                    ],
+                    "localId": "245",
+                    "locator": "16:26-16:58",
+                    "type": "List"
+                  },
+                  "localId": "263"
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "localId": "243",
+          "locator": "16:1-16:59",
+          "name": "MedianAny"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "270",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "MedianInt",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "283",
+                    "s": [
+                      {
+                        "value": [
+                          "Median",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "271",
+                        "s": [
+                          {
+                            "r": "272",
+                            "value": [
+                              "{ ",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              " }"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "283",
+            "locator": "17:19-17:37",
+            "signature": [],
+            "source": {
+              "let": [],
+              "localId": "284",
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "localId": "289",
+                  "operand": {
+                    "localId": "287",
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                },
+                "localId": "286"
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "element": [
+                      {
+                        "localId": "272",
+                        "locator": "17:28",
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "localId": "273",
+                        "locator": "17:31",
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "localId": "274",
+                        "locator": "17:34",
+                        "type": "Literal",
+                        "value": "3",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "localId": "271",
+                    "locator": "17:26-17:36",
+                    "type": "List"
+                  },
+                  "localId": "285"
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Median"
+          },
+          "localId": "270",
+          "locator": "17:1-17:37",
+          "name": "MedianInt"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "292",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ListsOfLists",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "295",
+                    "s": [
+                      {
+                        "value": [
+                          "List\u003c"
+                        ]
+                      },
+                      {
+                        "r": "293",
+                        "s": [
+                          {
+                            "value": [
+                              "List\u003c"
+                            ]
+                          },
+                          {
+                            "r": "294",
+                            "s": [
+                              {
+                                "value": [
+                                  "Any"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "\u003e"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\u003e{"
+                        ]
+                      },
+                      {
+                        "r": "297",
+                        "s": [
+                          {
+                            "value": [
+                              "{"
+                            ]
+                          },
+                          {
+                            "r": "298",
+                            "s": [
+                              {
+                                "value": [
+                                  "'a'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ","
+                            ]
+                          },
+                          {
+                            "r": "300",
+                            "s": [
+                              {
+                                "value": [
+                                  "'b'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ","
+                            ]
+                          },
+                          {
+                            "r": "302",
+                            "s": [
+                              {
+                                "value": [
+                                  "'c'"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ","
+                        ]
+                      },
+                      {
+                        "r": "304",
+                        "s": [
+                          {
+                            "r": "305",
+                            "value": [
+                              "{",
+                              "1",
+                              ",",
+                              "2",
+                              ",",
+                              "3",
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "}"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "localId": "298",
+                    "locator": "19:39-19:41",
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "localId": "300",
+                    "locator": "19:43-19:45",
+                    "type": "Literal",
+                    "value": "b",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "localId": "302",
+                    "locator": "19:47-19:49",
+                    "type": "Literal",
+                    "value": "c",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "localId": "297",
+                "locator": "19:38-19:50",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "localId": "305",
+                    "locator": "19:53",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "306",
+                    "locator": "19:55",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "307",
+                    "locator": "19:57",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "304",
+                "locator": "19:52-19:58",
+                "type": "List"
+              }
+            ],
+            "localId": "295",
+            "locator": "19:22-19:59",
+            "type": "List"
+          },
+          "localId": "292",
+          "locator": "19:1-19:59",
+          "name": "ListsOfLists"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "310",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "LotsOfDups",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "311",
+                    "s": [
+                      {
+                        "value": [
+                          "distinct "
+                        ]
+                      },
+                      {
+                        "r": "312",
+                        "s": [
+                          {
+                            "r": "313",
+                            "value": [
+                              "{",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "3",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              ", ",
+                              "4",
+                              ", ",
+                              "4",
+                              ", ",
+                              "4",
+                              ", ",
+                              "5",
+                              ", ",
+                              "5",
+                              ", ",
+                              "5",
+                              ", ",
+                              "5",
+                              ", ",
+                              "5",
+                              ", ",
+                              "4",
+                              ", ",
+                              "3",
+                              ", ",
+                              "2",
+                              ", ",
+                              "1",
+                              "}"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "311",
+            "locator": "20:20-20:85",
+            "operand": {
+              "element": [
+                {
+                  "localId": "313",
+                  "locator": "20:30",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "314",
+                  "locator": "20:33",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "315",
+                  "locator": "20:36",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "316",
+                  "locator": "20:39",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "317",
+                  "locator": "20:42",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "318",
+                  "locator": "20:45",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "319",
+                  "locator": "20:48",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "320",
+                  "locator": "20:51",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "321",
+                  "locator": "20:54",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "322",
+                  "locator": "20:57",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "323",
+                  "locator": "20:60",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "324",
+                  "locator": "20:63",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "325",
+                  "locator": "20:66",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "326",
+                  "locator": "20:69",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "327",
+                  "locator": "20:72",
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "328",
+                  "locator": "20:75",
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "329",
+                  "locator": "20:78",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "330",
+                  "locator": "20:81",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "localId": "331",
+                  "locator": "20:84",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "localId": "312",
+              "locator": "20:29-20:85",
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "localId": "310",
+          "locator": "20:1-20:85",
+          "name": "LotsOfDups"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "334",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsIncluded",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "345",
+                    "s": [
+                      {
+                        "r": "335",
+                        "s": [
+                          {
+                            "r": "336",
+                            "value": [
+                              "{",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "345",
+                        "value": [
+                          " ",
+                          "included in",
+                          " "
+                        ]
+                      },
+                      {
+                        "r": "339",
+                        "s": [
+                          {
+                            "r": "340",
+                            "value": [
+                              "{",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              ", ",
+                              "5",
+                              "}"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "345",
+            "locator": "21:20-21:56",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "localId": "336",
+                    "locator": "21:21",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "337",
+                    "locator": "21:24",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "338",
+                    "locator": "21:27",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "335",
+                "locator": "21:20-21:28",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "localId": "340",
+                    "locator": "21:43",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "341",
+                    "locator": "21:46",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "342",
+                    "locator": "21:49",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "343",
+                    "locator": "21:52",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "344",
+                    "locator": "21:55",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "339",
+                "locator": "21:42-21:56",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "IncludedIn"
+          },
+          "localId": "334",
+          "locator": "21:1-21:56",
+          "name": "IsIncluded"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "350",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsProperlyIncludes",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "362",
+                    "s": [
+                      {
+                        "r": "351",
+                        "s": [
+                          {
+                            "r": "352",
+                            "value": [
+                              "{",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              ", ",
+                              "5",
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "362",
+                        "value": [
+                          " ",
+                          "properly includes",
+                          " "
+                        ]
+                      },
+                      {
+                        "r": "357",
+                        "s": [
+                          {
+                            "r": "358",
+                            "value": [
+                              "{",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              ", ",
+                              "5",
+                              "}"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "362",
+            "locator": "22:28-22:73",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "localId": "352",
+                    "locator": "22:29",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "353",
+                    "locator": "22:32",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "354",
+                    "locator": "22:35",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "355",
+                    "locator": "22:38",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "356",
+                    "locator": "22:41",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "351",
+                "locator": "22:28-22:42",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "localId": "358",
+                    "locator": "22:63",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "359",
+                    "locator": "22:66",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "360",
+                    "locator": "22:69",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "361",
+                    "locator": "22:72",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "357",
+                "locator": "22:62-22:73",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "ProperIncludes"
+          },
+          "localId": "350",
+          "locator": "22:1-22:73",
+          "name": "IsProperlyIncludes"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "367",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsProperlyIncluded",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "378",
+                    "s": [
+                      {
+                        "r": "368",
+                        "s": [
+                          {
+                            "r": "369",
+                            "value": [
+                              "{",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "r": "378",
+                        "value": [
+                          " ",
+                          "properly included in",
+                          " "
+                        ]
+                      },
+                      {
+                        "r": "372",
+                        "s": [
+                          {
+                            "r": "373",
+                            "value": [
+                              "{",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              ", ",
+                              "4",
+                              ", ",
+                              "5",
+                              "}"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "378",
+            "locator": "23:28-23:73",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "localId": "369",
+                    "locator": "23:29",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "370",
+                    "locator": "23:32",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "371",
+                    "locator": "23:35",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "368",
+                "locator": "23:28-23:36",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "localId": "373",
+                    "locator": "23:60",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "374",
+                    "locator": "23:63",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "375",
+                    "locator": "23:66",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "376",
+                    "locator": "23:69",
+                    "type": "Literal",
+                    "value": "4",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "377",
+                    "locator": "23:72",
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "372",
+                "locator": "23:59-23:73",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "ProperIncludedIn"
+          },
+          "localId": "367",
+          "locator": "23:1-23:73",
+          "name": "IsProperlyIncluded"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "383",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "EqInteger",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "384",
+                    "s": [
+                      {
+                        "r": "385",
+                        "value": [
+                          "4",
+                          " ",
+                          "=",
+                          " ",
+                          "4"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "384",
+            "locator": "24:19-24:23",
+            "operand": [
+              {
+                "localId": "385",
+                "locator": "24:19",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "localId": "386",
+                "locator": "24:23",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "localId": "383",
+          "locator": "24:1-24:23",
+          "name": "EqInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "389",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "EqIntervals",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "390",
+                    "s": [
+                      {
+                        "r": "393",
+                        "s": [
+                          {
+                            "r": "391",
+                            "value": [
+                              "Interval[",
+                              "1",
+                              ", ",
+                              "3",
+                              "]"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " ",
+                          "=",
+                          " "
+                        ]
+                      },
+                      {
+                        "r": "396",
+                        "s": [
+                          {
+                            "r": "394",
+                            "value": [
+                              "Interval[",
+                              "1",
+                              ", ",
+                              "3",
+                              "]"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "390",
+            "locator": "25:21-25:51",
+            "operand": [
+              {
+                "high": {
+                  "localId": "392",
+                  "locator": "25:33",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "localId": "393",
+                "locator": "25:21-25:34",
+                "low": {
+                  "localId": "391",
+                  "locator": "25:30",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "localId": "395",
+                  "locator": "25:50",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "localId": "396",
+                "locator": "25:38-25:51",
+                "low": {
+                  "localId": "394",
+                  "locator": "25:47",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "localId": "389",
+          "locator": "25:1-25:51",
+          "name": "EqIntervals"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "399",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "EqTuples",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "400",
+                    "s": [
+                      {
+                        "r": "401",
+                        "s": [
+                          {
+                            "value": [
+                              "Tuple{"
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "402",
+                                "value": [
+                                  "a",
+                                  ": ",
+                                  "1"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "value": [
+                                  "b",
+                                  ": "
+                                ]
+                              },
+                              {
+                                "r": "403",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "Tuple{"
+                                    ]
+                                  },
+                                  {
+                                    "s": [
+                                      {
+                                        "r": "404",
+                                        "value": [
+                                          "c",
+                                          ": ",
+                                          "1"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "}"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " ",
+                          "=",
+                          " "
+                        ]
+                      },
+                      {
+                        "r": "405",
+                        "s": [
+                          {
+                            "value": [
+                              "Tuple{"
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "406",
+                                "value": [
+                                  "a",
+                                  ": ",
+                                  "1"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "value": [
+                                  "b",
+                                  ": "
+                                ]
+                              },
+                              {
+                                "r": "407",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "Tuple{"
+                                    ]
+                                  },
+                                  {
+                                    "s": [
+                                      {
+                                        "r": "408",
+                                        "value": [
+                                          "c",
+                                          ": ",
+                                          "1"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "}"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "400",
+            "locator": "26:18-26:74",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "localId": "402",
+                      "locator": "26:27",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "element": [
+                        {
+                          "name": "c",
+                          "value": {
+                            "localId": "404",
+                            "locator": "26:42",
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "localId": "403",
+                      "locator": "26:33-26:43",
+                      "type": "Tuple"
+                    }
+                  }
+                ],
+                "localId": "401",
+                "locator": "26:18-26:44",
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "localId": "406",
+                      "locator": "26:57",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "element": [
+                        {
+                          "name": "c",
+                          "value": {
+                            "localId": "408",
+                            "locator": "26:72",
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "localId": "407",
+                      "locator": "26:63-26:73",
+                      "type": "Tuple"
+                    }
+                  }
+                ],
+                "localId": "405",
+                "locator": "26:48-26:74",
+                "type": "Tuple"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "localId": "399",
+          "locator": "26:1-26:74",
+          "name": "EqTuples"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "411",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "EqLists",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "412",
+                    "s": [
+                      {
+                        "r": "413",
+                        "s": [
+                          {
+                            "r": "414",
+                            "value": [
+                              "{ ",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              " }"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " ",
+                          "=",
+                          " "
+                        ]
+                      },
+                      {
+                        "r": "417",
+                        "s": [
+                          {
+                            "r": "418",
+                            "value": [
+                              "{ ",
+                              "1",
+                              ", ",
+                              "2",
+                              ", ",
+                              "3",
+                              " }"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "412",
+            "locator": "27:17-27:41",
+            "operand": [
+              {
+                "element": [
+                  {
+                    "localId": "414",
+                    "locator": "27:19",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "415",
+                    "locator": "27:22",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "416",
+                    "locator": "27:25",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "413",
+                "locator": "27:17-27:27",
+                "type": "List"
+              },
+              {
+                "element": [
+                  {
+                    "localId": "418",
+                    "locator": "27:33",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "419",
+                    "locator": "27:36",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "localId": "420",
+                    "locator": "27:39",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "localId": "417",
+                "locator": "27:31-27:41",
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "localId": "411",
+          "locator": "27:1-27:41",
+          "name": "EqLists"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "423",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "IsNull",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "425",
+                    "s": [
+                      {
+                        "r": "424",
+                        "value": [
+                          "5",
+                          " is null"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "425",
+            "locator": "29:16-29:24",
+            "operand": {
+              "localId": "424",
+              "locator": "29:16",
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "localId": "423",
+          "locator": "29:1-29:24",
+          "name": "IsNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "428",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "StringConcat",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "434",
+                    "s": [
+                      {
+                        "r": "430",
+                        "s": [
+                          {
+                            "value": [
+                              "'a'"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " + "
+                        ]
+                      },
+                      {
+                        "r": "432",
+                        "s": [
+                          {
+                            "value": [
+                              "'b'"
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "434",
+            "locator": "30:22-30:30",
+            "operand": [
+              {
+                "localId": "430",
+                "locator": "30:22-30:24",
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "localId": "432",
+                "locator": "30:28-30:30",
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "localId": "428",
+          "locator": "30:1-30:30",
+          "name": "StringConcat"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "437",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CoalesceExpression",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "445",
+                    "s": [
+                      {
+                        "r": "438",
+                        "value": [
+                          "Coalesce",
+                          "(",
+                          "1",
+                          ", ",
+                          "2",
+                          ", ",
+                          "3",
+                          ", ",
+                          "4",
+                          ", ",
+                          "5",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "445",
+            "locator": "31:28-31:50",
+            "operand": [
+              {
+                "localId": "438",
+                "locator": "31:37",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "localId": "439",
+                "locator": "31:40",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "localId": "440",
+                "locator": "31:43",
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "localId": "441",
+                "locator": "31:46",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "localId": "442",
+                "locator": "31:49",
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "localId": "437",
+          "locator": "31:1-31:50",
+          "name": "CoalesceExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "448",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "CoalesceWithNulls",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "458",
+                    "s": [
+                      {
+                        "r": "449",
+                        "value": [
+                          "Coalesce",
+                          "(",
+                          "1",
+                          ", ",
+                          "null",
+                          ", ",
+                          "null",
+                          ", ",
+                          "4",
+                          ", ",
+                          "5",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "458",
+            "locator": "32:27-32:55",
+            "operand": [
+              {
+                "localId": "449",
+                "locator": "32:36",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "localId": "459",
+                "operand": {
+                  "localId": "450",
+                  "locator": "32:39-32:42",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "localId": "460",
+                "operand": {
+                  "localId": "451",
+                  "locator": "32:45-32:48",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "localId": "452",
+                "locator": "32:51",
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "localId": "453",
+                "locator": "32:54",
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "localId": "448",
+          "locator": "32:1-32:55",
+          "name": "CoalesceWithNulls"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "463",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "HasNull",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "475",
+                    "s": [
+                      {
+                        "value": [
+                          "Count",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "464",
+                        "s": [
+                          {
+                            "r": "465",
+                            "value": [
+                              "{ ",
+                              "1",
+                              ", ",
+                              "null",
+                              ", ",
+                              "null",
+                              ", ",
+                              "null",
+                              ", ",
+                              "2",
+                              " }"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "475",
+            "locator": "34:17-34:49",
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "localId": "465",
+                  "locator": "34:25",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "localId": "470",
+                  "operand": {
+                    "localId": "466",
+                    "locator": "34:28-34:31",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "localId": "471",
+                  "operand": {
+                    "localId": "467",
+                    "locator": "34:34-34:37",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "localId": "472",
+                  "operand": {
+                    "localId": "468",
+                    "locator": "34:40-34:43",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "localId": "469",
+                  "locator": "34:46",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "localId": "464",
+              "locator": "34:23-34:48",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "localId": "463",
+          "locator": "34:1-34:49",
+          "name": "HasNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "478",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "Empty",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "482",
+                    "s": [
+                      {
+                        "r": "479",
+                        "value": [
+                          "Count",
+                          "(",
+                          "{ }",
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "482",
+            "locator": "35:15-35:24",
+            "signature": [],
+            "source": {
+              "element": [],
+              "localId": "479",
+              "locator": "35:21-35:23",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "localId": "478",
+          "locator": "35:1-35:24",
+          "name": "Empty"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "485",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "TypedHasNull",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "499",
+                    "s": [
+                      {
+                        "value": [
+                          "Count",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "487",
+                        "s": [
+                          {
+                            "value": [
+                              "List\u003c"
+                            ]
+                          },
+                          {
+                            "r": "486",
+                            "s": [
+                              {
+                                "value": [
+                                  "Integer"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "r": "489",
+                            "value": [
+                              "\u003e { ",
+                              "1",
+                              ", ",
+                              "null",
+                              ", ",
+                              "null",
+                              ", ",
+                              "null",
+                              ", ",
+                              "2",
+                              " }"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "499",
+            "locator": "37:22-37:68",
+            "signature": [],
+            "source": {
+              "element": [
+                {
+                  "localId": "489",
+                  "locator": "37:44",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "localId": "494",
+                  "operand": {
+                    "localId": "490",
+                    "locator": "37:47-37:50",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "localId": "495",
+                  "operand": {
+                    "localId": "491",
+                    "locator": "37:53-37:56",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "localId": "496",
+                  "operand": {
+                    "localId": "492",
+                    "locator": "37:59-37:62",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "localId": "493",
+                  "locator": "37:65",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "localId": "487",
+              "locator": "37:28-37:67",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "localId": "485",
+          "locator": "37:1-37:68",
+          "name": "TypedHasNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "502",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "TypedEmpty",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "508",
+                    "s": [
+                      {
+                        "value": [
+                          "Count",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "504",
+                        "s": [
+                          {
+                            "value": [
+                              "List\u003c"
+                            ]
+                          },
+                          {
+                            "r": "503",
+                            "s": [
+                              {
+                                "value": [
+                                  "Integer"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "\u003e { }"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "508",
+            "locator": "38:20-38:43",
+            "signature": [],
+            "source": {
+              "element": [],
+              "localId": "504",
+              "locator": "38:26-38:42",
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "localId": "502",
+          "locator": "38:1-38:43",
+          "name": "TypedEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "511",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "NestedLet",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "540",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "512",
+                            "s": [
+                              {
+                                "r": "513",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "513",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "{ "
+                                        ]
+                                      },
+                                      {
+                                        "r": "514",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "{ "
+                                            ]
+                                          },
+                                          {
+                                            "s": [
+                                              {
+                                                "r": "515",
+                                                "value": [
+                                                  "id",
+                                                  ": ",
+                                                  "1"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": [
+                                              ", "
+                                            ]
+                                          },
+                                          {
+                                            "s": [
+                                              {
+                                                "r": "516",
+                                                "value": [
+                                                  "value",
+                                                  ": ",
+                                                  "10"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": [
+                                              " }"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          ", "
+                                        ]
+                                      },
+                                      {
+                                        "r": "517",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "{ "
+                                            ]
+                                          },
+                                          {
+                                            "s": [
+                                              {
+                                                "r": "518",
+                                                "value": [
+                                                  "id",
+                                                  ": ",
+                                                  "2"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": [
+                                              ", "
+                                            ]
+                                          },
+                                          {
+                                            "s": [
+                                              {
+                                                "r": "519",
+                                                "value": [
+                                                  "value",
+                                                  ": ",
+                                                  "20"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": [
+                                              " }"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          " }"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "X"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "s": [
+                          {
+                            "value": [
+                              "let\n      "
+                            ]
+                          },
+                          {
+                            "r": "521",
+                            "s": [
+                              {
+                                "value": [
+                                  "A",
+                                  ": "
+                                ]
+                              },
+                              {
+                                "r": "522",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "522",
+                                    "s": [
+                                      {
+                                        "r": "524",
+                                        "s": [
+                                          {
+                                            "r": "523",
+                                            "s": [
+                                              {
+                                                "value": [
+                                                  "X"
+                                                ]
+                                              }
+                                            ]
+                                          },
+                                          {
+                                            "value": [
+                                              "."
+                                            ]
+                                          },
+                                          {
+                                            "r": "524",
+                                            "s": [
+                                              {
+                                                "value": [
+                                                  "value"
+                                                ]
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "r": "525",
+                                        "value": [
+                                          " * ",
+                                          "10"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ",\n      "
+                            ]
+                          },
+                          {
+                            "r": "526",
+                            "s": [
+                              {
+                                "value": [
+                                  "B",
+                                  ": "
+                                ]
+                              },
+                              {
+                                "r": "527",
+                                "s": [
+                                  {
+                                    "r": "528",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "A"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "r": "529",
+                                    "value": [
+                                      " * ",
+                                      "10"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "532",
+                        "s": [
+                          {
+                            "value": [
+                              "return "
+                            ]
+                          },
+                          {
+                            "r": "533",
+                            "s": [
+                              {
+                                "value": [
+                                  "{\n      "
+                                ]
+                              },
+                              {
+                                "s": [
+                                  {
+                                    "value": [
+                                      "id",
+                                      ": "
+                                    ]
+                                  },
+                                  {
+                                    "r": "535",
+                                    "s": [
+                                      {
+                                        "r": "534",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "X"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          "."
+                                        ]
+                                      },
+                                      {
+                                        "r": "535",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "id"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  ",\n      "
+                                ]
+                              },
+                              {
+                                "s": [
+                                  {
+                                    "value": [
+                                      "value",
+                                      ": "
+                                    ]
+                                  },
+                                  {
+                                    "r": "537",
+                                    "s": [
+                                      {
+                                        "r": "536",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "X"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          "."
+                                        ]
+                                      },
+                                      {
+                                        "r": "537",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "value"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  ",\n      "
+                                ]
+                              },
+                              {
+                                "s": [
+                                  {
+                                    "value": [
+                                      "a",
+                                      ": "
+                                    ]
+                                  },
+                                  {
+                                    "r": "538",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "A"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  ",\n      "
+                                ]
+                              },
+                              {
+                                "s": [
+                                  {
+                                    "value": [
+                                      "b",
+                                      ": "
+                                    ]
+                                  },
+                                  {
+                                    "r": "539",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "B"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  "\n    }"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "localId": "522",
+                  "locator": "43:10-43:23",
+                  "operand": [
+                    {
+                      "localId": "524",
+                      "locator": "43:11-43:17",
+                      "path": "value",
+                      "scope": "X",
+                      "type": "Property"
+                    },
+                    {
+                      "localId": "525",
+                      "locator": "43:21-43:22",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "A",
+                "localId": "521",
+                "locator": "43:7-43:23"
+              },
+              {
+                "expression": {
+                  "localId": "527",
+                  "locator": "44:10-44:15",
+                  "operand": [
+                    {
+                      "localId": "528",
+                      "locator": "44:10",
+                      "name": "A",
+                      "type": "QueryLetRef"
+                    },
+                    {
+                      "localId": "529",
+                      "locator": "44:14-44:15",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "B",
+                "localId": "526",
+                "locator": "44:7-44:15"
+              }
+            ],
+            "localId": "540",
+            "locator": "41:3-50:5",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "localId": "535",
+                      "locator": "46:11-46:14",
+                      "path": "id",
+                      "scope": "X",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "value",
+                    "value": {
+                      "localId": "537",
+                      "locator": "47:14-47:20",
+                      "path": "value",
+                      "scope": "X",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "a",
+                    "value": {
+                      "localId": "538",
+                      "locator": "48:10",
+                      "name": "A",
+                      "type": "QueryLetRef"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "localId": "539",
+                      "locator": "49:10",
+                      "name": "B",
+                      "type": "QueryLetRef"
+                    }
+                  }
+                ],
+                "localId": "533",
+                "locator": "45:12-50:5",
+                "type": "Tuple"
+              },
+              "localId": "532",
+              "locator": "45:5-50:5"
+            },
+            "source": [
+              {
+                "alias": "X",
+                "expression": {
+                  "element": [
+                    {
+                      "element": [
+                        {
+                          "name": "id",
+                          "value": {
+                            "localId": "515",
+                            "locator": "41:12",
+                            "type": "Literal",
+                            "value": "1",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "localId": "516",
+                            "locator": "41:22-41:23",
+                            "type": "Literal",
+                            "value": "10",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "localId": "514",
+                      "locator": "41:6-41:25",
+                      "type": "Tuple"
+                    },
+                    {
+                      "element": [
+                        {
+                          "name": "id",
+                          "value": {
+                            "localId": "518",
+                            "locator": "41:34",
+                            "type": "Literal",
+                            "value": "2",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        },
+                        {
+                          "name": "value",
+                          "value": {
+                            "localId": "519",
+                            "locator": "41:44-41:45",
+                            "type": "Literal",
+                            "value": "20",
+                            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                          }
+                        }
+                      ],
+                      "localId": "517",
+                      "locator": "41:28-41:47",
+                      "type": "Tuple"
+                    }
+                  ],
+                  "localId": "513",
+                  "locator": "41:3-41:50",
+                  "type": "List"
+                },
+                "localId": "512",
+                "locator": "41:3-41:52"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "511",
+          "locator": "40:1-50:5",
+          "name": "NestedLet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [
+            {
+              "s": {
+                "r": "206",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "using "
+                    ]
+                  },
+                  {
+                    "s": [
+                      {
+                        "value": [
+                          "QUICK"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localId": "206",
+          "localIdentifier": "QUICK",
+          "locator": "3:1-3:11",
+          "uri": "http://hl7.org/fhir"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "valueset ",
+                      "\"Female Administrative Sex\"",
+                      ": ",
+                      "'2.16.840.1.113883.3.560.100.2'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "2.16.840.1.113883.3.560.100.2",
+          "localId": "208",
+          "locator": "5:1-5:69",
+          "name": "Female Administrative Sex"
+        }
+      ]
+    }
+  }
+}

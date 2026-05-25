@@ -1,0 +1,553 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "QueryExpressionsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "type": "Literal",
+                      "value": "4",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "type": "Literal",
+                      "value": "6",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "Tuples"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "path": "a",
+                  "scope": "T",
+                  "type": "Property"
+                },
+                {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "name": "SimpleQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "a",
+                "scope": "T",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "ProjectionQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "element": [
+                  {
+                    "name": "x",
+                    "value": {
+                      "path": "a",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "y",
+                    "value": {
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              }
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "TupleProjection"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "b",
+                "scope": "T",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "path": "a",
+                  "scope": "T",
+                  "type": "Property"
+                },
+                {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "GreaterOrEqual"
+            }
+          },
+          "name": "FilterAndProject"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "ascending",
+                  "path": "a",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortedQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "descending",
+                  "path": "a",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortedQueryDesc"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [
+              {
+                "alias": "S",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "suchThat": {
+                  "operand": [
+                    {
+                      "path": "a",
+                      "scope": "S",
+                      "type": "Property"
+                    },
+                    {
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "With"
+              }
+            ],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "WithQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [
+              {
+                "alias": "S",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "suchThat": {
+                  "operand": [
+                    {
+                      "path": "a",
+                      "scope": "S",
+                      "type": "Property"
+                    },
+                    {
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "Without"
+              }
+            ],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "WithoutQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "T",
+                  "expression": {
+                    "name": "Tuples",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "path": "a",
+                    "scope": "T",
+                    "type": "Property"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Greater"
+              }
+            },
+            "type": "Count"
+          },
+          "name": "AggregateQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "operand": [
+                    {
+                      "name": "N",
+                      "type": "AliasRef"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "doubled"
+              }
+            ],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "name": "doubled",
+                "type": "QueryLetRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "N",
+                "expression": {
+                  "element": [
+                    {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "LetQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "operand": [
+                  {
+                    "name": "A",
+                    "type": "AliasRef"
+                  },
+                  {
+                    "name": "B",
+                    "type": "AliasRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              }
+            },
+            "source": [
+              {
+                "alias": "A",
+                "expression": {
+                  "element": [
+                    {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              },
+              {
+                "alias": "B",
+                "expression": {
+                  "element": [
+                    {
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "20",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "type": "List"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "MultiSource"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

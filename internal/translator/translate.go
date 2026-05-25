@@ -19,18 +19,24 @@ const Version = "0.0.0-dev"
 
 // Options controls translation behavior.
 type Options struct {
-	EnableAnnotations      bool
-	EnableLocators         bool
-	DisableListDemotion    bool
-	DisableListPromotion   bool
-	DisableListTraversal   bool
+	EnableAnnotations       bool
+	EnableLocators          bool
+	DisableListDemotion     bool
+	DisableListPromotion    bool
+	DisableListTraversal    bool
 	DisableMethodInvocation bool
-	RequireFromKeyword     bool
-	ValidateUnits          bool
-	CompatibilityLevel     string
-	SignatureLevel         string
-	ErrorLevel             string
-	TranslatorVersion      string
+	RequireFromKeyword      bool
+	// EnableIntervalDemotion allows implicit demotion of Interval<T> to T.
+	// CQF flag: --enable-interval-demotion. Default off.
+	EnableIntervalDemotion bool
+	// EnableIntervalPromotion allows implicit promotion of T to Interval<T>.
+	// CQF flag: --enable-interval-promotion. Default off.
+	EnableIntervalPromotion bool
+	ValidateUnits           bool
+	CompatibilityLevel      string
+	SignatureLevel          string
+	ErrorLevel              string
+	TranslatorVersion       string
 
 	// CQFMode emits cqframework-compatible output: annotation:[], signature:[],
 	// and empty filter arrays on Retrieve nodes. Also forces translatorOptions:"".
@@ -107,21 +113,21 @@ const (
 
 // Translator is the core CQL→ELM translation engine.
 type Translator struct {
-	opts               Options
-	counter            int
-	source             string
-	diags              []Diagnostic
-	syms               map[string]symKind // symbol table built before statement pass
-	paramTypes         map[string]string  // maps parameter name → ELM qualified type name
-	queryAliases       []map[string]bool  // stack of alias sets for current query scopes
-	queryLetScopes     []map[string]bool  // stack of let-identifier sets for current query scopes
-	queryAliasTypes    []map[string]string // stack: alias name → FHIR resource type (e.g. "Encounter")
-	modelsByAlias      map[string]string  // model local-identifier → model URI (populated per Translate call)
-	primaryModelURI    string             // URI of the first non-System declared model
-	primaryModelName   string             // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
-	currentContextName string             // context being translated (for age function expansion)
-	functionParamScope map[string]bool    // set of operand (parameter) names in the current function body
-	fhirHelpersLocalName string           // local identifier of included FHIRHelpers library, or "" if not included
+	opts                 Options
+	counter              int
+	source               string
+	diags                []Diagnostic
+	syms                 map[string]symKind  // symbol table built before statement pass
+	paramTypes           map[string]string   // maps parameter name → ELM qualified type name
+	queryAliases         []map[string]bool   // stack of alias sets for current query scopes
+	queryLetScopes       []map[string]bool   // stack of let-identifier sets for current query scopes
+	queryAliasTypes      []map[string]string // stack: alias name → FHIR resource type (e.g. "Encounter")
+	modelsByAlias        map[string]string   // model local-identifier → model URI (populated per Translate call)
+	primaryModelURI      string              // URI of the first non-System declared model
+	primaryModelName     string              // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
+	currentContextName   string              // context being translated (for age function expansion)
+	functionParamScope   map[string]bool     // set of operand (parameter) names in the current function body
+	fhirHelpersLocalName string              // local identifier of included FHIRHelpers library, or "" if not included
 }
 
 // New creates a new Translator with the given options.
@@ -198,6 +204,12 @@ func (t *Translator) optionsString() string {
 	}
 	if t.opts.DisableListPromotion {
 		parts = append(parts, "DisableListPromotion")
+	}
+	if t.opts.EnableIntervalDemotion {
+		parts = append(parts, "EnableIntervalDemotion")
+	}
+	if t.opts.EnableIntervalPromotion {
+		parts = append(parts, "EnableIntervalPromotion")
 	}
 	if t.opts.ValidateUnits {
 		parts = append(parts, "ValidateUnits")
@@ -478,7 +490,10 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	}
 
 	// Contexts section — emit all declared contexts in declaration order (deduplicated).
-	if len(lib.Contexts) > 0 {
+	// The contexts block is an ELM R1 / CQL 1.5 addition; suppress it for 1.4 compatibility.
+	compLevel := t.opts.CompatibilityLevel
+	emitContexts := compLevel == "" || compLevel >= "1.5"
+	if emitContexts && len(lib.Contexts) > 0 {
 		seen := map[string]bool{}
 		var contextDefs []*elm.ContextDef
 		for _, ctx := range lib.Contexts {
@@ -2021,27 +2036,18 @@ func isStringLikeExpr(expr ast.Expr) bool {
 }
 
 func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
-	// InValueSet: when "In" operator's RHS is a declared value set, emit InValueSet
-	// with preserve:true on the ValueSetRef (runtime terminology evaluation).
+	// InValueSet: when "In" operator's RHS is a declared value set, emit InValueSet.
+	// preserve:true is an ELM R1 / CQL 1.5 feature (runtime terminology evaluation);
+	// suppress it for compatibility level 1.4.
 	if v.Op == "In" {
 		if ref, ok := v.Right.(*ast.IdentifierRef); ok && t.syms[ref.Name] == symValueSet {
-			preserve := true
-			return &elm.InValueSetNode{
-				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
-				Code:       t.translateExpr(v.Left),
-				ValueSet: &elm.ValueSetRefNode{
-					Annotation: t.cqfAnnotation(),
-					Name:       ref.Name,
-					Preserve:   &preserve,
-				},
+			compat := t.opts.CompatibilityLevel
+			emitPreserve := compat == "" || compat >= "1.5"
+			var preservePtr *bool
+			if emitPreserve {
+				b := true
+				preservePtr = &b
 			}
-		}
-	}
-	// with preserve:true on the ValueSetRef (runtime terminology evaluation).
-	if v.Op == "In" {
-		if ref, ok := v.Right.(*ast.IdentifierRef); ok && t.syms[ref.Name] == symValueSet {
-			preserve := true
 			return &elm.InValueSetNode{
 				Annotation: t.cqfAnnotation(),
 				Signature:  t.cqfEmptyArrayField(),
@@ -2049,7 +2055,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 				ValueSet: &elm.ValueSetRefNode{
 					Annotation: t.cqfAnnotation(),
 					Name:       ref.Name,
-					Preserve:   &preserve,
+					Preserve:   preservePtr,
 				},
 			}
 		}
@@ -2167,7 +2173,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		Operand:    operands,
 	}
 }
-
+
 // resolveFHIRSourceType returns the FHIR resource or backbone type name for the
 // expression, by inspecting query alias type bindings and the current context.
 // Returns "" if the type cannot be determined.
@@ -2497,7 +2503,7 @@ func (t *Translator) wrapInDecimalQuery(src elm.Expression) elm.Expression {
 		},
 	}
 }
-
+
 // inferListElementType infers the qualified ELM type name from a list of
 // expressions by looking at the type of the first non-null literal element.
 // Returns "" if the type cannot be determined.
@@ -2538,11 +2544,14 @@ func titleCase(s string) string {
 // buildStatementAnnotation builds the ELM annotation for a statement definition.
 // In CQFMode it emits [] (empty) when there are no CQL @tag annotations, or
 // produces the structured annotation array when the AST carries @tag annotations.
+// CQL compatibility level 1.4 suppresses @tag annotation data (CQF behaviour).
 func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.RawMessage {
 	if !t.opts.CQFMode && !t.opts.EnableAnnotations {
 		return nil
 	}
-	if len(s.Annotations) == 0 {
+	compat := t.opts.CompatibilityLevel
+	emitTagData := compat == "" || compat >= "1.5"
+	if len(s.Annotations) == 0 || !emitTagData {
 		return t.cqfAnnotation()
 	}
 	type tagJSON struct {

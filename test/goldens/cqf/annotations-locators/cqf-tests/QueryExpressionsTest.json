@@ -1,0 +1,2553 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "356",
+          "s": [
+            {
+              "value": [
+                "",
+                "library QueryExpressionsTest"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "QueryExpressionsTest"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "Tuples",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "209",
+                    "s": [
+                      {
+                        "value": [
+                          "{ "
+                        ]
+                      },
+                      {
+                        "r": "210",
+                        "s": [
+                          {
+                            "value": [
+                              "Tuple{"
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "211",
+                                "value": [
+                                  "a",
+                                  ": ",
+                                  "1"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "212",
+                                "value": [
+                                  "b",
+                                  ": ",
+                                  "2"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "213",
+                        "s": [
+                          {
+                            "value": [
+                              "Tuple{"
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "214",
+                                "value": [
+                                  "a",
+                                  ": ",
+                                  "3"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "215",
+                                "value": [
+                                  "b",
+                                  ": ",
+                                  "4"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ", "
+                        ]
+                      },
+                      {
+                        "r": "216",
+                        "s": [
+                          {
+                            "value": [
+                              "Tuple{"
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "217",
+                                "value": [
+                                  "a",
+                                  ": ",
+                                  "5"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ", "
+                            ]
+                          },
+                          {
+                            "s": [
+                              {
+                                "r": "218",
+                                "value": [
+                                  "b",
+                                  ": ",
+                                  "6"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              "}"
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          " }"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "localId": "211",
+                      "locator": "3:27",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "localId": "212",
+                      "locator": "3:33",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "localId": "210",
+                "locator": "3:18-3:34",
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "localId": "214",
+                      "locator": "3:46",
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "localId": "215",
+                      "locator": "3:52",
+                      "type": "Literal",
+                      "value": "4",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "localId": "213",
+                "locator": "3:37-3:53",
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "localId": "217",
+                      "locator": "3:65",
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "localId": "218",
+                      "locator": "3:71",
+                      "type": "Literal",
+                      "value": "6",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "localId": "216",
+                "locator": "3:56-3:72",
+                "type": "Tuple"
+              }
+            ],
+            "localId": "209",
+            "locator": "3:16-3:74",
+            "type": "List"
+          },
+          "localId": "208",
+          "locator": "3:1-3:74",
+          "name": "Tuples"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "221",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "SimpleQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "229",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "222",
+                            "s": [
+                              {
+                                "r": "223",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "223",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "225",
+                        "s": [
+                          {
+                            "value": [
+                              "where "
+                            ]
+                          },
+                          {
+                            "r": "225",
+                            "s": [
+                              {
+                                "r": "227",
+                                "s": [
+                                  {
+                                    "r": "226",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "T"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "."
+                                    ]
+                                  },
+                                  {
+                                    "r": "227",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "a"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "r": "228",
+                                "value": [
+                                  " ",
+                                  "\u003e",
+                                  " ",
+                                  "2"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "229",
+            "locator": "6:3-7:17",
+            "relationship": [],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "223",
+                  "locator": "6:3-6:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "222",
+                "locator": "6:3-6:12"
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "localId": "225",
+              "locator": "7:5-7:17",
+              "operand": [
+                {
+                  "localId": "227",
+                  "locator": "7:11-7:13",
+                  "path": "a",
+                  "scope": "T",
+                  "type": "Property"
+                },
+                {
+                  "localId": "228",
+                  "locator": "7:17",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "localId": "221",
+          "locator": "5:1-7:17",
+          "name": "SimpleQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "232",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "ProjectionQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "239",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "233",
+                            "s": [
+                              {
+                                "r": "234",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "234",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "236",
+                        "s": [
+                          {
+                            "value": [
+                              "return "
+                            ]
+                          },
+                          {
+                            "r": "238",
+                            "s": [
+                              {
+                                "r": "237",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "T"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  "."
+                                ]
+                              },
+                              {
+                                "r": "238",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "a"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "239",
+            "locator": "10:3-11:14",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "localId": "238",
+                "locator": "11:12-11:14",
+                "path": "a",
+                "scope": "T",
+                "type": "Property"
+              },
+              "localId": "236",
+              "locator": "11:5-11:14"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "234",
+                  "locator": "10:3-10:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "233",
+                "locator": "10:3-10:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "232",
+          "locator": "9:1-11:14",
+          "name": "ProjectionQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "242",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "TupleProjection",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "252",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "243",
+                            "s": [
+                              {
+                                "r": "244",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "244",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "246",
+                        "s": [
+                          {
+                            "value": [
+                              "return "
+                            ]
+                          },
+                          {
+                            "r": "247",
+                            "s": [
+                              {
+                                "value": [
+                                  "Tuple { "
+                                ]
+                              },
+                              {
+                                "s": [
+                                  {
+                                    "value": [
+                                      "x",
+                                      ": "
+                                    ]
+                                  },
+                                  {
+                                    "r": "249",
+                                    "s": [
+                                      {
+                                        "r": "248",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "T"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          "."
+                                        ]
+                                      },
+                                      {
+                                        "r": "249",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "a"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  ", "
+                                ]
+                              },
+                              {
+                                "s": [
+                                  {
+                                    "value": [
+                                      "y",
+                                      ": "
+                                    ]
+                                  },
+                                  {
+                                    "r": "251",
+                                    "s": [
+                                      {
+                                        "r": "250",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "T"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          "."
+                                        ]
+                                      },
+                                      {
+                                        "r": "251",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "b"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " }"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "252",
+            "locator": "14:3-15:35",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "element": [
+                  {
+                    "name": "x",
+                    "value": {
+                      "localId": "249",
+                      "locator": "15:23-15:25",
+                      "path": "a",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "y",
+                    "value": {
+                      "localId": "251",
+                      "locator": "15:31-15:33",
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "localId": "247",
+                "locator": "15:12-15:35",
+                "type": "Tuple"
+              },
+              "localId": "246",
+              "locator": "15:5-15:35"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "244",
+                  "locator": "14:3-14:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "243",
+                "locator": "14:3-14:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "242",
+          "locator": "13:1-15:35",
+          "name": "TupleProjection"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "255",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "FilterAndProject",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "266",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "256",
+                            "s": [
+                              {
+                                "r": "257",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "257",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "259",
+                        "s": [
+                          {
+                            "value": [
+                              "where "
+                            ]
+                          },
+                          {
+                            "r": "259",
+                            "s": [
+                              {
+                                "r": "261",
+                                "s": [
+                                  {
+                                    "r": "260",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "T"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "."
+                                    ]
+                                  },
+                                  {
+                                    "r": "261",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "a"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "r": "262",
+                                "value": [
+                                  " ",
+                                  "\u003e=",
+                                  " ",
+                                  "3"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "263",
+                        "s": [
+                          {
+                            "value": [
+                              "return "
+                            ]
+                          },
+                          {
+                            "r": "265",
+                            "s": [
+                              {
+                                "r": "264",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "T"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  "."
+                                ]
+                              },
+                              {
+                                "r": "265",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "b"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "266",
+            "locator": "18:3-20:14",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "localId": "265",
+                "locator": "20:12-20:14",
+                "path": "b",
+                "scope": "T",
+                "type": "Property"
+              },
+              "localId": "263",
+              "locator": "20:5-20:14"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "257",
+                  "locator": "18:3-18:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "256",
+                "locator": "18:3-18:12"
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "localId": "259",
+              "locator": "19:5-19:18",
+              "operand": [
+                {
+                  "localId": "261",
+                  "locator": "19:11-19:13",
+                  "path": "a",
+                  "scope": "T",
+                  "type": "Property"
+                },
+                {
+                  "localId": "262",
+                  "locator": "19:18",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "GreaterOrEqual"
+            }
+          },
+          "localId": "255",
+          "locator": "17:1-20:14",
+          "name": "FilterAndProject"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "269",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "SortedQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "279",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "270",
+                            "s": [
+                              {
+                                "r": "271",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "271",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "275",
+                        "s": [
+                          {
+                            "value": [
+                              "sort by "
+                            ]
+                          },
+                          {
+                            "r": "274",
+                            "s": [
+                              {
+                                "r": "273",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "a"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ascending"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "279",
+            "locator": "23:3-24:23",
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "ascending",
+                  "localId": "274",
+                  "locator": "24:13-24:23",
+                  "path": "a",
+                  "type": "ByColumn"
+                }
+              ],
+              "localId": "275",
+              "locator": "24:5-24:23"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "271",
+                  "locator": "23:3-23:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "270",
+                "locator": "23:3-23:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "269",
+          "locator": "22:1-24:23",
+          "name": "SortedQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "282",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "SortedQueryDesc",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "292",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "283",
+                            "s": [
+                              {
+                                "r": "284",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "284",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "288",
+                        "s": [
+                          {
+                            "value": [
+                              "sort by "
+                            ]
+                          },
+                          {
+                            "r": "287",
+                            "s": [
+                              {
+                                "r": "286",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "a"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " descending"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "292",
+            "locator": "27:3-28:24",
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "descending",
+                  "localId": "287",
+                  "locator": "28:13-28:24",
+                  "path": "a",
+                  "type": "ByColumn"
+                }
+              ],
+              "localId": "288",
+              "locator": "28:5-28:24"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "284",
+                  "locator": "27:3-27:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "283",
+                "locator": "27:3-27:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "282",
+          "locator": "26:1-28:24",
+          "name": "SortedQueryDesc"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "295",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "WithQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "307",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "296",
+                            "s": [
+                              {
+                                "r": "297",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "297",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "306",
+                        "s": [
+                          {
+                            "value": [
+                              "with "
+                            ]
+                          },
+                          {
+                            "r": "299",
+                            "s": [
+                              {
+                                "r": "300",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "300",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "S"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " such that "
+                            ]
+                          },
+                          {
+                            "r": "301",
+                            "s": [
+                              {
+                                "r": "303",
+                                "s": [
+                                  {
+                                    "r": "302",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "S"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "."
+                                    ]
+                                  },
+                                  {
+                                    "r": "303",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "a"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "=",
+                                  " "
+                                ]
+                              },
+                              {
+                                "r": "305",
+                                "s": [
+                                  {
+                                    "r": "304",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "T"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "."
+                                    ]
+                                  },
+                                  {
+                                    "r": "305",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "b"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "307",
+            "locator": "31:3-32:39",
+            "relationship": [
+              {
+                "alias": "S",
+                "expression": {
+                  "localId": "300",
+                  "locator": "32:10-32:17",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "306",
+                "locator": "32:5-32:39",
+                "suchThat": {
+                  "localId": "301",
+                  "locator": "32:31-32:39",
+                  "operand": [
+                    {
+                      "localId": "303",
+                      "locator": "32:31-32:33",
+                      "path": "a",
+                      "scope": "S",
+                      "type": "Property"
+                    },
+                    {
+                      "localId": "305",
+                      "locator": "32:37-32:39",
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "With"
+              }
+            ],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "297",
+                  "locator": "31:3-31:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "296",
+                "locator": "31:3-31:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "295",
+          "locator": "30:1-32:39",
+          "name": "WithQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "310",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "WithoutQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "322",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "311",
+                            "s": [
+                              {
+                                "r": "312",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "312",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "T"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "321",
+                        "s": [
+                          {
+                            "value": [
+                              "without "
+                            ]
+                          },
+                          {
+                            "r": "314",
+                            "s": [
+                              {
+                                "r": "315",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "315",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "Tuples"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "S"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " such that "
+                            ]
+                          },
+                          {
+                            "r": "316",
+                            "s": [
+                              {
+                                "r": "318",
+                                "s": [
+                                  {
+                                    "r": "317",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "S"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "."
+                                    ]
+                                  },
+                                  {
+                                    "r": "318",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "a"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "=",
+                                  " "
+                                ]
+                              },
+                              {
+                                "r": "320",
+                                "s": [
+                                  {
+                                    "r": "319",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "T"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      "."
+                                    ]
+                                  },
+                                  {
+                                    "r": "320",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "b"
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "322",
+            "locator": "35:3-36:42",
+            "relationship": [
+              {
+                "alias": "S",
+                "expression": {
+                  "localId": "315",
+                  "locator": "36:13-36:20",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "321",
+                "locator": "36:5-36:42",
+                "suchThat": {
+                  "localId": "316",
+                  "locator": "36:34-36:42",
+                  "operand": [
+                    {
+                      "localId": "318",
+                      "locator": "36:34-36:36",
+                      "path": "a",
+                      "scope": "S",
+                      "type": "Property"
+                    },
+                    {
+                      "localId": "320",
+                      "locator": "36:40-36:42",
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "Without"
+              }
+            ],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "localId": "312",
+                  "locator": "35:3-35:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "localId": "311",
+                "locator": "35:3-35:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "310",
+          "locator": "34:1-36:42",
+          "name": "WithoutQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "325",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "AggregateQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "336",
+                    "s": [
+                      {
+                        "value": [
+                          "Count",
+                          "("
+                        ]
+                      },
+                      {
+                        "r": "333",
+                        "s": [
+                          {
+                            "s": [
+                              {
+                                "r": "326",
+                                "s": [
+                                  {
+                                    "r": "327",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "("
+                                        ]
+                                      },
+                                      {
+                                        "r": "327",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "Tuples"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          ")"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      " ",
+                                      "T"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              " "
+                            ]
+                          },
+                          {
+                            "r": "329",
+                            "s": [
+                              {
+                                "value": [
+                                  "where "
+                                ]
+                              },
+                              {
+                                "r": "329",
+                                "s": [
+                                  {
+                                    "r": "331",
+                                    "s": [
+                                      {
+                                        "r": "330",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "T"
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      {
+                                        "value": [
+                                          "."
+                                        ]
+                                      },
+                                      {
+                                        "r": "331",
+                                        "s": [
+                                          {
+                                            "value": [
+                                              "a"
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "r": "332",
+                                    "value": [
+                                      " ",
+                                      "\u003e",
+                                      " ",
+                                      "2"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          ")"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "336",
+            "locator": "39:3-39:33",
+            "signature": [],
+            "source": {
+              "let": [],
+              "localId": "333",
+              "locator": "39:9-39:32",
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "T",
+                  "expression": {
+                    "localId": "327",
+                    "locator": "39:9-39:16",
+                    "name": "Tuples",
+                    "type": "ExpressionRef"
+                  },
+                  "localId": "326",
+                  "locator": "39:9-39:18"
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "localId": "329",
+                "locator": "39:20-39:32",
+                "operand": [
+                  {
+                    "localId": "331",
+                    "locator": "39:26-39:28",
+                    "path": "a",
+                    "scope": "T",
+                    "type": "Property"
+                  },
+                  {
+                    "localId": "332",
+                    "locator": "39:32",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Greater"
+              }
+            },
+            "type": "Count"
+          },
+          "localId": "325",
+          "locator": "38:1-39:33",
+          "name": "AggregateQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "339",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "LetQuery",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "353",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "r": "340",
+                            "s": [
+                              {
+                                "r": "341",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "341",
+                                    "s": [
+                                      {
+                                        "r": "342",
+                                        "value": [
+                                          "{ ",
+                                          "1",
+                                          ", ",
+                                          "2",
+                                          ", ",
+                                          "3",
+                                          " }"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "N"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "s": [
+                          {
+                            "value": [
+                              "let "
+                            ]
+                          },
+                          {
+                            "r": "346",
+                            "s": [
+                              {
+                                "value": [
+                                  "doubled",
+                                  ": "
+                                ]
+                              },
+                              {
+                                "r": "347",
+                                "s": [
+                                  {
+                                    "r": "348",
+                                    "s": [
+                                      {
+                                        "value": [
+                                          "N"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "r": "349",
+                                    "value": [
+                                      " * ",
+                                      "2"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n    "
+                        ]
+                      },
+                      {
+                        "r": "351",
+                        "s": [
+                          {
+                            "value": [
+                              "return "
+                            ]
+                          },
+                          {
+                            "r": "352",
+                            "s": [
+                              {
+                                "value": [
+                                  "doubled"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "localId": "347",
+                  "locator": "43:18-43:22",
+                  "operand": [
+                    {
+                      "localId": "348",
+                      "locator": "43:18",
+                      "name": "N",
+                      "type": "AliasRef"
+                    },
+                    {
+                      "localId": "349",
+                      "locator": "43:22",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "doubled",
+                "localId": "346",
+                "locator": "43:9-43:22"
+              }
+            ],
+            "localId": "353",
+            "locator": "42:3-44:18",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "localId": "352",
+                "locator": "44:12-44:18",
+                "name": "doubled",
+                "type": "QueryLetRef"
+              },
+              "localId": "351",
+              "locator": "44:5-44:18"
+            },
+            "source": [
+              {
+                "alias": "N",
+                "expression": {
+                  "element": [
+                    {
+                      "localId": "342",
+                      "locator": "42:6",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "localId": "343",
+                      "locator": "42:9",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "localId": "344",
+                      "locator": "42:12",
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "localId": "341",
+                  "locator": "42:3-42:15",
+                  "type": "List"
+                },
+                "localId": "340",
+                "locator": "42:3-42:17"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "339",
+          "locator": "41:1-44:18",
+          "name": "LetQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "356",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "MultiSource",
+                      ":\n  "
+                    ]
+                  },
+                  {
+                    "r": "371",
+                    "s": [
+                      {
+                        "s": [
+                          {
+                            "value": [
+                              "from\n    "
+                            ]
+                          },
+                          {
+                            "r": "357",
+                            "s": [
+                              {
+                                "r": "358",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "358",
+                                    "s": [
+                                      {
+                                        "r": "359",
+                                        "value": [
+                                          "{",
+                                          "1",
+                                          ", ",
+                                          "2",
+                                          "}"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "A"
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "value": [
+                              ",\n    "
+                            ]
+                          },
+                          {
+                            "r": "361",
+                            "s": [
+                              {
+                                "r": "362",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "("
+                                    ]
+                                  },
+                                  {
+                                    "r": "362",
+                                    "s": [
+                                      {
+                                        "r": "363",
+                                        "value": [
+                                          "{",
+                                          "10",
+                                          ", ",
+                                          "20",
+                                          "}"
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "value": [
+                                      ")"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " ",
+                                  "B"
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      {
+                        "value": [
+                          "\n  "
+                        ]
+                      },
+                      {
+                        "r": "367",
+                        "s": [
+                          {
+                            "value": [
+                              "return "
+                            ]
+                          },
+                          {
+                            "r": "368",
+                            "s": [
+                              {
+                                "r": "369",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "A"
+                                    ]
+                                  }
+                                ]
+                              },
+                              {
+                                "value": [
+                                  " + "
+                                ]
+                              },
+                              {
+                                "r": "370",
+                                "s": [
+                                  {
+                                    "value": [
+                                      "B"
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "localId": "371",
+            "locator": "47:3-50:14",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "localId": "368",
+                "locator": "50:10-50:14",
+                "operand": [
+                  {
+                    "localId": "369",
+                    "locator": "50:10",
+                    "name": "A",
+                    "type": "AliasRef"
+                  },
+                  {
+                    "localId": "370",
+                    "locator": "50:14",
+                    "name": "B",
+                    "type": "AliasRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              "localId": "367",
+              "locator": "50:3-50:14"
+            },
+            "source": [
+              {
+                "alias": "A",
+                "expression": {
+                  "element": [
+                    {
+                      "localId": "359",
+                      "locator": "48:7",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "localId": "360",
+                      "locator": "48:10",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "localId": "358",
+                  "locator": "48:5-48:12",
+                  "type": "List"
+                },
+                "localId": "357",
+                "locator": "48:5-48:14"
+              },
+              {
+                "alias": "B",
+                "expression": {
+                  "element": [
+                    {
+                      "localId": "363",
+                      "locator": "49:7-49:8",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "localId": "364",
+                      "locator": "49:11-49:12",
+                      "type": "Literal",
+                      "value": "20",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "localId": "362",
+                  "locator": "49:5-49:14",
+                  "type": "List"
+                },
+                "localId": "361",
+                "locator": "49:5-49:16"
+              }
+            ],
+            "type": "Query"
+          },
+          "localId": "356",
+          "locator": "46:1-50:14",
+          "name": "MultiSource"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

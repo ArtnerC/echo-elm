@@ -1,0 +1,659 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "QueryExpressionsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "locator": "3:27",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "locator": "3:33",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "locator": "3:18-3:34",
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "locator": "3:46",
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "locator": "3:52",
+                      "type": "Literal",
+                      "value": "4",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "locator": "3:37-3:53",
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "a",
+                    "value": {
+                      "locator": "3:65",
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "b",
+                    "value": {
+                      "locator": "3:71",
+                      "type": "Literal",
+                      "value": "6",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "locator": "3:56-3:72",
+                "type": "Tuple"
+              }
+            ],
+            "locator": "3:16-3:74",
+            "type": "List"
+          },
+          "locator": "3:1-3:74",
+          "name": "Tuples"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "6:3-7:17",
+            "relationship": [],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "6:3-6:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "6:3-6:12"
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "7:5-7:17",
+              "operand": [
+                {
+                  "locator": "7:11-7:13",
+                  "path": "a",
+                  "scope": "T",
+                  "type": "Property"
+                },
+                {
+                  "locator": "7:17",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "locator": "5:1-7:17",
+          "name": "SimpleQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "10:3-11:14",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "locator": "11:12-11:14",
+                "path": "a",
+                "scope": "T",
+                "type": "Property"
+              },
+              "locator": "11:5-11:14"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "10:3-10:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "10:3-10:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "9:1-11:14",
+          "name": "ProjectionQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "14:3-15:35",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "element": [
+                  {
+                    "name": "x",
+                    "value": {
+                      "locator": "15:23-15:25",
+                      "path": "a",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "y",
+                    "value": {
+                      "locator": "15:31-15:33",
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "locator": "15:12-15:35",
+                "type": "Tuple"
+              },
+              "locator": "15:5-15:35"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "14:3-14:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "14:3-14:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "13:1-15:35",
+          "name": "TupleProjection"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "18:3-20:14",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "locator": "20:12-20:14",
+                "path": "b",
+                "scope": "T",
+                "type": "Property"
+              },
+              "locator": "20:5-20:14"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "18:3-18:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "18:3-18:12"
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "19:5-19:18",
+              "operand": [
+                {
+                  "locator": "19:11-19:13",
+                  "path": "a",
+                  "scope": "T",
+                  "type": "Property"
+                },
+                {
+                  "locator": "19:18",
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "GreaterOrEqual"
+            }
+          },
+          "locator": "17:1-20:14",
+          "name": "FilterAndProject"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "23:3-24:23",
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "ascending",
+                  "locator": "24:13-24:23",
+                  "path": "a",
+                  "type": "ByColumn"
+                }
+              ],
+              "locator": "24:5-24:23"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "23:3-23:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "23:3-23:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "22:1-24:23",
+          "name": "SortedQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "27:3-28:24",
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "descending",
+                  "locator": "28:13-28:24",
+                  "path": "a",
+                  "type": "ByColumn"
+                }
+              ],
+              "locator": "28:5-28:24"
+            },
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "27:3-27:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "27:3-27:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "26:1-28:24",
+          "name": "SortedQueryDesc"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "31:3-32:39",
+            "relationship": [
+              {
+                "alias": "S",
+                "expression": {
+                  "locator": "32:10-32:17",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "32:5-32:39",
+                "suchThat": {
+                  "locator": "32:31-32:39",
+                  "operand": [
+                    {
+                      "locator": "32:31-32:33",
+                      "path": "a",
+                      "scope": "S",
+                      "type": "Property"
+                    },
+                    {
+                      "locator": "32:37-32:39",
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "With"
+              }
+            ],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "31:3-31:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "31:3-31:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "30:1-32:39",
+          "name": "WithQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "35:3-36:42",
+            "relationship": [
+              {
+                "alias": "S",
+                "expression": {
+                  "locator": "36:13-36:20",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "36:5-36:42",
+                "suchThat": {
+                  "locator": "36:34-36:42",
+                  "operand": [
+                    {
+                      "locator": "36:34-36:36",
+                      "path": "a",
+                      "scope": "S",
+                      "type": "Property"
+                    },
+                    {
+                      "locator": "36:40-36:42",
+                      "path": "b",
+                      "scope": "T",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "Without"
+              }
+            ],
+            "source": [
+              {
+                "alias": "T",
+                "expression": {
+                  "locator": "35:3-35:10",
+                  "name": "Tuples",
+                  "type": "ExpressionRef"
+                },
+                "locator": "35:3-35:12"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "34:1-36:42",
+          "name": "WithoutQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "39:3-39:33",
+            "signature": [],
+            "source": {
+              "let": [],
+              "locator": "39:9-39:32",
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "T",
+                  "expression": {
+                    "locator": "39:9-39:16",
+                    "name": "Tuples",
+                    "type": "ExpressionRef"
+                  },
+                  "locator": "39:9-39:18"
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "locator": "39:20-39:32",
+                "operand": [
+                  {
+                    "locator": "39:26-39:28",
+                    "path": "a",
+                    "scope": "T",
+                    "type": "Property"
+                  },
+                  {
+                    "locator": "39:32",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Greater"
+              }
+            },
+            "type": "Count"
+          },
+          "locator": "38:1-39:33",
+          "name": "AggregateQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "locator": "43:18-43:22",
+                  "operand": [
+                    {
+                      "locator": "43:18",
+                      "name": "N",
+                      "type": "AliasRef"
+                    },
+                    {
+                      "locator": "43:22",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Multiply"
+                },
+                "identifier": "doubled",
+                "locator": "43:9-43:22"
+              }
+            ],
+            "locator": "42:3-44:18",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "locator": "44:12-44:18",
+                "name": "doubled",
+                "type": "QueryLetRef"
+              },
+              "locator": "44:5-44:18"
+            },
+            "source": [
+              {
+                "alias": "N",
+                "expression": {
+                  "element": [
+                    {
+                      "locator": "42:6",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "locator": "42:9",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "locator": "42:12",
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "locator": "42:3-42:15",
+                  "type": "List"
+                },
+                "locator": "42:3-42:17"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "41:1-44:18",
+          "name": "LetQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "47:3-50:14",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "locator": "50:10-50:14",
+                "operand": [
+                  {
+                    "locator": "50:10",
+                    "name": "A",
+                    "type": "AliasRef"
+                  },
+                  {
+                    "locator": "50:14",
+                    "name": "B",
+                    "type": "AliasRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              "locator": "50:3-50:14"
+            },
+            "source": [
+              {
+                "alias": "A",
+                "expression": {
+                  "element": [
+                    {
+                      "locator": "48:7",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "locator": "48:10",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "locator": "48:5-48:12",
+                  "type": "List"
+                },
+                "locator": "48:5-48:14"
+              },
+              {
+                "alias": "B",
+                "expression": {
+                  "element": [
+                    {
+                      "locator": "49:7-49:8",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "locator": "49:11-49:12",
+                      "type": "Literal",
+                      "value": "20",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "locator": "49:5-49:14",
+                  "type": "List"
+                },
+                "locator": "49:5-49:16"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "46:1-50:14",
+          "name": "MultiSource"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

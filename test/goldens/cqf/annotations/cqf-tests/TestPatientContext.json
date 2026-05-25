@@ -1,0 +1,163 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "217",
+          "s": [
+            {
+              "value": [
+                "",
+                "library TestPatientContext"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "localId": "211",
+          "name": "Patient"
+        },
+        {
+          "localId": "214",
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TestPatientContext"
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "212",
+                "s": [
+                  {
+                    "r": "213",
+                    "value": [
+                      "",
+                      "define ",
+                      "Patient",
+                      ": ",
+                      "true"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "213",
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "localId": "212",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "217",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "define ",
+                      "Patients",
+                      ": "
+                    ]
+                  },
+                  {
+                    "r": "218",
+                    "s": [
+                      {
+                        "value": [
+                          "Patient"
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "localId": "218",
+            "name": "Patient",
+            "type": "ExpressionRef"
+          },
+          "localId": "217",
+          "name": "Patients"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [
+            {
+              "s": {
+                "r": "206",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "using "
+                    ]
+                  },
+                  {
+                    "s": [
+                      {
+                        "value": [
+                          "QDM"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": [
+                      " version '5.3'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localId": "206",
+          "localIdentifier": "QDM",
+          "uri": "urn:healthit-gov:qdm:v5_3",
+          "version": "5.3"
+        }
+      ]
+    }
+  }
+}

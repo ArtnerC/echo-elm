@@ -1,0 +1,1234 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "IntervalOpsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "highClosed": true,
+            "low": {
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "lowClosed": true,
+            "type": "Interval"
+          },
+          "name": "IntInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "type": "Literal",
+              "value": "11",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "highClosed": false,
+            "low": {
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "lowClosed": false,
+            "type": "Interval"
+          },
+          "name": "IntIntervalOpen"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "type": "Literal",
+              "value": "11",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "highClosed": false,
+            "low": {
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "lowClosed": true,
+            "type": "Interval"
+          },
+          "name": "IntIntervalHalfOpen"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Union"
+          },
+          "name": "IntervalUnion"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Intersect"
+          },
+          "name": "IntervalIntersect"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Except"
+          },
+          "name": "IntervalExcept"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "In"
+          },
+          "name": "PointInInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Contains"
+          },
+          "name": "IntervalContainsPoint"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Overlaps"
+          },
+          "name": "IntervalOverlaps"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "OverlapsBefore"
+          },
+          "name": "IntervalOverlapsBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "OverlapsAfter"
+          },
+          "name": "IntervalOverlapsAfter"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Includes"
+          },
+          "name": "IntervalIncludes"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "IncludedIn"
+          },
+          "name": "IntervalIncludedIn"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "ProperIncludes"
+          },
+          "name": "ProperIncludes"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "ProperIncludedIn"
+          },
+          "name": "ProperIncludedIn"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "high": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "highClosed": true,
+              "low": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "lowClosed": true,
+              "type": "Interval"
+            },
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Start"
+          },
+          "name": "IntervalStart"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "high": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "highClosed": true,
+              "low": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "lowClosed": true,
+              "type": "Interval"
+            },
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "End"
+          },
+          "name": "IntervalEnd"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "high": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "highClosed": true,
+              "low": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "lowClosed": true,
+              "type": "Interval"
+            },
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Width"
+          },
+          "name": "IntervalWidth"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "day": {
+                "type": "Literal",
+                "value": "31",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "12",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "highClosed": true,
+            "low": {
+              "day": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2020",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "lowClosed": true,
+            "type": "Interval"
+          },
+          "name": "DateInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2020",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "operand": {
+                  "high": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "31",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "month": {
+                      "type": "Literal",
+                      "value": "12",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "month": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "signature": [
+                  {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  }
+                ],
+                "type": "End"
+              }
+            ],
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Before"
+          },
+          "name": "DateIntervalBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2020",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "operand": {
+                  "high": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "31",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "month": {
+                      "type": "Literal",
+                      "value": "12",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "month": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "signature": [
+                  {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  }
+                ],
+                "type": "Start"
+              }
+            ],
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "After"
+          },
+          "name": "DateIntervalAfter"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "MeetsBefore"
+          },
+          "name": "MeetsBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "MeetsAfter"
+          },
+          "name": "MeetsAfter"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            ],
+            "type": "Meets"
+          },
+          "name": "Meets"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

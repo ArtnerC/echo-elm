@@ -1,0 +1,140 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "name": "x",
+          "parameterTypeSpecifier": {
+            "element": [
+              {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "NamedTypeSpecifier"
+                },
+                "name": "x"
+              }
+            ],
+            "type": "TupleTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "name": "a",
+          "parameterTypeSpecifier": {
+            "elementType": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "name": "a",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [
+                  {
+                    "elementType": {
+                      "elementType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "Indexer"
+              },
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [
+              {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Indexer"
+          },
+          "name": "b"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "name": "b",
+              "type": "ExpressionRef"
+            },
+            "else": {
+              "type": "Literal",
+              "value": "no",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "then": {
+              "type": "Literal",
+              "value": "yes",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "name": "c"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

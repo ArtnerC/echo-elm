@@ -1,127 +1,256 @@
+# option_profiles defines named translator option configurations.
+# Each profile lists the CQF CLI flags (cliFlags) and the equivalent
+# echo-elm translator options (translatorOptions) that should produce
+# matching output. Fixtures reference profiles by name; "all" means every profile.
+option_profiles:
+  default:
+    description: CQF CLI defaults — no annotations, no locators, SignatureLevel=None
+    cliFlags: []
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+
+  annotations:
+    description: Enable annotation blocks on every ELM node
+    cliFlags: [--annotations]
+    pendingImplementation: true  # CQL source text annotation emission not yet implemented
+    translatorOptions:
+      enableAnnotations: true
+      enableLocators: false
+      signatureLevel: None
+
+  locators:
+    description: Enable localId/locator attributes on every ELM node
+    cliFlags: [--locators]
+    pendingImplementation: true  # Source-position locator strings not yet emitted (only sequential localId)
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: true
+      signatureLevel: None
+
+  annotations-locators:
+    description: Annotations and locators together (common artifact authoring profile)
+    cliFlags: [--annotations, --locators]
+    pendingImplementation: true  # CQL source text annotation emission not yet implemented
+    translatorOptions:
+      enableAnnotations: true
+      enableLocators: true
+      signatureLevel: None
+
+  debug:
+    description: CQF --debug expands to annotations + locators + result-types
+    cliFlags: [--debug]
+    pendingImplementation: true  # Requires annotation emission + result-type tracking
+    translatorOptions:
+      enableAnnotations: true
+      enableLocators: true
+      signatureLevel: None
+
+  sig-overloads:
+    description: SignatureLevel=Overloads — record signatures for overloaded calls
+    cliFlags: [--signatures, Overloads]
+    pendingImplementation: true  # Operand type specifiers not yet emitted in signature array
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: Overloads
+
+  sig-all:
+    description: SignatureLevel=All — record signatures on every call
+    cliFlags: [--signatures, All]
+    pendingImplementation: true  # Operand type specifiers not yet emitted in signature array
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: All
+
+  disable-list-demotion:
+    description: Disable implicit list demotion (singleton-from-list coercions)
+    cliFlags: [--disable-list-demotion]
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+      disableListDemotion: true
+
+  disable-list-promotion:
+    description: Disable implicit list promotion (scalar-to-list coercions)
+    cliFlags: [--disable-list-promotion]
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+      disableListPromotion: true
+
+  strict:
+    description: CQF --strict (disable-list-traversal + demotion + promotion + method-invocation + require-from-keyword)
+    cliFlags: [--strict]
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+      disableListDemotion: true
+      disableListPromotion: true
+      disableListTraversal: true
+      disableMethodInvocation: true
+      requireFromKeyword: true
+
+  compat-1.4:
+    description: Compatibility level 1.4 (pre-1.5 semantics)
+    cliFlags: [--compatibility-level, "1.4"]
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+      compatibilityLevel: "1.4"
+
+  enable-interval-demotion:
+    description: Enable implicit interval demotion (Interval<T> → T)
+    cliFlags: [--enable-interval-demotion]
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+      enableIntervalDemotion: true
+
+  enable-interval-promotion:
+    description: Enable implicit interval promotion (T → Interval<T>)
+    cliFlags: [--enable-interval-promotion]
+    pendingImplementation: true  # Interval promotion type coercion not yet implemented
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: false
+      signatureLevel: None
+      enableIntervalPromotion: true
+
 fixtures:
   - path: smoke/Minimal.cql
     description: Library header only
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [smoke, cqf-corpus]
 
   - path: smoke/IncludeTest.cql
     description: FHIR model + include + Patient context + define
-    options:
-      format: JSON
     expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all, disable-list-demotion, disable-list-promotion, compat-1.4]
     tags: [smoke, cqf-corpus]
 
   # ── CQFramework cql-to-elm test corpus (verbatim imports) ─────────────────
 
   - path: cqf-tests/DateTimeLiteralTest.cql
     description: "DateTime, Date, and Time literal expressions"
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [smoke, cqf-corpus, datetime]
 
   - path: cqf-tests/DefaultContext.cql
     description: Default context library with null arithmetic
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [smoke, cqf-corpus, context]
 
   - path: cqf-tests/QuantityLiteralTest.cql
     description: Quantity literals, invalid units, and conversions
-    # CQF rejects 'shab-shab-shab' as an invalid UCUM unit at compile time.
+    # CQF rejects ''shab-shab-shab'' as an invalid UCUM unit at compile time.
     # No JSON output is produced. Echo-elm should also reject it.
-    options: {}
     expectedStatus: failure
+    profiles: [default]
     tags: [cqf-corpus, quantity]
 
   - path: cqf-tests/RatioLiteralTest.cql
     description: Ratio literal expressions
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [smoke, cqf-corpus, ratio]
 
   - path: cqf-tests/ParameterTest.cql
     description: Tuple and list parameter types
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [cqf-corpus, parameters]
 
   - path: cqf-tests/InTest.cql
-    description: In operator with intervals and lists
-    options: {}
+    description: In operator with intervals and lists (has implicit queries — excludes strict)
     expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, disable-list-demotion, disable-list-promotion, enable-interval-demotion, enable-interval-promotion, compat-1.4]
+    # upstream-error: CQF produces no output for disable-list-promotion (type-checks fail upstream).
+    excludeProfiles: [disable-list-promotion]
     tags: [cqf-corpus, operators]
 
   - path: cqf-tests/TenDividedByTwo.cql
     description: Integer division and implicit decimal promotion
     # Requires TranslationTestsCommon library not in corpus. CQF fails.
-    options: {}
     expectedStatus: failure
+    profiles: [default]
     tags: [cqf-corpus, arithmetic]
 
   - path: cqf-tests/TupleDifferentKeys.cql
     description: Tuple equality with different key sets
     # Requires TranslationTestsCommon library not in corpus. CQF fails.
-    options: {}
     expectedStatus: failure
+    profiles: [default]
     tags: [cqf-corpus, tuples]
 
   - path: cqf-tests/TestComments.cql
     description: Library with inline comments, FHIR model, queries, and function definition
-    options: {}
     expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all, disable-list-demotion, disable-list-promotion, compat-1.4]
     tags: [cqf-corpus, comments, fhir]
 
   - path: cqf-tests/TestPatientContext.cql
     description: Multiple context declarations with QDM model
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [cqf-corpus, context, qdm]
 
   - path: cqf-tests/TranslationTests.cql
     description: Comprehensive translation tests using QUICK model
-    options: {}
     expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, compat-1.4]
     tags: [cqf-corpus, translation]
 
   - path: cqf-tests/ArithmeticOpsTest.cql
     description: Arithmetic operators, aggregates, and math functions
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [cqf-corpus, arithmetic]
 
   - path: cqf-tests/StringFunctionsTest.cql
     description: String functions (Length, Upper, Lower, Substring, etc.)
-    options: {}
     expectedStatus: success
+    profiles: all
+    # upstream-error: CQF produces no output for strict/disable-list-promotion combinations.
+    excludeProfiles: [strict, disable-list-promotion]
     tags: [cqf-corpus, string]
 
   - path: cqf-tests/ConditionalExpressionsTest.cql
     description: If/then/else, case/when, null handling
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [cqf-corpus, conditional]
 
   - path: cqf-tests/IntervalOpsTest.cql
     description: Interval operators, timing, union/intersect/except
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [cqf-corpus, interval]
 
   - path: cqf-tests/ConversionFunctionsTest.cql
     description: Conversion functions and type cast/is/as expressions
-    options: {}
     expectedStatus: success
+    profiles: all
     tags: [cqf-corpus, conversion]
 
   - path: cqf-tests/ListOperationsTest.cql
     description: List operators, aggregates, sort, set operations
-    options: {}
     expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, disable-list-demotion, disable-list-promotion, compat-1.4]
     tags: [cqf-corpus, list]
 
   - path: cqf-tests/QueryExpressionsTest.cql
     description: Query expressions, from/where/return/sort/let/with
-    options: {}
     expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, compat-1.4]
     tags: [cqf-corpus, query]

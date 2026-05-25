@@ -1,0 +1,64 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "denominator": {
+              "unit": "1",
+              "value": 5
+            },
+            "locator": "1:21-1:25",
+            "numerator": {
+              "unit": "1",
+              "value": 5
+            },
+            "type": "Ratio"
+          },
+          "locator": "1:1-1:25",
+          "name": "SimpleRatio"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "denominator": {
+              "locator": "2:32-2:39",
+              "unit": "mL",
+              "value": 100
+            },
+            "locator": "2:23-2:39",
+            "numerator": {
+              "locator": "2:23-2:28",
+              "unit": "mg",
+              "value": 5
+            },
+            "type": "Ratio"
+          },
+          "locator": "2:1-2:39",
+          "name": "QuantityRatio"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "TestPatientContext"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Patient",
+            "type": "ExpressionRef"
+          },
+          "name": "Patients"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "QDM",
+          "uri": "urn:healthit-gov:qdm:v5_3",
+          "version": "5.3"
+        }
+      ]
+    }
+  }
+}

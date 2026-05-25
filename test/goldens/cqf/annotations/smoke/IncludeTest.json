@@ -1,0 +1,184 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "r": "216",
+          "s": [
+            {
+              "value": [
+                "",
+                "library IncludeTest version '1.0.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "localId": "213",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "IncludeTest",
+      "version": "1.0.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [
+            {
+              "s": {
+                "r": "208",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "include "
+                    ]
+                  },
+                  {
+                    "s": [
+                      {
+                        "value": [
+                          "FHIRHelpers"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": [
+                      " version ",
+                      "'4.0.1'",
+                      " called ",
+                      "FHIRHelpers"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localId": "208",
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "localId": "0",
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "localId": "212",
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "localId": "210",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "localId": "211",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "r": "216",
+                "s": [
+                  {
+                    "r": "217",
+                    "value": [
+                      "",
+                      "define ",
+                      "\"Initial Population\"",
+                      ":\n  ",
+                      "true"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "localId": "217",
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "localId": "216",
+          "name": "Initial Population"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localId": "1",
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [
+            {
+              "s": {
+                "r": "206",
+                "s": [
+                  {
+                    "value": [
+                      "",
+                      "using "
+                    ]
+                  },
+                  {
+                    "s": [
+                      {
+                        "value": [
+                          "FHIR"
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "value": [
+                      " version '4.0.1'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localId": "206",
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

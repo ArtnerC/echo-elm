@@ -1,0 +1,483 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "ConditionalExpressionsTest"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "else": {
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "then": {
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "If"
+          },
+          "name": "IfThenElse"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+              "operand": {
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "else": {
+              "type": "Literal",
+              "value": "not null",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "then": {
+              "type": "Literal",
+              "value": "was null",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "name": "IfNull"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "operand": [
+                {
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [
+                {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                }
+              ],
+              "type": "Greater"
+            },
+            "else": {
+              "condition": {
+                "operand": [
+                  {
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "Greater"
+              },
+              "else": {
+                "type": "Literal",
+                "value": "small",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              "then": {
+                "type": "Literal",
+                "value": "medium",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              "type": "If"
+            },
+            "then": {
+              "type": "Literal",
+              "value": "big",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "name": "NestedIf"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "caseItem": [
+              {
+                "then": {
+                  "type": "Literal",
+                  "value": "correct",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "operand": [
+                    {
+                      "operand": [
+                        {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      ],
+                      "signature": [
+                        {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        }
+                      ],
+                      "type": "Add"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "Equal"
+                }
+              },
+              {
+                "then": {
+                  "type": "Literal",
+                  "value": "wrong",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "operand": [
+                    {
+                      "operand": [
+                        {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      ],
+                      "signature": [
+                        {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        }
+                      ],
+                      "type": "Add"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "3",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "Equal"
+                }
+              }
+            ],
+            "else": {
+              "type": "Literal",
+              "value": "unknown",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Case"
+          },
+          "name": "CaseSimple"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "caseItem": [
+              {
+                "then": {
+                  "type": "Literal",
+                  "value": "one",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "then": {
+                  "type": "Literal",
+                  "value": "two",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "then": {
+                  "type": "Literal",
+                  "value": "three",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "when": {
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "comparand": {
+              "type": "Literal",
+              "value": "3",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "else": {
+              "type": "Literal",
+              "value": "other",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Case"
+          },
+          "name": "CaseComparand"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "type": "Null"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "IsNull"
+          },
+          "name": "IsNullExpr"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "operand": {
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [
+                {
+                  "name": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "NamedTypeSpecifier"
+                }
+              ],
+              "type": "IsNull"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Not"
+          },
+          "name": "IsNotNullExpr"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "type": "Null"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "IsNull"
+          },
+          "name": "IsNullFunc"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "operand": {
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [
+                {
+                  "name": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "NamedTypeSpecifier"
+                }
+              ],
+              "type": "IsNull"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Not"
+          },
+          "name": "IsNotNullFunc"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "type": "Null"
+              },
+              {
+                "type": "Null"
+              },
+              {
+                "type": "Literal",
+                "value": "42",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "NamedTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "NamedTypeSpecifier"
+              },
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "Coalesce"
+          },
+          "name": "CoalesceExpr"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "condition": {
+              "operand": {
+                "type": "Null"
+              },
+              "signature": [
+                {
+                  "name": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "NamedTypeSpecifier"
+                }
+              ],
+              "type": "IsNull"
+            },
+            "else": {
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "then": {
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "If"
+          },
+          "name": "IfNullExpr"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}
