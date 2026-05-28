@@ -3,6 +3,7 @@ package translator
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 	"strconv"
 	"strings"
 
@@ -118,16 +119,23 @@ type Translator struct {
 	source               string
 	diags                []Diagnostic
 	syms                 map[string]symKind  // symbol table built before statement pass
-	paramTypes           map[string]string   // maps parameter name → ELM qualified type name
+	paramTypes           map[string]string   // maps parameter name → ELM qualified type name (named types only)
+	paramTypeSpecs       map[string]typeSpec // maps parameter name → full typeSpec (named, list, interval)
+	defTypeSpecs         map[string]typeSpec // maps statement-def name → full typeSpec inferred from its body
 	queryAliases         []map[string]bool   // stack of alias sets for current query scopes
 	queryLetScopes       []map[string]bool   // stack of let-identifier sets for current query scopes
 	queryAliasTypes      []map[string]string // stack: alias name → FHIR resource type (e.g. "Encounter")
+	queryAliasTypeSpecs  []map[string]typeSpec // stack: alias name → element typeSpec (for sig inference)
+	queryLetTypeSpecs    []map[string]typeSpec // stack: let-id → inferred typeSpec for QueryLetRef inference
 	modelsByAlias        map[string]string   // model local-identifier → model URI (populated per Translate call)
 	primaryModelURI      string              // URI of the first non-System declared model
 	primaryModelName     string              // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
 	currentContextName   string              // context being translated (for age function expansion)
 	functionParamScope   map[string]bool     // set of operand (parameter) names in the current function body
+	operandTypeSpecs     map[string]typeSpec // function operand name → declared typeSpec, set during function body translation
+	listNodeTypes        map[*elm.ListNode]typeSpec // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
 	fhirHelpersLocalName string              // local identifier of included FHIRHelpers library, or "" if not included
+	skipLocatorStamp     bool                // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
 }
 
 // New creates a new Translator with the given options.
@@ -140,11 +148,11 @@ func (t *Translator) nextID() string {
 	return fmt.Sprintf("%d", t.counter)
 }
 
-// defID returns the next localId only when EnableLocators is active.
+// defID returns the next localId only when EnableAnnotations is active.
 // Def-level nodes (UsingDef, IncludeDef, ParameterDef, StatementDef, etc.)
-// must not emit localId when running without --locators, matching CQF CLI behavior.
+// must not emit localId when running without --annotations, matching CQF CLI behavior.
 func (t *Translator) defID() string {
-	if t.opts.EnableLocators {
+	if t.opts.EnableAnnotations {
 		return t.nextID()
 	}
 	return ""
@@ -154,9 +162,32 @@ func locatorStr(loc ast.Interval) string {
 	if loc.Start.Line == 0 {
 		return ""
 	}
+	if loc.Start.Line == loc.Stop.Line && loc.Start.Column == loc.Stop.Column {
+		return fmt.Sprintf("%d:%d", loc.Start.Line, loc.Start.Column)
+	}
 	return fmt.Sprintf("%d:%d-%d:%d",
 		loc.Start.Line, loc.Start.Column,
 		loc.Stop.Line, loc.Stop.Column)
+}
+
+// setLocator sets the Locator field on any ELM expression node via reflection.
+// Used by the translateExpr wrapper to stamp AST-derived locator strings onto nodes.
+func setLocator(e elm.Expression, loc string) {
+	if loc == "" || e == nil {
+		return
+	}
+	v := reflect.ValueOf(e)
+	if v.Kind() != reflect.Ptr || v.IsNil() {
+		return
+	}
+	v = v.Elem()
+	if v.Kind() != reflect.Struct {
+		return
+	}
+	f := v.FieldByName("Locator")
+	if f.IsValid() && f.CanSet() && f.Kind() == reflect.String {
+		f.SetString(loc)
+	}
 }
 
 // checkUnit validates a CQL Quantity unit against UCUM when the
@@ -247,6 +278,8 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	// Build symbol table so expression translation can emit the correct Ref types.
 	t.syms = make(map[string]symKind)
 	t.paramTypes = make(map[string]string)
+	t.paramTypeSpecs = make(map[string]typeSpec)
+	t.defTypeSpecs = make(map[string]typeSpec)
 
 	// Build model alias → URI map so translateRetrieve can qualify data types.
 	t.modelsByAlias = map[string]string{"System": typesystem.SystemURI}
@@ -275,6 +308,9 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		if p.ParameterType != nil {
 			if nts, ok := (*p.ParameterType).(*ast.NamedTypeSpecifier); ok {
 				t.paramTypes[p.Name] = resolveTypeName(nts.Name)
+			}
+			if ts := astTypeSpecToTypeSpec(*p.ParameterType); ts != nil {
+				t.paramTypeSpecs[p.Name] = ts
 			}
 		}
 	}
@@ -424,6 +460,13 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	if len(lib.Codes) > 0 {
 		codes := &elm.CodeDefs{}
 		for _, c := range lib.Codes {
+			csRef := &elm.CodeSystemDefinitionRef{
+				Annotation: t.cqfAnnotation(),
+				Name:       c.SystemName,
+			}
+			if t.opts.EnableLocators {
+				csRef.Locator = locatorStr(c.SystemLocator)
+			}
 			cd := &elm.CodeDef{
 				LocalID:     t.defID(),
 				Annotation:  t.cqfAnnotation(),
@@ -431,10 +474,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				ID:          c.Code,
 				Display:     c.Display,
 				AccessLevel: accessLevelStr(c.AccessLevel),
-				CodeSystem: &elm.CodeSystemDefinitionRef{
-					Annotation: t.cqfAnnotation(),
-					Name:       c.SystemName,
-				},
+				CodeSystem:  csRef,
 			}
 			if t.opts.EnableLocators {
 				cd.Locator = locatorStr(c.Loc())
@@ -499,10 +539,14 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		for _, ctx := range lib.Contexts {
 			if !seen[ctx.Name] {
 				seen[ctx.Name] = true
-				contextDefs = append(contextDefs, &elm.ContextDef{
+				cd := &elm.ContextDef{
 					Name:       ctx.Name,
 					Annotation: t.cqfAnnotation(),
-				})
+				}
+				if t.opts.EnableLocators {
+					cd.Locator = locatorStr(ctx.Loc())
+				}
+				contextDefs = append(contextDefs, cd)
 			}
 		}
 		out.Contexts = &elm.ContextDefs{Def: contextDefs}
@@ -553,11 +597,18 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			// so IdentifierRef nodes matching operand names emit OperandRef.
 			if s.IsFunction && len(s.Operands) > 0 {
 				t.functionParamScope = make(map[string]bool, len(s.Operands))
+				t.operandTypeSpecs = make(map[string]typeSpec, len(s.Operands))
 				for _, op := range s.Operands {
 					t.functionParamScope[op.Name] = true
+					if op.Type != nil {
+						if ts := astTypeSpecToTypeSpec(*op.Type); ts != nil {
+							t.operandTypeSpecs[op.Name] = ts
+						}
+					}
 				}
 			} else {
 				t.functionParamScope = nil
+				t.operandTypeSpecs = nil
 			}
 			for _, op := range s.Operands {
 				opd := &elm.OperandDef{Name: op.Name, Annotation: t.cqfAnnotation()}
@@ -571,7 +622,13 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			} else {
 				sd.Expression = &elm.NullNode{Annotation: t.cqfAnnotation()}
 			}
+			if !s.IsFunction {
+				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
+					t.defTypeSpecs[s.Name] = ts
+				}
+			}
 			t.functionParamScope = nil
+			t.operandTypeSpecs = nil
 			stmts.Def = append(stmts.Def, sd)
 		}
 		out.Statements = stmts
@@ -675,9 +732,21 @@ func (t *Translator) buildContextAccessor(contextName string, lib *ast.Library) 
 	dataType := "{" + dataNS + "}" + contextName
 	templateID := templateIDForModel(t.primaryModelName, dataNS, contextName)
 
+	// Find the source locator from the context declaration (if available).
+	ctxLocator := ""
+	if t.opts.EnableLocators {
+		for _, c := range lib.Contexts {
+			if c.Name == contextName {
+				ctxLocator = locatorStr(c.Loc())
+				break
+			}
+		}
+	}
+
 	retrieve := &elm.RetrieveNode{
 		DataType:    dataType,
 		TemplateID:  templateID,
+		Locator:     ctxLocator,
 		Annotation:  t.cqfAnnotation(),
 		Include:     t.cqfEmptyArrayField(),
 		CodeFilter:  t.cqfEmptyArrayField(),
@@ -688,6 +757,7 @@ func (t *Translator) buildContextAccessor(contextName string, lib *ast.Library) 
 	return &elm.StatementDef{
 		Name:       contextName,
 		Context:    contextName,
+		Locator:    ctxLocator,
 		Annotation: t.cqfAnnotation(),
 		Expression: &elm.SingletonFromNode{
 			Annotation: t.cqfAnnotation(),
@@ -732,43 +802,46 @@ func (t *Translator) expandAgeFunction(ann, sig json.RawMessage, name string, op
 
 	var birthDateExpr elm.Expression
 	if t.primaryModelName == "FHIR" {
+		propOperand := &elm.PropertyNode{
+			Annotation: t.cqfAnnotation(),
+			Path:       "birthDate.value",
+			Source:     contextRef,
+		}
 		birthDateExpr = &elm.UnaryExpressionNode{
 			Annotation: t.cqfAnnotation(),
-			Signature:  t.cqfEmptyArrayField(),
+			Signature:  t.buildSigFromTypes("ToDateTime", []typeSpec{dateTS}),
 			Operator:   "ToDateTime",
-			Operand: &elm.PropertyNode{
-				Annotation: t.cqfAnnotation(),
-				Path:       "birthDate.value",
-				Source:     contextRef,
-			},
+			Operand:    propOperand,
 		}
 	} else {
+		propOperand := &elm.PropertyNode{
+			Annotation: t.cqfAnnotation(),
+			Path:       "birthDate",
+			Source:     contextRef,
+		}
 		birthDateExpr = &elm.UnaryExpressionNode{
 			Annotation: t.cqfAnnotation(),
-			Signature:  t.cqfEmptyArrayField(),
+			Signature:  t.buildSigFromTypes("ToDate", []typeSpec{dateTimeTS}),
 			Operator:   "ToDate",
-			Operand: &elm.PropertyNode{
-				Annotation: t.cqfAnnotation(),
-				Path:       "birthDate",
-				Source:     contextRef,
-			},
+			Operand:    propOperand,
 		}
 	}
 
 	if isAt && len(operands) > 0 {
 		dateArg := t.translateExpr(operands[0])
+		ops := []elm.Expression{birthDateExpr, dateArg}
 		return &elm.PrecisionOperatorNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("CalculateAgeAt", ops),
 			Operator:   "CalculateAgeAt",
 			Precision:  precision,
-			Operand:    []elm.Expression{birthDateExpr, dateArg},
+			Operand:    ops,
 		}
 	}
 
 	return &elm.CalculateAgeNode{
 		Annotation: ann,
-		Signature:  sig,
+		Signature:  t.computeSig("CalculateAge", []elm.Expression{birthDateExpr}),
 		Precision:  precision,
 		Operand:    birthDateExpr,
 	}
@@ -787,29 +860,51 @@ func (t *Translator) translateTypeSpecifier(ts ast.TypeSpecifier) elm.TypeSpecif
 			name = v.Qualifier + "." + v.Name
 		}
 		name = resolveTypeName(name)
-		return &elm.NamedTypeSpecifier{Annotation: ann, Name: name}
+		nts := &elm.NamedTypeSpecifier{Annotation: ann, Name: name}
+		if t.opts.EnableLocators {
+			nts.Locator = locatorStr(v.Loc())
+		}
+		return nts
 	case *ast.IntervalTypeSpecifier:
-		return &elm.IntervalTypeSpecifier{
+		its := &elm.IntervalTypeSpecifier{
 			Annotation: ann,
 			PointType:  t.translateTypeSpecifier(v.PointType),
 		}
+		if t.opts.EnableLocators {
+			its.Locator = locatorStr(v.Loc())
+		}
+		return its
 	case *ast.ListTypeSpecifier:
-		return &elm.ListTypeSpecifier{
+		lts := &elm.ListTypeSpecifier{
 			Annotation:  ann,
 			ElementType: t.translateTypeSpecifier(v.ElementType),
 		}
+		if t.opts.EnableLocators {
+			lts.Locator = locatorStr(v.Loc())
+		}
+		return lts
 	case *ast.TupleTypeSpecifier:
 		tts := &elm.TupleTypeSpecifier{Annotation: ann}
+		if t.opts.EnableLocators {
+			tts.Locator = locatorStr(v.Loc())
+		}
 		for _, elem := range v.Elements {
-			tts.Element = append(tts.Element, &elm.TupleElementDefinition{
+			ted := &elm.TupleElementDefinition{
 				Annotation:  t.cqfAnnotation(),
 				Name:        elem.Name,
 				ElementType: t.translateTypeSpecifier(elem.Type),
-			})
+			}
+			if t.opts.EnableLocators {
+				ted.Locator = locatorStr(elem.Loc())
+			}
+			tts.Element = append(tts.Element, ted)
 		}
 		return tts
 	case *ast.ChoiceTypeSpecifier:
 		cts := &elm.ChoiceTypeSpecifier{Annotation: ann}
+		if t.opts.EnableLocators {
+			cts.Locator = locatorStr(v.Loc())
+		}
 		for _, ct := range v.Types {
 			cts.Choice = append(cts.Choice, t.translateTypeSpecifier(ct))
 		}
@@ -1204,10 +1299,23 @@ func (t *Translator) inferBoundType(expr ast.Expr) string {
 	return ""
 }
 
-// translateExpr converts an AST expression to an ELM expression.
+// translateExpr converts an AST expression to an ELM expression and, when
+// EnableLocators is active, stamps the source location onto the result node.
+// If a callee set skipLocatorStamp (because it manually placed the locator on
+// an inner node), the outer stamp is skipped.
+func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
+	result := t.translateExprCore(expr)
+	if expr != nil && t.opts.EnableLocators && !t.skipLocatorStamp {
+		setLocator(result, locatorStr(expr.Loc()))
+	}
+	t.skipLocatorStamp = false
+	return result
+}
+
+// translateExprCore converts an AST expression to an ELM expression.
 // All expression nodes receive annotation:[] in CQF mode (ELM Element base).
 // OperatorExpression subclasses also receive signature:[].
-func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
+func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	if expr == nil {
 		return &elm.NullNode{Annotation: t.cqfAnnotation()}
 	}
@@ -1252,10 +1360,18 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		}
 		t.checkUnit(v.Numerator.Unit, v.Loc())
 		t.checkUnit(v.Denominator.Unit, v.Loc())
+		num := &elm.QuantityLiteral{Annotation: t.cqfAnnotation(), Unit: numUnit, Value: json.Number(v.Numerator.Value)}
+		den := &elm.QuantityLiteral{Annotation: t.cqfAnnotation(), Unit: denomUnit, Value: json.Number(v.Denominator.Value)}
+		if t.opts.EnableLocators && v.Numerator.Unit != "" {
+			num.Locator = locatorStr(v.Numerator.Loc())
+		}
+		if t.opts.EnableLocators && v.Denominator.Unit != "" {
+			den.Locator = locatorStr(v.Denominator.Loc())
+		}
 		return &elm.RatioNode{
 			Annotation:  ann,
-			Numerator:   &elm.QuantityLiteral{Annotation: t.cqfAnnotation(), Unit: numUnit, Value: json.Number(v.Numerator.Value)},
-			Denominator: &elm.QuantityLiteral{Annotation: t.cqfAnnotation(), Unit: denomUnit, Value: json.Number(v.Denominator.Value)},
+			Numerator:   num,
+			Denominator: den,
 		}
 
 	// ---- References ----
@@ -1311,77 +1427,100 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		if v.LibraryName == "" {
 			switch v.Name {
 			case "Date":
-				node := &elm.DateNode{Annotation: ann, Signature: sig}
+				node := &elm.DateNode{Annotation: ann}
+				operands := make([]elm.Expression, 0, len(v.Operands))
 				if len(v.Operands) > 0 {
 					node.Year = t.translateExpr(v.Operands[0])
+					operands = append(operands, node.Year)
 				}
 				if len(v.Operands) > 1 {
 					node.Month = t.translateExpr(v.Operands[1])
+					operands = append(operands, node.Month)
 				}
 				if len(v.Operands) > 2 {
 					node.Day = t.translateExpr(v.Operands[2])
+					operands = append(operands, node.Day)
 				}
+				node.Signature = t.computeSig("Date", operands)
 				return node
 			case "DateTime":
-				node := &elm.DateTimeNode{Annotation: ann, Signature: sig}
+				node := &elm.DateTimeNode{Annotation: ann}
+				operands := make([]elm.Expression, 0, len(v.Operands))
 				if len(v.Operands) > 0 {
 					node.Year = t.translateExpr(v.Operands[0])
+					operands = append(operands, node.Year)
 				}
 				if len(v.Operands) > 1 {
 					node.Month = t.translateExpr(v.Operands[1])
+					operands = append(operands, node.Month)
 				}
 				if len(v.Operands) > 2 {
 					node.Day = t.translateExpr(v.Operands[2])
+					operands = append(operands, node.Day)
 				}
 				if len(v.Operands) > 3 {
 					node.Hour = t.translateExpr(v.Operands[3])
+					operands = append(operands, node.Hour)
 				}
 				if len(v.Operands) > 4 {
 					node.Minute = t.translateExpr(v.Operands[4])
+					operands = append(operands, node.Minute)
 				}
 				if len(v.Operands) > 5 {
 					node.Second = t.translateExpr(v.Operands[5])
+					operands = append(operands, node.Second)
 				}
 				if len(v.Operands) > 6 {
 					node.Millisecond = t.translateExpr(v.Operands[6])
+					operands = append(operands, node.Millisecond)
 				}
 				if len(v.Operands) > 7 {
 					node.TimezoneOffset = t.translateExpr(v.Operands[7])
+					operands = append(operands, node.TimezoneOffset)
 				}
+				node.Signature = t.computeSig("DateTime", operands)
 				return node
 			case "Time":
-				node := &elm.TimeNode{Annotation: ann, Signature: sig}
+				node := &elm.TimeNode{Annotation: ann}
+				operands := make([]elm.Expression, 0, len(v.Operands))
 				if len(v.Operands) > 0 {
 					node.Hour = t.translateExpr(v.Operands[0])
+					operands = append(operands, node.Hour)
 				}
 				if len(v.Operands) > 1 {
 					node.Minute = t.translateExpr(v.Operands[1])
+					operands = append(operands, node.Minute)
 				}
 				if len(v.Operands) > 2 {
 					node.Second = t.translateExpr(v.Operands[2])
+					operands = append(operands, node.Second)
 				}
 				if len(v.Operands) > 3 {
 					node.Millisecond = t.translateExpr(v.Operands[3])
+					operands = append(operands, node.Millisecond)
 				}
+				node.Signature = t.computeSig("Time", operands)
 				return node
 			}
 			// Map unary system operators to UnaryExpressionNode.
 			if unarySystemOps[v.Name] && len(v.Operands) == 1 {
+				operand := t.translateExpr(v.Operands[0])
 				return &elm.UnaryExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig(v.Name, []elm.Expression{operand}),
 					Operator:   v.Name,
-					Operand:    t.translateExpr(v.Operands[0]),
+					Operand:    operand,
 				}
 			}
 			// Tail(list) → Slice(source: list, startIndex: 1, endIndex: Null)
 			if v.Name == "Tail" && len(v.Operands) == 1 {
+				src := t.translateExpr(v.Operands[0])
 				return &elm.NamedOperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig("Slice", []elm.Expression{src}),
 					Operator:   "Slice",
 					Operands: []elm.NamedOperand{
-						{Name: "source", Value: t.translateExpr(v.Operands[0])},
+						{Name: "source", Value: src},
 						{Name: "startIndex", Value: t.intLiteral(1)},
 						{Name: "endIndex", Value: &elm.NullNode{Annotation: t.cqfAnnotation()}},
 					},
@@ -1389,34 +1528,36 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			}
 			// Skip(list, n) → Slice(source: list, startIndex: n, endIndex: Null)
 			if v.Name == "Skip" && len(v.Operands) == 2 {
+				src := t.translateExpr(v.Operands[0])
+				start := t.translateExpr(v.Operands[1])
 				return &elm.NamedOperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig("Slice", []elm.Expression{src, start}),
 					Operator:   "Slice",
 					Operands: []elm.NamedOperand{
-						{Name: "source", Value: t.translateExpr(v.Operands[0])},
-						{Name: "startIndex", Value: t.translateExpr(v.Operands[1])},
+						{Name: "source", Value: src},
+						{Name: "startIndex", Value: start},
 						{Name: "endIndex", Value: &elm.NullNode{Annotation: t.cqfAnnotation()}},
 					},
 				}
 			}
 			// Take(list, n) → Slice(source: list, startIndex: 0, endIndex: Coalesce(n, 0))
 			if v.Name == "Take" && len(v.Operands) == 2 {
+				src := t.translateExpr(v.Operands[0])
+				n := t.translateExpr(v.Operands[1])
+				coalesceOperands := []elm.Expression{n, t.intLiteral(0)}
 				coalesce := &elm.OperatorExpressionNode{
 					Annotation: t.cqfAnnotation(),
-					Signature:  t.cqfEmptyArrayField(),
+					Signature:  t.computeSig("Coalesce", coalesceOperands),
 					Operator:   "Coalesce",
-					Operand: []elm.Expression{
-						t.translateExpr(v.Operands[1]),
-						t.intLiteral(0),
-					},
+					Operand:    coalesceOperands,
 				}
 				return &elm.NamedOperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig("Slice", []elm.Expression{src, n}),
 					Operator:   "Slice",
 					Operands: []elm.NamedOperand{
-						{Name: "source", Value: t.translateExpr(v.Operands[0])},
+						{Name: "source", Value: src},
 						{Name: "startIndex", Value: t.intLiteral(0)},
 						{Name: "endIndex", Value: coalesce},
 					},
@@ -1430,14 +1571,15 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 				}
 				return &elm.AggregateExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig(v.Name, []elm.Expression{src}),
 					Operator:   v.Name,
 					Source:     src,
 				}
 			}
 			// Map operators with named operand fields (Substring, Combine, etc.).
 			if slots, ok := namedOperatorOps[v.Name]; ok && len(v.Operands) > 0 && len(v.Operands) <= len(slots) {
-				operands := make([]elm.NamedOperand, 0, len(v.Operands))
+				vals := make([]elm.Expression, 0, len(v.Operands))
+				namedOps := make([]elm.NamedOperand, 0, len(v.Operands))
 				for i, o := range v.Operands {
 					val := t.translateExpr(o)
 					// Log requires Decimal operands; CQF promotes integer literals.
@@ -1445,7 +1587,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 						if _, isInt := o.(*ast.IntegerLiteral); isInt {
 							val = &elm.UnaryExpressionNode{
 								Annotation: t.cqfAnnotation(),
-								Signature:  t.cqfEmptyArrayField(),
+								Signature:  t.computeSig("ToDecimal", []elm.Expression{val}),
 								Operator:   "ToDecimal",
 								Operand:    val,
 							}
@@ -1463,16 +1605,17 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 							}
 						}
 					}
-					operands = append(operands, elm.NamedOperand{
+					vals = append(vals, val)
+					namedOps = append(namedOps, elm.NamedOperand{
 						Name:  slots[i],
 						Value: val,
 					})
 				}
 				return &elm.NamedOperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig(v.Name, vals),
 					Operator:   v.Name,
-					Operands:   operands,
+					Operands:   namedOps,
 				}
 			}
 			// Map binary system operators (operand: [a, b]) to generic OperatorExpressionNode.
@@ -1487,7 +1630,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 						if _, isInt := o.(*ast.IntegerLiteral); isInt {
 							ops[i] = &elm.UnaryExpressionNode{
 								Annotation: t.cqfAnnotation(),
-								Signature:  t.cqfEmptyArrayField(),
+								Signature:  t.computeSig("ToDecimal", []elm.Expression{ops[i]}),
 								Operator:   "ToDecimal",
 								Operand:    ops[i],
 							}
@@ -1508,7 +1651,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 				}
 				return &elm.OperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig(v.Name, ops),
 					Operator:   v.Name,
 					Operand:    ops,
 				}
@@ -1521,7 +1664,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 				}
 				return &elm.OperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig(v.Name, ops),
 					Operator:   v.Name,
 					Operand:    ops,
 				}
@@ -1550,7 +1693,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 				}
 				return &elm.OperatorExpressionNode{
 					Annotation: ann,
-					Signature:  sig,
+					Signature:  t.computeSig("Coalesce", operands),
 					Operator:   "Coalesce",
 					Operand:    operands,
 				}
@@ -1566,7 +1709,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		}
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
-			Signature:   sig,
+			Signature:   t.computeSig("FunctionRef", operands),
 			Name:        v.Name,
 			LibraryName: v.LibraryName,
 			Operand:     operands,
@@ -1609,12 +1752,28 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			}
 		}
 		// Apply implicit FHIRHelpers coercion when FHIRHelpers is included and the
-		// property resolves to a FHIR primitive type.
+		// property resolves to a FHIR primitive type. CQF places the source locator
+		// on the inner PropertyNode, not the synthetic FunctionRef wrapper.
 		if t.fhirHelpersLocalName != "" {
 			if fhirFunc := t.resolveFHIRPropertyCoercion(v.Source, v.Path); fhirFunc != "" {
+				if t.opts.EnableLocators {
+					setLocator(propertyNode, locatorStr(v.Loc()))
+					t.skipLocatorStamp = true
+				}
+				wrapperSig := sig
+				if fhirType := t.resolveFHIRPropertyType(v.Source, v.Path); fhirType != "" {
+					typeName := fhirType
+					if sourceType := t.resolveFHIRSourceType(v.Source); sourceType != "" {
+						if bound := typesystem.FHIRPropertyBinding[sourceType+"."+v.Path]; bound != "" {
+							typeName = bound
+						}
+					}
+					argSpec := namedTS{"{http://hl7.org/fhir}" + typeName}
+					wrapperSig = t.buildSigFromTypes("FunctionRef", []typeSpec{argSpec})
+				}
 				return &elm.FunctionRefNode{
 					Annotation:  ann,
-					Signature:   sig,
+					Signature:   wrapperSig,
 					Name:        fhirFunc,
 					LibraryName: t.fhirHelpersLocalName,
 					Operand:     []elm.Expression{propertyNode},
@@ -1623,20 +1782,22 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		}
 		return propertyNode
 	case *ast.IndexedAccessExpr:
+		operands := []elm.Expression{t.translateExpr(v.Source), t.translateExpr(v.Index)}
 		return &elm.OperatorExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("Indexer", operands),
 			Operator:   "Indexer",
-			Operand:    []elm.Expression{t.translateExpr(v.Source), t.translateExpr(v.Index)},
+			Operand:    operands,
 		}
 
 	// ---- Unary / binary ----
 	case *ast.UnaryExpr:
+		operand := t.translateExpr(v.Operand)
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig(v.Op, []elm.Expression{operand}),
 			Operator:   v.Op,
-			Operand:    t.translateExpr(v.Operand),
+			Operand:    operand,
 		}
 	case *ast.BinaryExpr:
 		return t.translateBinaryExpr(v)
@@ -1712,11 +1873,15 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 					AsType:     inferred,
 				}
 			}
-			cn.CaseItem = append(cn.CaseItem, &elm.CaseItem{
+			ci := &elm.CaseItem{
 				Annotation: t.cqfAnnotation(),
 				When:       t.translateExpr(item.When),
 				Then:       thenExpr,
-			})
+			}
+			if t.opts.EnableLocators {
+				ci.Locator = locatorStr(item.Loc())
+			}
+			cn.CaseItem = append(cn.CaseItem, ci)
 		}
 		return cn
 
@@ -1741,11 +1906,12 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			qualifier := nts.Qualifier
 			if qualifier == "" || qualifier == "System" {
 				if elmOp, ok := convertToOps[nts.Name]; ok {
+					operand := t.translateExpr(v.Operand)
 					return &elm.UnaryExpressionNode{
 						Annotation: ann,
-						Signature:  sig,
+						Signature:  t.computeSig(elmOp, []elm.Expression{operand}),
 						Operator:   elmOp,
-						Operand:    t.translateExpr(v.Operand),
+						Operand:    operand,
 					}
 				}
 			}
@@ -1785,20 +1951,22 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			},
 		}
 	case *ast.DurationBetweenExpr:
+		operands := []elm.Expression{t.translateExpr(v.Low), t.translateExpr(v.High)}
 		return &elm.PrecisionOperatorNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("DurationBetween", operands),
 			Operator:   "DurationBetween",
 			Precision:  v.Precision,
-			Operand:    []elm.Expression{t.translateExpr(v.Low), t.translateExpr(v.High)},
+			Operand:    operands,
 		}
 	case *ast.DifferenceBetweenExpr:
+		operands := []elm.Expression{t.translateExpr(v.Low), t.translateExpr(v.High)}
 		return &elm.PrecisionOperatorNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("DifferenceBetween", operands),
 			Operator:   "DifferenceBetween",
 			Precision:  v.Precision,
-			Operand:    []elm.Expression{t.translateExpr(v.Low), t.translateExpr(v.High)},
+			Operand:    operands,
 		}
 	case *ast.IntervalExpr:
 		low := t.translateExpr(v.Low)
@@ -1836,11 +2004,13 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			HighClosed: v.HighClosed,
 		}
 	case *ast.TimeBoundaryExpr:
+		op := titleCase(v.Boundary)
+		operand := t.translateExpr(v.Source)
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
-			Operator:   titleCase(v.Boundary),
-			Operand:    t.translateExpr(v.Source),
+			Signature:  t.computeSig(op, []elm.Expression{operand}),
+			Operator:   op,
+			Operand:    operand,
 		}
 	case *ast.DateTimeComponentExpr:
 		return &elm.PrecisionOperatorNode{
@@ -1851,53 +2021,59 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			Operand:    []elm.Expression{t.translateExpr(v.Source)},
 		}
 	case *ast.DurationExpr:
+		src := t.translateExpr(v.Source)
+		startNode := &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("Start", []elm.Expression{src}), Operator: "Start", Operand: src}
+		endNode := &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("End", []elm.Expression{src}), Operator: "End", Operand: src}
+		operands := []elm.Expression{startNode, endNode}
 		return &elm.PrecisionOperatorNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("DurationBetween", operands),
 			Operator:   "DurationBetween",
 			Precision:  v.Precision,
-			Operand: []elm.Expression{
-				&elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: "Start", Operand: t.translateExpr(v.Source)},
-				&elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: "End", Operand: t.translateExpr(v.Source)},
-			},
+			Operand:    operands,
 		}
 	case *ast.DifferenceExpr:
+		src := t.translateExpr(v.Source)
+		startNode := &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("Start", []elm.Expression{src}), Operator: "Start", Operand: src}
+		endNode := &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("End", []elm.Expression{src}), Operator: "End", Operand: src}
+		operands := []elm.Expression{startNode, endNode}
 		return &elm.PrecisionOperatorNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("DifferenceBetween", operands),
 			Operator:   "DifferenceBetween",
 			Precision:  v.Precision,
-			Operand: []elm.Expression{
-				&elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: "Start", Operand: t.translateExpr(v.Source)},
-				&elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: "End", Operand: t.translateExpr(v.Source)},
-			},
+			Operand:    operands,
 		}
 	case *ast.WidthExpr:
+		operand := t.translateExpr(v.Source)
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("Width", []elm.Expression{operand}),
 			Operator:   "Width",
-			Operand:    t.translateExpr(v.Source),
+			Operand:    operand,
 		}
 	case *ast.SuccessorExpr:
+		operand := t.translateExpr(v.Source)
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("Successor", []elm.Expression{operand}),
 			Operator:   "Successor",
-			Operand:    t.translateExpr(v.Source),
+			Operand:    operand,
 		}
 	case *ast.PredecessorExpr:
+		operand := t.translateExpr(v.Source)
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("Predecessor", []elm.Expression{operand}),
 			Operator:   "Predecessor",
-			Operand:    t.translateExpr(v.Source),
+			Operand:    operand,
 		}
 	case *ast.SingletonFromExpr:
+		operand := t.translateExpr(v.Source)
 		return &elm.SingletonFromNode{
 			Annotation: ann,
-			Signature:  sig,
-			Operand:    t.translateExpr(v.Source),
+			Signature:  t.computeSig("SingletonFrom", []elm.Expression{operand}),
+			Operand:    operand,
 		}
 	case *ast.PointFromExpr:
 		return &elm.UnaryExpressionNode{
@@ -1930,10 +2106,12 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		// Determine element type for null coercion.
 		// Typed list: use declared element type. Untyped: infer from non-null elements.
 		var nullType string
+		var typedElemTS typeSpec
 		if v.TypeSpec != nil {
 			ts := t.translateTypeSpecifier(v.TypeSpec)
 			if nts, ok := ts.(*elm.NamedTypeSpecifier); ok {
 				nullType = nts.Name
+				typedElemTS = namedTS{nts.Name}
 			}
 		} else {
 			nullType = t.inferListElementType(v.Elements)
@@ -1949,6 +2127,12 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 				}
 			}
 			ln.Element = append(ln.Element, elem)
+		}
+		if typedElemTS != nil {
+			if t.listNodeTypes == nil {
+				t.listNodeTypes = map[*elm.ListNode]typeSpec{}
+			}
+			t.listNodeTypes[ln] = typedElemTS
 		}
 		return ln
 	case *ast.TupleExpr:
@@ -1994,11 +2178,12 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 	// ---- Aggregate ----
 	case *ast.AggregateExpr:
 		// Distinct and Flatten are UnaryExpression in ELM (single operand object, not array).
+		operand := t.translateExpr(v.Operand)
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig(v.Op, []elm.Expression{operand}),
 			Operator:   v.Op,
-			Operand:    t.translateExpr(v.Operand),
+			Operand:    operand,
 		}
 	case *ast.SetAggregateExpr:
 		operands := []elm.Expression{t.translateExpr(v.Operand)}
@@ -2008,7 +2193,7 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 			// CQF always emits null as the second (precision) argument when absent.
 			operands = append(operands, &elm.NullNode{Annotation: t.cqfAnnotation()})
 		}
-		return &elm.OperatorExpressionNode{Annotation: ann, Signature: sig, Operator: v.Op, Operand: operands}
+		return &elm.OperatorExpressionNode{Annotation: ann, Signature: t.computeSig(v.Op, operands), Operator: v.Op, Operand: operands}
 
 	// ---- Retrieve ----
 	case *ast.RetrieveExpr:
@@ -2048,15 +2233,24 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 				b := true
 				preservePtr = &b
 			}
+			vs := &elm.ValueSetRefNode{
+				Annotation: t.cqfAnnotation(),
+				Name:       ref.Name,
+				Preserve:   preservePtr,
+			}
+			if t.opts.EnableLocators {
+				vs.Locator = locatorStr(ref.Loc())
+			}
+			codeExpr := t.translateExpr(v.Left)
+			invsSig := t.cqfEmptyArrayField()
+			if lvl := t.opts.SignatureLevel; lvl != "" && lvl != "None" {
+				invsSig = t.buildInferredSig([]elm.Expression{codeExpr})
+			}
 			return &elm.InValueSetNode{
 				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
-				Code:       t.translateExpr(v.Left),
-				ValueSet: &elm.ValueSetRefNode{
-					Annotation: t.cqfAnnotation(),
-					Name:       ref.Name,
-					Preserve:   preservePtr,
-				},
+				Signature:  invsSig,
+				Code:       codeExpr,
+				ValueSet:   vs,
 			}
 		}
 	}
@@ -2076,16 +2270,41 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		}
 	}
 
-	// List promotion: when the "In" operator's RHS is not already an interval or list,
-	// wrap it in ToList to conform to ELM semantics (DisableListPromotion=false default).
+	// For the "In" operator, apply either interval promotion or list promotion when
+	// the RHS is not already an interval or list expression.
+	var listPromoted bool
 	if v.Op == "In" && !t.opts.DisableListPromotion {
 		if _, isInterval := v.Right.(*ast.IntervalExpr); !isInterval {
 			if _, isList := v.Right.(*ast.ListExpr); !isList {
-				rhs = &elm.UnaryExpressionNode{
-					Annotation: t.cqfAnnotation(),
-					Signature:  t.cqfEmptyArrayField(),
-					Operator:   "ToList",
-					Operand:    rhs,
+				if t.opts.EnableIntervalPromotion {
+					// Interval promotion: wrap scalar RHS in If(IsNull(rhs), Null, Interval[rhs,rhs]).
+					// Three independent translations of v.Right are required.
+					rhs = &elm.IfNode{
+						Annotation: t.cqfAnnotation(),
+						Condition: &elm.UnaryExpressionNode{
+							Annotation: t.cqfAnnotation(),
+							Signature:  t.cqfEmptyArrayField(),
+							Operator:   "IsNull",
+							Operand:    rhs,
+						},
+						Then: &elm.NullNode{Annotation: t.cqfAnnotation()},
+						Else: &elm.IntervalNode{
+							Annotation: t.cqfAnnotation(),
+							Low:        t.translateExpr(v.Right),
+							High:       t.translateExpr(v.Right),
+							LowClosed:  true,
+							HighClosed: true,
+						},
+					}
+				} else {
+					// List promotion: wrap scalar RHS in ToList.
+					rhs = &elm.UnaryExpressionNode{
+						Annotation: t.cqfAnnotation(),
+						Signature:  t.cqfEmptyArrayField(),
+						Operator:   "ToList",
+						Operand:    rhs,
+					}
+					listPromoted = true
 				}
 			}
 		}
@@ -2115,7 +2334,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		if _, ok := v.Left.(*ast.IntegerLiteral); ok {
 			lhs = &elm.UnaryExpressionNode{
 				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
+				Signature:  t.computeSig("ToDecimal", []elm.Expression{lhs}),
 				Operator:   "ToDecimal",
 				Operand:    lhs,
 			}
@@ -2123,7 +2342,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		if _, ok := v.Right.(*ast.IntegerLiteral); ok {
 			rhs = &elm.UnaryExpressionNode{
 				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
+				Signature:  t.computeSig("ToDecimal", []elm.Expression{rhs}),
 				Operator:   "ToDecimal",
 				Operand:    rhs,
 			}
@@ -2142,14 +2361,14 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		if leftInt && rightDec {
 			lhs = &elm.UnaryExpressionNode{
 				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
+				Signature:  t.computeSig("ToDecimal", []elm.Expression{lhs}),
 				Operator:   "ToDecimal",
 				Operand:    lhs,
 			}
 		} else if rightInt && leftDec {
 			rhs = &elm.UnaryExpressionNode{
 				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
+				Signature:  t.computeSig("ToDecimal", []elm.Expression{rhs}),
 				Operator:   "ToDecimal",
 				Operand:    rhs,
 			}
@@ -2160,15 +2379,22 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	if v.Precision != "" {
 		return &elm.PrecisionOperatorNode{
 			Annotation: t.cqfAnnotation(),
-			Signature:  t.cqfEmptyArrayField(),
+			Signature:  t.computeSig(op, operands),
 			Operator:   op,
 			Precision:  v.Precision,
 			Operand:    operands,
 		}
 	}
+	// "In" uses special signature logic based on whether promotion was applied.
+	var sig json.RawMessage
+	if op == "In" {
+		sig = t.computeInSig(lhs, rhs, listPromoted)
+	} else {
+		sig = t.computeSig(op, operands)
+	}
 	return &elm.OperatorExpressionNode{
 		Annotation: t.cqfAnnotation(),
-		Signature:  t.cqfEmptyArrayField(),
+		Signature:  sig,
 		Operator:   op,
 		Operand:    operands,
 	}
@@ -2231,19 +2457,25 @@ func (t *Translator) resolveFHIRPropertyCoercion(source ast.Expr, path string) s
 
 func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 	ann := t.cqfAnnotation()
-	sig := t.cqfEmptyArrayField()
 	operand := t.translateExpr(v.Operand)
+	loc := ""
+	if t.opts.EnableLocators {
+		loc = locatorStr(v.Loc())
+	}
 	if v.IsNull {
 		isNull := &elm.UnaryExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("IsNull", []elm.Expression{operand}),
 			Operator:   "IsNull",
 			Operand:    operand,
 		}
 		if v.Negated {
+			if loc != "" {
+				isNull.Locator = loc
+			}
 			return &elm.UnaryExpressionNode{
 				Annotation: ann,
-				Signature:  sig,
+				Signature:  t.computeSig("Not", []elm.Expression{isNull}),
 				Operator:   "Not",
 				Operand:    isNull,
 			}
@@ -2252,24 +2484,30 @@ func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 	}
 	if v.IsTrue {
 		op := "IsTrue"
-		node := &elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: op, Operand: operand}
+		node := &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig(op, []elm.Expression{operand}), Operator: op, Operand: operand}
 		if v.Negated {
-			return &elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: "Not", Operand: node}
+			if loc != "" {
+				node.Locator = loc
+			}
+			return &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("Not", []elm.Expression{node}), Operator: "Not", Operand: node}
 		}
 		return node
 	}
 	if v.IsFalse {
 		op := "IsFalse"
-		node := &elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: op, Operand: operand}
+		node := &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig(op, []elm.Expression{operand}), Operator: op, Operand: operand}
 		if v.Negated {
-			return &elm.UnaryExpressionNode{Annotation: ann, Signature: sig, Operator: "Not", Operand: node}
+			if loc != "" {
+				node.Locator = loc
+			}
+			return &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("Not", []elm.Expression{node}), Operator: "Not", Operand: node}
 		}
 		return node
 	}
 	ts := t.translateTypeSpecifier(v.TypeSpec)
 	return &elm.IsNode{
 		Annotation:      ann,
-		Signature:       sig,
+		Signature:       t.cqfEmptyArrayField(),
 		Operand:         operand,
 		IsTypeSpecifier: ts,
 	}
@@ -2293,7 +2531,7 @@ func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
 	if v.Precision != "" {
 		return &elm.PrecisionOperatorNode{
 			Annotation: t.cqfAnnotation(),
-			Signature:  t.cqfEmptyArrayField(),
+			Signature:  t.computeSig(op, operands),
 			Operator:   op,
 			Precision:  v.Precision,
 			Operand:    operands,
@@ -2301,7 +2539,7 @@ func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
 	}
 	return &elm.OperatorExpressionNode{
 		Annotation: t.cqfAnnotation(),
-		Signature:  t.cqfEmptyArrayField(),
+		Signature:  t.computeSig(op, operands),
 		Operator:   op,
 		Operand:    operands,
 	}
@@ -2341,24 +2579,36 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 	t.queryAliases = append(t.queryAliases, aliases)
 	defer func() { t.queryAliases = t.queryAliases[:len(t.queryAliases)-1] }()
 
-	// Build alias→FHIR-type map for implicit FHIRHelpers coercion.
+	// Build alias→FHIR-type map for implicit FHIRHelpers coercion, and pre-translate
+	// each source expression so we can both register the alias' element type for
+	// signature inference and reuse the translated node below.
 	aliasTypes := make(map[string]string)
-	if t.fhirHelpersLocalName != "" {
-		for _, src := range q.Sources {
-			if src.Alias != "" {
-				if re, ok := src.Expression.(*ast.RetrieveExpr); ok && re.DataType != "" {
-					// DataType format: "FHIR.Encounter" — extract after the last dot.
-					typeName := re.DataType
-					if i := strings.LastIndex(typeName, "."); i >= 0 {
-						typeName = typeName[i+1:]
-					}
-					aliasTypes[src.Alias] = typeName
+	aliasTypeSpecs := make(map[string]typeSpec)
+	translatedSources := make(map[int]elm.Expression, len(q.Sources))
+	for i, src := range q.Sources {
+		if src.Alias == "" {
+			continue
+		}
+		if t.fhirHelpersLocalName != "" {
+			if re, ok := src.Expression.(*ast.RetrieveExpr); ok && re.DataType != "" {
+				// DataType format: "FHIR.Encounter" — extract after the last dot.
+				typeName := re.DataType
+				if i := strings.LastIndex(typeName, "."); i >= 0 {
+					typeName = typeName[i+1:]
 				}
+				aliasTypes[src.Alias] = typeName
 			}
+		}
+		srcExpr := t.translateExpr(src.Expression)
+		translatedSources[i] = srcExpr
+		if lt, ok := t.inferTypeSpec(srcExpr).(listTS); ok {
+			aliasTypeSpecs[src.Alias] = lt.elem
 		}
 	}
 	t.queryAliasTypes = append(t.queryAliasTypes, aliasTypes)
 	defer func() { t.queryAliasTypes = t.queryAliasTypes[:len(t.queryAliasTypes)-1] }()
+	t.queryAliasTypeSpecs = append(t.queryAliasTypeSpecs, aliasTypeSpecs)
+	defer func() { t.queryAliasTypeSpecs = t.queryAliasTypeSpecs[:len(t.queryAliasTypeSpecs)-1] }()
 
 	// Build the let-variable set for this query scope (for QueryLetRef resolution).
 	letScope := make(map[string]bool)
@@ -2367,25 +2617,42 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 	}
 	t.queryLetScopes = append(t.queryLetScopes, letScope)
 	defer func() { t.queryLetScopes = t.queryLetScopes[:len(t.queryLetScopes)-1] }()
+	letTypeSpecs := make(map[string]typeSpec)
+	t.queryLetTypeSpecs = append(t.queryLetTypeSpecs, letTypeSpecs)
+	defer func() { t.queryLetTypeSpecs = t.queryLetTypeSpecs[:len(t.queryLetTypeSpecs)-1] }()
 
 	qn := &elm.QueryNode{
 		Annotation:   t.cqfAnnotation(),
 		Let:          []*elm.LetClauseELM{},
 		Relationship: []*elm.RelationshipClauseELM{},
 	}
-	for _, src := range q.Sources {
-		qn.Source = append(qn.Source, &elm.AliasedQuerySourceELM{
+	for i, src := range q.Sources {
+		expr, ok := translatedSources[i]
+		if !ok {
+			expr = t.translateExpr(src.Expression)
+		}
+		aqse := &elm.AliasedQuerySourceELM{
 			Annotation: t.cqfAnnotation(),
 			Alias:      src.Alias,
-			Expression: t.translateExpr(src.Expression),
-		})
+			Expression: expr,
+		}
+		if t.opts.EnableLocators {
+			aqse.Locator = locatorStr(src.Loc())
+		}
+		qn.Source = append(qn.Source, aqse)
 	}
 	for _, let := range q.Let {
-		qn.Let = append(qn.Let, &elm.LetClauseELM{
+		letExpr := t.translateExpr(let.Expression)
+		letTypeSpecs[let.Identifier] = t.inferTypeSpec(letExpr)
+		lce := &elm.LetClauseELM{
 			Annotation: t.cqfAnnotation(),
 			Identifier: let.Identifier,
-			Expression: t.translateExpr(let.Expression),
-		})
+			Expression: letExpr,
+		}
+		if t.opts.EnableLocators {
+			lce.Locator = locatorStr(let.Loc())
+		}
+		qn.Let = append(qn.Let, lce)
 	}
 	for _, rel := range q.Relationship {
 		kind := "With"
@@ -2397,7 +2664,15 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			Kind:       kind,
 			Alias:      rel.Source.Alias,
 			Expression: t.translateExpr(rel.Source.Expression),
-			SuchThat:   t.translateExpr(rel.SuchThat),
+		}
+		if rel.Source.Alias != "" {
+			if lt, ok := t.inferTypeSpec(r.Expression).(listTS); ok {
+				aliasTypeSpecs[rel.Source.Alias] = lt.elem
+			}
+		}
+		r.SuchThat = t.translateExpr(rel.SuchThat)
+		if t.opts.EnableLocators {
+			r.Locator = locatorStr(rel.Loc())
 		}
 		qn.Relationship = append(qn.Relationship, r)
 	}
@@ -2411,11 +2686,15 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			f := false
 			distinct = &f
 		}
-		qn.Return = &elm.ReturnClauseELM{
+		rc := &elm.ReturnClauseELM{
 			Annotation: t.cqfAnnotation(),
 			Distinct:   distinct,
 			Expression: t.translateExpr(q.Return.Expression),
 		}
+		if t.opts.EnableLocators {
+			rc.Locator = locatorStr(q.Return.Loc())
+		}
+		qn.Return = rc
 	}
 	if q.Aggregate != nil {
 		qn.Aggregate = &elm.AggregateClauseELM{
@@ -2427,6 +2706,9 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 	}
 	if q.Sort != nil {
 		sortClause := &elm.SortClauseELM{Annotation: t.cqfAnnotation()}
+		if t.opts.EnableLocators {
+			sortClause.Locator = locatorStr(q.Sort.Loc())
+		}
 		for _, item := range q.Sort.Items {
 			dir := item.DirectionText
 			if dir == "" {
@@ -2438,6 +2720,9 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			sortItem := &elm.SortByItemELM{
 				Annotation: t.cqfAnnotation(),
 				Direction:  dir,
+			}
+			if t.opts.EnableLocators {
+				sortItem.Locator = locatorStr(item.Loc())
 			}
 			if item.Expression == nil {
 				// `sort asc` / `sort desc` — direction only, no by-expression.
@@ -2480,6 +2765,18 @@ func (t *Translator) isDecimalListExpr(expr ast.Expr) bool {
 // regardless of input element type, coercing List<T> → List<Decimal>.
 func (t *Translator) wrapInDecimalQuery(src elm.Expression) elm.Expression {
 	const alias = "X"
+	// Register the alias element type so inferTypeSpec(AliasRef) returns the
+	// correct type when computing the inner ToDecimal signature.
+	aliasTypeSpecs := map[string]typeSpec{}
+	if lt, ok := t.inferTypeSpec(src).(listTS); ok {
+		aliasTypeSpecs[alias] = lt.elem
+	} else {
+		aliasTypeSpecs[alias] = anyTS
+	}
+	t.queryAliasTypeSpecs = append(t.queryAliasTypeSpecs, aliasTypeSpecs)
+	defer func() { t.queryAliasTypeSpecs = t.queryAliasTypeSpecs[:len(t.queryAliasTypeSpecs)-1] }()
+
+	aliasRef := &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: alias}
 	return &elm.QueryNode{
 		Annotation: t.cqfAnnotation(),
 		Source: []*elm.AliasedQuerySourceELM{
@@ -2496,9 +2793,9 @@ func (t *Translator) wrapInDecimalQuery(src elm.Expression) elm.Expression {
 			Distinct:   func() *bool { f := false; return &f }(),
 			Expression: &elm.UnaryExpressionNode{
 				Annotation: t.cqfAnnotation(),
-				Signature:  t.cqfEmptyArrayField(),
+				Signature:  t.computeSig("ToDecimal", []elm.Expression{aliasRef}),
 				Operator:   "ToDecimal",
-				Operand:    &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: alias},
+				Operand:    aliasRef,
 			},
 		},
 	}

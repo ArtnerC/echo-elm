@@ -354,6 +354,15 @@ var FHIRPrimitiveCoercion = map[string]string{
 	"time":         "ToTime",
 }
 
+// FHIRPropertyBinding maps "TypeName.propertyName" to a FHIR bound code
+// enum/type name when the property carries a required ValueSet binding. The
+// CQFramework compiler reports the bound type (e.g. AdministrativeGender) as
+// the operand type of FHIRHelpers.ToString for these properties; we mirror
+// that behavior in our emitted signatures.
+var FHIRPropertyBinding = map[string]string{
+	"Patient.gender": "AdministrativeGender",
+}
+
 // IsFHIRDateTimeType returns true when fhirType is a FHIR type that
 // FHIRHelpers converts to a CQL DateTime (point, not interval). This is
 // used to decide whether `during` (IncludedIn) should be emitted as In

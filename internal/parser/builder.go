@@ -48,6 +48,51 @@ func accessLevel(ctx antlr.ParserRuleContext) ast.AccessLevel {
 	return ast.Public
 }
 
+// intervalFromCtx extracts a 1-based source interval from an ANTLR parser rule context.
+// Start column is antlr 0-indexed + 1; stop column is the last char position (1-indexed).
+func intervalFromCtx(ctx antlr.ParserRuleContext) ast.Interval {
+	if ctx == nil {
+		return ast.Interval{}
+	}
+	start := ctx.GetStart()
+	if start == nil || start.GetLine() == 0 {
+		return ast.Interval{}
+	}
+	startLine := start.GetLine()
+	startCol := start.GetColumn() + 1
+
+	stop := ctx.GetStop()
+	endLine, endCol := startLine, startCol
+	if stop != nil && stop.GetTokenIndex() >= 0 {
+		endLine = stop.GetLine()
+		endCol = stop.GetColumn() + len(stop.GetText())
+	} else {
+		endCol = startCol + len(start.GetText()) - 1
+	}
+	return ast.Interval{
+		Start: ast.Position{Line: startLine, Column: startCol},
+		Stop:  ast.Position{Line: endLine, Column: endCol},
+	}
+}
+
+// setLoc sets the loc on an AST expression node, overriding any previously set location.
+// Outer wrapper builders use this to widen inner spans to the full context span.
+// The new location is only applied when the context provides a valid (non-zero) interval.
+func setLoc(n ast.Expr, ctx antlr.ParserRuleContext) ast.Expr {
+	if n == nil || ctx == nil {
+		return n
+	}
+	loc := intervalFromCtx(ctx)
+	if loc.Start.Line == 0 {
+		return n
+	}
+	type setter interface{ SetLoc(ast.Interval) }
+	if s, ok := n.(setter); ok {
+		s.SetLoc(loc)
+	}
+	return n
+}
+
 // -----------------------------------------------------------------------
 // Library (root)
 // -----------------------------------------------------------------------
@@ -137,6 +182,7 @@ func (b *astBuilder) buildUsing(ctx cqlparser.IUsingDefinitionContext) *ast.Usin
 	if vs := udc.VersionSpecifier(); vs != nil {
 		ud.Version = unquoteString(vs.GetText())
 	}
+	ud.SetLoc(intervalFromCtx(udc))
 	return ud
 }
 
@@ -156,6 +202,7 @@ func (b *astBuilder) buildInclude(ctx cqlparser.IIncludeDefinitionContext) *ast.
 	if li := idc.LocalIdentifier(); li != nil {
 		id.LocalName = li.GetText()
 	}
+	id.SetLoc(intervalFromCtx(idc))
 	return id
 }
 
@@ -178,6 +225,7 @@ func (b *astBuilder) buildCodesystem(ctx cqlparser.ICodesystemDefinitionContext)
 	if vs := cdc.VersionSpecifier(); vs != nil {
 		cs.Version = unquoteString(vs.GetText())
 	}
+	cs.SetLoc(intervalFromCtx(cdc))
 	return cs
 }
 
@@ -200,6 +248,7 @@ func (b *astBuilder) buildValueset(ctx cqlparser.IValuesetDefinitionContext) *as
 	if vspec := vdc.VersionSpecifier(); vspec != nil {
 		vs.Version = unquoteString(vspec.GetText())
 	}
+	vs.SetLoc(intervalFromCtx(vdc))
 	return vs
 }
 
@@ -226,6 +275,7 @@ func (b *astBuilder) buildCode(ctx cqlparser.ICodeDefinitionContext) *ast.CodeDe
 		} else {
 			cd.SystemName = unquoteIdentifier(csic.Identifier().GetText())
 		}
+		cd.SystemLocator = intervalFromCtx(csic)
 	}
 	if disp := cdc.DisplayClause(); disp != nil {
 		dc := disp.(*cqlparser.DisplayClauseContext)
@@ -233,6 +283,7 @@ func (b *astBuilder) buildCode(ctx cqlparser.ICodeDefinitionContext) *ast.CodeDe
 			cd.Display = unquoteString(s.GetText())
 		}
 	}
+	cd.SetLoc(intervalFromCtx(cdc))
 	return cd
 }
 
@@ -252,6 +303,7 @@ func (b *astBuilder) buildConcept(ctx cqlparser.IConceptDefinitionContext) *ast.
 	for _, ci := range cdc.AllCodeIdentifier() {
 		cd.Codes = append(cd.Codes, ci.GetText())
 	}
+	cd.SetLoc(intervalFromCtx(cdc))
 	return cd
 }
 
@@ -275,6 +327,7 @@ func (b *astBuilder) buildParameter(ctx cqlparser.IParameterDefinitionContext) *
 	if defaultExpr := pdc.Expression(); defaultExpr != nil {
 		pd.Default = b.buildExpr(defaultExpr)
 	}
+	pd.SetLoc(intervalFromCtx(pdc))
 	return pd
 }
 
@@ -290,6 +343,7 @@ func (b *astBuilder) buildContext(ctx cqlparser.IContextDefinitionContext) *ast.
 	} else if idc := cdc.Identifier(); idc != nil {
 		cd.Name = idc.GetText()
 	}
+	cd.SetLoc(intervalFromCtx(cdc))
 	return cd
 }
 
@@ -439,6 +493,7 @@ func (b *astBuilder) buildExpressionDef(ctx cqlparser.IExpressionDefinitionConte
 	if startTok != nil {
 		ed.Annotations = b.extractAnnotations(startTok.GetTokenIndex())
 	}
+	ed.SetLoc(intervalFromCtx(edc))
 	return ed
 }
 
@@ -479,6 +534,7 @@ func (b *astBuilder) buildFunctionDef(ctx cqlparser.IFunctionDefinitionContext) 
 	if startTok != nil {
 		ed.Annotations = b.extractAnnotations(startTok.GetTokenIndex())
 	}
+	ed.SetLoc(intervalFromCtx(fdc))
 	return ed
 }
 
@@ -496,6 +552,7 @@ func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast
 		if inner := ldc.TypeSpecifier(); inner != nil {
 			lt.ElementType = b.buildTypeSpecifier(inner)
 		}
+		lt.SetLoc(intervalFromCtx(ldc))
 		return lt
 	}
 	if interval := ctx.IntervalTypeSpecifier(); interval != nil {
@@ -504,6 +561,7 @@ func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast
 		if inner := idc.TypeSpecifier(); inner != nil {
 			it.PointType = b.buildTypeSpecifier(inner)
 		}
+		it.SetLoc(intervalFromCtx(idc))
 		return it
 	}
 	if tuple := ctx.TupleTypeSpecifier(); tuple != nil {
@@ -518,8 +576,10 @@ func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast
 			if ts := edc.TypeSpecifier(); ts != nil {
 				te.Type = b.buildTypeSpecifier(ts)
 			}
+			te.SetLoc(intervalFromCtx(edc))
 			tt.Elements = append(tt.Elements, te)
 		}
+		tt.SetLoc(intervalFromCtx(tdc))
 		return tt
 	}
 	if choice := ctx.ChoiceTypeSpecifier(); choice != nil {
@@ -528,6 +588,7 @@ func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast
 		for _, ts := range cdc.AllTypeSpecifier() {
 			ct.Types = append(ct.Types, b.buildTypeSpecifier(ts))
 		}
+		ct.SetLoc(intervalFromCtx(cdc))
 		return ct
 	}
 	return nil
@@ -543,5 +604,6 @@ func (b *astBuilder) buildNamedTypeSpecifier(ctx cqlparser.INamedTypeSpecifierCo
 	if ri := ndc.ReferentialOrTypeNameIdentifier(); ri != nil {
 		nts.Name = ri.GetText()
 	}
+	nts.SetLoc(intervalFromCtx(ndc))
 	return nts
 }

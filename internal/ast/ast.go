@@ -52,6 +52,9 @@ type baseNode struct {
 func (b baseNode) nodeMarker() {}
 func (b baseNode) Loc() Interval { return b.loc }
 
+// SetLoc sets the source location of this node.
+func (b *baseNode) SetLoc(loc Interval) { b.loc = loc }
+
 // -----------------------------------------------------------------------
 // Library (root node)
 // -----------------------------------------------------------------------
@@ -123,11 +126,12 @@ type ValuesetDefinition struct {
 // CodeDefinition: code "Name" from CodeSystem
 type CodeDefinition struct {
 	baseNode
-	Name        string
-	Code        string
-	SystemName  string
-	Display     string
-	AccessLevel AccessLevel
+	Name         string
+	Code         string
+	SystemName   string
+	SystemLocator Interval // source span of the codesystem identifier
+	Display      string
+	AccessLevel  AccessLevel
 }
 
 // ConceptDefinition: concept "Name": { codes }

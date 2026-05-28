@@ -13,6 +13,10 @@ import (
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildExpr(ctx cqlparser.IExpressionContext) ast.Expr {
+	return setLoc(b.buildExprInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildExprInner(ctx cqlparser.IExpressionContext) ast.Expr {
 	if ctx == nil {
 		return nil
 	}
@@ -222,6 +226,10 @@ func (b *astBuilder) buildExpr(ctx cqlparser.IExpressionContext) ast.Expr {
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildExprTerm(ctx cqlparser.IExpressionTermContext) ast.Expr {
+	return setLoc(b.buildExprTermInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildExprTermInner(ctx cqlparser.IExpressionTermContext) ast.Expr {
 	if ctx == nil {
 		return nil
 	}
@@ -348,7 +356,8 @@ func (b *astBuilder) buildExprTerm(ctx cqlparser.IExpressionTermContext) ast.Exp
 			ce.Comparand = b.buildExpr(exprs[0])
 		}
 		for _, item := range items {
-			itemExprs := item.(*cqlparser.CaseExpressionItemContext).AllExpression()
+			itemCtx := item.(*cqlparser.CaseExpressionItemContext)
+			itemExprs := itemCtx.AllExpression()
 			ci := &ast.CaseItem{}
 			if len(itemExprs) > 0 {
 				ci.When = b.buildExpr(itemExprs[0])
@@ -356,6 +365,7 @@ func (b *astBuilder) buildExprTerm(ctx cqlparser.IExpressionTermContext) ast.Exp
 			if len(itemExprs) > 1 {
 				ci.Then = b.buildExpr(itemExprs[1])
 			}
+			ci.SetLoc(intervalFromCtx(itemCtx))
 			ce.Items = append(ce.Items, ci)
 		}
 		ce.Else = b.buildExpr(exprs[len(exprs)-1])
@@ -397,6 +407,10 @@ func (b *astBuilder) buildExprTerm(ctx cqlparser.IExpressionTermContext) ast.Exp
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildTerm(ctx cqlparser.ITermContext) ast.Expr {
+	return setLoc(b.buildTermInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildTermInner(ctx cqlparser.ITermContext) ast.Expr {
 	if ctx == nil {
 		return nil
 	}
@@ -447,6 +461,10 @@ func (b *astBuilder) buildTerm(ctx cqlparser.ITermContext) ast.Expr {
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildInvocation(ctx cqlparser.IInvocationContext, source ast.Expr) ast.Expr {
+	return setLoc(b.buildInvocationInner(ctx, source), ctx)
+}
+
+func (b *astBuilder) buildInvocationInner(ctx cqlparser.IInvocationContext, source ast.Expr) ast.Expr {
 	if ctx == nil {
 		return source
 	}
@@ -489,6 +507,10 @@ func (b *astBuilder) buildInvocation(ctx cqlparser.IInvocationContext, source as
 }
 
 func (b *astBuilder) buildQualifiedInvocation(ctx cqlparser.IQualifiedInvocationContext, source ast.Expr) ast.Expr {
+	return setLoc(b.buildQualifiedInvocationInner(ctx, source), ctx)
+}
+
+func (b *astBuilder) buildQualifiedInvocationInner(ctx cqlparser.IQualifiedInvocationContext, source ast.Expr) ast.Expr {
 	if ctx == nil {
 		return source
 	}
@@ -519,6 +541,10 @@ func (b *astBuilder) buildQualifiedInvocation(ctx cqlparser.IQualifiedInvocation
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildLiteral(ctx cqlparser.ILiteralContext) ast.Expr {
+	return setLoc(b.buildLiteralInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildLiteralInner(ctx cqlparser.ILiteralContext) ast.Expr {
 	if ctx == nil {
 		return &ast.NullLiteral{}
 	}
@@ -599,7 +625,9 @@ func (b *astBuilder) buildQuantityLiteral(ctx cqlparser.IQuantityContext) *ast.Q
 	if u := qc.Unit(); u != nil {
 		unit = unquoteString(u.GetText())
 	}
-	return &ast.QuantityLiteral{Value: value, Unit: unit}
+	q := &ast.QuantityLiteral{Value: value, Unit: unit}
+	q.SetLoc(intervalFromCtx(qc))
+	return q
 }
 
 // -----------------------------------------------------------------------
@@ -607,6 +635,10 @@ func (b *astBuilder) buildQuantityLiteral(ctx cqlparser.IQuantityContext) *ast.Q
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildIntervalSelector(ctx cqlparser.IIntervalSelectorContext) ast.Expr {
+	return setLoc(b.buildIntervalSelectorInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildIntervalSelectorInner(ctx cqlparser.IIntervalSelectorContext) ast.Expr {
 	isc := ctx.(*cqlparser.IntervalSelectorContext)
 	exprs := isc.AllExpression()
 	var low, high ast.Expr
@@ -637,6 +669,10 @@ func (b *astBuilder) buildIntervalSelector(ctx cqlparser.IIntervalSelectorContex
 }
 
 func (b *astBuilder) buildTupleSelector(ctx cqlparser.ITupleSelectorContext) ast.Expr {
+	return setLoc(b.buildTupleSelectorInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildTupleSelectorInner(ctx cqlparser.ITupleSelectorContext) ast.Expr {
 	tsc := ctx.(*cqlparser.TupleSelectorContext)
 	te := &ast.TupleExpr{}
 	for _, elem := range tsc.AllTupleElementSelector() {
@@ -649,6 +685,10 @@ func (b *astBuilder) buildTupleSelector(ctx cqlparser.ITupleSelectorContext) ast
 }
 
 func (b *astBuilder) buildListSelector(ctx cqlparser.IListSelectorContext) ast.Expr {
+	return setLoc(b.buildListSelectorInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildListSelectorInner(ctx cqlparser.IListSelectorContext) ast.Expr {
 	lsc := ctx.(*cqlparser.ListSelectorContext)
 	le := &ast.ListExpr{}
 	if ts := lsc.TypeSpecifier(); ts != nil {
@@ -661,6 +701,10 @@ func (b *astBuilder) buildListSelector(ctx cqlparser.IListSelectorContext) ast.E
 }
 
 func (b *astBuilder) buildInstanceSelector(ctx cqlparser.IInstanceSelectorContext) ast.Expr {
+	return setLoc(b.buildInstanceSelectorInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildInstanceSelectorInner(ctx cqlparser.IInstanceSelectorContext) ast.Expr {
 	isc := ctx.(*cqlparser.InstanceSelectorContext)
 	ie := &ast.InstanceExpr{
 		TypeSpec: b.buildNamedTypeSpecifier(isc.NamedTypeSpecifier()),
@@ -675,6 +719,10 @@ func (b *astBuilder) buildInstanceSelector(ctx cqlparser.IInstanceSelectorContex
 }
 
 func (b *astBuilder) buildCodeSelector(ctx cqlparser.ICodeSelectorContext) ast.Expr {
+	return setLoc(b.buildCodeSelectorInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildCodeSelectorInner(ctx cqlparser.ICodeSelectorContext) ast.Expr {
 	csc := ctx.(*cqlparser.CodeSelectorContext)
 	code := unquoteString(csc.STRING().GetText())
 	system := ""
@@ -692,6 +740,10 @@ func (b *astBuilder) buildCodeSelector(ctx cqlparser.ICodeSelectorContext) ast.E
 }
 
 func (b *astBuilder) buildConceptSelector(ctx cqlparser.IConceptSelectorContext) ast.Expr {
+	return setLoc(b.buildConceptSelectorInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildConceptSelectorInner(ctx cqlparser.IConceptSelectorContext) ast.Expr {
 	csc := ctx.(*cqlparser.ConceptSelectorContext)
 	ce := &ast.ConceptExpr{}
 	for _, cs := range csc.AllCodeSelector() {
@@ -714,6 +766,10 @@ func (b *astBuilder) buildConceptSelector(ctx cqlparser.IConceptSelectorContext)
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildRetrieve(ctx cqlparser.IRetrieveContext) ast.Expr {
+	return setLoc(b.buildRetrieveInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildRetrieveInner(ctx cqlparser.IRetrieveContext) ast.Expr {
 	if ctx == nil {
 		return nil
 	}
@@ -751,6 +807,10 @@ func (b *astBuilder) buildRetrieve(ctx cqlparser.IRetrieveContext) ast.Expr {
 // -----------------------------------------------------------------------
 
 func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
+	return setLoc(b.buildQueryInner(ctx), ctx)
+}
+
+func (b *astBuilder) buildQueryInner(ctx cqlparser.IQueryContext) ast.Expr {
 	if ctx == nil {
 		return nil
 	}
@@ -768,10 +828,12 @@ func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
 	if lc := qc.LetClause(); lc != nil {
 		for _, item := range lc.(*cqlparser.LetClauseContext).AllLetClauseItem() {
 			lci := item.(*cqlparser.LetClauseItemContext)
-			q.Let = append(q.Let, &ast.LetClause{
+			let := &ast.LetClause{
 				Identifier: unquoteIdentifier(lci.Identifier().GetText()),
 				Expression: b.buildExpr(lci.Expression()),
-			})
+			}
+			let.SetLoc(intervalFromCtx(lci))
+			q.Let = append(q.Let, let)
 		}
 	}
 
@@ -783,6 +845,7 @@ func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
 			rel := ast.QueryRelationship{Kind: "with"}
 			rel.Source = b.buildAliasedQuerySource(w.AliasedQuerySource())
 			rel.SuchThat = b.buildExpr(w.Expression())
+			rel.SetLoc(intervalFromCtx(w))
 			q.Relationship = append(q.Relationship, rel)
 		}
 		if woc := ic.WithoutClause(); woc != nil {
@@ -790,13 +853,17 @@ func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
 			rel := ast.QueryRelationship{Kind: "without"}
 			rel.Source = b.buildAliasedQuerySource(wo.AliasedQuerySource())
 			rel.SuchThat = b.buildExpr(wo.Expression())
+			rel.SetLoc(intervalFromCtx(wo))
 			q.Relationship = append(q.Relationship, rel)
 		}
 	}
 
 	// Where
 	if wc := qc.WhereClause(); wc != nil {
-		q.Where = b.buildExpr(wc.(*cqlparser.WhereClauseContext).Expression())
+		wcc := wc.(*cqlparser.WhereClauseContext)
+		q.Where = b.buildExpr(wcc.Expression())
+		// Override with the full whereClause span (includes 'where' keyword).
+		q.Where = setLoc(q.Where, wcc)
 	}
 
 	// Return
@@ -816,6 +883,7 @@ func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
 			Distinct:   distinct,
 			Expression: b.buildExpr(rcc.Expression()),
 		}
+		q.Return.SetLoc(intervalFromCtx(rcc))
 	}
 
 	// Aggregate
@@ -840,6 +908,7 @@ func (b *astBuilder) buildQuery(ctx cqlparser.IQueryContext) ast.Expr {
 	// Sort
 	if sc := qc.SortClause(); sc != nil {
 		q.Sort = b.buildSortClause(sc)
+		q.Sort.SetLoc(intervalFromCtx(sc.(*cqlparser.SortClauseContext)))
 	}
 
 	return q
@@ -859,11 +928,17 @@ func (b *astBuilder) buildAliasedQuerySource(ctx cqlparser.IAliasedQuerySourceCo
 		if ret := qsc.Retrieve(); ret != nil {
 			aqs.Expression = b.buildRetrieve(ret)
 		} else if qie := qsc.QualifiedIdentifierExpression(); qie != nil {
-			aqs.Expression = &ast.IdentifierRef{Name: qie.GetText()}
+			ref := &ast.IdentifierRef{Name: qie.GetText()}
+			ref.SetLoc(intervalFromCtx(qie.(*cqlparser.QualifiedIdentifierExpressionContext)))
+			aqs.Expression = ref
 		} else if expr := qsc.Expression(); expr != nil {
-			aqs.Expression = b.buildExpr(expr)
+			e := b.buildExpr(expr)
+			// querySource: '(' expression ')' — widen the expression's loc to include the parens.
+			setLoc(e, qsc)
+			aqs.Expression = e
 		}
 	}
+	aqs.SetLoc(intervalFromCtx(aqsc))
 	return aqs
 }
 
@@ -898,11 +973,13 @@ func (b *astBuilder) buildSortClause(ctx cqlparser.ISortClauseContext) *ast.Sort
 			}
 		}
 		expr := b.buildExprTerm(sbi.ExpressionTerm())
-		sortClause.Items = append(sortClause.Items, &ast.SortByItem{
+		sortItem := &ast.SortByItem{
 			Expression:    expr,
 			Direction:     dir,
 			DirectionText: dirText,
-		})
+		}
+		sortItem.SetLoc(intervalFromCtx(sbi))
+		sortClause.Items = append(sortClause.Items, sortItem)
 	}
 	return sortClause
 }
@@ -1157,3 +1234,4 @@ func parseInt(s string) int64 {
 	}
 	return v
 }
+

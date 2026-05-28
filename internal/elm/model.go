@@ -690,6 +690,7 @@ func (n *QuantityNode) MarshalJSON() ([]byte, error) {
 // Unlike QuantityNode (an expression), it has no type discriminator and unit is always emitted.
 type QuantityLiteral struct {
 	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
 	Unit       string          `json:"unit"`
 	Value      json.Number     `json:"value"`
 }
@@ -1238,6 +1239,7 @@ func (s *SortByItemELM) MarshalJSON() ([]byte, error) {
 // SortClauseELM holds the sort directives for a query.
 type SortClauseELM struct {
 	Annotation json.RawMessage  `json:"annotation,omitempty"`
+	Locator    string           `json:"locator,omitempty"`
 	By         []*SortByItemELM `json:"by,omitempty"`
 }
 
