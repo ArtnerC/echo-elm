@@ -34,10 +34,13 @@ type Options struct {
 	// CQF flag: --enable-interval-promotion. Default off.
 	EnableIntervalPromotion bool
 	ValidateUnits           bool
-	CompatibilityLevel      string
-	SignatureLevel          string
-	ErrorLevel              string
-	TranslatorVersion       string
+	// EnableResultTypes records type information on each ELM expression node.
+	// CQF flag: --result-types. Implied by --debug.
+	EnableResultTypes  bool
+	CompatibilityLevel string
+	SignatureLevel     string
+	ErrorLevel         string
+	TranslatorVersion  string
 
 	// CQFMode emits cqframework-compatible output: annotation:[], signature:[],
 	// and empty filter arrays on Retrieve nodes. Also forces translatorOptions:"".
@@ -116,7 +119,9 @@ const (
 type Translator struct {
 	opts                 Options
 	counter              int
-	source               string
+	sourceName           string
+	sourceText           string // original CQL source for annotation s-tree extraction
+	lineOffsets          []int  // byte offsets of each line start in sourceText (1-indexed via [line-1])
 	diags                []Diagnostic
 	syms                 map[string]symKind  // symbol table built before statement pass
 	paramTypes           map[string]string   // maps parameter name → ELM qualified type name (named types only)
@@ -269,8 +274,217 @@ func (t *Translator) cqfEmptyArrayField() json.RawMessage {
 var cqfEmptyArray = json.RawMessage("[]")
 
 // Translate converts an AST library to an ELM library.
+// SetSourceText records the original CQL source so that annotation s-trees
+// (EnableAnnotations) can extract the literal text spans for each definition.
+// Safe to call before Translate.
+func (t *Translator) SetSourceText(src string) {
+	t.sourceText = src
+	t.lineOffsets = computeLineOffsets(src)
+}
+
+// computeLineOffsets returns a slice such that lineOffsets[i] is the byte
+// offset of the start of line i+1 in src (lines are 1-based externally).
+func computeLineOffsets(src string) []int {
+	offsets := []int{0}
+	for i := 0; i < len(src); i++ {
+		if src[i] == '\n' {
+			offsets = append(offsets, i+1)
+		}
+	}
+	return offsets
+}
+
+// posToOffset converts a 1-based line/column position to a byte offset in
+// sourceText. Returns -1 when the position is invalid. Column is 1-based.
+func (t *Translator) posToOffset(line, col int) int {
+	if line <= 0 || line > len(t.lineOffsets) {
+		return -1
+	}
+	off := t.lineOffsets[line-1] + (col - 1)
+	if off < 0 || off > len(t.sourceText) {
+		return -1
+	}
+	return off
+}
+
+// sourceSlice returns sourceText[start..endInclusive] (inclusive end column).
+// Both start and end are 1-based line/column. Returns "" when bounds are invalid.
+func (t *Translator) sourceSlice(loc ast.Interval) string {
+	s := t.posToOffset(loc.Start.Line, loc.Start.Column)
+	// end column is the last char (inclusive) — convert to exclusive offset.
+	e := t.posToOffset(loc.Stop.Line, loc.Stop.Column+1)
+	if s < 0 || e < 0 || e < s {
+		return ""
+	}
+	return t.sourceText[s:e]
+}
+
+// sourceSliceWithLeading returns the source text covering loc, extended
+// backward to include any preceding contiguous comment-only lines (no blank
+// line separator). Mirrors CQF's annotation source-text capture behaviour.
+// Carriage returns are stripped to normalize CRLF input to LF (matching CQF).
+func (t *Translator) sourceSliceWithLeading(loc ast.Interval) string {
+	s := t.posToOffset(loc.Start.Line, loc.Start.Column)
+	e := t.posToOffset(loc.Stop.Line, loc.Stop.Column+1)
+	if s < 0 || e < 0 || e < s {
+		return ""
+	}
+	s = t.extendStartForLeadingComments(s)
+	return strings.ReplaceAll(t.sourceText[s:e], "\r", "")
+}
+
+// extendStartForLeadingComments returns the offset of the earliest comment
+// character in the trivia run (whitespace + comments) immediately preceding
+// the def's first non-trivia character at start. If the trivia contains no
+// comment (just whitespace), returns start unchanged.
+//
+// This mirrors ANTLR HIDDEN-channel token attachment used by CQF: all hidden
+// tokens between the previous non-hidden token and the def's first non-hidden
+// token are considered the def's leading trivia. CQF strips the LEADING
+// whitespace (before any comment) but preserves intra-trivia whitespace.
+func (t *Translator) extendStartForLeadingComments(start int) int {
+	src := t.sourceText
+	if start <= 0 || start > len(src) {
+		return start
+	}
+	// Forward-scan src[0:start] classifying chars; track the position just
+	// after the last code character.
+	afterLastCode := 0
+	n := start
+	i := 0
+	for i < n {
+		c := src[i]
+		// Line comment: // ... \n
+		if c == '/' && i+1 < len(src) && src[i+1] == '/' {
+			for i < n && src[i] != '\n' {
+				i++
+			}
+			continue
+		}
+		// Block comment: /* ... */
+		if c == '/' && i+1 < len(src) && src[i+1] == '*' {
+			i += 2
+			for i+1 < len(src) && !(src[i] == '*' && src[i+1] == '/') {
+				i++
+			}
+			if i+1 < len(src) {
+				i += 2
+			}
+			continue
+		}
+		// String literal '...'
+		if c == '\'' {
+			afterLastCode = i + 1
+			i++
+			for i < n && src[i] != '\'' {
+				if src[i] == '\\' && i+1 < len(src) {
+					i++
+				}
+				afterLastCode = i + 1
+				i++
+			}
+			if i < n {
+				afterLastCode = i + 1
+				i++
+			}
+			continue
+		}
+		// Quoted identifier "..."
+		if c == '"' {
+			afterLastCode = i + 1
+			i++
+			for i < n && src[i] != '"' {
+				if src[i] == '\\' && i+1 < len(src) {
+					i++
+				}
+				afterLastCode = i + 1
+				i++
+			}
+			if i < n {
+				afterLastCode = i + 1
+				i++
+			}
+			continue
+		}
+		if c == ' ' || c == '\t' || c == '\r' || c == '\n' {
+			i++
+			continue
+		}
+		afterLastCode = i + 1
+		i++
+	}
+	// Trivia is src[afterLastCode:start]. Find the first non-whitespace char.
+	trim := afterLastCode
+	for trim < start {
+		c := src[trim]
+		if c == ' ' || c == '\t' || c == '\r' || c == '\n' {
+			trim++
+			continue
+		}
+		break
+	}
+	if trim == start {
+		return start
+	}
+	return trim
+}
+
+// srcAnnotationJSON returns the JSON for a single source-text Annotation entry
+// covering loc (with leading comments extended). Returns nil when the slice
+// is empty (e.g. missing source mapping).
+func (t *Translator) srcAnnotationJSON(loc ast.Interval) json.RawMessage {
+	if !t.opts.EnableAnnotations {
+		return nil
+	}
+	text := t.sourceSliceWithLeading(loc)
+	if text == "" {
+		return nil
+	}
+	type sNode struct {
+		Value []string `json:"value,omitempty"`
+	}
+	type sBlock struct {
+		S []sNode `json:"s,omitempty"`
+	}
+	type annJSON struct {
+		S    *sBlock `json:"s,omitempty"`
+		Type string  `json:"type"`
+	}
+	ann := []annJSON{{Type: "Annotation", S: &sBlock{S: []sNode{{Value: []string{text}}}}}}
+	b, err := json.Marshal(ann)
+	if err != nil {
+		return nil
+	}
+	return json.RawMessage(b)
+}
+
+// mergeAnnotations merges a base annotation (e.g. cqfAnnotation [] or @tag
+// annotations) with the source-text annotation. When base is empty/nil, returns
+// the source annotation. When source is nil, returns base unchanged.
+func (t *Translator) mergeAnnotations(base, src json.RawMessage) json.RawMessage {
+	if src == nil {
+		return base
+	}
+	if base == nil || string(base) == "[]" || string(base) == "" {
+		return src
+	}
+	var baseArr, srcArr []json.RawMessage
+	if err := json.Unmarshal(base, &baseArr); err != nil {
+		return src
+	}
+	if err := json.Unmarshal(src, &srcArr); err != nil {
+		return base
+	}
+	combined := append(baseArr, srcArr...)
+	b, err := json.Marshal(combined)
+	if err != nil {
+		return base
+	}
+	return json.RawMessage(b)
+}
+
 func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
-	t.source = sourceName
+	t.sourceName = sourceName
 	t.counter = 0
 	t.diags = nil
 	t.fhirHelpersLocalName = ""
@@ -361,6 +575,47 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		out.Annotation = append(out.Annotation, json.RawMessage(infoJSON))
 	}
 
+	// Library-level source-text annotation (EnableAnnotations).
+	// CQF emits an Annotation entry whose s-tree text covers the library
+	// declaration header (e.g. "library Foo version '1.0.0'") when there is
+	// at least one additional definition after the library line.
+	hasMore := len(lib.Usings) > 0 || len(lib.Includes) > 0 ||
+		len(lib.Codesystems) > 0 || len(lib.Valuesets) > 0 ||
+		len(lib.Codes) > 0 || len(lib.Concepts) > 0 ||
+		len(lib.Parameters) > 0 || len(lib.Contexts) > 0 ||
+		len(lib.Statements) > 0
+	if t.opts.EnableAnnotations && lib.Name != nil && lib.Name.Name != "" && hasMore {
+		// CQF extends the library annotation to include any leading comments
+		// preceding the "library" keyword. We construct the canonical text
+		// (used by the normalizer's flattened comparison) by combining the
+		// preceding-comment leading text with the canonical "library X" form.
+		// When lib.Name has no Loc (no source position) we synthesize the text.
+		var text string
+		if libLoc := lib.Name.Loc(); libLoc.Start.Line > 0 {
+			text = t.sourceSliceWithLeading(libLoc)
+		}
+		if text == "" {
+			text = "library " + lib.Name.Name
+			if lib.Name.Version != "" {
+				text += " version '" + lib.Name.Version + "'"
+			}
+		}
+		type sNode struct {
+			Value []string `json:"value,omitempty"`
+		}
+		type sBlock struct {
+			S []sNode `json:"s,omitempty"`
+		}
+		type annJSON struct {
+			S    *sBlock `json:"s,omitempty"`
+			Type string  `json:"type"`
+		}
+		ann := annJSON{Type: "Annotation", S: &sBlock{S: []sNode{{Value: []string{text}}}}}
+		if b, mErr := json.Marshal(ann); mErr == nil {
+			out.Annotation = append(out.Annotation, json.RawMessage(b))
+		}
+	}
+
 	// Usings: always add implicit System first
 	usings := &elm.UsingDefs{}
 	usings.Def = append(usings.Def, &elm.UsingDef{
@@ -374,7 +629,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			LocalIdentifier: u.LocalName,
 			URI:             t.modelURIVersioned(u.ModelName, u.Version),
 			Version:         u.Version,
-			Annotation:      t.cqfAnnotation(),
+			Annotation:      t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(u.Loc())),
 		}
 		if t.opts.EnableLocators {
 			ud.Locator = locatorStr(u.Loc())
@@ -405,7 +660,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				LocalIdentifier: localID,
 				Path:            inc.Path,
 				Version:         inc.Version,
-				Annotation:      t.cqfAnnotation(),
+				Annotation:      t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(inc.Loc())),
 			}
 			if t.opts.EnableLocators {
 				id.Locator = locatorStr(inc.Loc())
@@ -421,7 +676,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		for _, cs := range lib.Codesystems {
 			csd := &elm.CodeSystemDef{
 				LocalID:     t.defID(),
-				Annotation:  t.cqfAnnotation(),
+				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(cs.Loc())),
 				Name:        cs.Name,
 				ID:          cs.ID,
 				Version:     cs.Version,
@@ -441,7 +696,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		for _, vs := range lib.Valuesets {
 			vsd := &elm.ValueSetDef{
 				LocalID:     t.defID(),
-				Annotation:  t.cqfAnnotation(),
+				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(vs.Loc())),
 				Name:        vs.Name,
 				ID:          vs.ID,
 				Version:     vs.Version,
@@ -469,7 +724,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			}
 			cd := &elm.CodeDef{
 				LocalID:     t.defID(),
-				Annotation:  t.cqfAnnotation(),
+				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(c.Loc())),
 				Name:        c.Name,
 				ID:          c.Code,
 				Display:     c.Display,
@@ -513,7 +768,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				LocalID:     t.defID(),
 				Name:        p.Name,
 				AccessLevel: accessLevelStr(p.AccessLevel),
-				Annotation:  t.cqfAnnotation(),
+				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(p.Loc())),
 			}
 			if t.opts.EnableLocators {
 				pd.Locator = locatorStr(p.Loc())
@@ -2848,26 +3103,47 @@ func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.
 	}
 	compat := t.opts.CompatibilityLevel
 	emitTagData := compat == "" || compat >= "1.5"
-	if len(s.Annotations) == 0 || !emitTagData {
-		return t.cqfAnnotation()
+
+	type sNode struct {
+		R     string   `json:"r,omitempty"`
+		Value []string `json:"value,omitempty"`
+	}
+	type sBlock struct {
+		R string  `json:"r,omitempty"`
+		S []sNode `json:"s,omitempty"`
 	}
 	type tagJSON struct {
 		Name  string `json:"name"`
 		Value string `json:"value"`
 	}
 	type annJSON struct {
-		T    []tagJSON `json:"t"`
+		T    []tagJSON `json:"t,omitempty"`
+		S    *sBlock   `json:"s,omitempty"`
 		Type string    `json:"type"`
 	}
-	result := make([]annJSON, 0, len(s.Annotations))
-	for _, ann := range s.Annotations {
-		a := annJSON{Type: "Annotation"}
-		for _, tag := range ann.Tags {
-			a.T = append(a.T, tagJSON{Name: tag.Name, Value: tag.Value})
+
+	// Build the single Annotation entry that combines @tag annotations and
+	// the source-text s-tree (CQF emits both inside one Annotation map).
+	combined := annJSON{Type: "Annotation"}
+	if len(s.Annotations) > 0 && emitTagData {
+		// CQF merges all @tag pairs across preceding block comments into one
+		// flat tag list on the single Annotation entry.
+		for _, ann := range s.Annotations {
+			for _, tag := range ann.Tags {
+				combined.T = append(combined.T, tagJSON{Name: tag.Name, Value: tag.Value})
+			}
 		}
-		result = append(result, a)
 	}
-	b, err := json.Marshal(result)
+	if t.opts.EnableAnnotations {
+		if text := t.sourceSliceWithLeading(s.Loc()); text != "" {
+			combined.S = &sBlock{S: []sNode{{Value: []string{text}}}}
+		}
+	}
+
+	if combined.T == nil && combined.S == nil {
+		return t.cqfAnnotation()
+	}
+	b, err := json.Marshal([]annJSON{combined})
 	if err != nil {
 		return t.cqfAnnotation()
 	}

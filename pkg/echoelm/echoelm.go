@@ -137,6 +137,7 @@ func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult,
 	}
 
 	t := translator.New(tOpts)
+	t.SetSourceText(string(src))
 	transResult := t.Translate(parseResult.Library, sourceName)
 
 	result := &TranslateResult{

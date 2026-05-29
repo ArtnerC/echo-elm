@@ -14,7 +14,6 @@ option_profiles:
   annotations:
     description: Enable annotation blocks on every ELM node
     cliFlags: [--annotations]
-    pendingImplementation: true  # CQL source text annotation emission not yet implemented
     translatorOptions:
       enableAnnotations: true
       enableLocators: false
@@ -31,7 +30,6 @@ option_profiles:
   annotations-locators:
     description: Annotations and locators together (common artifact authoring profile)
     cliFlags: [--annotations, --locators]
-    pendingImplementation: true  # CQL source text annotation emission not yet implemented
     translatorOptions:
       enableAnnotations: true
       enableLocators: true
@@ -40,10 +38,10 @@ option_profiles:
   debug:
     description: CQF --debug expands to annotations + locators + result-types
     cliFlags: [--debug]
-    pendingImplementation: true  # Requires annotation emission + result-type tracking
     translatorOptions:
       enableAnnotations: true
       enableLocators: true
+      enableResultTypes: true
       signatureLevel: None
 
   sig-overloads:

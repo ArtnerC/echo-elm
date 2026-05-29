@@ -153,6 +153,7 @@ func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 func (b *astBuilder) buildVersionedIdentifier(ctx cqlparser.ILibraryDefinitionContext) *ast.VersionedIdentifier {
 	ldc := ctx.(*cqlparser.LibraryDefinitionContext)
 	vi := &ast.VersionedIdentifier{}
+	vi.SetLoc(intervalFromCtx(ldc))
 	if qi := ldc.QualifiedIdentifier(); qi != nil {
 		vi.Name = qi.GetText()
 	}
