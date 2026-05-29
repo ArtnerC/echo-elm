@@ -48,7 +48,7 @@ func TestTranslate_XMLOutput(t *testing.T) {
 	if err != nil {
 		t.Fatalf("translate: %v", err)
 	}
-	b, err := res.MarshalXML()
+	b, err := res.XMLBytes()
 	if err != nil {
 		t.Fatalf("xml: %v", err)
 	}
@@ -148,7 +148,7 @@ func TestValidate_RoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("translate: %v", err)
 	}
-	xmlBytes, err := res.MarshalXML()
+	xmlBytes, err := res.XMLBytes()
 	if err != nil {
 		t.Fatalf("xml: %v", err)
 	}

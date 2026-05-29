@@ -67,7 +67,7 @@ func main() {
 		}
 		_ = exec.Command("go", "build", "-o", binPath, "./cmd/echo-elm").Run()
 		out, _ := exec.Command(binPath, "version").Output()
-		os.Remove(binPath)
+		_ = os.Remove(binPath)
 		result := string(out)
 		if result == "" {
 			return "0.0.0-dev (binary built; no version flag output captured)"

@@ -197,7 +197,7 @@ func runTranslate(args []string, cqfMode bool) {
 	var outBytes []byte
 	switch strings.ToUpper(format) {
 	case "XML":
-		outBytes, err = result.MarshalXML()
+		outBytes, err = result.XMLBytes()
 	default: // JSON
 		outBytes, err = json.MarshalIndent(result, "", "   ")
 	}

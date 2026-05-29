@@ -145,7 +145,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 			out.ParsedName = result.Library.Identifier.ID
 		}
 		if format == "xml" || format == "both" {
-			if xmlBytes, e := result.MarshalXML(); e == nil {
+			if xmlBytes, e := result.XMLBytes(); e == nil {
 				out.ElmXML = string(xmlBytes)
 			}
 		}

@@ -191,7 +191,7 @@ func adoptiumURL() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("adoptium info GET: %w", err)
 	}
-	defer infoResp.Body.Close()
+	defer func() { _ = infoResp.Body.Close() }()
 
 	var assets []struct {
 		Binary struct {
@@ -228,21 +228,21 @@ func downloadTemurin() error {
 		return err
 	}
 	defer func() {
-		tmpFile.Close()
-		os.Remove(tmpFile.Name())
+		_ = tmpFile.Close()
+		_ = os.Remove(tmpFile.Name())
 	}()
 
 	resp, err := http.Get(dlURL) //nolint:noctx // context not required for tool download helper
 	if err != nil {
 		return fmt.Errorf("download: %w", err)
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 
 	written, err := io.Copy(tmpFile, resp.Body)
 	if err != nil {
 		return fmt.Errorf("stream: %w", err)
 	}
-	tmpFile.Close()
+	_ = tmpFile.Close()
 	fmt.Printf("  downloaded %.1f MB\n", float64(written)/1e6)
 
 	// Extract based on file extension.
@@ -262,7 +262,7 @@ func extractZip(src, dst string) error {
 	if err != nil {
 		return err
 	}
-	defer r.Close()
+	defer func() { _ = r.Close() }()
 
 	for _, f := range r.File {
 		path := filepath.Join(dst, f.Name)
@@ -284,12 +284,12 @@ func extractZip(src, dst string) error {
 		}
 		rc, err := f.Open()
 		if err != nil {
-			out.Close()
+			_ = out.Close()
 			return err
 		}
 		_, err = io.Copy(out, rc)
-		rc.Close()
-		out.Close()
+		_ = rc.Close()
+		_ = out.Close()
 		if err != nil {
 			return err
 		}
@@ -302,13 +302,13 @@ func extractTarGz(src, dst string) error {
 	if err != nil {
 		return err
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	gz, err := gzip.NewReader(f)
 	if err != nil {
 		return err
 	}
-	defer gz.Close()
+	defer func() { _ = gz.Close() }()
 
 	tr := tar.NewReader(gz)
 	for {
@@ -337,7 +337,7 @@ func extractTarGz(src, dst string) error {
 				return err
 			}
 			_, err = io.Copy(out, tr)
-			out.Close()
+			_ = out.Close()
 			if err != nil {
 				return err
 			}

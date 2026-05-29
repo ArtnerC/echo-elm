@@ -246,7 +246,7 @@ func runUpstream(launcher, cqlPath string, extraFlags []string) (jsonOut, stderr
 	base := strings.TrimSuffix(filepath.Base(cqlPath), ".cql")
 	outJSON := filepath.Join(dir, base+".json")
 
-	os.Remove(outJSON)
+	_ = os.Remove(outJSON)
 
 	args := append([]string{"--input", cqlPath, "--format", "JSON"}, extraFlags...)
 

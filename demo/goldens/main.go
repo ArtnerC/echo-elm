@@ -36,8 +36,8 @@ func run() error {
 	canonical := filepath.Join(goldensDir, "cqf")
 
 	defer func() {
-		os.RemoveAll(tmpA)
-		os.RemoveAll(tmpB)
+		_ = os.RemoveAll(tmpA)
+		_ = os.RemoveAll(tmpB)
 	}()
 
 	versions := []struct {

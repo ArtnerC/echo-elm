@@ -113,8 +113,8 @@ func (r *TranslateResult) MarshalJSON() ([]byte, error) {
 	return json.Marshal(&env)
 }
 
-// MarshalXML returns the ELM XML bytes.
-func (r *TranslateResult) MarshalXML() ([]byte, error) {
+// XMLBytes returns the ELM XML bytes.
+func (r *TranslateResult) XMLBytes() ([]byte, error) {
 	return elm.MarshalXML(r.Library, elm.XMLOptions{Indent: true})
 }
 

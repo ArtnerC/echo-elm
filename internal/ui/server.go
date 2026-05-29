@@ -353,7 +353,7 @@ func (s *Server) handleTranslate(w http.ResponseWriter, r *http.Request) {
 
 	t1 := time.Now()
 	jsonBytes, _ := json.Marshal(result)
-	xmlBytes, _ := result.MarshalXML()
+	xmlBytes, _ := result.XMLBytes()
 	serializeMs := time.Since(t1).Milliseconds()
 
 	diags := make([]diagnosticResp, 0, len(result.Diagnostics))

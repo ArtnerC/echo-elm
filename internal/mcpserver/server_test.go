@@ -65,7 +65,7 @@ func newMCPClient(t *testing.T, workspace string) *mcp.ClientSession {
 	if err != nil {
 		t.Fatalf("connect to mcp server: %v", err)
 	}
-	t.Cleanup(func() { session.Close() })
+	t.Cleanup(func() { _ = session.Close() })
 
 	return session
 }

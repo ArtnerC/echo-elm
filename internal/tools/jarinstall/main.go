@@ -261,7 +261,7 @@ func downloadFile(url, dst string) error {
 	if err != nil {
 		return err
 	}
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode != http.StatusOK {
 		return fmt.Errorf("HTTP %d for %s", resp.StatusCode, url)
 	}
@@ -271,8 +271,8 @@ func downloadFile(url, dst string) error {
 		return err
 	}
 	defer func() {
-		tmp.Close()
-		os.Remove(tmp.Name())
+		_ = tmp.Close()
+		_ = os.Remove(tmp.Name())
 	}()
 
 	if _, err := io.Copy(tmp, resp.Body); err != nil {

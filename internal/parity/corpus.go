@@ -100,7 +100,7 @@ func LoadCorpus(dir string) (*Corpus, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open corpus.yaml: %w", err)
 	}
-	defer f.Close()
+	defer func() { _ = f.Close() }()
 
 	var c Corpus
 	if err := yaml.NewDecoder(f).Decode(&c); err != nil {

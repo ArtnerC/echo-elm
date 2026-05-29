@@ -61,7 +61,7 @@ func main() {
 	}
 
 	fmt.Println("\n=== ELM XML ===")
-	xmlBytes, err := result.MarshalXML()
+	xmlBytes, err := result.XMLBytes()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "XML marshal error: %v\n", err)
 		os.Exit(1)

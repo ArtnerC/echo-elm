@@ -184,7 +184,7 @@ func setLocator(e elm.Expression, loc string) {
 		return
 	}
 	v := reflect.ValueOf(e)
-	if v.Kind() != reflect.Ptr || v.IsNil() {
+	if v.Kind() != reflect.Pointer || v.IsNil() {
 		return
 	}
 	v = v.Elem()

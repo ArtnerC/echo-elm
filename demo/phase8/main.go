@@ -38,7 +38,7 @@ func main() {
 
 	session, err := client.Connect(ctx, transport, nil)
 	must("connect", err)
-	defer session.Close()
+	defer func() { _ = session.Close() }()
 
 	fmt.Printf("Connected to echo-elm MCP server\n")
 	fmt.Printf("Workspace: %s\n\n", workspace)
