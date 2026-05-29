@@ -32,8 +32,8 @@ func main() {
 			fmt.Println(r.Diff)
 		}
 		if r.UpstreamJSON != "" {
-			os.WriteFile("_up.json", []byte(r.UpstreamJSON), 0644)
-			os.WriteFile("_echo.json", []byte(r.EchoJSON), 0644)
+			_ = os.WriteFile("_up.json", []byte(r.UpstreamJSON), 0644)
+			_ = os.WriteFile("_echo.json", []byte(r.EchoJSON), 0644)
 		}
 		if r.Error != "" {
 			fmt.Println("ERR:", r.Error)

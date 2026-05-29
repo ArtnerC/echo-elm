@@ -3,6 +3,7 @@ package mcpserver_test
 import (
 	"context"
 	"encoding/json"
+	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
@@ -24,18 +25,22 @@ func fixtureWorkspace(t *testing.T) string {
 	return abs
 }
 
-// echoElmBinary returns the path to the echo-elm binary, platform-aware.
+// echoElmBinary returns the path to the echo-elm binary in the repo root.
+// It tries "echo-elm" first (built with explicit -o), then "echo-elm.exe"
+// (default Windows output name), so it works in CI and local dev.
 func echoElmBinary(t *testing.T) string {
 	t.Helper()
-	name := "echo-elm"
-	if runtime.GOOS == "windows" {
-		name = "echo-elm.exe"
+	for _, name := range []string{"echo-elm", "echo-elm.exe"} {
+		abs, err := filepath.Abs(filepath.Join("..", "..", name))
+		if err != nil {
+			continue
+		}
+		if _, statErr := os.Stat(abs); statErr == nil {
+			return abs
+		}
 	}
-	abs, err := filepath.Abs(filepath.Join("..", "..", name))
-	if err != nil {
-		t.Fatalf("resolve binary path: %v", err)
-	}
-	return abs
+	t.Fatal("echo-elm binary not found in repo root; run: go build -o echo-elm ./cmd/echo-elm")
+	return ""
 }
 
 // newMCPClient starts echo-elm mcp as a subprocess and returns a connected client session.

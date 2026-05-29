@@ -42,7 +42,7 @@ define "Initial Population":
 		}
 		out, _ := res.MarshalJSON()
 		var lib map[string]interface{}
-		json.Unmarshal(out, &lib)
+		_ = json.Unmarshal(out, &lib)
 		libMap := lib["library"].(map[string]interface{})
 
 		// Contexts section
@@ -97,7 +97,7 @@ using FHIR version '4.0.1'
 		}
 		out, _ := res.MarshalJSON()
 		var lib map[string]interface{}
-		json.Unmarshal(out, &lib)
+		_ = json.Unmarshal(out, &lib)
 		libMap := lib["library"].(map[string]interface{})
 		ann := libMap["annotation"].([]interface{})[0].(map[string]interface{})
 		level := ann["signatureLevel"]
@@ -146,7 +146,7 @@ define "Adults":
 		fmt.Printf("   ELM written: %s (%d bytes)\n", outFile, info.Size())
 		// Verify round-trip.
 		var lib map[string]interface{}
-		json.Unmarshal(elmBytes, &lib)
+		_ = json.Unmarshal(elmBytes, &lib)
 		libMap := lib["library"].(map[string]interface{})
 		id := libMap["identifier"].(map[string]interface{})
 		fmt.Printf("   identifier: %s %s\n", id["id"], id["version"])

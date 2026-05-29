@@ -276,10 +276,14 @@ func extractZip(src, dst string) error {
 			continue // zip slip guard
 		}
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(path, f.Mode())
+			if err := os.MkdirAll(path, f.Mode()); err != nil {
+				return err
+			}
 			continue
 		}
-		os.MkdirAll(filepath.Dir(path), 0o755)
+		if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+			return err
+		}
 		out, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, f.Mode())
 		if err != nil {
 			return err

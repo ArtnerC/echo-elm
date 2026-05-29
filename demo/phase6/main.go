@@ -183,7 +183,7 @@ func demoLibrarySource() bool {
 	// DirSource with temp directory
 	tmp, _ := os.MkdirTemp("", "echo-elm-test-*")
 	defer os.RemoveAll(tmp)
-	os.WriteFile(tmp+"/TestLib-1.0.0.cql", []byte("library TestLib version '1.0.0'"), 0o644)
+	_ = os.WriteFile(tmp+"/TestLib-1.0.0.cql", []byte("library TestLib version '1.0.0'"), 0o644)
 	dirSrc := resolver.NewDirSource(tmp)
 	srcBytes, ok2, err2 := dirSrc.GetLibrarySource("TestLib", "1.0.0")
 	if err2 != nil || !ok2 || !strings.Contains(string(srcBytes), "TestLib") {
