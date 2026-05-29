@@ -3,6 +3,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,7 +25,7 @@ func main() {
 	workspace := fixtureWorkspace()
 
 	// Start echo-elm ui as a subprocess.
-	cmd := exec.Command(binary, "ui", "--workspace", workspace)
+	cmd := exec.CommandContext(context.Background(), binary, "ui", "--workspace", workspace)
 	cmd.Stderr = os.Stderr
 	must("start ui server", cmd.Start())
 	defer cmd.Process.Kill() //nolint:errcheck

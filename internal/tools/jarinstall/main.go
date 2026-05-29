@@ -246,7 +246,7 @@ func mavenJarURL(coordinate string) string {
 
 // runCmdWithBin runs bin with args and returns combined stdout+stderr.
 func runCmdWithBin(bin string, args ...string) (string, error) {
-	cmd := exec.Command(bin, args...)
+	cmd := exec.CommandContext(context.Background(), bin, args...)
 	out, err := cmd.CombinedOutput()
 	return string(out), err
 }

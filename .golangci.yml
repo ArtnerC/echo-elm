@@ -43,7 +43,7 @@ linters:
         linters:
           - unused
       - path: internal/
-        text: 'comment on exported'
+        text: '^exported:|comment on exported'
         linters:
           - revive
 

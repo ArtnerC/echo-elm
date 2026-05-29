@@ -30,7 +30,7 @@ func main() {
 		Name: "phase8-demo", Version: "0.0.0",
 	}, nil)
 	transport := &mcp.CommandTransport{
-		Command: exec.Command(binary, "mcp", "--workdir", workspace),
+		Command: exec.CommandContext(context.Background(), binary, "mcp", "--workdir", workspace),
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
