@@ -55,7 +55,7 @@ func newMCPClient(t *testing.T, workspace string) *mcp.ClientSession {
 	}, nil)
 
 	transport := &mcp.CommandTransport{
-		Command: exec.Command(binary, "mcp", "--workdir", workspace),
+		Command: exec.CommandContext(context.Background(), binary, "mcp", "--workdir", workspace),
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

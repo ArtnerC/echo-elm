@@ -7,6 +7,7 @@ import (
 	"archive/tar"
 	"archive/zip"
 	"compress/gzip"
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -78,7 +79,7 @@ func systemJava() (string, int, error) {
 	if err != nil {
 		return "", 0, err
 	}
-	out, err := exec.Command(javaBin, "-version").CombinedOutput()
+	out, err := exec.CommandContext(context.Background(), javaBin, "-version").CombinedOutput()
 	if err != nil {
 		return "", 0, err
 	}
