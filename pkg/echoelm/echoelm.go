@@ -85,7 +85,7 @@ func WithCQLOptionsFile(path string) Option {
 		if err != nil {
 			return
 		}
-		*o = f.Apply(*o)
+		*o = f.Apply(o)
 	}
 }
 
@@ -95,7 +95,7 @@ func WithCQLOptions(f *cqloptions.File) Option {
 		if f == nil {
 			return
 		}
-		*o = f.Apply(*o)
+		*o = f.Apply(o)
 	}
 }
 

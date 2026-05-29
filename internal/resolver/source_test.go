@@ -58,8 +58,8 @@ func TestDirSource(t *testing.T) {
 
 func TestFSSource(t *testing.T) {
 	fs := fstest.MapFS{
-		"libs/Foo.cql":         &fstest.MapFile{Data: []byte("library Foo")},
-		"libs/Bar-2.0.0.cql":   &fstest.MapFile{Data: []byte("library Bar version '2.0.0'")},
+		"libs/Foo.cql":       &fstest.MapFile{Data: []byte("library Foo")},
+		"libs/Bar-2.0.0.cql": &fstest.MapFile{Data: []byte("library Bar version '2.0.0'")},
 	}
 	src := resolver.NewFSSource(fs, "libs")
 
@@ -84,9 +84,9 @@ func TestFSSource(t *testing.T) {
 
 func TestMapSource(t *testing.T) {
 	src := resolver.NewMapSource(map[string][]byte{
-		"FHIRHelpers":         []byte("library FHIRHelpers"),
-		"Foo|1.0.0":           []byte("library Foo version '1.0.0'"),
-		"Foo|2.0.0":           []byte("library Foo version '2.0.0'"),
+		"FHIRHelpers": []byte("library FHIRHelpers"),
+		"Foo|1.0.0":   []byte("library Foo version '1.0.0'"),
+		"Foo|2.0.0":   []byte("library Foo version '2.0.0'"),
 	})
 
 	if b, ok, _ := src.GetLibrarySource("FHIRHelpers", ""); !ok || string(b) != "library FHIRHelpers" {

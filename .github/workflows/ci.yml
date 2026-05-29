@@ -24,7 +24,7 @@ jobs:
         run: go build ./...
 
       - name: Build echo-elm binary (required by MCP tests)
-        run: go build -o echo-elm ./cmd/echo-elm
+        run: go build -o echo-elm${{ runner.os == 'Windows' && '.exe' || '' }} ./cmd/echo-elm
 
       - name: Test
         run: go test -race ./...

@@ -39,7 +39,8 @@ func main() {
 			os.Exit(1)
 		}
 
-		for _, r := range results {
+		for i := range results {
+			r := &results[i]
 			icon := statusIcon(r.Status)
 			fmt.Printf("  %s  %-40s  %v\n", icon, r.Fixture, r.Status)
 			if r.Status == parity.StatusDifferJSON && r.Diff != "" {

@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"io"
 	"net/http"
@@ -24,7 +25,7 @@ var cqfVersions = []cqfVersion{
 	{
 		Slug:       "4.8.0",
 		Coordinate: "org.cqframework:cql-to-elm-cli:4.8.0",
-		MainClass: "org.cqframework.cql.cql2elm.cli.Main",
+		MainClass:  "org.cqframework.cql.cql2elm.cli.Main",
 	},
 }
 
@@ -146,13 +147,13 @@ func installVersion(javaBin, csBin string, v cqfVersion) error {
 	if strings.HasSuffix(csBin, ".jar") || strings.Contains(csBin, "bootstrap") {
 		csArgs = []string{"-jar", csBin}
 	}
-	fetchArgs := append(csArgs, "fetch",
+	csArgs = append(csArgs, "fetch",
 		"--cache", cacheDir,
 		"--classpath",
 		v.Coordinate,
 	)
 
-	out, err := runCmdWithBin(javaBin, fetchArgs...)
+	out, err := runCmdWithBin(javaBin, csArgs...)
 	if err != nil {
 		return fmt.Errorf("coursier fetch: %w\nOutput: %s", err, out)
 	}
@@ -250,14 +251,13 @@ func runCmdWithBin(bin string, args ...string) (string, error) {
 	return string(out), err
 }
 
-// runCmd runs a command and returns its combined stdout, or an error.
-func runCmd(name string, args ...string) (string, error) {
-	return runCmdWithBin(name, args...)
-}
-
 // downloadFile downloads url to dst atomically.
 func downloadFile(url, dst string) error {
-	resp, err := http.Get(url)
+	req, err := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
+	if err != nil {
+		return err
+	}
+	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		return err
 	}

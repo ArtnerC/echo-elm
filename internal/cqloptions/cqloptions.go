@@ -52,8 +52,8 @@ func Parse(data []byte) (*File, error) {
 
 // Apply applies the file's settings on top of a base translator.Options.
 // Unset/empty fields are ignored.
-func (f *File) Apply(base translator.Options) translator.Options {
-	out := base
+func (f *File) Apply(base *translator.Options) translator.Options {
+	out := *base
 	for _, opt := range f.Options {
 		applyOptionToken(&out, opt)
 	}

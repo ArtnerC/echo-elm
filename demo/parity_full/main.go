@@ -23,7 +23,8 @@ func main() {
 			os.Exit(1)
 		}
 
-		for _, r := range results {
+		for i := range results {
+			r := &results[i]
 			icon := "✓"
 			if r.Status != parity.StatusMatch {
 				icon = "✗"

@@ -41,7 +41,7 @@ func TestApply(t *testing.T) {
 		Options:        []string{"EnableAnnotations", "DisableListPromotion"},
 		SignatureLevel: "Overloads",
 	}
-	out := f.Apply(base)
+	out := f.Apply(&base)
 	if !out.EnableAnnotations {
 		t.Error("EnableAnnotations not applied")
 	}

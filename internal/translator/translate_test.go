@@ -189,7 +189,7 @@ func TestDiagnosticsOnSyntaxError(t *testing.T) {
 func TestLibrarySourceInterface(t *testing.T) {
 	// Verify MapSource lookup works correctly.
 	m := resolver.NewMapSource(map[string][]byte{
-		"FHIRHelpers":        []byte("library FHIRHelpers version '4.0.1'"),
+		"FHIRHelpers":       []byte("library FHIRHelpers version '4.0.1'"),
 		"FHIRHelpers|4.0.1": []byte("library FHIRHelpers version '4.0.1'"),
 	})
 
@@ -503,7 +503,7 @@ define Same: I1 same as Period`
 
 	r := translate(t, cql)
 	stmts := r.Library.Statements
-	// I1 + Before + After + During + Includes + Same = 6
+	// expects 6 definitions: I1, Before, After, During, Includes, Same
 	if stmts == nil || len(stmts.Def) < 5 {
 		t.Fatalf("expected >=5 statements, got %d", len(stmts.Def))
 	}
