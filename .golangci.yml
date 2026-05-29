@@ -42,6 +42,10 @@ linters:
       - path: _test\.go
         linters:
           - unused
+      - path: internal/
+        text: 'comment on exported'
+        linters:
+          - revive
 
 formatters:
   enable:

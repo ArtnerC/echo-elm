@@ -143,7 +143,7 @@ func installVersion(javaBin, csBin string, v cqfVersion) error {
 	// Determine how to invoke coursier.
 	// If csBin is a jar (ends in .jar or is the bootstrap), invoke as: java -jar csBin
 	// If it's a native binary (cs on PATH), invoke directly.
-	var csArgs []string
+	csArgs := make([]string, 0, 7)
 	if strings.HasSuffix(csBin, ".jar") || strings.Contains(csBin, "bootstrap") {
 		csArgs = []string{"-jar", csBin}
 	}

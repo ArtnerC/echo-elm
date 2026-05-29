@@ -354,7 +354,7 @@ func (t *Translator) extendStartForLeadingComments(start int) int {
 		// Block comment: /* ... */
 		if c == '/' && i+1 < len(src) && src[i+1] == '*' {
 			i += 2
-			for i+1 < len(src) && !(src[i] == '*' && src[i+1] == '/') {
+			for i+1 < len(src) && (src[i] != '*' || src[i+1] != '/') {
 				i++
 			}
 			if i+1 < len(src) {
@@ -458,7 +458,7 @@ func (t *Translator) mergeAnnotations(base, src json.RawMessage) json.RawMessage
 	if base == nil || string(base) == "[]" || string(base) == "" {
 		return src
 	}
-	var baseArr, srcArr []json.RawMessage
+	var baseArr, srcArr []json.RawMessage //nolint:prealloc
 	if err := json.Unmarshal(base, &baseArr); err != nil {
 		return src
 	}

@@ -4,6 +4,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"os/exec"
@@ -22,7 +23,7 @@ func main() {
 	})
 
 	check("go build ./...", func() string {
-		out, err := exec.Command("go", "build", "./...").CombinedOutput()
+		out, err := exec.CommandContext(context.Background(), "go", "build", "./...").CombinedOutput()
 		if err != nil {
 			return "FAIL: " + string(out)
 		}
@@ -32,7 +33,7 @@ func main() {
 	check("go vet (non-generated)", func() string {
 		// Exclude ANTLR-generated packages from vet; generated code contains
 		// unreachable-code patterns that are intentional ANTLR output.
-		listOut, err := exec.Command("go", "list", "./...").Output()
+		listOut, err := exec.CommandContext(context.Background(), "go", "list", "./...").Output()
 		if err != nil {
 			return "FAIL (list): " + string(listOut)
 		}
@@ -44,7 +45,7 @@ func main() {
 			}
 		}
 		args := append([]string{"vet"}, pkgs...)
-		out, err := exec.Command("go", args...).CombinedOutput()
+		out, err := exec.CommandContext(context.Background(), "go", args...).CombinedOutput()
 		if err != nil {
 			return "FAIL: " + string(out)
 		}
@@ -52,7 +53,7 @@ func main() {
 	})
 
 	check("go test ./...", func() string {
-		out, err := exec.Command("go", "test", "./...").CombinedOutput()
+		out, err := exec.CommandContext(context.Background(), "go", "test", "./...").CombinedOutput()
 		if err != nil {
 			return "FAIL:\n" + string(out)
 		}
@@ -65,8 +66,8 @@ func main() {
 		if runtime.GOOS == "windows" {
 			binPath = "./echo-elm.exe"
 		}
-		_ = exec.Command("go", "build", "-o", binPath, "./cmd/echo-elm").Run()
-		out, _ := exec.Command(binPath, "version").Output()
+		_ = exec.CommandContext(context.Background(), "go", "build", "-o", binPath, "./cmd/echo-elm").Run()
+		out, _ := exec.CommandContext(context.Background(), binPath, "version").Output()
 		_ = os.Remove(binPath)
 		result := string(out)
 		if result == "" {
