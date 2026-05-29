@@ -24,15 +24,25 @@ func fixtureWorkspace(t *testing.T) string {
 	return abs
 }
 
+// echoElmBinary returns the path to the echo-elm binary, platform-aware.
+func echoElmBinary(t *testing.T) string {
+	t.Helper()
+	name := "echo-elm"
+	if runtime.GOOS == "windows" {
+		name = "echo-elm.exe"
+	}
+	abs, err := filepath.Abs(filepath.Join("..", "..", name))
+	if err != nil {
+		t.Fatalf("resolve binary path: %v", err)
+	}
+	return abs
+}
+
 // newMCPClient starts echo-elm mcp as a subprocess and returns a connected client session.
 func newMCPClient(t *testing.T, workspace string) *mcp.ClientSession {
 	t.Helper()
 
-	// Build the binary if not already done (use go run for simplicity in tests).
-	binary, err := filepath.Abs(filepath.Join("..", "..", "echo-elm.exe"))
-	if err != nil {
-		t.Fatalf("resolve binary: %v", err)
-	}
+	binary := echoElmBinary(t)
 
 	client := mcp.NewClient(&mcp.Implementation{
 		Name:    "echo-elm-test",
