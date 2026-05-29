@@ -1,8 +1,7 @@
-version: "2"
-
 linters:
   enable:
     - errcheck
+    - gosimple
     - staticcheck
     - govet
     - ineffassign
@@ -15,24 +14,25 @@ linters:
     - noctx
     - gocritic
     - prealloc
-  settings:
-    goimports:
-      local-prefixes: github.com/artnerc/echo-elm
-    misspell:
-      ignore-words:
-        - healthit
-    revive:
-      rules:
-        - name: exported
-        - name: var-naming
-        - name: error-return
-        - name: if-return
-        - name: increment-decrement
-        - name: var-declaration
-    gocritic:
-      enabled-tags:
-        - diagnostic
-        - performance
+
+linters-settings:
+  goimports:
+    local-prefixes: github.com/artnerc/echo-elm
+  misspell:
+    ignore-words:
+      - healthit
+  revive:
+    rules:
+      - name: exported
+      - name: var-naming
+      - name: error-return
+      - name: if-return
+      - name: increment-decrement
+      - name: var-declaration
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - performance
 
 issues:
   exclude-rules:
