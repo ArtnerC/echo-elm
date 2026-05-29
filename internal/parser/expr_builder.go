@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
+
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/parser/cqlparser"
 )
@@ -1234,4 +1235,3 @@ func parseInt(s string) int64 {
 	}
 	return v
 }
-

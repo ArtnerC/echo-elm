@@ -44,7 +44,7 @@ using FHIR version '4.0.1'`)
 	b, _ := json.MarshalIndent(result, "   ", "  ")
 	// Extract translatorOptions
 	var env map[string]any
-	json.Unmarshal(b, &env)
+	_ = json.Unmarshal(b, &env)
 	lib := env["library"].(map[string]any)
 	ann := lib["annotation"].([]any)
 	info := ann[0].(map[string]any)
@@ -83,7 +83,7 @@ define "Initial Population": true`)
 	}
 	b, _ := json.Marshal(result)
 	var env map[string]any
-	json.Unmarshal(b, &env)
+	_ = json.Unmarshal(b, &env)
 	lib := env["library"].(map[string]any)
 
 	// translatorOptions must be ""
@@ -160,7 +160,7 @@ func demoLibrarySource() bool {
 	fmt.Println("   MapSource versioned lookup ✓")
 
 	// Unversioned fallback
-	src, ok, err = mapSrc.GetLibrarySource("FHIRHelpers", "")
+	_, ok, err = mapSrc.GetLibrarySource("FHIRHelpers", "")
 	if err != nil || !ok {
 		fmt.Printf("   FAIL: MapSource unversioned fallback: ok=%v err=%v\n", ok, err)
 		return false
@@ -208,7 +208,7 @@ context Patient`)
 	}
 	b, _ := json.Marshal(result)
 	var env map[string]any
-	json.Unmarshal(b, &env)
+	_ = json.Unmarshal(b, &env)
 	lib := env["library"].(map[string]any)
 
 	// Find the implicit Patient accessor statement's SingletonFrom.Retrieve

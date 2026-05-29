@@ -344,7 +344,8 @@ func runParity(args []string) {
 	}
 
 	summary := parity.Summary(results)
-	for _, r := range results {
+	for i := range results {
+		r := &results[i]
 		icon := "✓"
 		if r.Status != parity.StatusMatch {
 			icon = "≠"
@@ -372,7 +373,7 @@ func runParity(args []string) {
 // resolveOutput determines the output file path from the input path, --output flag, and format.
 func resolveOutput(input, output, format string) string {
 	ext := ".json"
-	if strings.ToUpper(format) == "XML" {
+	if strings.EqualFold(format, "XML") {
 		ext = ".xml"
 	}
 	base := strings.TrimSuffix(filepath.Base(input), filepath.Ext(input))

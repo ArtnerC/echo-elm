@@ -21,6 +21,8 @@ type LibrarySource = resolver.LibrarySource
 type Option func(*translator.Options)
 
 // WithOptions replaces all translator options at once.
+//
+//nolint:gocritic // hugeParam: public API, changing to pointer would break callers
 func WithOptions(opts translator.Options) Option {
 	return func(o *translator.Options) {
 		*o = opts

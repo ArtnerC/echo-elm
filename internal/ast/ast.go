@@ -49,7 +49,7 @@ type baseNode struct {
 	loc Interval
 }
 
-func (b baseNode) nodeMarker() {}
+func (b baseNode) nodeMarker()   {}
 func (b baseNode) Loc() Interval { return b.loc }
 
 // SetLoc sets the source location of this node.
@@ -126,12 +126,12 @@ type ValuesetDefinition struct {
 // CodeDefinition: code "Name" from CodeSystem
 type CodeDefinition struct {
 	baseNode
-	Name         string
-	Code         string
-	SystemName   string
+	Name          string
+	Code          string
+	SystemName    string
 	SystemLocator Interval // source span of the codesystem identifier
-	Display      string
-	AccessLevel  AccessLevel
+	Display       string
+	AccessLevel   AccessLevel
 }
 
 // ConceptDefinition: concept "Name": { codes }
@@ -146,10 +146,10 @@ type ConceptDefinition struct {
 // ParameterDefinition: parameter Name ParameterType default <expr>
 type ParameterDefinition struct {
 	baseNode
-	Name        string
+	Name          string
 	ParameterType *TypeSpecifier
-	Default     Expr
-	AccessLevel AccessLevel
+	Default       Expr
+	AccessLevel   AccessLevel
 }
 
 // ContextDefinition: context Patient

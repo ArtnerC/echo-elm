@@ -1,6 +1,7 @@
 package parity
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -114,6 +115,8 @@ func profileOptions(profile OptionProfile) translator.Options {
 }
 
 // translateWithProfile returns an echo-elm translation using the given profile options.
+//
+//nolint:gocritic // hugeParam: internal helper with stable interface
 func translateWithProfile(cqlPath string, opts translator.Options) ([]byte, error) {
 	src, err := os.ReadFile(cqlPath)
 	if err != nil {
@@ -152,6 +155,7 @@ func ProfileTranslateFunc(profile OptionProfile) func(cqlPath string) ([]byte, e
 	}
 }
 
+//nolint:gocritic // hugeParam: public API
 func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]FixtureResult, error) {
 	corpus, err := LoadCorpus(cfg.CorpusDir)
 	if err != nil {
@@ -187,6 +191,7 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 	return results, nil
 }
 
+//nolint:gocritic // hugeParam: internal helper with stable interface
 func runFixture(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error)) FixtureResult {
 	start := time.Now()
 	cqlPath := filepath.Join(corpusRoot, fix.Path)
@@ -280,6 +285,8 @@ func upstreamLauncher(toolsDir, version string) string {
 // It is intended to be called once (e.g. via demo/goldens) to produce or refresh
 // the committed golden files used by TestGoldenCorpus.
 // Returns the number of golden files written and a version-diff report.
+//
+//nolint:gocritic // hugeParam: public API
 func GenerateGoldens(cfg Config, outputDir string) (written int, versionDiff []string, err error) {
 	return generateGoldensInner(cfg, filepath.Join(outputDir, cfg.CQFVersion))
 }
@@ -287,11 +294,14 @@ func GenerateGoldens(cfg Config, outputDir string) (written int, versionDiff []s
 // GenerateGoldensTo runs the upstream CQF CLI for every non-failure fixture × profile
 // and writes normalized JSON to targetDir/<profile>/<fixture>.json (no version subdirectory).
 // Use this to write the canonical collapsed golden set.
+//
+//nolint:gocritic // hugeParam: public API
 func GenerateGoldensTo(cfg Config, targetDir string) (int, error) {
 	n, _, err := generateGoldensInner(cfg, targetDir)
 	return n, err
 }
 
+//nolint:gocritic // hugeParam: internal; stable interface
 func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff []string, err error) {
 	corpus, err := LoadCorpus(cfg.CorpusDir)
 	if err != nil {
@@ -360,7 +370,7 @@ func CompareVersionGoldens(outputDir, versionA, versionB string) ([]string, erro
 		if err != nil {
 			return err
 		}
-		if string(aBytes) != string(bBytes) {
+		if !bytes.Equal(aBytes, bBytes) {
 			diffs = append(diffs, rel)
 		}
 		return nil
@@ -543,8 +553,8 @@ func simpleDiff(want, got string) string {
 // Summary returns aggregate counts for a slice of results.
 func Summary(results []FixtureResult) map[Status]int {
 	m := make(map[Status]int)
-	for _, r := range results {
-		m[r.Status]++
+	for i := range results {
+		m[results[i].Status]++
 	}
 	return m
 }

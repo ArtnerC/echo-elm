@@ -60,6 +60,7 @@ func WriteReport(outDir, id, cqfVersion string, results []FixtureResult) error {
 	return nil
 }
 
+//nolint:gocritic // hugeParam: internal helper; large struct copy acceptable here
 func renderMarkdown(r RunReport) string {
 	var sb strings.Builder
 
@@ -75,7 +76,8 @@ func renderMarkdown(r RunReport) string {
 
 	fmt.Fprintf(&sb, "## Fixtures\n\n")
 	fmt.Fprintf(&sb, "| Fixture | Status | Duration |\n|---|---|---|\n")
-	for _, f := range r.Fixtures {
+	for i := range r.Fixtures {
+		f := &r.Fixtures[i]
 		icon := statusMDIcon(f.Status)
 		fmt.Fprintf(&sb, "| `%s` | %s %s | %s |\n",
 			f.Fixture, icon, string(f.Status), f.Duration.Round(time.Millisecond))
@@ -84,7 +86,8 @@ func renderMarkdown(r RunReport) string {
 
 	// Append diffs for failing fixtures.
 	var hasDiffs bool
-	for _, f := range r.Fixtures {
+	for i := range r.Fixtures {
+		f := &r.Fixtures[i]
 		if f.Status == StatusDifferJSON && f.Diff != "" {
 			if !hasDiffs {
 				fmt.Fprintf(&sb, "## Diffs\n\n")

@@ -4,6 +4,7 @@ import (
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
+
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/parser/cqlparser"
 )
@@ -62,7 +63,8 @@ func intervalFromCtx(ctx antlr.ParserRuleContext) ast.Interval {
 	startCol := start.GetColumn() + 1
 
 	stop := ctx.GetStop()
-	endLine, endCol := startLine, startCol
+	endLine := startLine
+	var endCol int
 	if stop != nil && stop.GetTokenIndex() >= 0 {
 		endLine = stop.GetLine()
 		endCol = stop.GetColumn() + len(stop.GetText())
@@ -133,8 +135,8 @@ func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 		switch {
 		case sc.ContextDefinition() != nil:
 			ctx := b.buildContext(sc.ContextDefinition())
-			lib.Context = ctx                                     // last (backward compat)
-			lib.Contexts = append(lib.Contexts, ctx)             // all contexts
+			lib.Context = ctx                        // last (backward compat)
+			lib.Contexts = append(lib.Contexts, ctx) // all contexts
 			currentContext = ctx.Name
 		case sc.ExpressionDefinition() != nil:
 			def := b.buildExpressionDef(sc.ExpressionDefinition())
@@ -416,13 +418,14 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 			spaceIdx := strings.IndexByte(rest, ' ')
 			var nameEnd int
 			var afterTag string
-			if colonIdx >= 0 && (spaceIdx < 0 || colonIdx <= spaceIdx) {
+			switch {
+			case colonIdx >= 0 && (spaceIdx < 0 || colonIdx <= spaceIdx):
 				nameEnd = colonIdx
 				afterTag = strings.TrimLeft(rest[colonIdx+1:], " \t")
-			} else if spaceIdx >= 0 {
+			case spaceIdx >= 0:
 				nameEnd = spaceIdx
 				afterTag = strings.TrimLeft(rest[spaceIdx+1:], " \t")
-			} else {
+			default:
 				nameEnd = len(rest)
 				afterTag = ""
 			}

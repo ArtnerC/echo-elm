@@ -14,6 +14,7 @@ package parser
 
 import (
 	"github.com/antlr4-go/antlr/v4"
+
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/parser/cqlparser"
 )
@@ -43,7 +44,7 @@ const (
 
 // Result is the output of a parse operation.
 type Result struct {
-	Library     *ast.Library  // nil on fatal error
+	Library     *ast.Library // nil on fatal error
 	Diagnostics []Diagnostic
 }
 

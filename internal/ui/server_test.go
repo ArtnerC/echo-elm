@@ -274,11 +274,11 @@ func TestStaticFallback(t *testing.T) {
 		t.Errorf("want 200 for SPA fallback, got %d", w.Code)
 	}
 	if !strings.Contains(w.Body.String(), "<html") {
-		t.Errorf("expected HTML body for SPA fallback, got: %q", w.Body.String()[:min(200, w.Body.Len())])
+		t.Errorf("expected HTML body for SPA fallback, got: %q", w.Body.String()[:clampInt(200, w.Body.Len())])
 	}
 }
 
-func min(a, b int) int {
+func clampInt(a, b int) int {
 	if a < b {
 		return a
 	}

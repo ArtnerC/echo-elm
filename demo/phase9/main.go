@@ -104,12 +104,13 @@ func waitReady(url string, timeout time.Duration) {
 func mustGet(url string) string {
 	resp, err := http.Get(url) //nolint:noctx
 	must("GET "+url, err)
-	defer resp.Body.Close()
 	if resp.StatusCode >= 400 {
+		resp.Body.Close()
 		fmt.Fprintf(os.Stderr, "FATAL: GET %s → %d\n", url, resp.StatusCode)
 		os.Exit(1)
 	}
 	b, err := io.ReadAll(resp.Body)
+	resp.Body.Close()
 	must("read body", err)
 	return string(b)
 }

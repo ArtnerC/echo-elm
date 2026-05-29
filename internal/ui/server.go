@@ -239,7 +239,7 @@ type libraryHeader struct {
 
 func (s *Server) handleLibraries(w http.ResponseWriter, r *http.Request) {
 	files, _ := walkCQLFiles(s.opts.Workspace)
-	var headers []libraryHeader
+	headers := make([]libraryHeader, 0, len(files))
 	for _, rel := range files {
 		abs, err := s.safePath(rel)
 		if err != nil {
@@ -356,7 +356,7 @@ func (s *Server) handleTranslate(w http.ResponseWriter, r *http.Request) {
 	xmlBytes, _ := result.MarshalXML()
 	serializeMs := time.Since(t1).Milliseconds()
 
-	var diags []diagnosticResp
+	diags := make([]diagnosticResp, 0, len(result.Diagnostics))
 	for _, d := range result.Diagnostics {
 		diags = append(diags, diagnosticResp{
 			Severity: d.Severity,
@@ -412,7 +412,7 @@ func (s *Server) handleParityRuns(w http.ResponseWriter, r *http.Request) {
 		writeError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	var runs []parityRunSummary
+	runs := make([]parityRunSummary, 0, len(entries))
 	for _, e := range entries {
 		if !e.IsDir() {
 			continue

@@ -19,8 +19,8 @@ import (
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 
 	intelm "github.com/artnerc/echo-elm/internal/elm"
-	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/parity"
+	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -65,17 +65,17 @@ func Run(ctx context.Context, opts Options) error {
 // translatorOptions carries the full set of translator knobs an MCP caller
 // can override. All fields are optional; absent fields use the default.
 type translatorOptions struct {
-	Annotations       *bool   `json:"annotations,omitempty"`
-	Locators          *bool   `json:"locators,omitempty"`
-	SignatureLevel    string  `json:"signatureLevel,omitempty"`    // None|Differing|Overloads|All
-	CQFMode           bool    `json:"cqfMode,omitempty"`           // cqframework-compat output
-	CompatibilityLevel string `json:"compatibilityLevel,omitempty"` // 1.3|1.4|1.5
-	ValidateUnits     *bool   `json:"validateUnits,omitempty"`
-	DisableListDemotion   bool `json:"disableListDemotion,omitempty"`
-	DisableListPromotion  bool `json:"disableListPromotion,omitempty"`
-	DisableListTraversal  bool `json:"disableListTraversal,omitempty"`
-	DisableMethodInvocation bool `json:"disableMethodInvocation,omitempty"`
-	RequireFromKeyword    bool `json:"requireFromKeyword,omitempty"`
+	Annotations             *bool  `json:"annotations,omitempty"`
+	Locators                *bool  `json:"locators,omitempty"`
+	SignatureLevel          string `json:"signatureLevel,omitempty"`     // None|Differing|Overloads|All
+	CQFMode                 bool   `json:"cqfMode,omitempty"`            // cqframework-compat output
+	CompatibilityLevel      string `json:"compatibilityLevel,omitempty"` // 1.3|1.4|1.5
+	ValidateUnits           *bool  `json:"validateUnits,omitempty"`
+	DisableListDemotion     bool   `json:"disableListDemotion,omitempty"`
+	DisableListPromotion    bool   `json:"disableListPromotion,omitempty"`
+	DisableListTraversal    bool   `json:"disableListTraversal,omitempty"`
+	DisableMethodInvocation bool   `json:"disableMethodInvocation,omitempty"`
+	RequireFromKeyword      bool   `json:"requireFromKeyword,omitempty"`
 }
 
 func applyTranslatorOptions(o *translator.Options, in translatorOptions) {
@@ -419,11 +419,11 @@ func registerTools(srv *mcp.Server, opts Options) {
 			cqfResult, cqfErr := echoelm.Translate(src, sourceName, echoelm.WithCQFOptions())
 			if cqfErr != nil {
 				return toolResult(compareOut{
-					Status:    "cqf-unavailable",
+					Status:      "cqf-unavailable",
 					EchoElmJSON: echoNorm,
-					CqfMode:   "cqf-mode-fallback",
+					CqfMode:     "cqf-mode-fallback",
 					Diagnostics: diags,
-					Shareable: "No CQF instance available. Provide cqfJar, cqfScript, or cqfElm.",
+					Shareable:   "No CQF instance available. Provide cqfJar, cqfScript, or cqfElm.",
 				})
 			}
 			cqfBytes, _ := json.MarshalIndent(map[string]interface{}{"library": cqfResult.Library}, "", "  ")
@@ -529,13 +529,13 @@ type libraryHeader struct {
 
 // compareOut is the structured output of compare_with_cqf.
 type compareOut struct {
-	Status      string    `json:"status"`              // "match"|"differ"|"echo-error"|"cqf-unavailable"|"cqf-error"
-	EchoElmJSON string    `json:"echoElmJson"`         // normalized JSON from echo-elm
-	CqfJSON     string    `json:"cqfJson"`             // normalized JSON from CQF side (empty if unavailable)
-	CqfMode     string    `json:"cqfMode"`             // how CQF side was obtained
+	Status      string    `json:"status"`      // "match"|"differ"|"echo-error"|"cqf-unavailable"|"cqf-error"
+	EchoElmJSON string    `json:"echoElmJson"` // normalized JSON from echo-elm
+	CqfJSON     string    `json:"cqfJson"`     // normalized JSON from CQF side (empty if unavailable)
+	CqfMode     string    `json:"cqfMode"`     // how CQF side was obtained
 	Diff        string    `json:"diff,omitempty"`
 	Diagnostics []diagOut `json:"diagnostics,omitempty"`
-	Shareable   string    `json:"shareable"`           // compact text block for bug reports
+	Shareable   string    `json:"shareable"` // compact text block for bug reports
 }
 
 func toDiagOuts(diags []translator.Diagnostic) []diagOut {

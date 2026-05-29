@@ -10,9 +10,9 @@ import (
 
 // OptionProfile defines a named set of translator options and their CQF CLI flag equivalents.
 type OptionProfile struct {
-	Description           string                 `yaml:"description"`
-	CLIFlags              []string               `yaml:"cliFlags"`
-	TranslatorOptions     map[string]interface{} `yaml:"translatorOptions"`
+	Description       string                 `yaml:"description"`
+	CLIFlags          []string               `yaml:"cliFlags"`
+	TranslatorOptions map[string]interface{} `yaml:"translatorOptions"`
 	// PendingImplementation marks profiles whose corresponding echo-elm feature is
 	// not yet implemented. TestGoldenCorpus skips these profiles rather than failing.
 	PendingImplementation bool `yaml:"pendingImplementation"`

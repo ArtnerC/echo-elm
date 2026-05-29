@@ -23,7 +23,8 @@ func main() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-	for _, r := range results {
+	for i := range results {
+		r := &results[i]
 		if !strings.Contains(r.Fixture, target) {
 			continue
 		}

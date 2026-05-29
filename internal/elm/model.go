@@ -308,7 +308,7 @@ type NamedTypeSpecifier struct {
 	Name       string          `json:"name,omitempty"`
 }
 
-func (*NamedTypeSpecifier) isTypeSpecifier() {}
+func (*NamedTypeSpecifier) isTypeSpecifier()                     {}
 func (n *NamedTypeSpecifier) typeSpecifierJSON() ([]byte, error) { return n.MarshalJSON() }
 func (n *NamedTypeSpecifier) MarshalJSON() ([]byte, error) {
 	type alias NamedTypeSpecifier
@@ -323,7 +323,7 @@ type IntervalTypeSpecifier struct {
 	PointType  TypeSpecifier   `json:"pointType,omitempty"`
 }
 
-func (*IntervalTypeSpecifier) isTypeSpecifier() {}
+func (*IntervalTypeSpecifier) isTypeSpecifier()                     {}
 func (n *IntervalTypeSpecifier) typeSpecifierJSON() ([]byte, error) { return n.MarshalJSON() }
 func (n *IntervalTypeSpecifier) MarshalJSON() ([]byte, error) {
 	type alias IntervalTypeSpecifier
@@ -338,7 +338,7 @@ type ListTypeSpecifier struct {
 	ElementType TypeSpecifier   `json:"elementType,omitempty"`
 }
 
-func (*ListTypeSpecifier) isTypeSpecifier() {}
+func (*ListTypeSpecifier) isTypeSpecifier()                     {}
 func (n *ListTypeSpecifier) typeSpecifierJSON() ([]byte, error) { return n.MarshalJSON() }
 func (n *ListTypeSpecifier) MarshalJSON() ([]byte, error) {
 	type alias ListTypeSpecifier
@@ -353,7 +353,7 @@ type TupleTypeSpecifier struct {
 	Element    []*TupleElementDefinition `json:"element,omitempty"`
 }
 
-func (*TupleTypeSpecifier) isTypeSpecifier() {}
+func (*TupleTypeSpecifier) isTypeSpecifier()                     {}
 func (n *TupleTypeSpecifier) typeSpecifierJSON() ([]byte, error) { return n.MarshalJSON() }
 func (n *TupleTypeSpecifier) MarshalJSON() ([]byte, error) {
 	type alias TupleTypeSpecifier
@@ -377,7 +377,7 @@ type ChoiceTypeSpecifier struct {
 	Choice     []TypeSpecifier `json:"choice,omitempty"`
 }
 
-func (*ChoiceTypeSpecifier) isTypeSpecifier() {}
+func (*ChoiceTypeSpecifier) isTypeSpecifier()                     {}
 func (n *ChoiceTypeSpecifier) typeSpecifierJSON() ([]byte, error) { return n.MarshalJSON() }
 func (n *ChoiceTypeSpecifier) MarshalJSON() ([]byte, error) {
 	type alias ChoiceTypeSpecifier
@@ -472,11 +472,11 @@ func (n *ValueSetRefNode) MarshalJSON() ([]byte, error) {
 // InValueSetNode: tests whether a code belongs to a value set.
 // Emitted instead of In(ToList(ValueSetRef)) when the RHS is a value set.
 type InValueSetNode struct {
-	LocalID    string          `json:"localId,omitempty"`
-	Locator    string          `json:"locator,omitempty"`
-	Annotation json.RawMessage `json:"annotation,omitempty"`
-	Signature  json.RawMessage `json:"signature,omitempty"`
-	Code       Expression      `json:"code"`
+	LocalID    string           `json:"localId,omitempty"`
+	Locator    string           `json:"locator,omitempty"`
+	Annotation json.RawMessage  `json:"annotation,omitempty"`
+	Signature  json.RawMessage  `json:"signature,omitempty"`
+	Code       Expression       `json:"code"`
 	ValueSet   *ValueSetRefNode `json:"valueset"`
 }
 
@@ -492,11 +492,11 @@ func (n *InValueSetNode) MarshalJSON() ([]byte, error) {
 		Preserve    *bool           `json:"preserve,omitempty"`
 	}
 	type plain struct {
-		LocalID    string          `json:"localId,omitempty"`
-		Locator    string          `json:"locator,omitempty"`
-		Annotation json.RawMessage `json:"annotation,omitempty"`
-		Signature  json.RawMessage `json:"signature,omitempty"`
-		Code       Expression      `json:"code"`
+		LocalID    string            `json:"localId,omitempty"`
+		Locator    string            `json:"locator,omitempty"`
+		Annotation json.RawMessage   `json:"annotation,omitempty"`
+		Signature  json.RawMessage   `json:"signature,omitempty"`
+		Code       Expression        `json:"code"`
 		ValueSet   *plainValueSetRef `json:"valueset"`
 	}
 	var vs *plainValueSetRef
@@ -710,7 +710,6 @@ func (n *RatioNode) MarshalJSON() ([]byte, error) {
 	return marshalWithType("Ratio", (*alias)(n))
 }
 
-
 type UnimplementedNode struct {
 	LocalID  string `json:"localId,omitempty"`
 	Locator  string `json:"locator,omitempty"`
@@ -821,6 +820,7 @@ func (n *NamedOperatorExpressionNode) MarshalJSON() ([]byte, error) {
 	buf.WriteByte('}')
 	return buf.Bytes(), nil
 }
+
 type DateNode struct {
 	LocalID    string          `json:"localId,omitempty"`
 	Locator    string          `json:"locator,omitempty"`
@@ -1163,12 +1163,12 @@ func (n *PrecisionOperatorNode) MarshalJSON() ([]byte, error) {
 
 // AliasedQuerySourceELM is the ELM representation of an aliased source.
 type AliasedQuerySourceELM struct {
-	LocalID     string          `json:"localId,omitempty"`
-	Locator     string          `json:"locator,omitempty"`
-	Annotation  json.RawMessage `json:"annotation,omitempty"`
-	Alias       string          `json:"alias"`
-	Expression  Expression      `json:"expression"`
-	ResultType  string          `json:"resultTypeName,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Alias      string          `json:"alias"`
+	Expression Expression      `json:"expression"`
+	ResultType string          `json:"resultTypeName,omitempty"`
 }
 
 // LetClauseELM is the ELM representation of a let clause.
@@ -1182,13 +1182,13 @@ type LetClauseELM struct {
 
 // RelationshipClauseELM is the ELM representation of a with/without clause.
 type RelationshipClauseELM struct {
-	LocalID    string                 `json:"localId,omitempty"`
-	Locator    string                 `json:"locator,omitempty"`
-	Annotation json.RawMessage        `json:"annotation,omitempty"`
-	Kind       string                 `json:"-"` // "With" or "Without"
-	Alias      string                 `json:"alias"`
-	Expression Expression             `json:"expression"`
-	SuchThat   Expression             `json:"suchThat,omitempty"`
+	LocalID    string          `json:"localId,omitempty"`
+	Locator    string          `json:"locator,omitempty"`
+	Annotation json.RawMessage `json:"annotation,omitempty"`
+	Kind       string          `json:"-"` // "With" or "Without"
+	Alias      string          `json:"alias"`
+	Expression Expression      `json:"expression"`
+	SuchThat   Expression      `json:"suchThat,omitempty"`
 }
 
 func (r *RelationshipClauseELM) MarshalJSON() ([]byte, error) {

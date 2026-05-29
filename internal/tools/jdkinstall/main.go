@@ -4,9 +4,9 @@
 package main
 
 import (
+	"archive/tar"
 	"archive/zip"
 	"compress/gzip"
-	"archive/tar"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,10 +21,10 @@ import (
 )
 
 const (
-	temurinVersion   = 17
-	temurinAPIBase   = "https://api.adoptium.net/v3"
-	toolsJDKDir      = "tools/jdk"
-	jdkEnvFile       = "tools/jdk/jdk.env"
+	temurinVersion = 17
+	temurinAPIBase = "https://api.adoptium.net/v3"
+	toolsJDKDir    = "tools/jdk"
+	jdkEnvFile     = "tools/jdk/jdk.env"
 )
 
 func main() {
@@ -130,12 +130,6 @@ func parseMajorVersion(output string) (int, error) {
 	return major, nil
 }
 
-// adoptiumAsset is a minimal subset of the Adoptium binary info response.
-type adoptiumAsset struct {
-	BinaryLink string `json:"binary_link"`
-	BinaryName string `json:"binary_name"`
-}
-
 func adoptiumURL() (string, error) {
 	goOS := runtime.GOOS
 	goArch := runtime.GOARCH
@@ -171,7 +165,7 @@ func adoptiumURL() (string, error) {
 			return http.ErrUseLastResponse
 		},
 	}
-	resp, err := client.Head(apiURL)
+	resp, err := client.Head(apiURL) //nolint:noctx // context not required for tool download helper
 	if err != nil {
 		return "", fmt.Errorf("adoptium HEAD: %w", err)
 	}
@@ -193,7 +187,7 @@ func adoptiumURL() (string, error) {
 		temurinAPIBase, temurinVersion, adoptOS, adoptArch,
 	)
 	infoURL += "?page_size=1"
-	infoResp, err := http.Get(infoURL)
+	infoResp, err := http.Get(infoURL) //nolint:noctx // context not required for tool download helper
 	if err != nil {
 		return "", fmt.Errorf("adoptium info GET: %w", err)
 	}
@@ -238,7 +232,7 @@ func downloadTemurin() error {
 		os.Remove(tmpFile.Name())
 	}()
 
-	resp, err := http.Get(dlURL)
+	resp, err := http.Get(dlURL) //nolint:noctx // context not required for tool download helper
 	if err != nil {
 		return fmt.Errorf("download: %w", err)
 	}
@@ -331,9 +325,13 @@ func extractTarGz(src, dst string) error {
 		}
 		switch hdr.Typeflag {
 		case tar.TypeDir:
-			os.MkdirAll(path, os.FileMode(hdr.Mode))
-		case tar.TypeReg, tar.TypeRegA:
-			os.MkdirAll(filepath.Dir(path), 0o755)
+			if err := os.MkdirAll(path, os.FileMode(hdr.Mode)); err != nil {
+				return err
+			}
+		case tar.TypeReg:
+			if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
+				return err
+			}
 			out, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, os.FileMode(hdr.Mode))
 			if err != nil {
 				return err
@@ -344,7 +342,9 @@ func extractTarGz(src, dst string) error {
 				return err
 			}
 		case tar.TypeSymlink:
-			os.Symlink(hdr.Linkname, path)
+			if err := os.Symlink(hdr.Linkname, path); err != nil {
+				return err
+			}
 		}
 	}
 	return nil

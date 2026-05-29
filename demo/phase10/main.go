@@ -65,7 +65,8 @@ func main() {
 	must("run parity", err)
 
 	summary := parity.Summary(results)
-	for _, r := range results {
+	for i := range results {
+		r := &results[i]
 		icon := statusIcon(r.Status)
 		fmt.Printf("   %s  %-45s  %s\n", icon, r.Fixture, r.Status)
 		if r.Error != "" {

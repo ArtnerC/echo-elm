@@ -123,27 +123,29 @@ type Translator struct {
 	sourceText           string // original CQL source for annotation s-tree extraction
 	lineOffsets          []int  // byte offsets of each line start in sourceText (1-indexed via [line-1])
 	diags                []Diagnostic
-	syms                 map[string]symKind  // symbol table built before statement pass
-	paramTypes           map[string]string   // maps parameter name → ELM qualified type name (named types only)
-	paramTypeSpecs       map[string]typeSpec // maps parameter name → full typeSpec (named, list, interval)
-	defTypeSpecs         map[string]typeSpec // maps statement-def name → full typeSpec inferred from its body
-	queryAliases         []map[string]bool   // stack of alias sets for current query scopes
-	queryLetScopes       []map[string]bool   // stack of let-identifier sets for current query scopes
-	queryAliasTypes      []map[string]string // stack: alias name → FHIR resource type (e.g. "Encounter")
-	queryAliasTypeSpecs  []map[string]typeSpec // stack: alias name → element typeSpec (for sig inference)
-	queryLetTypeSpecs    []map[string]typeSpec // stack: let-id → inferred typeSpec for QueryLetRef inference
-	modelsByAlias        map[string]string   // model local-identifier → model URI (populated per Translate call)
-	primaryModelURI      string              // URI of the first non-System declared model
-	primaryModelName     string              // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
-	currentContextName   string              // context being translated (for age function expansion)
-	functionParamScope   map[string]bool     // set of operand (parameter) names in the current function body
-	operandTypeSpecs     map[string]typeSpec // function operand name → declared typeSpec, set during function body translation
+	syms                 map[string]symKind         // symbol table built before statement pass
+	paramTypes           map[string]string          // maps parameter name → ELM qualified type name (named types only)
+	paramTypeSpecs       map[string]typeSpec        // maps parameter name → full typeSpec (named, list, interval)
+	defTypeSpecs         map[string]typeSpec        // maps statement-def name → full typeSpec inferred from its body
+	queryAliases         []map[string]bool          // stack of alias sets for current query scopes
+	queryLetScopes       []map[string]bool          // stack of let-identifier sets for current query scopes
+	queryAliasTypes      []map[string]string        // stack: alias name → FHIR resource type (e.g. "Encounter")
+	queryAliasTypeSpecs  []map[string]typeSpec      // stack: alias name → element typeSpec (for sig inference)
+	queryLetTypeSpecs    []map[string]typeSpec      // stack: let-id → inferred typeSpec for QueryLetRef inference
+	modelsByAlias        map[string]string          // model local-identifier → model URI (populated per Translate call)
+	primaryModelURI      string                     // URI of the first non-System declared model
+	primaryModelName     string                     // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
+	currentContextName   string                     // context being translated (for age function expansion)
+	functionParamScope   map[string]bool            // set of operand (parameter) names in the current function body
+	operandTypeSpecs     map[string]typeSpec        // function operand name → declared typeSpec, set during function body translation
 	listNodeTypes        map[*elm.ListNode]typeSpec // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
-	fhirHelpersLocalName string              // local identifier of included FHIRHelpers library, or "" if not included
-	skipLocatorStamp     bool                // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
+	fhirHelpersLocalName string                     // local identifier of included FHIRHelpers library, or "" if not included
+	skipLocatorStamp     bool                       // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
 }
 
 // New creates a new Translator with the given options.
+//
+//nolint:gocritic // hugeParam: Options is part of the public API; pointer would break callers
 func New(opts Options) *Translator {
 	return &Translator{opts: opts}
 }
@@ -307,18 +309,6 @@ func (t *Translator) posToOffset(line, col int) int {
 	return off
 }
 
-// sourceSlice returns sourceText[start..endInclusive] (inclusive end column).
-// Both start and end are 1-based line/column. Returns "" when bounds are invalid.
-func (t *Translator) sourceSlice(loc ast.Interval) string {
-	s := t.posToOffset(loc.Start.Line, loc.Start.Column)
-	// end column is the last char (inclusive) — convert to exclusive offset.
-	e := t.posToOffset(loc.Stop.Line, loc.Stop.Column+1)
-	if s < 0 || e < 0 || e < s {
-		return ""
-	}
-	return t.sourceText[s:e]
-}
-
 // sourceSliceWithLeading returns the source text covering loc, extended
 // backward to include any preceding contiguous comment-only lines (no blank
 // line separator). Mirrors CQF's annotation source-text capture behaviour.
@@ -475,8 +465,8 @@ func (t *Translator) mergeAnnotations(base, src json.RawMessage) json.RawMessage
 	if err := json.Unmarshal(src, &srcArr); err != nil {
 		return base
 	}
-	combined := append(baseArr, srcArr...)
-	b, err := json.Marshal(combined)
+	baseArr = append(baseArr, srcArr...)
+	b, err := json.Marshal(baseArr)
 	if err != nil {
 		return base
 	}
@@ -815,7 +805,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 
 	// Statements — prepend implicit context accessor for each unique context that
 	// (a) is not "Unfiltered", and (b) has no explicit definition with the same name.
-	var stmtDefs []*elm.StatementDef
+	stmtDefs := make([]*elm.StatementDef, 0, len(lib.Contexts))
 	seenAccessor := map[string]bool{}
 	for _, ctx := range lib.Contexts {
 		if ctx.Name == "Unfiltered" || explicitNames[ctx.Name] || seenAccessor[ctx.Name] {
@@ -896,10 +886,6 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	return result
 }
 
-func (t *Translator) modelURI(name string) string {
-	return t.modelURIVersioned(name, "")
-}
-
 // modelURIVersioned returns the ELM namespace URI for a model name + optional version.
 // For versioned models like QDM, the URI includes the version (e.g. urn:healthit-gov:qdm:v5_3).
 func (t *Translator) modelURIVersioned(name, version string) string {
@@ -946,10 +932,11 @@ func (t *Translator) qualifyDataType(rawType string) (dataType, templateID strin
 		return rawType, "" // already namespace-qualified
 	}
 
-	modelAlias, typeName := "", rawType
-	if i := strings.Index(rawType, "."); i >= 0 {
-		modelAlias = rawType[:i]
-		typeName = rawType[i+1:]
+	var modelAlias, typeName string
+	if before, after, ok := strings.Cut(rawType, "."); ok {
+		modelAlias, typeName = before, after
+	} else {
+		typeName = before
 	}
 
 	var (
@@ -1524,7 +1511,7 @@ func (t *Translator) inferBoundType(expr ast.Expr) string {
 	if expr == nil {
 		return ""
 	}
-	switch expr.(type) {
+	switch fr := expr.(type) {
 	case *ast.IntegerLiteral:
 		return typesystem.TypeInteger
 	case *ast.LongLiteral:
@@ -1541,7 +1528,6 @@ func (t *Translator) inferBoundType(expr ast.Expr) string {
 		return typesystem.TypeQuantity
 	case *ast.FunctionRef:
 		// DateTime/Date/Time system function calls infer the corresponding type.
-		fr := expr.(*ast.FunctionRef)
 		switch fr.Name {
 		case "DateTime":
 			return typesystem.TypeDateTime
@@ -2227,27 +2213,23 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		low := t.translateExpr(v.Low)
 		high := t.translateExpr(v.High)
 		// Null interval bounds: CQF wraps null in an As cast typed from the non-null bound.
-		if low != nil {
-			if _, isNull := low.(*elm.NullNode); isNull {
-				if bndType := t.inferBoundType(v.High); bndType != "" {
-					low = &elm.AsNode{
-						Annotation: t.cqfAnnotation(),
-						Signature:  t.cqfEmptyArrayField(),
-						AsType:     bndType,
-						Operand:    low,
-					}
+		if _, isNull := low.(*elm.NullNode); isNull {
+			if bndType := t.inferBoundType(v.High); bndType != "" {
+				low = &elm.AsNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  t.cqfEmptyArrayField(),
+					AsType:     bndType,
+					Operand:    low,
 				}
 			}
 		}
-		if high != nil {
-			if _, isNull := high.(*elm.NullNode); isNull {
-				if bndType := t.inferBoundType(v.Low); bndType != "" {
-					high = &elm.AsNode{
-						Annotation: t.cqfAnnotation(),
-						Signature:  t.cqfEmptyArrayField(),
-						AsType:     bndType,
-						Operand:    high,
-					}
+		if _, isNull := high.(*elm.NullNode); isNull {
+			if bndType := t.inferBoundType(v.Low); bndType != "" {
+				high = &elm.AsNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  t.cqfEmptyArrayField(),
+					AsType:     bndType,
+					Operand:    high,
 				}
 			}
 		}

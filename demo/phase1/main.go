@@ -54,7 +54,7 @@ define function AgeInYears(birthDate DateTime):
 		},
 		{
 			name: "Syntax error recovery",
-			src:  `library Bad version 'no-closing-bracket
+			src: `library Bad version 'no-closing-bracket
 
 define "Broken": @@@@invalid`,
 		},

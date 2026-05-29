@@ -44,7 +44,7 @@ func main() {
 	}
 
 	srv := &http.Server{Handler: s.Handler()}
-	go func() { srv.Serve(ln) }()
+	go func() { _ = srv.Serve(ln) }()
 
 	// Give the goroutine a moment to start.
 	time.Sleep(20 * time.Millisecond)
@@ -53,7 +53,7 @@ func main() {
 
 	// ── Test 1: /api/healthz ──────────────────────────────────────────────
 	fmt.Printf("── Test 1: GET /api/healthz\n")
-	resp := must(client.Get(base + "/api/healthz"))
+	resp := must(client.Get(base + "/api/healthz")) //nolint:bodyclose,noctx // body closed by decode()
 	var health map[string]string
 	decode(resp, &health)
 	check("status=ok", health["status"] == "ok")
@@ -61,7 +61,7 @@ func main() {
 
 	// ── Test 2: /api/version ─────────────────────────────────────────────
 	fmt.Printf("── Test 2: GET /api/version\n")
-	resp = must(client.Get(base + "/api/version"))
+	resp = must(client.Get(base + "/api/version")) //nolint:bodyclose,noctx // body closed by decode()
 	var ver map[string]string
 	decode(resp, &ver)
 	check("cqlSpec=1.5.3", ver["cqlSpec"] == "1.5.3")
@@ -69,7 +69,7 @@ func main() {
 
 	// ── Test 3: /api/workspace ───────────────────────────────────────────
 	fmt.Printf("── Test 3: GET /api/workspace\n")
-	resp = must(client.Get(base + "/api/workspace"))
+	resp = must(client.Get(base + "/api/workspace")) //nolint:bodyclose,noctx // body closed by decode()
 	var ws struct {
 		Root     string   `json:"root"`
 		CQLFiles []string `json:"cqlFiles"`
@@ -80,7 +80,7 @@ func main() {
 
 	// ── Test 4: /api/libraries ───────────────────────────────────────────
 	fmt.Printf("── Test 4: GET /api/libraries\n")
-	resp = must(client.Get(base + "/api/libraries"))
+	resp = must(client.Get(base + "/api/libraries")) //nolint:bodyclose,noctx // body closed by decode()
 	var libs []struct {
 		Name    string `json:"name"`
 		Version string `json:"version"`
@@ -94,7 +94,7 @@ func main() {
 
 	// ── Test 5: /api/libraries/{path} ────────────────────────────────────
 	fmt.Printf("── Test 5: GET /api/libraries/libs/Minimal-1.0.0.cql\n")
-	resp = must(client.Get(base + "/api/libraries/libs/Minimal-1.0.0.cql"))
+	resp = must(client.Get(base + "/api/libraries/libs/Minimal-1.0.0.cql")) //nolint:bodyclose,noctx // body closed by decode()
 	var libContent struct {
 		Content string `json:"content"`
 	}
@@ -107,7 +107,7 @@ func main() {
 	body, _ := json.Marshal(map[string]string{
 		"content": "library Demo version '1.0.0'",
 	})
-	resp = must(client.Post(base+"/api/translate", "application/json", bytes.NewReader(body)))
+	resp = must(client.Post(base+"/api/translate", "application/json", bytes.NewReader(body))) //nolint:bodyclose,noctx // body closed by decode()
 	var tr struct {
 		Diagnostics []any  `json:"diagnostics"`
 		ElmJSON     string `json:"elmJson"`
@@ -127,7 +127,7 @@ func main() {
 	body, _ = json.Marshal(map[string]string{
 		"content": "library Bad\n define @@@ invalid",
 	})
-	resp = must(client.Post(base+"/api/translate", "application/json", bytes.NewReader(body)))
+	resp = must(client.Post(base+"/api/translate", "application/json", bytes.NewReader(body))) //nolint:bodyclose,noctx // body closed by decode()
 	var tr2 struct {
 		Diagnostics []struct {
 			Severity string `json:"severity"`
@@ -143,7 +143,7 @@ func main() {
 
 	// ── Test 8: /api/parity/runs (empty) ─────────────────────────────────
 	fmt.Printf("── Test 8: GET /api/parity/runs\n")
-	resp = must(client.Get(base + "/api/parity/runs"))
+	resp = must(client.Get(base + "/api/parity/runs")) //nolint:bodyclose,noctx // body closed by decode()
 	var runs []any
 	decode(resp, &runs)
 	check("returns array", runs != nil || len(runs) == 0)
@@ -151,16 +151,16 @@ func main() {
 
 	// ── Test 9: Static SPA fallback ───────────────────────────────────────
 	fmt.Printf("── Test 9: GET /unknown-path (SPA fallback)\n")
-	resp = must(client.Get(base + "/some/unknown/route"))
+	resp = must(client.Get(base + "/some/unknown/route")) //nolint:bodyclose,noctx // body closed manually below
 	buf := new(bytes.Buffer)
-	buf.ReadFrom(resp.Body)
+	_, _ = buf.ReadFrom(resp.Body)
 	check("200 HTML for unknown route", resp.StatusCode == 200 && strings.Contains(buf.String(), "<html"))
 	fmt.Printf("   HTTP %d  Content-Type: %s\n\n", resp.StatusCode, resp.Header.Get("Content-Type"))
 
 	// Shutdown.
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	srv.Shutdown(ctx)
+	_ = srv.Shutdown(ctx)
 
 	fmt.Println("Phase 7 complete ✓  Local UI server verified — all endpoints functional.")
 }

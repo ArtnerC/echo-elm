@@ -23,6 +23,13 @@ import (
 )
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	goldensDir := "test/goldens"
 	tmpA := filepath.Join(goldensDir, ".tmp-3.29.0")
 	tmpB := filepath.Join(goldensDir, ".tmp-4.8.0")
@@ -46,8 +53,7 @@ func main() {
 		cfg := parity.DefaultConfig(v.ver)
 		n, err := parity.GenerateGoldensTo(cfg, v.dir)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "  error: %v\n", err)
-			os.Exit(1)
+			return fmt.Errorf("  error: %w", err)
 		}
 		fmt.Printf("  wrote %d golden file(s)\n", n)
 	}
@@ -55,8 +61,7 @@ func main() {
 	fmt.Println("\nComparing versions...")
 	diffs, err := parity.CompareVersionGoldens(goldensDir, ".tmp-3.29.0", ".tmp-4.8.0")
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "compare error: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("compare error: %w", err)
 	}
 
 	if len(diffs) > 0 {
@@ -64,22 +69,20 @@ func main() {
 		for _, d := range diffs {
 			fmt.Printf("  %s\n", d)
 		}
-		fmt.Println("\nVersions diverged — canonical goldens NOT updated.")
-		os.Exit(1)
+		return fmt.Errorf("versions diverged — canonical goldens NOT updated")
 	}
 
 	// Versions are identical — collapse to canonical set from 4.8.0 (latest).
 	fmt.Println("✓ Versions identical — writing canonical set to test/goldens/cqf/")
 	if err := os.RemoveAll(canonical); err != nil {
-		fmt.Fprintf(os.Stderr, "remove %s: %v\n", canonical, err)
-		os.Exit(1)
+		return fmt.Errorf("remove %s: %w", canonical, err)
 	}
 	if err := copyDir(tmpB, canonical); err != nil {
-		fmt.Fprintf(os.Stderr, "copy to cqf/: %v\n", err)
-		os.Exit(1)
+		return fmt.Errorf("copy to cqf/: %w", err)
 	}
 
 	fmt.Println("Goldens written to test/goldens/cqf/ — commit to lock in the baseline.")
+	return nil
 }
 
 func copyDir(src, dst string) error {

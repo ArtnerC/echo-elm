@@ -418,9 +418,6 @@ func (t *Translator) operandIsOpaqueMulti(e elm.Expression) bool {
 	return false
 }
 
-// operandIsOpaque retained for backward-compat with anything still calling it.
-func (t *Translator) operandIsOpaque(e elm.Expression) bool { return t.operandIsOpaqueMulti(e) }
-
 // hasIntervalOperand reports whether any operand is an IntervalNode literal
 // (a fully-syntactic Interval[low, high] expression).
 func hasIntervalOperand(operands []elm.Expression) bool {

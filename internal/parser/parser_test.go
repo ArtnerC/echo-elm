@@ -355,4 +355,3 @@ define function Double(x Integer) returns Integer:
 		t.Error("function body expression is nil")
 	}
 }
-

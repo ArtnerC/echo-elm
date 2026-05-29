@@ -223,10 +223,10 @@ var ucumAtoms = map[string]bool{
 	"[arb'U]": true, "[USP'U]": true,
 	"[in_i'Hg]": true, "[psi]": true,
 	"meq": true, "ueq": true,
-	"[drp]": true,
+	"[drp]":    true,
 	"[tbs_us]": true, "[tsp_us]": true, "[cup_us]": true,
 	// FHIR commonly emits these:
-	"[pH]": true,
+	"[pH]":    true,
 	"[lb_av]": true, "[oz_av]": true,
 	"[ft_us]": true, "[in_us]": true, "[mi_us]": true,
 }

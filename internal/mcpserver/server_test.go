@@ -384,7 +384,9 @@ func TestMCPCompareWithCQFPreSupplied(t *testing.T) {
 	if r1.IsError {
 		t.Fatalf("translate failed: %+v", r1.Content)
 	}
-	var tr struct{ ElmJSON string `json:"elmJson"` }
+	var tr struct {
+		ElmJSON string `json:"elmJson"`
+	}
 	decodeText(t, r1, &tr)
 
 	r2 := callTool(t, session, "compare_with_cqf", map[string]any{
