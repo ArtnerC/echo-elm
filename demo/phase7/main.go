@@ -27,7 +27,7 @@ func main() {
 	workspace := fixtureWorkspace()
 
 	// Start server on a random loopback port.
-	ln, err := net.Listen("tcp", "127.0.0.1:0")
+	ln, err := (&net.ListenConfig{}).Listen(context.Background(), "tcp", "127.0.0.1:0")
 	if err != nil {
 		fatalf("listen: %v", err)
 	}
@@ -184,7 +184,7 @@ func must(resp *http.Response, err error) *http.Response {
 }
 
 func decode(resp *http.Response, v any) {
-	defer resp.Body.Close()
+	defer func() { _ = resp.Body.Close() }()
 	if resp.StatusCode >= 400 {
 		fatalf("unexpected status %d", resp.StatusCode)
 	}

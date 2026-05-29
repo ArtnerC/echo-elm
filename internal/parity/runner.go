@@ -2,6 +2,7 @@ package parity
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -252,10 +253,10 @@ func runUpstream(launcher, cqlPath string, extraFlags []string) (jsonOut, stderr
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
-		cmd = exec.Command("cmd", "/C", launcher)
+		cmd = exec.CommandContext(context.Background(), "cmd", "/C", launcher)
 		cmd.Args = append(cmd.Args, args...)
 	} else {
-		cmd = exec.Command(launcher, args...)
+		cmd = exec.CommandContext(context.Background(), launcher, args...)
 	}
 
 	var stderrBuf strings.Builder

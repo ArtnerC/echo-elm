@@ -169,7 +169,7 @@ func adoptiumURL() (string, error) {
 	if err != nil {
 		return "", fmt.Errorf("adoptium HEAD: %w", err)
 	}
-	resp.Body.Close()
+	_ = resp.Body.Close()
 
 	if resp.StatusCode == http.StatusFound || resp.StatusCode == http.StatusMovedPermanently || resp.StatusCode == http.StatusTemporaryRedirect || resp.StatusCode == http.StatusPermanentRedirect {
 		loc := resp.Header.Get("Location")

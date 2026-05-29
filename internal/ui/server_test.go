@@ -2,6 +2,7 @@ package ui_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -43,10 +44,10 @@ func do(t *testing.T, h http.Handler, method, path string, body []byte) *httptes
 	t.Helper()
 	var req *http.Request
 	if body != nil {
-		req = httptest.NewRequest(method, path, bytes.NewReader(body))
+		req = httptest.NewRequestWithContext(context.Background(), method, path, bytes.NewReader(body))
 		req.Header.Set("Content-Type", "application/json")
 	} else {
-		req = httptest.NewRequest(method, path, nil)
+		req = httptest.NewRequestWithContext(context.Background(), method, path, nil)
 	}
 	w := httptest.NewRecorder()
 	h.ServeHTTP(w, req)

@@ -394,7 +394,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 			if err != nil {
 				return nil, compareOut{}, fmt.Errorf("tempdir: %w", err)
 			}
-			defer os.RemoveAll(tmpDir)
+			defer func() { _ = os.RemoveAll(tmpDir) }()
 			tmpCQL := filepath.Join(tmpDir, sourceName)
 			if err := os.WriteFile(tmpCQL, src, 0o644); err != nil {
 				return nil, compareOut{}, fmt.Errorf("write temp cql: %w", err)
@@ -482,17 +482,17 @@ func runCQF(launcher, cqlPath string) (jsonOut, stderr string, err error) {
 	dir := filepath.Dir(cqlPath)
 	base := strings.TrimSuffix(filepath.Base(cqlPath), ".cql")
 	outJSON := filepath.Join(dir, base+".json")
-	os.Remove(outJSON)
+	_ = os.Remove(outJSON)
 
 	var cmd *exec.Cmd
 	if strings.HasPrefix(launcher, "jar:") {
 		jar := strings.TrimPrefix(launcher, "jar:")
-		cmd = exec.Command("java", "-jar", jar, "--input", cqlPath, "--format", "JSON")
+		cmd = exec.CommandContext(context.Background(), "java", "-jar", jar, "--input", cqlPath, "--format", "JSON")
 	} else {
 		if isWindowsPath(launcher) {
-			cmd = exec.Command("cmd", "/C", launcher, "--input", cqlPath, "--format", "JSON")
+			cmd = exec.CommandContext(context.Background(), "cmd", "/C", launcher, "--input", cqlPath, "--format", "JSON")
 		} else {
-			cmd = exec.Command(launcher, "--input", cqlPath, "--format", "JSON")
+			cmd = exec.CommandContext(context.Background(), launcher, "--input", cqlPath, "--format", "JSON")
 		}
 	}
 
