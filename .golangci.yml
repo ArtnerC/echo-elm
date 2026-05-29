@@ -1,53 +1,56 @@
+version: "2"
+
 linters:
   enable:
     - errcheck
-    - gosimple
     - staticcheck
     - govet
     - ineffassign
     - unused
-    - gofmt
-    - goimports
     - revive
     - misspell
     - bodyclose
     - noctx
     - gocritic
     - prealloc
-
-linters-settings:
-  goimports:
-    local-prefixes: github.com/artnerc/echo-elm
-  misspell:
-    ignore-words:
-      - healthit
-  revive:
+  settings:
+    misspell:
+      ignore-rules:
+        - healthit
+    revive:
+      rules:
+        - name: exported
+        - name: var-naming
+        - name: error-return
+        - name: if-return
+        - name: increment-decrement
+        - name: var-declaration
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - performance
+  exclusions:
+    paths:
+      - internal/parser/cqlparser
     rules:
-      - name: exported
-      - name: var-naming
-      - name: error-return
-      - name: if-return
-      - name: increment-decrement
-      - name: var-declaration
-  gocritic:
-    enabled-tags:
-      - diagnostic
-      - performance
+      - path: _gen\.go
+        linters:
+          - revive
+      - path: internal/parser/cqlparser/
+        linters:
+          - all
+      - path: _test\.go
+        linters:
+          - unused
 
-issues:
-  exclude-rules:
-    - path: _gen\.go
-      linters:
-        - revive
-    - path: internal/parser/cqlparser/
-      linters:
-        - all
-    - path: _test\.go
-      linters:
-        - unused
-
-  exclude-dirs:
-    - internal/parser/cqlparser
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/artnerc/echo-elm
 
 run:
   timeout: 5m
