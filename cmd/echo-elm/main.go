@@ -13,6 +13,7 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/mcpserver"
 	"github.com/artnerc/echo-elm/internal/parity"
+	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/internal/ui"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
@@ -20,6 +21,16 @@ import (
 
 // Version is set at build time via -ldflags.
 var Version = "0.0.0-dev"
+
+// multiFlag collects a repeatable string flag into a slice.
+type multiFlag []string
+
+func (m *multiFlag) String() string { return strings.Join(*m, ",") }
+
+func (m *multiFlag) Set(v string) error {
+	*m = append(*m, v)
+	return nil
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -81,13 +92,18 @@ func runTranslate(args []string, cqfMode bool) {
 		requireFromKeyword      bool
 		enableIntervalDemotion  bool
 		enableIntervalPromotion bool
+		resultTypes             bool
+		debugMode               bool
 		compatLevel             string
 	)
+
+	var libDirs multiFlag
 
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
 	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
 	fs.BoolVar(&validate, "validate", false, "Run structural validation on the serialized ELM before writing it")
+	fs.Var(&libDirs, "lib-dir", "Additional directory to search for included CQL libraries (repeatable; the input file's own directory is always searched)")
 
 	// Default flags differ by mode to match each mode's natural behavior.
 	annotationsDefault := !cqfMode // modern: true, CQF: false (no annotation content without --annotations)
@@ -102,6 +118,8 @@ func runTranslate(args []string, cqfMode bool) {
 	fs.BoolVar(&requireFromKeyword, "require-from-keyword", false, "Require explicit 'from' in queries")
 	fs.BoolVar(&enableIntervalDemotion, "enable-interval-demotion", false, "Enable implicit interval demotion")
 	fs.BoolVar(&enableIntervalPromotion, "enable-interval-promotion", false, "Enable implicit interval promotion")
+	fs.BoolVar(&resultTypes, "result-types", false, "Record the resolved type on every ELM node")
+	fs.BoolVar(&debugMode, "debug", false, "Shorthand for --annotations --locators --result-types")
 
 	if cqfMode {
 		sigLevel = "None"
@@ -117,7 +135,7 @@ func runTranslate(args []string, cqfMode bool) {
 
 	// --strict expands: disable-list-traversal + demotion + promotion + method-invocation + require-from-keyword
 	var strict bool
-	fs.BoolVar(&strict, "strict", false, "Strict mode (disables list traversal, demotion, promotion, method invocation; requires from keyword)")
+	fs.BoolVar(&strict, "strict", false, "Strict mode (disables list traversal, demotion, promotion, and method invocation)")
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
@@ -134,20 +152,36 @@ func runTranslate(args []string, cqfMode bool) {
 		os.Exit(1)
 	}
 
+	// Includes resolve from the input file's own directory first (matching the
+	// CQF CLI), then from any --lib-dir directories in the order given.
+	searchDirs := append([]string{filepath.Dir(input)}, libDirs...)
+	sources := make([]echoelm.LibrarySource, 0, len(searchDirs))
+	for _, dir := range searchDirs {
+		sources = append(sources, resolver.NewDirSource(dir))
+	}
+
+	// --debug is CQF's shorthand for annotations + locators + result types.
+	if debugMode {
+		annotations, locators, resultTypes = true, true, true
+	}
+
 	opts := []echoelm.Option{
 		echoelm.WithAnnotations(annotations),
 		echoelm.WithLocators(locators),
 		echoelm.WithSignatureLevel(sigLevel),
 		echoelm.WithCQFMode(cqfMode),
+		echoelm.WithLibrarySource(resolver.NewMultiSource(sources...)),
 		echoelm.WithIntervalDemotion(enableIntervalDemotion),
 		echoelm.WithIntervalPromotion(enableIntervalPromotion),
 		func(o *translator.Options) {
 			if strict {
+				// CQF's --strict expands to exactly these four; it does not
+				// imply --require-from-keyword.
 				o.DisableListTraversal = true
 				o.DisableListDemotion = true
 				o.DisableListPromotion = true
 				o.DisableMethodInvocation = true
-				o.RequireFromKeyword = true
+				o.RequireFromKeyword = requireFromKeyword
 			} else {
 				o.DisableListDemotion = disableListDemotion
 				o.DisableListPromotion = disableListPromotion
@@ -155,6 +189,7 @@ func runTranslate(args []string, cqfMode bool) {
 				o.DisableMethodInvocation = disableMethodInvocation
 				o.RequireFromKeyword = requireFromKeyword
 			}
+			o.EnableResultTypes = resultTypes
 			o.CompatibilityLevel = compatLevel
 		},
 	}
