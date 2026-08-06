@@ -304,7 +304,18 @@ func (b *astBuilder) buildConcept(ctx cqlparser.IConceptDefinitionContext) *ast.
 		cd.Name = unquoteIdentifier(idc.GetText())
 	}
 	for _, ci := range cdc.AllCodeIdentifier() {
-		cd.Codes = append(cd.Codes, ci.GetText())
+		cic := ci.(*cqlparser.CodeIdentifierContext)
+		ref := ast.ConceptCodeRef{
+			Name:    unquoteIdentifier(cic.Identifier().GetText()),
+			Locator: intervalFromCtx(cic),
+		}
+		if lib := cic.LibraryIdentifier(); lib != nil {
+			ref.LibraryName = unquoteIdentifier(lib.GetText())
+		}
+		cd.Codes = append(cd.Codes, ref)
+	}
+	if dc := cdc.DisplayClause(); dc != nil {
+		cd.Display = unquoteString(dc.(*cqlparser.DisplayClauseContext).STRING().GetText())
 	}
 	cd.SetLoc(intervalFromCtx(cdc))
 	return cd
@@ -403,7 +414,7 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 		// Detect start of a new @tag on this line.
 		trimmed := strings.TrimSpace(line)
 		atIdx := strings.Index(trimmed, "@")
-		if !inHash && atIdx >= 0 && (atIdx == 0 || isOnlyWhitespace(trimmed[:atIdx])) {
+		if !inHash && atIdx >= 0 && isLeadingJunk(trimmed[:atIdx]) {
 			// Flush previous tag.
 			if inTag {
 				tags = append(tags, ast.CQLAnnotationTag{
@@ -458,8 +469,19 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 			} else {
 				currentValue.WriteString(line)
 			}
+		} else {
+			// Non-hash continuation: strip leading "* " block-comment decoration and append.
+			// CQF collects multi-line tag values when subsequent lines don't start a new @tag.
+			cont := trimmed
+			// Strip leading asterisk decoration: "* text" → "text", "*" → ""
+			if strings.HasPrefix(cont, "*") {
+				cont = strings.TrimLeft(cont[1:], " \t")
+			}
+			if cont != "" {
+				currentValue.WriteByte('\n')
+				currentValue.WriteString(cont)
+			}
 		}
-		// Single-line tags don't have continuation lines.
 	}
 	// Flush last tag.
 	if inTag {
@@ -475,6 +497,17 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 func isOnlyWhitespace(s string) bool {
 	for _, r := range s {
 		if r != ' ' && r != '\t' && r != '\r' && r != '\n' {
+			return false
+		}
+	}
+	return true
+}
+
+// isLeadingJunk returns true if s contains only whitespace and/or '*' characters,
+// i.e. the prefix before an @ tag in a block comment like " * @description:".
+func isLeadingJunk(s string) bool {
+	for _, r := range s {
+		if r != ' ' && r != '\t' && r != '\r' && r != '\n' && r != '*' {
 			return false
 		}
 	}

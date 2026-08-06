@@ -1,0 +1,598 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for the quoted-identifier query source found while\n// verifying issues/03-cqf-parity-gaps.md.\n//\n// A quoted identifier used as a query source must be unquoted like every other\n// reference position; it previously kept its double quotes, producing an\n// ExpressionRef named \"\\\"My Items\\\"\" that no engine could resolve.\nlibrary QuotedIdentifiers version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "QuotedIdentifiers",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"My Items\": { 1, 2, 3 }"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "locator": "9:22",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "9:25",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "9:28",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "locator": "9:20-9:30",
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "List"
+          },
+          "locator": "9:1-9:30",
+          "name": "My Items",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Plain\": 42"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "10:17-10:18",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Literal",
+            "value": "42",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "locator": "10:1-10:18",
+          "name": "Plain",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QuotedDirectRef\": \"My Items\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "12:27-12:36",
+            "name": "My Items",
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "ExpressionRef"
+          },
+          "locator": "12:1-12:36",
+          "name": "QuotedDirectRef",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"UnquotedDirectRef\": Plain"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "13:29-13:33",
+            "name": "Plain",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "ExpressionRef"
+          },
+          "locator": "13:1-13:33",
+          "name": "UnquotedDirectRef",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QuotedQuerySource\":\n  \"My Items\" I\n    return I"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "16:3-17:12",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "17:12",
+                "name": "I",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "AliasRef"
+              },
+              "locator": "17:5-17:12",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "16:3-16:12",
+                  "name": "My Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "16:3-16:14",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "15:1-17:12",
+          "name": "QuotedQuerySource",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QuotedQuerySourceWhere\":\n  \"My Items\" I\n    where I \u003e 1\n    return I"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "20:3-22:12",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "22:12",
+                "name": "I",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "AliasRef"
+              },
+              "locator": "22:5-22:12",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "20:3-20:12",
+                  "name": "My Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "20:3-20:14",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "21:5-21:15",
+              "operand": [
+                {
+                  "locator": "21:11",
+                  "name": "I",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "AliasRef"
+                },
+                {
+                  "locator": "21:15",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "locator": "19:1-22:12",
+          "name": "QuotedQuerySourceWhere",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QuotedRelationshipSource\":\n  \"My Items\" I\n    with \"My Items\" J such that I = J\n    return I"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "25:3-27:12",
+            "relationship": [
+              {
+                "alias": "J",
+                "expression": {
+                  "locator": "26:10-26:19",
+                  "name": "My Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "26:5-26:37",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "suchThat": {
+                  "locator": "26:33-26:37",
+                  "operand": [
+                    {
+                      "locator": "26:33",
+                      "name": "I",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "AliasRef"
+                    },
+                    {
+                      "locator": "26:37",
+                      "name": "J",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "With"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "27:12",
+                "name": "I",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "AliasRef"
+              },
+              "locator": "27:5-27:12",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "25:3-25:12",
+                  "name": "My Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "25:3-25:14",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "24:1-27:12",
+          "name": "QuotedRelationshipSource",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define function \"My Function\"(x Integer) returns Integer: x + 1"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "29:59-29:63",
+            "operand": [
+              {
+                "locator": "29:59",
+                "name": "x",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "OperandRef"
+              },
+              {
+                "locator": "29:63",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "29:1-29:63",
+          "name": "My Function",
+          "operand": [
+            {
+              "name": "x",
+              "operandTypeSpecifier": {
+                "locator": "29:33-29:39",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QuotedFunctionCall\": \"My Function\"(1)"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "30:30-30:45",
+            "name": "My Function",
+            "operand": [
+              {
+                "locator": "30:44",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "30:1-30:45",
+          "name": "QuotedFunctionCall",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

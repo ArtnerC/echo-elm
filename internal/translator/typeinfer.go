@@ -108,6 +108,9 @@ var overloadedOps = map[string]bool{
 	"Less": true, "LessOrEqual": true, "Greater": true, "GreaterOrEqual": true,
 	// Duration/Difference between datetimes (multiple precision overloads)
 	"DurationBetween": true, "DifferenceBetween": true,
+	// Component extraction has Date and DateTime overloads. DateFrom, TimeFrom
+	// and TimezoneOffsetFrom are DateTime-only, so they are not listed here.
+	"DateTimeComponentFrom": true,
 	// Age (polymorphic by FHIR vs QDM patient type)
 	"CalculateAge": true, "CalculateAgeAt": true,
 	// Aggregate (polymorphic by list element type)
@@ -174,6 +177,53 @@ var neverSigOps = map[string]bool{
 	// Binary string concatenation via `+` is folded to Concatenate, which
 	// CQF always serialises with signature: [] even in All mode.
 	"Concatenate": true,
+}
+
+// fixedResultTypes gives the result type of every operator whose type does not
+// depend on its operands. Operators whose result follows an operand (arithmetic,
+// set operations, Coalesce, …) are resolved from the operand instead and are not
+// listed here.
+var fixedResultTypes = map[string]typeSpec{
+	// Boolean-valued
+	"Not": boolTS, "IsNull": boolTS, "IsTrue": boolTS, "IsFalse": boolTS,
+	"Exists": boolTS, "IsIncludedIn": boolTS,
+	"ProperIn": boolTS, "ProperContains": boolTS,
+	"ProperIncludes": boolTS, "ProperIncludedIn": boolTS,
+	"Starts": boolTS, "Ends": boolTS, "During": boolTS, "Within": boolTS,
+	"Equivalent": boolTS, "NotEquivalent": boolTS,
+	"AllTrue": boolTS, "AnyTrue": boolTS, "InValueSet": boolTS, "InCodeSystem": boolTS,
+	"AnyInValueSet": boolTS, "AnyInCodeSystem": boolTS,
+	"CanConvertQuantity": boolTS, "SameOrOverlaps": boolTS,
+	"ConvertsToBoolean": boolTS, "ConvertsToDate": boolTS, "ConvertsToDateTime": boolTS,
+	"ConvertsToDecimal": boolTS, "ConvertsToInteger": boolTS, "ConvertsToLong": boolTS,
+	"ConvertsToQuantity": boolTS, "ConvertsToRatio": boolTS, "ConvertsToString": boolTS,
+	"ConvertsToTime": boolTS,
+
+	// String-valued
+	"Upper": strTS, "Lower": strTS, "Substring": strTS, "Combine": strTS,
+	"ReplaceMatches": strTS, "Concatenate": strTS, "ToString": strTS,
+
+	// Integer-valued
+	"IndexOf": intTS, "PositionOf": intTS, "LastPositionOf": intTS,
+	"Length": intTS, "Count": intTS,
+	"ToInteger": intTS, "Truncate": intTS, "Floor": intTS, "Ceiling": intTS,
+	"TimezoneOffsetFrom": decTS,
+
+	// Decimal-valued
+	"ToDecimal": decTS, "Ln": decTS, "Log": decTS, "Exp": decTS, "Sqrt": decTS,
+
+	// Date/time-valued
+	"ToDate": dateTS, "DateFrom": dateTS,
+	"ToDateTime": dateTimeTS, "Now": dateTimeTS,
+	"ToTime": timeTS, "TimeFrom": timeTS, "TimeOfDay": timeTS,
+	"Today": dateTS,
+
+	// Other scalar
+	"ToQuantity": quantityTS, "ToLong": longTS, "ToBoolean": boolTS,
+	"Message": anyTS,
+
+	// Collection-valued
+	"Split": listTS{strTS}, "SplitOnMatches": listTS{strTS},
 }
 
 // computeSig builds the ELM signature JSON for an operator and its translated operands.
@@ -276,6 +326,32 @@ func (t *Translator) buildFixedSigOverride(operands []elm.Expression, overrides 
 // computeInSig handles the "In" operator signature, which follows special rules
 // in Overloads mode: only emit a signature when list-promotion was applied or
 // when the interval RHS has a null bound (requiring null coercion at runtime).
+// computeFunctionRefSig builds the signature for a FunctionRef. At
+// SignatureLevel=Overloads the signature only disambiguates overloaded calls, so
+// a function defined exactly once in this library gets none. Calls into included
+// libraries keep the signature: their definitions are not fully resolved here,
+// and the common case (FHIRHelpers.ToString, ToDateTime, …) is overloaded.
+func (t *Translator) computeFunctionRefSig(libraryName, name string, operands []elm.Expression) json.RawMessage {
+	level := t.opts.SignatureLevel
+	if level == "Overloads" || level == "Differing" {
+		if libraryName == "" && t.localFuncCounts[name] == 1 {
+			return t.cqfEmptyArrayField()
+		}
+	}
+	return t.computeSig("FunctionRef", operands)
+}
+
+// computeInSig builds the signature for an ELM In node. demoted reports that
+// the node came from rewriting `included in` / `during` into In rather than from
+// a literal `in`.
+//
+// At Overloads/Differing, CQF records the resolved signature when a coercion was
+// needed to reach the chosen overload.
+//
+// CQF also emits a signature for some In expressions where no coercion happened
+// — `2 in {1,2,3}` and `"Day" included in "Period"` both carry one while
+// `5 in Interval[1,10]` and `"Day" in "Period"` do not. The discriminator is not
+// yet understood; see the sig-overloads note on elm-nodes/MembershipOperators.cql.
 func (t *Translator) computeInSig(lhs, rhs elm.Expression, listPromoted bool) json.RawMessage {
 	level := t.opts.SignatureLevel
 	if level == "" || level == "None" {
@@ -284,7 +360,6 @@ func (t *Translator) computeInSig(lhs, rhs elm.Expression, listPromoted bool) js
 	if level == "All" {
 		return t.buildInferredSig([]elm.Expression{lhs, rhs})
 	}
-	// Overloads/Differing: emit signature only when coercion is required.
 	if listPromoted || hasNullIntervalBound(rhs) {
 		return t.buildInferredSig([]elm.Expression{lhs, rhs})
 	}
@@ -481,6 +556,19 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 			inner = anyTS
 		}
 		return intervalTS{inner}
+	case *ast.TupleTypeSpecifier:
+		fields := make([]tupleField, 0, len(v.Elements))
+		for _, el := range v.Elements {
+			if el == nil {
+				continue
+			}
+			fts := astTypeSpecToTypeSpec(el.Type)
+			if fts == nil {
+				fts = anyTS
+			}
+			fields = append(fields, tupleField{name: el.Name, ts: fts})
+		}
+		return tupleTS{fields: fields}
 	}
 	return nil
 }
@@ -509,6 +597,19 @@ func elmTypeSpecToTypeSpec(ts elm.TypeSpecifier) typeSpec {
 			inner = anyTS
 		}
 		return listTS{inner}
+	case *elm.TupleTypeSpecifier:
+		fields := make([]tupleField, 0, len(v.Element))
+		for _, el := range v.Element {
+			if el == nil {
+				continue
+			}
+			fts := elmTypeSpecToTypeSpec(el.ElementType)
+			if fts == nil {
+				fts = anyTS
+			}
+			fields = append(fields, tupleField{name: el.Name, ts: fts})
+		}
+		return tupleTS{fields: fields}
 	}
 	return nil
 }
@@ -528,6 +629,12 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		return anyTS
 	case *elm.QuantityNode:
 		return quantityTS
+	case *elm.RatioNode:
+		return namedTS{typesystem.TypeRatio}
+	case *elm.CodeNode:
+		return namedTS{typesystem.TypeCode}
+	case *elm.ConceptNode:
+		return namedTS{typesystem.TypeConcept}
 	case *elm.DateNode:
 		return dateTS
 	case *elm.DateTimeNode:
@@ -557,15 +664,23 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "ToList":
 			// ToList(scalar) → List<typeof(scalar)>
 			return listTS{t.inferTypeSpec(v.Operand)}
-		case "Negate", "Abs", "Truncate", "Floor", "Ceiling", "Successor", "Predecessor":
-			// Numeric unary ops preserve operand type.
+		case "Negate", "Abs", "Successor", "Predecessor":
+			// These preserve the operand type.
 			return t.inferTypeSpec(v.Operand)
+		case "Truncate", "Floor", "Ceiling":
+			// Decimal → Integer: these round to a whole number.
+			return intTS
 		case "Start", "End":
 			// Start/End of an Interval returns the point type.
 			if iv, ok := t.inferTypeSpec(v.Operand).(intervalTS); ok {
 				return iv.point
 			}
-		case "Width", "Size":
+		case "Width":
+			if iv, ok := t.inferTypeSpec(v.Operand).(intervalTS); ok {
+				return iv.point
+			}
+			return quantityTS
+		case "Size":
 			return quantityTS
 		case "IsNull", "IsTrue", "IsFalse", "Not", "Exists":
 			return boolTS
@@ -575,6 +690,9 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			if lt, ok := t.inferTypeSpec(v.Operand).(listTS); ok {
 				return lt.elem
 			}
+		}
+		if ts, ok := fixedResultTypes[v.Operator]; ok {
+			return ts
 		}
 	case *elm.ListNode:
 		if v.TypeSpec != nil {
@@ -589,15 +707,29 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			// Prefer the first non-null element for type inference.
 			for _, el := range v.Element {
 				if !isNullLike(el) {
-					return listTS{t.inferTypeSpec(el)}
+					return listTS{t.nodeResultTS(el)}
 				}
 			}
-			return listTS{t.inferTypeSpec(v.Element[0])}
+			return listTS{t.nodeResultTS(v.Element[0])}
 		}
 		return listTS{anyTS}
 	case *elm.AggregateExpressionNode:
-		// The source expression is the list being aggregated.
-		return t.inferTypeSpec(v.Source)
+		// An aggregate reduces List<T> to a scalar. Most yield T; the
+		// statistical ones are Decimal-valued regardless of element type, and
+		// Count is always Integer.
+		switch v.Operator {
+		case "Count":
+			return intTS
+		case "Avg", "Median", "StdDev", "PopulationStdDev", "Variance",
+			"PopulationVariance", "GeometricMean":
+			return decTS
+		case "AllTrue", "AnyTrue":
+			return boolTS
+		}
+		if lt, ok := t.inferTypeSpec(v.Source).(listTS); ok {
+			return lt.elem
+		}
+		return anyTS
 	case *elm.IntervalNode:
 		if v.Low != nil {
 			if _, isNull := v.Low.(*elm.NullNode); !isNull {
@@ -619,8 +751,24 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 				return ts
 			}
 		}
+	case *elm.IsNode:
+		return boolTS
 	case *elm.IfNode:
 		return t.inferTypeSpec(v.Then)
+	case *elm.CaseNode:
+		// The result is the common type of the branches; the first resolvable
+		// then-branch stands in for it, falling back to the else.
+		for _, ci := range v.CaseItem {
+			if ci == nil || ci.Then == nil {
+				continue
+			}
+			if ts := t.inferTypeSpec(ci.Then); !isAnyTS(ts) {
+				return ts
+			}
+		}
+		if v.Else != nil {
+			return t.inferTypeSpec(v.Else)
+		}
 	case *elm.ParameterRefNode:
 		if ts, ok := t.paramTypeSpecs[v.Name]; ok {
 			return ts
@@ -633,9 +781,46 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return ts
 		}
 	case *elm.ExpressionRefNode:
+		if v.LibraryName != "" {
+			if ts, ok := t.libDefTypes[v.LibraryName][v.Name]; ok {
+				return ts
+			}
+			break
+		}
 		if ts, ok := t.defTypeSpecs[v.Name]; ok {
+			// A definition declared in a retrieve context evaluates to one value
+			// per context member when referenced from Unfiltered, so the
+			// reference is list-valued there.
+			if t.inUnfilteredContext() {
+				if declared := t.defContexts[v.Name]; declared != "" && declared != "Unfiltered" {
+					return listTS{ts}
+				}
+			}
 			return ts
 		}
+	case *elm.IdentifierRefNode:
+		// Only reachable from a sort-by expression, where the identifier names a
+		// field of the query's result element ($this being the element itself).
+		if t.sortElementTS != nil {
+			if v.Name == "$this" {
+				return t.sortElementTS
+			}
+			if tt, ok := t.sortElementTS.(tupleTS); ok {
+				for _, f := range tt.fields {
+					if f.name == v.Name {
+						return f.ts
+					}
+				}
+			}
+		}
+	case *elm.CodeRefNode:
+		return namedTS{typesystem.TypeCode}
+	case *elm.ConceptRefNode:
+		return namedTS{typesystem.TypeConcept}
+	case *elm.CodeSystemRefNode:
+		return namedTS{typesystem.TypeCodeSystem}
+	case *elm.ValueSetRefNode:
+		return namedTS{typesystem.TypeValueSet}
 	case *elm.AliasRefNode:
 		// Walk alias scopes from innermost outward.
 		for i := len(t.queryAliasTypeSpecs) - 1; i >= 0; i-- {
@@ -650,12 +835,16 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			}
 		}
 	case *elm.QueryNode:
+		// An aggregate clause reduces the query to a single value.
+		if v.Aggregate != nil && v.Aggregate.Expression != nil {
+			return t.inferTypeSpec(v.Aggregate.Expression)
+		}
 		// Query result type = List<returnElementType>; default = List<sourceElementType>.
 		if v.Return != nil && v.Return.Expression != nil {
-			return listTS{t.inferTypeSpec(v.Return.Expression)}
+			return listTS{t.nodeResultTS(v.Return.Expression)}
 		}
 		if len(v.Source) > 0 && v.Source[0] != nil {
-			if lt, ok := t.inferTypeSpec(v.Source[0].Expression).(listTS); ok {
+			if lt, ok := t.nodeResultTS(v.Source[0].Expression).(listTS); ok {
 				return lt
 			}
 		}
@@ -682,8 +871,13 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "Concatenate":
 			return strTS
 		case "Coalesce":
-			// Result is the (common) type of the first non-null operand; approximate
-			// with the first operand's type.
+			// The result is the common type of the alternatives: an untyped null
+			// among them leaves no common type but Any.
+			for _, op := range v.Operand {
+				if isNullLike(op) {
+					return anyTS
+				}
+			}
 			if len(v.Operand) > 0 {
 				return t.inferTypeSpec(v.Operand[0])
 			}
@@ -702,14 +896,41 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 				}
 			}
 		}
+		if ts, ok := fixedResultTypes[v.Operator]; ok {
+			return ts
+		}
+	case *elm.NamedOperatorExpressionNode:
+		if ts, ok := fixedResultTypes[v.Operator]; ok {
+			return ts
+		}
+		// Round preserves its operand's numeric type.
+		if v.Operator == "Round" && len(v.Operands) > 0 {
+			return t.inferTypeSpec(v.Operands[0].Value)
+		}
 	case *elm.CalculateAgeNode:
 		return intTS
+	case *elm.UnaryPrecisionOperatorNode:
+		// DateTimeComponentFrom extracts a numeric component.
+		if ts, ok := fixedResultTypes[v.Operator]; ok {
+			return ts
+		}
+		return intTS
 	case *elm.PrecisionOperatorNode:
-		// CalculateAgeAt and similar return Integer.
+		if ts, ok := fixedResultTypes[v.Operator]; ok {
+			return ts
+		}
+		// CalculateAgeAt, DurationBetween and similar return Integer.
 		return intTS
 	case *elm.InValueSetNode:
 		return boolTS
 	case *elm.FunctionRefNode:
+		// A call to a function declared in this library resolves to its
+		// declared return type.
+		if v.LibraryName == "" {
+			if ts, ok := t.localFuncReturns[v.Name]; ok {
+				return ts
+			}
+		}
 		// FHIRHelpers.ToString (and other primitive helpers) return primitive types.
 		if v.LibraryName == t.fhirHelpersLocalName {
 			switch v.Name {
@@ -776,25 +997,129 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 	return anyTS
 }
 
-// fhirTypeToCQLTypeSpec maps a FHIR primitive type name (from FHIRPropertyType)
-// to the CQL typeSpec that CQF emits for the post-FHIRHelpers-coerced value.
+// fhirTypeToCQLTypeSpec maps a FHIR type name (from FHIRPropertyType) to the CQL
+// typeSpec that CQF resolves it to. The mapping runs through the System type of
+// the FHIR type's "value" element, so it covers real primitives (FHIR.code) and
+// binding types (FHIR.AdministrativeGender) alike — both resolve to String.
 func fhirTypeToCQLTypeSpec(fhirType string) typeSpec {
-	switch fhirType {
-	case "boolean":
+	switch typesystem.FHIRPrimitiveValueType[fhirType] {
+	case "Boolean":
 		return boolTS
-	case "integer", "positiveInt", "unsignedInt":
+	case "Integer":
 		return intTS
-	case "decimal":
+	case "Long":
+		return longTS
+	case "Decimal":
 		return decTS
-	case "string", "code", "uri", "url", "canonical", "oid", "id", "markdown", "base64Binary", "xhtml":
+	case "String":
 		return strTS
-	case "dateTime", "instant":
+	case "DateTime":
 		return dateTimeTS
-	case "date":
+	case "Date":
 		return dateTS
-	case "time":
+	case "Time":
 		return timeTS
+	case "Quantity":
+		return quantityTS
 	default:
 		return anyTS
 	}
+}
+
+// toELMTypeSpecifier converts an inferred typeSpec into the ELM TypeSpecifier
+// node used for resultTypeSpecifier. Named types return nil: they are recorded
+// in resultTypeName instead.
+func toELMTypeSpecifier(ts typeSpec) elm.TypeSpecifier {
+	switch v := ts.(type) {
+	case namedTS:
+		return &elm.NamedTypeSpecifier{Name: v.name}
+	case listTS:
+		return &elm.ListTypeSpecifier{ElementType: toELMTypeSpecifier(v.elem)}
+	case intervalTS:
+		return &elm.IntervalTypeSpecifier{PointType: toELMTypeSpecifier(v.point)}
+	case tupleTS:
+		els := make([]*elm.TupleElementDefinition, 0, len(v.fields))
+		for _, f := range v.fields {
+			els = append(els, &elm.TupleElementDefinition{
+				Name:        f.name,
+				ElementType: toELMTypeSpecifier(f.ts),
+			})
+		}
+		return &elm.TupleTypeSpecifier{Element: els}
+	}
+	return nil
+}
+
+// resultTypeOf splits an inferred typeSpec into the (resultTypeName,
+// resultTypeSpecifier) pair CQF records. A named type goes in the name; every
+// structured type goes in the specifier. An unresolved type yields neither —
+// stamping Any where CQF resolved a concrete type would be worse than omitting.
+func resultTypeOf(ts typeSpec) (string, elm.TypeSpecifier) {
+	if ts == nil {
+		return "", nil
+	}
+	if n, ok := ts.(namedTS); ok {
+		if n.name == "" || n.name == anyTS.name {
+			return "", nil
+		}
+		return n.name, nil
+	}
+	return "", toELMTypeSpecifier(ts)
+}
+
+// stampTypeSpecifier records the type a source-declared type specifier denotes.
+// CQF stamps these (an `as` target, an operand or parameter type, and their
+// nested element/point types) but not the specifiers it synthesizes to carry
+// result-type information — those are type metadata, not nodes from the source.
+func stampTypeSpecifier(spec elm.TypeSpecifier) {
+	if spec == nil {
+		return
+	}
+	ts := elmTypeSpecToTypeSpec(spec)
+	switch v := spec.(type) {
+	case *elm.NamedTypeSpecifier:
+		v.ResultTypeName = v.Name
+	case *elm.IntervalTypeSpecifier:
+		stampTypeSpecifier(v.PointType)
+		_, v.ResultTypeSpecifier = resultTypeOf(ts)
+	case *elm.ListTypeSpecifier:
+		stampTypeSpecifier(v.ElementType)
+		_, v.ResultTypeSpecifier = resultTypeOf(ts)
+	case *elm.TupleTypeSpecifier:
+		for _, el := range v.Element {
+			stampTypeSpecifier(el.ElementType)
+		}
+		_, v.ResultTypeSpecifier = resultTypeOf(ts)
+	case *elm.ChoiceTypeSpecifier:
+		for _, c := range v.Choice {
+			stampTypeSpecifier(c)
+		}
+	}
+}
+
+// nodeResultTS returns the type already recorded on a node, falling back to
+// inference. Preferring the recorded value matters for FHIR properties, whose
+// node carries the FHIR type while inference reports the type it converts to.
+func (t *Translator) nodeResultTS(e elm.Expression) typeSpec {
+	if name, spec := elm.GetResultType(e); name != "" || spec != nil {
+		if name != "" {
+			return namedTS{name}
+		}
+		if ts := elmTypeSpecToTypeSpec(spec); ts != nil {
+			return ts
+		}
+	}
+	return t.inferTypeSpec(e)
+}
+
+// isAnyTS reports whether ts is the unresolved/Any named type.
+func isAnyTS(ts typeSpec) bool {
+	n, ok := ts.(namedTS)
+	return ok && n.name == anyTS.name
+}
+
+// inUnfilteredContext reports whether the statement being translated is in the
+// Unfiltered context (the default when none is declared).
+func (t *Translator) inUnfilteredContext() bool {
+	return t.currentContextName == "" || t.currentContextName == "Unfiltered"
 }

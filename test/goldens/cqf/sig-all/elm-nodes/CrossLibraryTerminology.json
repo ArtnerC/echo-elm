@@ -1,0 +1,129 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "All",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "CrossLibraryTerminology",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "T",
+          "path": "SharedTerminology",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "SNOMED",
+            "type": "CodeSystemRef"
+          },
+          "name": "QualifiedCodeSystem"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "Diabetes",
+            "type": "CodeRef"
+          },
+          "name": "QualifiedCode"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "Diabetes VS",
+            "preserve": true,
+            "type": "ValueSetRef"
+          },
+          "name": "QualifiedValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "SharedExpression",
+            "type": "ExpressionRef"
+          },
+          "name": "QualifiedExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "libraryName": "T",
+              "name": "Diabetes",
+              "type": "CodeRef"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}Code",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "InValueSet",
+            "valueset": {
+              "libraryName": "T",
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "name": "QualifiedCodeInQualifiedValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "type": "Literal",
+              "value": "some-code",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [
+              {
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            ],
+            "type": "InValueSet",
+            "valueset": {
+              "libraryName": "T",
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "name": "StringInQualifiedValueSet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -1,7 +1,6 @@
 package parity
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -348,7 +347,9 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 
 // CompareVersionGoldens walks two version golden trees and reports any files
 // that differ. Returns a list of differing paths (relative to the golden root).
-func CompareVersionGoldens(outputDir, versionA, versionB string) ([]string, error) {
+// Fixture paths in skip (as listed in corpus.yaml under versionDivergent) are
+// known to differ between upstream versions and are not reported.
+func CompareVersionGoldens(outputDir, versionA, versionB string, skip map[string]bool) ([]string, error) {
 	dirA := filepath.Join(outputDir, versionA)
 	var diffs []string
 
@@ -357,6 +358,9 @@ func CompareVersionGoldens(outputDir, versionA, versionB string) ([]string, erro
 			return err
 		}
 		rel, _ := filepath.Rel(dirA, pathA)
+		if skip[fixturePathFromGoldenRel(rel)] {
+			return nil
+		}
 		pathB := filepath.Join(outputDir, versionB, rel)
 
 		aBytes, err := os.ReadFile(pathA)
@@ -371,7 +375,7 @@ func CompareVersionGoldens(outputDir, versionA, versionB string) ([]string, erro
 		if err != nil {
 			return err
 		}
-		if !bytes.Equal(aBytes, bBytes) {
+		if normalizeJSON(string(aBytes)) != normalizeJSON(string(bBytes)) {
 			diffs = append(diffs, rel)
 		}
 		return nil
@@ -379,7 +383,42 @@ func CompareVersionGoldens(outputDir, versionA, versionB string) ([]string, erro
 	return diffs, err
 }
 
-// normalizeJSON re-marshals JSON with sorted keys and consistent spacing.
+// fixturePathFromGoldenRel converts a golden path relative to a version root
+// ("default/elm-nodes/Foo.json") into the corpus fixture path it came from
+// ("elm-nodes/Foo.cql").
+func fixturePathFromGoldenRel(rel string) string {
+	rel = filepath.ToSlash(rel)
+	if i := strings.Index(rel, "/"); i >= 0 {
+		rel = rel[i+1:]
+	}
+	return strings.TrimSuffix(rel, ".json") + ".cql"
+}
+
+// normalizeJSON re-marshals JSON with sorted keys and consistent spacing, after
+// reducing the few things that cannot be compared across translators.
+//
+// The rule for adding anything here: a field may only be normalized away when it
+// carries no meaning for a consumer of the ELM, or when what it means is checked
+// some other way. What is currently reduced, and why:
+//
+//   - translatorVersion — names the producing translator; volatile by definition.
+//   - empty "annotation": [] and "t": [] arrays — CQF 4.8.0 emits them where
+//     3.29.0 omits them, so they are pure serializer asymmetry.
+//   - "t" tag arrays are sorted by name — tag content is compared, ordering is not.
+//   - localId (and the "r" references that point at it) — an internal node index.
+//     CQF numbers from a pre-order ANTLR rule visit; echo-elm uses its own counter.
+//   - annotation s-tree shape — reduced to its concatenated leaf text. CQF splits
+//     the source into per-grammar-rule segments ("define ", "\"X\"", ":\n  ", …)
+//     while echo-elm emits one span. The text itself is still compared, so wrong
+//     annotation content still fails; only the segmentation is unverified.
+//
+// Deliberately NOT normalized, because each is meaningful and each was hiding a
+// real defect when it was: statement/definition ordering, resultTypeName and
+// resultTypeSpecifier, and translatorOptions/signatureLevel.
+//
+// CqlToElmError annotations are dropped because echo-elm emits no diagnostic
+// annotations at all yet; that gap is tracked in issues/03-cqf-parity-gaps.md
+// rather than being silently absorbed here.
 func normalizeJSON(s string) string {
 	var v interface{}
 	if err := json.Unmarshal([]byte(s), &v); err != nil {
@@ -394,28 +433,14 @@ func normalizeJSON(s string) string {
 	return string(b)
 }
 
-// canonicalizeAnnotationFields makes parity-irrelevant fields comparable across
-// translators that may number nodes differently or produce different parse-tree
-// shapes inside annotation s-trees. Specifically:
-//
-//   - localId values are stripped from every map (CQF assigns sequential IDs from
-//     pre-order ANTLR rule visit; echo-elm uses its own counter — the absolute
-//     values are an internal indexing scheme, not semantic ELM content).
-//   - r references inside annotation s-trees are stripped (they reference localId).
-//   - annotation s-trees are collapsed to their concatenated leaf text so that
-//     differences in parse-rule wrapping shape (CQF emits extra "rule" layers
-//     around each operator that echo-elm does not model) do not break parity.
-//     The semantic invariant preserved: the concatenation of all value strings
-//     equals the def's source text.
-//   - resultTypeName / resultTypeSpecifier are stripped because echo-elm's type
-//     inference is verified by dedicated unit tests (type_inference_test.go) —
-//     this parity check focuses on annotation s-tree coverage and ELM structure.
+// canonicalizeAnnotationFields strips the internal node index and reduces
+// annotation s-trees to their text. See normalizeJSON for the full rationale;
+// TestAnnotationTextInvariant checks that the retained text is in fact the
+// def's source, so the reduction is not a blank cheque.
 func canonicalizeAnnotationFields(v interface{}) {
 	switch node := v.(type) {
 	case map[string]interface{}:
 		delete(node, "localId")
-		delete(node, "resultTypeName")
-		delete(node, "resultTypeSpecifier")
 		// Recognize Annotation entries and collapse their s-tree.
 		if t, _ := node["type"].(string); t == "Annotation" {
 			if sv, ok := node["s"]; ok {
@@ -481,10 +506,20 @@ func stripEmptyAnnotations(v interface{}) {
 		if arr, ok := node["annotation"].([]interface{}); ok && len(arr) == 0 {
 			delete(node, "annotation")
 		}
-		// Strip empty tag array from Annotation nodes
-		if t, _ := node["type"].(string); t == "Annotation" {
-			if arr, ok := node["t"].([]interface{}); ok && len(arr) == 0 {
-				delete(node, "t")
+		// Strip empty tag array from Annotation nodes; sort non-empty t arrays by name.
+		if typ, _ := node["type"].(string); typ == "Annotation" {
+			if arr, ok := node["t"].([]interface{}); ok {
+				if len(arr) == 0 {
+					delete(node, "t")
+				} else {
+					sort.SliceStable(arr, func(i, j int) bool {
+						mi, _ := arr[i].(map[string]interface{})
+						mj, _ := arr[j].(map[string]interface{})
+						ni, _ := mi["name"].(string)
+						nj, _ := mj["name"].(string)
+						return ni < nj
+					})
+				}
 			}
 		}
 		for _, child := range node {
@@ -505,10 +540,13 @@ func stripVolatileFields(m map[string]interface{}) {
 			var kept []interface{}
 			for _, a := range anns {
 				if ann, ok := a.(map[string]interface{}); ok {
+					// translatorVersion is the only genuinely volatile field here:
+					// it names the producing translator. translatorOptions and
+					// signatureLevel describe how the ELM was produced and are
+					// compared. CqlToElmError annotations carry diagnostics that
+					// echo-elm does not yet emit; see the parity notes in
+					// issues/03-cqf-parity-gaps.md.
 					delete(ann, "translatorVersion")
-					delete(ann, "translatorOptions")
-					delete(ann, "signatureLevel")
-					delete(ann, "compatibilityLevel")
 					if t, _ := ann["type"].(string); t == "CqlToElmError" {
 						continue
 					}

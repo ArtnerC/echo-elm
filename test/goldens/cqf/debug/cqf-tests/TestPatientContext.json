@@ -2,15 +2,15 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "217",
           "s": [
             {
               "value": [
-                "",
                 "library TestPatientContext"
               ]
             }
@@ -22,12 +22,10 @@
     "contexts": {
       "def": [
         {
-          "localId": "211",
           "locator": "5:1-5:15",
           "name": "Patient"
         },
         {
-          "localId": "214",
           "locator": "9:1-9:18",
           "name": "Unfiltered"
         }
@@ -36,7 +34,6 @@
     "identifier": {
       "id": "TestPatientContext"
     },
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -48,16 +45,10 @@
           "annotation": [
             {
               "s": {
-                "r": "212",
                 "s": [
                   {
-                    "r": "213",
                     "value": [
-                      "",
-                      "define ",
-                      "Patient",
-                      ": ",
-                      "true"
+                      "define Patient: true"
                     ]
                   }
                 ]
@@ -67,14 +58,12 @@
           ],
           "context": "Patient",
           "expression": {
-            "localId": "213",
             "locator": "7:17-7:20",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
             "type": "Literal",
             "value": "true",
             "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
           },
-          "localId": "212",
           "locator": "7:1-7:20",
           "name": "Patient",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -84,24 +73,10 @@
           "annotation": [
             {
               "s": {
-                "r": "217",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Patients",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "218",
-                    "s": [
-                      {
-                        "value": [
-                          "Patient"
-                        ]
-                      }
+                      "define Patients: Patient"
                     ]
                   }
                 ]
@@ -111,30 +86,24 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "218",
             "locator": "11:18-11:24",
             "name": "Patient",
             "resultTypeSpecifier": {
               "elementType": {
-                "localId": "220",
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               },
-              "localId": "219",
               "type": "ListTypeSpecifier"
             },
             "type": "ExpressionRef"
           },
-          "localId": "217",
           "locator": "11:1-11:24",
           "name": "Patients",
           "resultTypeSpecifier": {
             "elementType": {
-              "localId": "222",
               "name": "{urn:hl7-org:elm-types:r1}Boolean",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "221",
             "type": "ListTypeSpecifier"
           }
         }
@@ -143,7 +112,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
@@ -151,26 +119,10 @@
           "annotation": [
             {
               "s": {
-                "r": "206",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "using "
-                    ]
-                  },
-                  {
-                    "s": [
-                      {
-                        "value": [
-                          "QDM"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "value": [
-                      " version '5.3'"
+                      "using QDM version '5.3'"
                     ]
                   }
                 ]
@@ -178,7 +130,6 @@
               "type": "Annotation"
             }
           ],
-          "localId": "206",
           "localIdentifier": "QDM",
           "locator": "3:1-3:23",
           "uri": "urn:healthit-gov:qdm:v5_3",

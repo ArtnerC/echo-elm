@@ -1,0 +1,354 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for block-comment @tag annotations.\n//\n// CQF has no allowlist of spec-defined tag names: it emits any tag whose name\n// is a valid CQL identifier and silently drops the rest. So @author and\n// @customThing produce tag data while @measure-component and @dotted.name do not.\nlibrary AnnotationTags version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "AnnotationTags",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "/*\n@author: Chopin\n@description: Every tag name here is a valid identifier\n@comment: C\n@seealso: S\n@deprecated: X\n@notes: N\n@jurisdiction: J\n@region: R\n@terminologyKey: T\n@customThing: CT\n@with_underscore: U\n@with2digits: D2\n@UPPER: UP\n@_leading: L\n*/\ndefine \"ValidTagNames\": true"
+                    ]
+                  }
+                ]
+              },
+              "t": [
+                {
+                  "name": "UPPER",
+                  "value": "UP"
+                },
+                {
+                  "name": "_leading",
+                  "value": "L"
+                },
+                {
+                  "name": "author",
+                  "value": "Chopin"
+                },
+                {
+                  "name": "comment",
+                  "value": "C"
+                },
+                {
+                  "name": "customThing",
+                  "value": "CT"
+                },
+                {
+                  "name": "deprecated",
+                  "value": "X"
+                },
+                {
+                  "name": "description",
+                  "value": "Every tag name here is a valid identifier"
+                },
+                {
+                  "name": "jurisdiction",
+                  "value": "J"
+                },
+                {
+                  "name": "notes",
+                  "value": "N"
+                },
+                {
+                  "name": "region",
+                  "value": "R"
+                },
+                {
+                  "name": "seealso",
+                  "value": "S"
+                },
+                {
+                  "name": "terminologyKey",
+                  "value": "T"
+                },
+                {
+                  "name": "with2digits",
+                  "value": "D2"
+                },
+                {
+                  "name": "with_underscore",
+                  "value": "U"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "24:25-24:28",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "locator": "24:1-24:28",
+          "name": "ValidTagNames",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "/*\n@measure-component: dropped\n@dotted.name: dropped\n@9leading: dropped\n@description: kept\n*/\ndefine \"InvalidTagNames\": true"
+                    ]
+                  }
+                ]
+              },
+              "t": [
+                {
+                  "name": "description",
+                  "value": "kept"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "32:27-32:30",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "locator": "32:1-32:30",
+          "name": "InvalidTagNames",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "/*\n@description: Determines the cumulative duration of a list of intervals\n@comment: #This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#\n */\ndefine function \"CumulativeDuration\"(Intervals List\u003cInterval\u003cDateTime\u003e\u003e):\n  Sum((collapse Intervals) X return all duration in days of X)"
+                    ]
+                  }
+                ]
+              },
+              "t": [
+                {
+                  "name": "comment",
+                  "value": "#This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#"
+                },
+                {
+                  "name": "description",
+                  "value": "Determines the cumulative duration of a list of intervals"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "40:3-40:62",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "source": {
+              "let": [],
+              "locator": "40:7-40:61",
+              "relationship": [],
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "locator": "40:41-40:61",
+                  "operand": [
+                    {
+                      "operand": {
+                        "locator": "40:61",
+                        "name": "X",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "AliasRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "operand": {
+                        "locator": "40:61",
+                        "name": "X",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "AliasRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    }
+                  ],
+                  "precision": "Day",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "signature": [],
+                  "type": "DurationBetween"
+                },
+                "locator": "40:30-40:61",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "locator": "40:7-40:26",
+                    "operand": [
+                      {
+                        "locator": "40:17-40:25",
+                        "name": "Intervals",
+                        "resultTypeSpecifier": {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "type": "ListTypeSpecifier"
+                        },
+                        "type": "OperandRef"
+                      },
+                      {
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                        "type": "Null"
+                      }
+                    ],
+                    "resultTypeSpecifier": {
+                      "elementType": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    },
+                    "signature": [],
+                    "type": "Collapse"
+                  },
+                  "locator": "40:7-40:28",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Sum"
+          },
+          "locator": "39:1-40:62",
+          "name": "CumulativeDuration",
+          "operand": [
+            {
+              "name": "Intervals",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "locator": "39:53-39:70",
+                  "pointType": {
+                    "locator": "39:62-39:69",
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "locator": "39:48-39:71",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+          "type": "FunctionDef"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

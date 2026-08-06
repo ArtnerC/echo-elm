@@ -2,15 +2,15 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "350",
           "s": [
             {
               "value": [
-                "",
                 "library ConversionFunctionsTest"
               ]
             }
@@ -22,7 +22,6 @@
     "identifier": {
       "id": "ConversionFunctionsTest"
     },
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -34,40 +33,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToIntFromString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "213",
-                    "s": [
-                      {
-                        "value": [
-                          "ToInteger",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "209",
-                        "s": [
-                          {
-                            "value": [
-                              "'42'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ToIntFromString: ToInteger('42')"
                     ]
                   }
                 ]
@@ -77,10 +46,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "213",
             "locator": "3:25-3:39",
             "operand": {
-              "localId": "209",
               "locator": "3:35-3:38",
               "type": "Literal",
               "value": "42",
@@ -89,7 +56,6 @@
             "signature": [],
             "type": "ToInteger"
           },
-          "localId": "208",
           "locator": "3:1-3:39",
           "name": "ToIntFromString"
         },
@@ -98,40 +64,10 @@
           "annotation": [
             {
               "s": {
-                "r": "216",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToDecFromString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "221",
-                    "s": [
-                      {
-                        "value": [
-                          "ToDecimal",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "217",
-                        "s": [
-                          {
-                            "value": [
-                              "'3.14'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ToDecFromString: ToDecimal('3.14')"
                     ]
                   }
                 ]
@@ -141,10 +77,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "221",
             "locator": "4:25-4:41",
             "operand": {
-              "localId": "217",
               "locator": "4:35-4:40",
               "type": "Literal",
               "value": "3.14",
@@ -153,7 +87,6 @@
             "signature": [],
             "type": "ToDecimal"
           },
-          "localId": "216",
           "locator": "4:1-4:41",
           "name": "ToDecFromString"
         },
@@ -162,28 +95,10 @@
           "annotation": [
             {
               "s": {
-                "r": "224",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToStringFromInt",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "228",
-                    "s": [
-                      {
-                        "r": "225",
-                        "value": [
-                          "ToString",
-                          "(",
-                          "42",
-                          ")"
-                        ]
-                      }
+                      "define ToStringFromInt: ToString(42)"
                     ]
                   }
                 ]
@@ -193,10 +108,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "228",
             "locator": "5:25-5:36",
             "operand": {
-              "localId": "225",
               "locator": "5:34-5:35",
               "type": "Literal",
               "value": "42",
@@ -205,7 +118,6 @@
             "signature": [],
             "type": "ToString"
           },
-          "localId": "224",
           "locator": "5:1-5:36",
           "name": "ToStringFromInt"
         },
@@ -214,28 +126,10 @@
           "annotation": [
             {
               "s": {
-                "r": "231",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToStringFromDecimal",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "235",
-                    "s": [
-                      {
-                        "r": "232",
-                        "value": [
-                          "ToString",
-                          "(",
-                          "3.14",
-                          ")"
-                        ]
-                      }
+                      "define ToStringFromDecimal: ToString(3.14)"
                     ]
                   }
                 ]
@@ -245,10 +139,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "235",
             "locator": "6:29-6:42",
             "operand": {
-              "localId": "232",
               "locator": "6:38-6:41",
               "type": "Literal",
               "value": "3.14",
@@ -257,7 +149,6 @@
             "signature": [],
             "type": "ToString"
           },
-          "localId": "231",
           "locator": "6:1-6:42",
           "name": "ToStringFromDecimal"
         },
@@ -266,40 +157,10 @@
           "annotation": [
             {
               "s": {
-                "r": "238",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToBoolFromString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "243",
-                    "s": [
-                      {
-                        "value": [
-                          "ToBoolean",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "239",
-                        "s": [
-                          {
-                            "value": [
-                              "'true'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ToBoolFromString: ToBoolean('true')"
                     ]
                   }
                 ]
@@ -309,10 +170,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "243",
             "locator": "7:26-7:42",
             "operand": {
-              "localId": "239",
               "locator": "7:36-7:41",
               "type": "Literal",
               "value": "true",
@@ -321,7 +180,6 @@
             "signature": [],
             "type": "ToBoolean"
           },
-          "localId": "238",
           "locator": "7:1-7:42",
           "name": "ToBoolFromString"
         },
@@ -330,28 +188,10 @@
           "annotation": [
             {
               "s": {
-                "r": "246",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToStringFromBool",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "250",
-                    "s": [
-                      {
-                        "r": "247",
-                        "value": [
-                          "ToString",
-                          "(",
-                          "true",
-                          ")"
-                        ]
-                      }
+                      "define ToStringFromBool: ToString(true)"
                     ]
                   }
                 ]
@@ -361,10 +201,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "250",
             "locator": "8:26-8:39",
             "operand": {
-              "localId": "247",
               "locator": "8:35-8:38",
               "type": "Literal",
               "value": "true",
@@ -373,7 +211,6 @@
             "signature": [],
             "type": "ToString"
           },
-          "localId": "246",
           "locator": "8:1-8:39",
           "name": "ToStringFromBool"
         },
@@ -382,40 +219,10 @@
           "annotation": [
             {
               "s": {
-                "r": "253",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToDateFromString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "258",
-                    "s": [
-                      {
-                        "value": [
-                          "ToDate",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "254",
-                        "s": [
-                          {
-                            "value": [
-                              "'2020-01-15'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ToDateFromString: ToDate('2020-01-15')"
                     ]
                   }
                 ]
@@ -425,10 +232,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "258",
             "locator": "10:26-10:45",
             "operand": {
-              "localId": "254",
               "locator": "10:33-10:44",
               "type": "Literal",
               "value": "2020-01-15",
@@ -437,7 +242,6 @@
             "signature": [],
             "type": "ToDate"
           },
-          "localId": "253",
           "locator": "10:1-10:45",
           "name": "ToDateFromString"
         },
@@ -446,40 +250,10 @@
           "annotation": [
             {
               "s": {
-                "r": "261",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToDateTimeFromString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "266",
-                    "s": [
-                      {
-                        "value": [
-                          "ToDateTime",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "262",
-                        "s": [
-                          {
-                            "value": [
-                              "'2020-01-15T10:30:00'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ToDateTimeFromString: ToDateTime('2020-01-15T10:30:00')"
                     ]
                   }
                 ]
@@ -489,10 +263,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "266",
             "locator": "11:30-11:62",
             "operand": {
-              "localId": "262",
               "locator": "11:41-11:61",
               "type": "Literal",
               "value": "2020-01-15T10:30:00",
@@ -501,7 +273,6 @@
             "signature": [],
             "type": "ToDateTime"
           },
-          "localId": "261",
           "locator": "11:1-11:62",
           "name": "ToDateTimeFromString"
         },
@@ -510,40 +281,10 @@
           "annotation": [
             {
               "s": {
-                "r": "269",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToTimeFromString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "274",
-                    "s": [
-                      {
-                        "value": [
-                          "ToTime",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "270",
-                        "s": [
-                          {
-                            "value": [
-                              "'10:30:00'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ToTimeFromString: ToTime('10:30:00')"
                     ]
                   }
                 ]
@@ -553,10 +294,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "274",
             "locator": "12:26-12:43",
             "operand": {
-              "localId": "270",
               "locator": "12:33-12:42",
               "type": "Literal",
               "value": "10:30:00",
@@ -565,7 +304,6 @@
             "signature": [],
             "type": "ToTime"
           },
-          "localId": "269",
           "locator": "12:1-12:43",
           "name": "ToTimeFromString"
         },
@@ -574,28 +312,10 @@
           "annotation": [
             {
               "s": {
-                "r": "277",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToStringFromDate",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "285",
-                    "s": [
-                      {
-                        "r": "282",
-                        "value": [
-                          "ToString",
-                          "(",
-                          "@2020-01-15",
-                          ")"
-                        ]
-                      }
+                      "define ToStringFromDate: ToString(@2020-01-15)"
                     ]
                   }
                 ]
@@ -605,19 +325,15 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "285",
             "locator": "14:26-14:46",
             "operand": {
               "day": {
-                "localId": "281",
                 "type": "Literal",
                 "value": "15",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
-              "localId": "282",
               "locator": "14:35-14:45",
               "month": {
-                "localId": "280",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -625,7 +341,6 @@
               "signature": [],
               "type": "Date",
               "year": {
-                "localId": "279",
                 "type": "Literal",
                 "value": "2020",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -634,7 +349,6 @@
             "signature": [],
             "type": "ToString"
           },
-          "localId": "277",
           "locator": "14:1-14:46",
           "name": "ToStringFromDate"
         },
@@ -643,28 +357,10 @@
           "annotation": [
             {
               "s": {
-                "r": "288",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ToStringFromDateTime",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "298",
-                    "s": [
-                      {
-                        "r": "289",
-                        "value": [
-                          "ToString",
-                          "(",
-                          "@2020-01-15T10:30:00",
-                          ")"
-                        ]
-                      }
+                      "define ToStringFromDateTime: ToString(@2020-01-15T10:30:00)"
                     ]
                   }
                 ]
@@ -674,37 +370,30 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "298",
             "locator": "15:30-15:59",
             "operand": {
               "day": {
-                "localId": "292",
                 "type": "Literal",
                 "value": "15",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               "hour": {
-                "localId": "293",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
-              "localId": "289",
               "locator": "15:39-15:58",
               "minute": {
-                "localId": "294",
                 "type": "Literal",
                 "value": "30",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               "month": {
-                "localId": "291",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               "second": {
-                "localId": "295",
                 "type": "Literal",
                 "value": "0",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -712,7 +401,6 @@
               "signature": [],
               "type": "DateTime",
               "year": {
-                "localId": "290",
                 "type": "Literal",
                 "value": "2020",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -721,7 +409,6 @@
             "signature": [],
             "type": "ToString"
           },
-          "localId": "288",
           "locator": "15:1-15:59",
           "name": "ToStringFromDateTime"
         },
@@ -730,49 +417,10 @@
           "annotation": [
             {
               "s": {
-                "r": "301",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ConvertToInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "306",
-                    "s": [
-                      {
-                        "value": [
-                          "convert "
-                        ]
-                      },
-                      {
-                        "r": "303",
-                        "s": [
-                          {
-                            "value": [
-                              "'42'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " to "
-                        ]
-                      },
-                      {
-                        "r": "302",
-                        "s": [
-                          {
-                            "value": [
-                              "Integer"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ConvertToInteger: convert '42' to Integer"
                     ]
                   }
                 ]
@@ -782,10 +430,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "306",
             "locator": "17:26-17:48",
             "operand": {
-              "localId": "303",
               "locator": "17:34-17:37",
               "type": "Literal",
               "value": "42",
@@ -794,7 +440,6 @@
             "signature": [],
             "type": "ToInteger"
           },
-          "localId": "301",
           "locator": "17:1-17:48",
           "name": "ConvertToInteger"
         },
@@ -803,49 +448,10 @@
           "annotation": [
             {
               "s": {
-                "r": "309",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ConvertToDecimal",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "314",
-                    "s": [
-                      {
-                        "value": [
-                          "convert "
-                        ]
-                      },
-                      {
-                        "r": "311",
-                        "s": [
-                          {
-                            "value": [
-                              "'3.14'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " to "
-                        ]
-                      },
-                      {
-                        "r": "310",
-                        "s": [
-                          {
-                            "value": [
-                              "Decimal"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ConvertToDecimal: convert '3.14' to Decimal"
                     ]
                   }
                 ]
@@ -855,10 +461,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "314",
             "locator": "18:26-18:50",
             "operand": {
-              "localId": "311",
               "locator": "18:34-18:39",
               "type": "Literal",
               "value": "3.14",
@@ -867,7 +471,6 @@
             "signature": [],
             "type": "ToDecimal"
           },
-          "localId": "309",
           "locator": "18:1-18:50",
           "name": "ConvertToDecimal"
         },
@@ -876,49 +479,10 @@
           "annotation": [
             {
               "s": {
-                "r": "317",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ConvertToDate",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "322",
-                    "s": [
-                      {
-                        "value": [
-                          "convert "
-                        ]
-                      },
-                      {
-                        "r": "319",
-                        "s": [
-                          {
-                            "value": [
-                              "'2020-01-15'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " to "
-                        ]
-                      },
-                      {
-                        "r": "318",
-                        "s": [
-                          {
-                            "value": [
-                              "Date"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ConvertToDate: convert '2020-01-15' to Date"
                     ]
                   }
                 ]
@@ -928,10 +492,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "322",
             "locator": "19:23-19:50",
             "operand": {
-              "localId": "319",
               "locator": "19:31-19:42",
               "type": "Literal",
               "value": "2020-01-15",
@@ -940,7 +502,6 @@
             "signature": [],
             "type": "ToDate"
           },
-          "localId": "317",
           "locator": "19:1-19:50",
           "name": "ConvertToDate"
         },
@@ -949,36 +510,10 @@
           "annotation": [
             {
               "s": {
-                "r": "325",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IsInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "326",
-                    "s": [
-                      {
-                        "r": "327",
-                        "value": [
-                          "42",
-                          " is "
-                        ]
-                      },
-                      {
-                        "r": "328",
-                        "s": [
-                          {
-                            "value": [
-                              "Integer"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IsInteger: 42 is Integer"
                     ]
                   }
                 ]
@@ -989,15 +524,12 @@
           "context": "Unfiltered",
           "expression": {
             "isTypeSpecifier": {
-              "localId": "328",
               "locator": "21:25-21:31",
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "326",
             "locator": "21:19-21:31",
             "operand": {
-              "localId": "327",
               "locator": "21:19-21:20",
               "type": "Literal",
               "value": "42",
@@ -1006,7 +538,6 @@
             "signature": [],
             "type": "Is"
           },
-          "localId": "325",
           "locator": "21:1-21:31",
           "name": "IsInteger"
         },
@@ -1015,36 +546,10 @@
           "annotation": [
             {
               "s": {
-                "r": "331",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IsDecimal",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "332",
-                    "s": [
-                      {
-                        "r": "333",
-                        "value": [
-                          "3.14",
-                          " is "
-                        ]
-                      },
-                      {
-                        "r": "334",
-                        "s": [
-                          {
-                            "value": [
-                              "Decimal"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IsDecimal: 3.14 is Decimal"
                     ]
                   }
                 ]
@@ -1055,15 +560,12 @@
           "context": "Unfiltered",
           "expression": {
             "isTypeSpecifier": {
-              "localId": "334",
               "locator": "22:27-22:33",
               "name": "{urn:hl7-org:elm-types:r1}Decimal",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "332",
             "locator": "22:19-22:33",
             "operand": {
-              "localId": "333",
               "locator": "22:19-22:22",
               "type": "Literal",
               "value": "3.14",
@@ -1072,7 +574,6 @@
             "signature": [],
             "type": "Is"
           },
-          "localId": "331",
           "locator": "22:1-22:33",
           "name": "IsDecimal"
         },
@@ -1081,44 +582,10 @@
           "annotation": [
             {
               "s": {
-                "r": "337",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IsString",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "338",
-                    "s": [
-                      {
-                        "r": "339",
-                        "s": [
-                          {
-                            "value": [
-                              "'hello'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " is "
-                        ]
-                      },
-                      {
-                        "r": "341",
-                        "s": [
-                          {
-                            "value": [
-                              "String"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IsString: 'hello' is String"
                     ]
                   }
                 ]
@@ -1129,15 +596,12 @@
           "context": "Unfiltered",
           "expression": {
             "isTypeSpecifier": {
-              "localId": "341",
               "locator": "23:29-23:34",
               "name": "{urn:hl7-org:elm-types:r1}String",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "338",
             "locator": "23:18-23:34",
             "operand": {
-              "localId": "339",
               "locator": "23:18-23:24",
               "type": "Literal",
               "value": "hello",
@@ -1146,7 +610,6 @@
             "signature": [],
             "type": "Is"
           },
-          "localId": "337",
           "locator": "23:1-23:34",
           "name": "IsString"
         },
@@ -1155,36 +618,10 @@
           "annotation": [
             {
               "s": {
-                "r": "344",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IsBoolean",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "345",
-                    "s": [
-                      {
-                        "r": "346",
-                        "value": [
-                          "true",
-                          " is "
-                        ]
-                      },
-                      {
-                        "r": "347",
-                        "s": [
-                          {
-                            "value": [
-                              "Boolean"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IsBoolean: true is Boolean"
                     ]
                   }
                 ]
@@ -1195,15 +632,12 @@
           "context": "Unfiltered",
           "expression": {
             "isTypeSpecifier": {
-              "localId": "347",
               "locator": "24:27-24:33",
               "name": "{urn:hl7-org:elm-types:r1}Boolean",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "345",
             "locator": "24:19-24:33",
             "operand": {
-              "localId": "346",
               "locator": "24:19-24:22",
               "type": "Literal",
               "value": "true",
@@ -1212,7 +646,6 @@
             "signature": [],
             "type": "Is"
           },
-          "localId": "344",
           "locator": "24:1-24:33",
           "name": "IsBoolean"
         },
@@ -1221,36 +654,10 @@
           "annotation": [
             {
               "s": {
-                "r": "350",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AsInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "351",
-                    "s": [
-                      {
-                        "r": "352",
-                        "value": [
-                          "42",
-                          " as "
-                        ]
-                      },
-                      {
-                        "r": "353",
-                        "s": [
-                          {
-                            "value": [
-                              "Integer"
-                            ]
-                          }
-                        ]
-                      }
+                      "define AsInteger: 42 as Integer"
                     ]
                   }
                 ]
@@ -1261,15 +668,12 @@
           "context": "Unfiltered",
           "expression": {
             "asTypeSpecifier": {
-              "localId": "353",
               "locator": "26:25-26:31",
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "351",
             "locator": "26:19-26:31",
             "operand": {
-              "localId": "352",
               "locator": "26:19-26:20",
               "type": "Literal",
               "value": "42",
@@ -1279,7 +683,6 @@
             "strict": false,
             "type": "As"
           },
-          "localId": "350",
           "locator": "26:1-26:31",
           "name": "AsInteger"
         }
@@ -1288,7 +691,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

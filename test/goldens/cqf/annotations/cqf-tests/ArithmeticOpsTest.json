@@ -2,15 +2,15 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "390",
           "s": [
             {
               "value": [
-                "",
                 "library ArithmeticOpsTest"
               ]
             }
@@ -22,7 +22,6 @@
     "identifier": {
       "id": "ArithmeticOpsTest"
     },
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -34,27 +33,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AddIntegers",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "209",
-                    "s": [
-                      {
-                        "r": "210",
-                        "value": [
-                          "2",
-                          " + ",
-                          "3"
-                        ]
-                      }
+                      "define AddIntegers: 2 + 3"
                     ]
                   }
                 ]
@@ -64,16 +46,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "209",
             "operand": [
               {
-                "localId": "210",
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "211",
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -82,7 +61,6 @@
             "signature": [],
             "type": "Add"
           },
-          "localId": "208",
           "name": "AddIntegers"
         },
         {
@@ -90,27 +68,10 @@
           "annotation": [
             {
               "s": {
-                "r": "214",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SubtractIntegers",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "215",
-                    "s": [
-                      {
-                        "r": "216",
-                        "value": [
-                          "10",
-                          " - ",
-                          "4"
-                        ]
-                      }
+                      "define SubtractIntegers: 10 - 4"
                     ]
                   }
                 ]
@@ -120,16 +81,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "215",
             "operand": [
               {
-                "localId": "216",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "217",
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -138,7 +96,6 @@
             "signature": [],
             "type": "Subtract"
           },
-          "localId": "214",
           "name": "SubtractIntegers"
         },
         {
@@ -146,27 +103,10 @@
           "annotation": [
             {
               "s": {
-                "r": "220",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MultiplyIntegers",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "221",
-                    "s": [
-                      {
-                        "r": "222",
-                        "value": [
-                          "3",
-                          " * ",
-                          "7"
-                        ]
-                      }
+                      "define MultiplyIntegers: 3 * 7"
                     ]
                   }
                 ]
@@ -176,16 +116,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "221",
             "operand": [
               {
-                "localId": "222",
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "223",
                 "type": "Literal",
                 "value": "7",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -194,7 +131,6 @@
             "signature": [],
             "type": "Multiply"
           },
-          "localId": "220",
           "name": "MultiplyIntegers"
         },
         {
@@ -202,27 +138,10 @@
           "annotation": [
             {
               "s": {
-                "r": "226",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DivideIntegers",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "227",
-                    "s": [
-                      {
-                        "r": "228",
-                        "value": [
-                          "10",
-                          " / ",
-                          "4"
-                        ]
-                      }
+                      "define DivideIntegers: 10 / 4"
                     ]
                   }
                 ]
@@ -232,12 +151,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "227",
             "operand": [
               {
-                "localId": "231",
                 "operand": {
-                  "localId": "228",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -246,9 +162,7 @@
                 "type": "ToDecimal"
               },
               {
-                "localId": "233",
                 "operand": {
-                  "localId": "229",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -260,7 +174,6 @@
             "signature": [],
             "type": "Divide"
           },
-          "localId": "226",
           "name": "DivideIntegers"
         },
         {
@@ -268,27 +181,10 @@
           "annotation": [
             {
               "s": {
-                "r": "236",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ModuloIntegers",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "237",
-                    "s": [
-                      {
-                        "r": "238",
-                        "value": [
-                          "10",
-                          " mod ",
-                          "3"
-                        ]
-                      }
+                      "define ModuloIntegers: 10 mod 3"
                     ]
                   }
                 ]
@@ -298,16 +194,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "237",
             "operand": [
               {
-                "localId": "238",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "239",
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -316,7 +209,6 @@
             "signature": [],
             "type": "Modulo"
           },
-          "localId": "236",
           "name": "ModuloIntegers"
         },
         {
@@ -324,27 +216,10 @@
           "annotation": [
             {
               "s": {
-                "r": "242",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "TruncatedDivide",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "243",
-                    "s": [
-                      {
-                        "r": "244",
-                        "value": [
-                          "10",
-                          " div ",
-                          "3"
-                        ]
-                      }
+                      "define TruncatedDivide: 10 div 3"
                     ]
                   }
                 ]
@@ -354,16 +229,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "243",
             "operand": [
               {
-                "localId": "244",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "245",
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -372,7 +244,6 @@
             "signature": [],
             "type": "TruncatedDivide"
           },
-          "localId": "242",
           "name": "TruncatedDivide"
         },
         {
@@ -380,37 +251,10 @@
           "annotation": [
             {
               "s": {
-                "r": "248",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "NegateInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "249",
-                    "s": [
-                      {
-                        "value": [
-                          "-"
-                        ]
-                      },
-                      {
-                        "r": "250",
-                        "s": [
-                          {
-                            "r": "250",
-                            "value": [
-                              "(",
-                              "5",
-                              ")"
-                            ]
-                          }
-                        ]
-                      }
+                      "define NegateInteger: -(5)"
                     ]
                   }
                 ]
@@ -420,9 +264,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "249",
             "operand": {
-              "localId": "250",
               "type": "Literal",
               "value": "5",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -430,7 +272,6 @@
             "signature": [],
             "type": "Negate"
           },
-          "localId": "248",
           "name": "NegateInteger"
         },
         {
@@ -438,42 +279,10 @@
           "annotation": [
             {
               "s": {
-                "r": "253",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AbsInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "258",
-                    "s": [
-                      {
-                        "value": [
-                          "Abs",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "254",
-                        "s": [
-                          {
-                            "r": "255",
-                            "value": [
-                              "-",
-                              "7"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define AbsInteger: Abs(-7)"
                     ]
                   }
                 ]
@@ -483,11 +292,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "258",
             "operand": {
-              "localId": "254",
               "operand": {
-                "localId": "255",
                 "type": "Literal",
                 "value": "7",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -498,7 +304,6 @@
             "signature": [],
             "type": "Abs"
           },
-          "localId": "253",
           "name": "AbsInteger"
         },
         {
@@ -506,27 +311,10 @@
           "annotation": [
             {
               "s": {
-                "r": "261",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AddDecimals",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "262",
-                    "s": [
-                      {
-                        "r": "263",
-                        "value": [
-                          "1.5",
-                          " + ",
-                          "2.5"
-                        ]
-                      }
+                      "define AddDecimals: 1.5 + 2.5"
                     ]
                   }
                 ]
@@ -536,16 +324,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "262",
             "operand": [
               {
-                "localId": "263",
                 "type": "Literal",
                 "value": "1.5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
               },
               {
-                "localId": "264",
                 "type": "Literal",
                 "value": "2.5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -554,7 +339,6 @@
             "signature": [],
             "type": "Add"
           },
-          "localId": "261",
           "name": "AddDecimals"
         },
         {
@@ -562,27 +346,10 @@
           "annotation": [
             {
               "s": {
-                "r": "267",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MultiplyDecimals",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "268",
-                    "s": [
-                      {
-                        "r": "269",
-                        "value": [
-                          "2.5",
-                          " * ",
-                          "4.0"
-                        ]
-                      }
+                      "define MultiplyDecimals: 2.5 * 4.0"
                     ]
                   }
                 ]
@@ -592,16 +359,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "268",
             "operand": [
               {
-                "localId": "269",
                 "type": "Literal",
                 "value": "2.5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
               },
               {
-                "localId": "270",
                 "type": "Literal",
                 "value": "4.0",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -610,7 +374,6 @@
             "signature": [],
             "type": "Multiply"
           },
-          "localId": "267",
           "name": "MultiplyDecimals"
         },
         {
@@ -618,27 +381,10 @@
           "annotation": [
             {
               "s": {
-                "r": "273",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DivideDecimals",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "274",
-                    "s": [
-                      {
-                        "r": "275",
-                        "value": [
-                          "7.5",
-                          " / ",
-                          "2.5"
-                        ]
-                      }
+                      "define DivideDecimals: 7.5 / 2.5"
                     ]
                   }
                 ]
@@ -648,16 +394,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "274",
             "operand": [
               {
-                "localId": "275",
                 "type": "Literal",
                 "value": "7.5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
               },
               {
-                "localId": "276",
                 "type": "Literal",
                 "value": "2.5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -666,7 +409,6 @@
             "signature": [],
             "type": "Divide"
           },
-          "localId": "273",
           "name": "DivideDecimals"
         },
         {
@@ -674,27 +416,10 @@
           "annotation": [
             {
               "s": {
-                "r": "279",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "PowerOf",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "280",
-                    "s": [
-                      {
-                        "r": "281",
-                        "value": [
-                          "2",
-                          " ^ ",
-                          "10"
-                        ]
-                      }
+                      "define PowerOf: 2 ^ 10"
                     ]
                   }
                 ]
@@ -704,16 +429,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "280",
             "operand": [
               {
-                "localId": "281",
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "282",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -722,7 +444,6 @@
             "signature": [],
             "type": "Power"
           },
-          "localId": "279",
           "name": "PowerOf"
         },
         {
@@ -730,67 +451,10 @@
           "annotation": [
             {
               "s": {
-                "r": "285",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MinInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "295",
-                    "s": [
-                      {
-                        "value": [
-                          "Min",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "286",
-                        "s": [
-                          {
-                            "r": "287",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "290",
-                            "s": [
-                              {
-                                "r": "291",
-                                "value": [
-                                  "-",
-                                  "5"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "r": "292",
-                            "value": [
-                              ", ",
-                              "10",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define MinInteger: Min({1, 2, 3, -5, 10})"
                     ]
                   }
                 ]
@@ -800,32 +464,26 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "295",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "287",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "288",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "289",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "290",
                   "operand": {
-                    "localId": "291",
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -834,18 +492,15 @@
                   "type": "Negate"
                 },
                 {
-                  "localId": "292",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "286",
               "type": "List"
             },
             "type": "Min"
           },
-          "localId": "285",
           "name": "MinInteger"
         },
         {
@@ -853,67 +508,10 @@
           "annotation": [
             {
               "s": {
-                "r": "298",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MaxInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "308",
-                    "s": [
-                      {
-                        "value": [
-                          "Max",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "299",
-                        "s": [
-                          {
-                            "r": "300",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "303",
-                            "s": [
-                              {
-                                "r": "304",
-                                "value": [
-                                  "-",
-                                  "5"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "r": "305",
-                            "value": [
-                              ", ",
-                              "10",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define MaxInteger: Max({1, 2, 3, -5, 10})"
                     ]
                   }
                 ]
@@ -923,32 +521,26 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "308",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "300",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "301",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "302",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "303",
                   "operand": {
-                    "localId": "304",
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -957,18 +549,15 @@
                   "type": "Negate"
                 },
                 {
-                  "localId": "305",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "299",
               "type": "List"
             },
             "type": "Max"
           },
-          "localId": "298",
           "name": "MaxInteger"
         },
         {
@@ -976,51 +565,10 @@
           "annotation": [
             {
               "s": {
-                "r": "311",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SumInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "320",
-                    "s": [
-                      {
-                        "value": [
-                          "Sum",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "312",
-                        "s": [
-                          {
-                            "r": "313",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define SumInteger: Sum({1, 2, 3, 4, 5})"
                     ]
                   }
                 ]
@@ -1030,47 +578,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "320",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "313",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "314",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "315",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "316",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "317",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "312",
               "type": "List"
             },
             "type": "Sum"
           },
-          "localId": "311",
           "name": "SumInteger"
         },
         {
@@ -1078,51 +618,10 @@
           "annotation": [
             {
               "s": {
-                "r": "323",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AvgInteger",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "338",
-                    "s": [
-                      {
-                        "value": [
-                          "Avg",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "324",
-                        "s": [
-                          {
-                            "r": "325",
-                            "value": [
-                              "{",
-                              "2",
-                              ", ",
-                              "4",
-                              ", ",
-                              "6",
-                              ", ",
-                              "8",
-                              ", ",
-                              "10",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define AvgInteger: Avg({2, 4, 6, 8, 10})"
                     ]
                   }
                 ]
@@ -1132,25 +631,20 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "338",
             "signature": [],
             "source": {
               "let": [],
-              "localId": "339",
               "relationship": [],
               "return": {
                 "distinct": false,
                 "expression": {
-                  "localId": "344",
                   "operand": {
-                    "localId": "342",
                     "name": "X",
                     "type": "AliasRef"
                   },
                   "signature": [],
                   "type": "ToDecimal"
-                },
-                "localId": "341"
+                }
               },
               "source": [
                 {
@@ -1158,47 +652,39 @@
                   "expression": {
                     "element": [
                       {
-                        "localId": "325",
                         "type": "Literal",
                         "value": "2",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "326",
                         "type": "Literal",
                         "value": "4",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "327",
                         "type": "Literal",
                         "value": "6",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "328",
                         "type": "Literal",
                         "value": "8",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "329",
                         "type": "Literal",
                         "value": "10",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       }
                     ],
-                    "localId": "324",
                     "type": "List"
-                  },
-                  "localId": "340"
+                  }
                 }
               ],
               "type": "Query"
             },
             "type": "Avg"
           },
-          "localId": "323",
           "name": "AvgInteger"
         },
         {
@@ -1206,28 +692,10 @@
           "annotation": [
             {
               "s": {
-                "r": "347",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Floor3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "351",
-                    "s": [
-                      {
-                        "r": "348",
-                        "value": [
-                          "Floor",
-                          "(",
-                          "3.7",
-                          ")"
-                        ]
-                      }
+                      "define Floor3: Floor(3.7)"
                     ]
                   }
                 ]
@@ -1237,9 +705,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "351",
             "operand": {
-              "localId": "348",
               "type": "Literal",
               "value": "3.7",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -1247,7 +713,6 @@
             "signature": [],
             "type": "Floor"
           },
-          "localId": "347",
           "name": "Floor3"
         },
         {
@@ -1255,28 +720,10 @@
           "annotation": [
             {
               "s": {
-                "r": "354",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Ceiling3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "358",
-                    "s": [
-                      {
-                        "r": "355",
-                        "value": [
-                          "Ceiling",
-                          "(",
-                          "3.2",
-                          ")"
-                        ]
-                      }
+                      "define Ceiling3: Ceiling(3.2)"
                     ]
                   }
                 ]
@@ -1286,9 +733,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "358",
             "operand": {
-              "localId": "355",
               "type": "Literal",
               "value": "3.2",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -1296,7 +741,6 @@
             "signature": [],
             "type": "Ceiling"
           },
-          "localId": "354",
           "name": "Ceiling3"
         },
         {
@@ -1304,30 +748,10 @@
           "annotation": [
             {
               "s": {
-                "r": "361",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Round3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "366",
-                    "s": [
-                      {
-                        "r": "362",
-                        "value": [
-                          "Round",
-                          "(",
-                          "3.567",
-                          ", ",
-                          "2",
-                          ")"
-                        ]
-                      }
+                      "define Round3: Round(3.567, 2)"
                     ]
                   }
                 ]
@@ -1337,15 +761,12 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "366",
             "operand": {
-              "localId": "362",
               "type": "Literal",
               "value": "3.567",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "precision": {
-              "localId": "363",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1353,7 +774,6 @@
             "signature": [],
             "type": "Round"
           },
-          "localId": "361",
           "name": "Round3"
         },
         {
@@ -1361,28 +781,10 @@
           "annotation": [
             {
               "s": {
-                "r": "369",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Truncate3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "373",
-                    "s": [
-                      {
-                        "r": "370",
-                        "value": [
-                          "Truncate",
-                          "(",
-                          "3.9",
-                          ")"
-                        ]
-                      }
+                      "define Truncate3: Truncate(3.9)"
                     ]
                   }
                 ]
@@ -1392,9 +794,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "373",
             "operand": {
-              "localId": "370",
               "type": "Literal",
               "value": "3.9",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -1402,7 +802,6 @@
             "signature": [],
             "type": "Truncate"
           },
-          "localId": "369",
           "name": "Truncate3"
         },
         {
@@ -1410,28 +809,10 @@
           "annotation": [
             {
               "s": {
-                "r": "376",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Ln3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "380",
-                    "s": [
-                      {
-                        "r": "377",
-                        "value": [
-                          "Ln",
-                          "(",
-                          "1.0",
-                          ")"
-                        ]
-                      }
+                      "define Ln3: Ln(1.0)"
                     ]
                   }
                 ]
@@ -1441,9 +822,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "380",
             "operand": {
-              "localId": "377",
               "type": "Literal",
               "value": "1.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -1451,7 +830,6 @@
             "signature": [],
             "type": "Ln"
           },
-          "localId": "376",
           "name": "Ln3"
         },
         {
@@ -1459,28 +837,10 @@
           "annotation": [
             {
               "s": {
-                "r": "383",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Exp3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "387",
-                    "s": [
-                      {
-                        "r": "384",
-                        "value": [
-                          "Exp",
-                          "(",
-                          "0.0",
-                          ")"
-                        ]
-                      }
+                      "define Exp3: Exp(0.0)"
                     ]
                   }
                 ]
@@ -1490,9 +850,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "387",
             "operand": {
-              "localId": "384",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
@@ -1500,7 +858,6 @@
             "signature": [],
             "type": "Exp"
           },
-          "localId": "383",
           "name": "Exp3"
         },
         {
@@ -1508,30 +865,10 @@
           "annotation": [
             {
               "s": {
-                "r": "390",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Log3",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "397",
-                    "s": [
-                      {
-                        "r": "391",
-                        "value": [
-                          "Log",
-                          "(",
-                          "100.0",
-                          ", ",
-                          "10",
-                          ")"
-                        ]
-                      }
+                      "define Log3: Log(100.0, 10)"
                     ]
                   }
                 ]
@@ -1541,18 +878,14 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "397",
             "operand": [
               {
-                "localId": "391",
                 "type": "Literal",
                 "value": "100.0",
                 "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
               },
               {
-                "localId": "399",
                 "operand": {
-                  "localId": "392",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1564,7 +897,6 @@
             "signature": [],
             "type": "Log"
           },
-          "localId": "390",
           "name": "Log3"
         }
       ]
@@ -1572,7 +904,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

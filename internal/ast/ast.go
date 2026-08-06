@@ -134,11 +134,19 @@ type CodeDefinition struct {
 	AccessLevel   AccessLevel
 }
 
+// ConceptCodeRef is one entry in a concept declaration's code list. The
+// library qualifier is optional: `concept "C": { "Code", Common."Other" }`.
+type ConceptCodeRef struct {
+	Name        string
+	LibraryName string
+	Locator     Interval // source span of the code identifier
+}
+
 // ConceptDefinition: concept "Name": { codes }
 type ConceptDefinition struct {
 	baseNode
 	Name        string
-	Codes       []string
+	Codes       []ConceptCodeRef
 	Display     string
 	AccessLevel AccessLevel
 }
@@ -733,7 +741,9 @@ type ReturnClause struct {
 // AggregateClause: aggregate distinct? func starting <expr>
 type AggregateClause struct {
 	baseNode
-	Distinct   bool
+	// Distinct is nil for plain 'aggregate' (no ELM field emitted), true for
+	// 'aggregate distinct', false for 'aggregate all'.
+	Distinct   *bool
 	Identifier string
 	Expression Expr
 	Starting   Expr

@@ -2,11 +2,12 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators",
         "type": "CqlToElmInfo"
       }
     ],
     "identifier": {},
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -18,16 +19,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
-                    "r": "211",
                     "value": [
-                      "",
-                      "define ",
-                      "YearLiteral",
-                      ": ",
-                      "@2014"
+                      "define YearLiteral: @2014"
                     ]
                   }
                 ]
@@ -37,18 +32,15 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "211",
             "locator": "1:21-1:25",
             "signature": [],
             "type": "Date",
             "year": {
-              "localId": "210",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "208",
           "locator": "1:1-1:25",
           "name": "YearLiteral"
         },
@@ -57,16 +49,10 @@
           "annotation": [
             {
               "s": {
-                "r": "214",
                 "s": [
                   {
-                    "r": "215",
                     "value": [
-                      "",
-                      "define ",
-                      "DateTimeYearLiteral",
-                      ": ",
-                      "@2014T"
+                      "define DateTimeYearLiteral: @2014T"
                     ]
                   }
                 ]
@@ -76,18 +62,15 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "215",
             "locator": "2:29-2:34",
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "216",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "214",
           "locator": "2:1-2:34",
           "name": "DateTimeYearLiteral"
         },
@@ -96,16 +79,10 @@
           "annotation": [
             {
               "s": {
-                "r": "219",
                 "s": [
                   {
-                    "r": "220",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCYearLiteral",
-                      ": ",
-                      "@2014TZ"
+                      "define UTCYearLiteral: @2014TZ"
                     ]
                   }
                 ]
@@ -115,24 +92,20 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "220",
             "locator": "3:24-3:30",
             "signature": [],
             "timezoneOffset": {
-              "localId": "222",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "221",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "219",
           "locator": "3:1-3:30",
           "name": "UTCYearLiteral"
         },
@@ -141,16 +114,10 @@
           "annotation": [
             {
               "s": {
-                "r": "225",
                 "s": [
                   {
-                    "r": "229",
                     "value": [
-                      "",
-                      "define ",
-                      "YearMonthLiteral",
-                      ": ",
-                      "@2014-12"
+                      "define YearMonthLiteral: @2014-12"
                     ]
                   }
                 ]
@@ -160,10 +127,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "229",
             "locator": "4:26-4:33",
             "month": {
-              "localId": "228",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -171,13 +136,11 @@
             "signature": [],
             "type": "Date",
             "year": {
-              "localId": "227",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "225",
           "locator": "4:1-4:33",
           "name": "YearMonthLiteral"
         },
@@ -186,16 +149,10 @@
           "annotation": [
             {
               "s": {
-                "r": "232",
                 "s": [
                   {
-                    "r": "233",
                     "value": [
-                      "",
-                      "define ",
-                      "DateTimeYearMonthLiteral",
-                      ": ",
-                      "@2014-12T"
+                      "define DateTimeYearMonthLiteral: @2014-12T"
                     ]
                   }
                 ]
@@ -205,10 +162,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "233",
             "locator": "5:34-5:42",
             "month": {
-              "localId": "235",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -216,13 +171,11 @@
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "234",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "232",
           "locator": "5:1-5:42",
           "name": "DateTimeYearMonthLiteral"
         },
@@ -231,16 +184,10 @@
           "annotation": [
             {
               "s": {
-                "r": "238",
                 "s": [
                   {
-                    "r": "239",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCYearMonthLiteral",
-                      ": ",
-                      "@2014-12TZ"
+                      "define UTCYearMonthLiteral: @2014-12TZ"
                     ]
                   }
                 ]
@@ -250,30 +197,25 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "239",
             "locator": "6:29-6:38",
             "month": {
-              "localId": "241",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "242",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "240",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "238",
           "locator": "6:1-6:38",
           "name": "UTCYearMonthLiteral"
         },
@@ -282,16 +224,10 @@
           "annotation": [
             {
               "s": {
-                "r": "245",
                 "s": [
                   {
-                    "r": "250",
                     "value": [
-                      "",
-                      "define ",
-                      "DateLiteral",
-                      ": ",
-                      "@2014-01-31"
+                      "define DateLiteral: @2014-01-31"
                     ]
                   }
                 ]
@@ -302,15 +238,12 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "249",
               "type": "Literal",
               "value": "31",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "250",
             "locator": "7:21-7:31",
             "month": {
-              "localId": "248",
               "type": "Literal",
               "value": "1",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -318,13 +251,11 @@
             "signature": [],
             "type": "Date",
             "year": {
-              "localId": "247",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "245",
           "locator": "7:1-7:31",
           "name": "DateLiteral"
         },
@@ -333,16 +264,10 @@
           "annotation": [
             {
               "s": {
-                "r": "253",
                 "s": [
                   {
-                    "r": "254",
                     "value": [
-                      "",
-                      "define ",
-                      "DateTimeDateLiteral",
-                      ": ",
-                      "@2014-01-31T"
+                      "define DateTimeDateLiteral: @2014-01-31T"
                     ]
                   }
                 ]
@@ -353,15 +278,12 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "257",
               "type": "Literal",
               "value": "31",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "254",
             "locator": "8:29-8:40",
             "month": {
-              "localId": "256",
               "type": "Literal",
               "value": "1",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -369,13 +291,11 @@
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "255",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "253",
           "locator": "8:1-8:40",
           "name": "DateTimeDateLiteral"
         },
@@ -384,16 +304,10 @@
           "annotation": [
             {
               "s": {
-                "r": "260",
                 "s": [
                   {
-                    "r": "261",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCDateLiteral",
-                      ": ",
-                      "@2014-01-31TZ"
+                      "define UTCDateLiteral: @2014-01-31TZ"
                     ]
                   }
                 ]
@@ -404,35 +318,29 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "264",
               "type": "Literal",
               "value": "31",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "261",
             "locator": "9:24-9:36",
             "month": {
-              "localId": "263",
               "type": "Literal",
               "value": "1",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "265",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "262",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "260",
           "locator": "9:1-9:36",
           "name": "UTCDateLiteral"
         },
@@ -441,16 +349,10 @@
           "annotation": [
             {
               "s": {
-                "r": "268",
                 "s": [
                   {
-                    "r": "269",
                     "value": [
-                      "",
-                      "define ",
-                      "HourLiteral",
-                      ": ",
-                      "@T23"
+                      "define HourLiteral: @T23"
                     ]
                   }
                 ]
@@ -461,17 +363,14 @@
           "context": "Unfiltered",
           "expression": {
             "hour": {
-              "localId": "270",
               "type": "Literal",
               "value": "23",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "269",
             "locator": "10:21-10:24",
             "signature": [],
             "type": "Time"
           },
-          "localId": "268",
           "locator": "10:1-10:24",
           "name": "HourLiteral"
         },
@@ -480,16 +379,10 @@
           "annotation": [
             {
               "s": {
-                "r": "273",
                 "s": [
                   {
-                    "r": "274",
                     "value": [
-                      "",
-                      "define ",
-                      "HourMinuteLiteral",
-                      ": ",
-                      "@T10:30"
+                      "define HourMinuteLiteral: @T10:30"
                     ]
                   }
                 ]
@@ -500,15 +393,12 @@
           "context": "Unfiltered",
           "expression": {
             "hour": {
-              "localId": "275",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "274",
             "locator": "11:27-11:33",
             "minute": {
-              "localId": "276",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -516,7 +406,6 @@
             "signature": [],
             "type": "Time"
           },
-          "localId": "273",
           "locator": "11:1-11:33",
           "name": "HourMinuteLiteral"
         },
@@ -525,16 +414,10 @@
           "annotation": [
             {
               "s": {
-                "r": "279",
                 "s": [
                   {
-                    "r": "280",
                     "value": [
-                      "",
-                      "define ",
-                      "HourMinuteSecondLiteral",
-                      ": ",
-                      "@T10:30:15"
+                      "define HourMinuteSecondLiteral: @T10:30:15"
                     ]
                   }
                 ]
@@ -545,21 +428,17 @@
           "context": "Unfiltered",
           "expression": {
             "hour": {
-              "localId": "281",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "280",
             "locator": "12:33-12:42",
             "minute": {
-              "localId": "282",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "283",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -567,7 +446,6 @@
             "signature": [],
             "type": "Time"
           },
-          "localId": "279",
           "locator": "12:1-12:42",
           "name": "HourMinuteSecondLiteral"
         },
@@ -576,16 +454,10 @@
           "annotation": [
             {
               "s": {
-                "r": "286",
                 "s": [
                   {
-                    "r": "287",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeLiteral",
-                      ": ",
-                      "@T10:30:15.000"
+                      "define TimeLiteral: @T10:30:15.000"
                     ]
                   }
                 ]
@@ -596,27 +468,22 @@
           "context": "Unfiltered",
           "expression": {
             "hour": {
-              "localId": "288",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "287",
             "locator": "13:21-13:34",
             "millisecond": {
-              "localId": "291",
               "type": "Literal",
               "value": "0",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "minute": {
-              "localId": "289",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "290",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -624,7 +491,6 @@
             "signature": [],
             "type": "Time"
           },
-          "localId": "286",
           "locator": "13:1-13:34",
           "name": "TimeLiteral"
         },
@@ -633,16 +499,10 @@
           "annotation": [
             {
               "s": {
-                "r": "294",
                 "s": [
                   {
-                    "r": "295",
                     "value": [
-                      "",
-                      "define ",
-                      "DateHourLiteral",
-                      ": ",
-                      "@2014-02-12T23"
+                      "define DateHourLiteral: @2014-02-12T23"
                     ]
                   }
                 ]
@@ -653,21 +513,17 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "298",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "299",
               "type": "Literal",
               "value": "23",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "295",
             "locator": "14:25-14:38",
             "month": {
-              "localId": "297",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -675,13 +531,11 @@
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "296",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "294",
           "locator": "14:1-14:38",
           "name": "DateHourLiteral"
         },
@@ -690,16 +544,10 @@
           "annotation": [
             {
               "s": {
-                "r": "302",
                 "s": [
                   {
-                    "r": "303",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCDateHourLiteral",
-                      ": ",
-                      "@2014-02-12T23Z"
+                      "define UTCDateHourLiteral: @2014-02-12T23Z"
                     ]
                   }
                 ]
@@ -710,41 +558,34 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "306",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "307",
               "type": "Literal",
               "value": "23",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "303",
             "locator": "15:28-15:42",
             "month": {
-              "localId": "305",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "308",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "304",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "302",
           "locator": "15:1-15:42",
           "name": "UTCDateHourLiteral"
         },
@@ -753,16 +594,10 @@
           "annotation": [
             {
               "s": {
-                "r": "311",
                 "s": [
                   {
-                    "r": "312",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZoneDateHourLiteral",
-                      ": ",
-                      "@2014-02-12T23-07:00"
+                      "define TimeZoneDateHourLiteral: @2014-02-12T23-07:00"
                     ]
                   }
                 ]
@@ -773,41 +608,34 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "315",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "316",
               "type": "Literal",
               "value": "23",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "312",
             "locator": "16:33-16:52",
             "month": {
-              "localId": "314",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "317",
               "type": "Literal",
               "value": "-7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "313",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "311",
           "locator": "16:1-16:52",
           "name": "TimeZoneDateHourLiteral"
         },
@@ -816,16 +644,10 @@
           "annotation": [
             {
               "s": {
-                "r": "320",
                 "s": [
                   {
-                    "r": "321",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZonePositiveDateHourLiteral",
-                      ": ",
-                      "@2014-02-12T23+07:00"
+                      "define TimeZonePositiveDateHourLiteral: @2014-02-12T23+07:00"
                     ]
                   }
                 ]
@@ -836,41 +658,34 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "324",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "325",
               "type": "Literal",
               "value": "23",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "321",
             "locator": "17:41-17:60",
             "month": {
-              "localId": "323",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "326",
               "type": "Literal",
               "value": "7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "322",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "320",
           "locator": "17:1-17:60",
           "name": "TimeZonePositiveDateHourLiteral"
         },
@@ -879,16 +694,10 @@
           "annotation": [
             {
               "s": {
-                "r": "329",
                 "s": [
                   {
-                    "r": "330",
                     "value": [
-                      "",
-                      "define ",
-                      "DateHourMinuteLiteral",
-                      ": ",
-                      "@2014-02-12T10:30"
+                      "define DateHourMinuteLiteral: @2014-02-12T10:30"
                     ]
                   }
                 ]
@@ -899,27 +708,22 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "333",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "334",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "330",
             "locator": "18:31-18:47",
             "minute": {
-              "localId": "335",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "332",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -927,13 +731,11 @@
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "331",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "329",
           "locator": "18:1-18:47",
           "name": "DateHourMinuteLiteral"
         },
@@ -942,16 +744,10 @@
           "annotation": [
             {
               "s": {
-                "r": "338",
                 "s": [
                   {
-                    "r": "339",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCDateHourMinuteLiteral",
-                      ": ",
-                      "@2014-02-12T10:30Z"
+                      "define UTCDateHourMinuteLiteral: @2014-02-12T10:30Z"
                     ]
                   }
                 ]
@@ -962,47 +758,39 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "342",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "343",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "339",
             "locator": "19:34-19:51",
             "minute": {
-              "localId": "344",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "341",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "345",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "340",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "338",
           "locator": "19:1-19:51",
           "name": "UTCDateHourMinuteLiteral"
         },
@@ -1011,16 +799,10 @@
           "annotation": [
             {
               "s": {
-                "r": "348",
                 "s": [
                   {
-                    "r": "349",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZoneDateHourMinuteLiteral",
-                      ": ",
-                      "@2014-02-12T10:30-07:00"
+                      "define TimeZoneDateHourMinuteLiteral: @2014-02-12T10:30-07:00"
                     ]
                   }
                 ]
@@ -1031,47 +813,39 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "352",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "353",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "349",
             "locator": "20:39-20:61",
             "minute": {
-              "localId": "354",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "351",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "355",
               "type": "Literal",
               "value": "-7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "350",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "348",
           "locator": "20:1-20:61",
           "name": "TimeZoneDateHourMinuteLiteral"
         },
@@ -1080,16 +854,10 @@
           "annotation": [
             {
               "s": {
-                "r": "358",
                 "s": [
                   {
-                    "r": "359",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZonePositiveDateHourMinuteLiteral",
-                      ": ",
-                      "@2014-02-12T10:30+07:00"
+                      "define TimeZonePositiveDateHourMinuteLiteral: @2014-02-12T10:30+07:00"
                     ]
                   }
                 ]
@@ -1100,47 +868,39 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "362",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "363",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "359",
             "locator": "21:47-21:69",
             "minute": {
-              "localId": "364",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "361",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "365",
               "type": "Literal",
               "value": "7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "360",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "358",
           "locator": "21:1-21:69",
           "name": "TimeZonePositiveDateHourMinuteLiteral"
         },
@@ -1149,16 +909,10 @@
           "annotation": [
             {
               "s": {
-                "r": "368",
                 "s": [
                   {
-                    "r": "369",
                     "value": [
-                      "",
-                      "define ",
-                      "DateHourMinuteSecondLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15"
+                      "define DateHourMinuteSecondLiteral: @2014-02-12T10:30:15"
                     ]
                   }
                 ]
@@ -1169,33 +923,27 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "372",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "373",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "369",
             "locator": "22:37-22:56",
             "minute": {
-              "localId": "374",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "371",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "375",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1203,13 +951,11 @@
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "370",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "368",
           "locator": "22:1-22:56",
           "name": "DateHourMinuteSecondLiteral"
         },
@@ -1218,16 +964,10 @@
           "annotation": [
             {
               "s": {
-                "r": "378",
                 "s": [
                   {
-                    "r": "379",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCDateHourMinuteSecondLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15Z"
+                      "define UTCDateHourMinuteSecondLiteral: @2014-02-12T10:30:15Z"
                     ]
                   }
                 ]
@@ -1238,53 +978,44 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "382",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "383",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "379",
             "locator": "23:40-23:60",
             "minute": {
-              "localId": "384",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "381",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "385",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "386",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "380",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "378",
           "locator": "23:1-23:60",
           "name": "UTCDateHourMinuteSecondLiteral"
         },
@@ -1293,16 +1024,10 @@
           "annotation": [
             {
               "s": {
-                "r": "389",
                 "s": [
                   {
-                    "r": "390",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZoneDateHourMinuteSecondLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15-07:00"
+                      "define TimeZoneDateHourMinuteSecondLiteral: @2014-02-12T10:30:15-07:00"
                     ]
                   }
                 ]
@@ -1313,53 +1038,44 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "393",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "394",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "390",
             "locator": "24:45-24:70",
             "minute": {
-              "localId": "395",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "392",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "396",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "397",
               "type": "Literal",
               "value": "-7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "391",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "389",
           "locator": "24:1-24:70",
           "name": "TimeZoneDateHourMinuteSecondLiteral"
         },
@@ -1368,16 +1084,10 @@
           "annotation": [
             {
               "s": {
-                "r": "400",
                 "s": [
                   {
-                    "r": "401",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZonePositiveDateHourMinuteSecondLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15+07:00"
+                      "define TimeZonePositiveDateHourMinuteSecondLiteral: @2014-02-12T10:30:15+07:00"
                     ]
                   }
                 ]
@@ -1388,53 +1098,44 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "404",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "405",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "401",
             "locator": "25:53-25:78",
             "minute": {
-              "localId": "406",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "403",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "407",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "408",
               "type": "Literal",
               "value": "7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "402",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "400",
           "locator": "25:1-25:78",
           "name": "TimeZonePositiveDateHourMinuteSecondLiteral"
         },
@@ -1443,16 +1144,10 @@
           "annotation": [
             {
               "s": {
-                "r": "411",
                 "s": [
                   {
-                    "r": "412",
                     "value": [
-                      "",
-                      "define ",
-                      "DateTimeLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15.0000"
+                      "define DateTimeLiteral: @2014-02-12T10:30:15.0000"
                     ]
                   }
                 ]
@@ -1463,39 +1158,32 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "415",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "416",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "412",
             "locator": "26:25-26:49",
             "millisecond": {
-              "localId": "419",
               "type": "Literal",
               "value": "0",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "minute": {
-              "localId": "417",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "414",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "418",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1503,13 +1191,11 @@
             "signature": [],
             "type": "DateTime",
             "year": {
-              "localId": "413",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "411",
           "locator": "26:1-26:49",
           "name": "DateTimeLiteral"
         },
@@ -1518,16 +1204,10 @@
           "annotation": [
             {
               "s": {
-                "r": "422",
                 "s": [
                   {
-                    "r": "423",
                     "value": [
-                      "",
-                      "define ",
-                      "UTCDateTimeLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15.0000Z"
+                      "define UTCDateTimeLiteral: @2014-02-12T10:30:15.0000Z"
                     ]
                   }
                 ]
@@ -1538,59 +1218,49 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "426",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "427",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "423",
             "locator": "27:28-27:53",
             "millisecond": {
-              "localId": "430",
               "type": "Literal",
               "value": "0",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "minute": {
-              "localId": "428",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "425",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "429",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "431",
               "type": "Literal",
               "value": "0.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "424",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "422",
           "locator": "27:1-27:53",
           "name": "UTCDateTimeLiteral"
         },
@@ -1599,16 +1269,10 @@
           "annotation": [
             {
               "s": {
-                "r": "434",
                 "s": [
                   {
-                    "r": "435",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZoneDateTimeLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15.0000-07:00"
+                      "define TimeZoneDateTimeLiteral: @2014-02-12T10:30:15.0000-07:00"
                     ]
                   }
                 ]
@@ -1619,59 +1283,49 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "438",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "439",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "435",
             "locator": "28:33-28:63",
             "millisecond": {
-              "localId": "442",
               "type": "Literal",
               "value": "0",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "minute": {
-              "localId": "440",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "437",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "441",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "443",
               "type": "Literal",
               "value": "-7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "436",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "434",
           "locator": "28:1-28:63",
           "name": "TimeZoneDateTimeLiteral"
         },
@@ -1680,16 +1334,10 @@
           "annotation": [
             {
               "s": {
-                "r": "446",
                 "s": [
                   {
-                    "r": "447",
                     "value": [
-                      "",
-                      "define ",
-                      "TimeZonePositiveDateTimeLiteral",
-                      ": ",
-                      "@2014-02-12T10:30:15.0000+07:00"
+                      "define TimeZonePositiveDateTimeLiteral: @2014-02-12T10:30:15.0000+07:00"
                     ]
                   }
                 ]
@@ -1700,59 +1348,49 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "450",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "451",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "447",
             "locator": "29:41-29:71",
             "millisecond": {
-              "localId": "454",
               "type": "Literal",
               "value": "0",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "minute": {
-              "localId": "452",
               "type": "Literal",
               "value": "30",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "449",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "453",
               "type": "Literal",
               "value": "15",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "455",
               "type": "Literal",
               "value": "7.0",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "448",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "446",
           "locator": "29:1-29:71",
           "name": "TimeZonePositiveDateTimeLiteral"
         },
@@ -1761,16 +1399,10 @@
           "annotation": [
             {
               "s": {
-                "r": "458",
                 "s": [
                   {
-                    "r": "459",
                     "value": [
-                      "// Test for https://github.com/cqframework/clinical_quality_language/issues/1298\n",
-                      "define ",
-                      "TimeZoneHalfHourLiteral",
-                      ": ",
-                      "@2014-01-01T12:05:05.955+01:30"
+                      "// Test for https://github.com/cqframework/clinical_quality_language/issues/1298\ndefine TimeZoneHalfHourLiteral: @2014-01-01T12:05:05.955+01:30"
                     ]
                   }
                 ]
@@ -1781,59 +1413,49 @@
           "context": "Unfiltered",
           "expression": {
             "day": {
-              "localId": "462",
               "type": "Literal",
               "value": "1",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "hour": {
-              "localId": "463",
               "type": "Literal",
               "value": "12",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "459",
             "locator": "32:33-32:62",
             "millisecond": {
-              "localId": "466",
               "type": "Literal",
               "value": "955",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "minute": {
-              "localId": "464",
               "type": "Literal",
               "value": "5",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "month": {
-              "localId": "461",
               "type": "Literal",
               "value": "1",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "second": {
-              "localId": "465",
               "type": "Literal",
               "value": "5",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "timezoneOffset": {
-              "localId": "467",
               "type": "Literal",
               "value": "1.5",
               "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
             },
             "type": "DateTime",
             "year": {
-              "localId": "460",
               "type": "Literal",
               "value": "2014",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             }
           },
-          "localId": "458",
           "locator": "32:1-32:62",
           "name": "TimeZoneHalfHourLiteral"
         },
@@ -1842,25 +1464,10 @@
           "annotation": [
             {
               "s": {
-                "r": "470",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "YearExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "471",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "year"
-                        ]
-                      }
+                      "define YearExpression: 1 year"
                     ]
                   }
                 ]
@@ -1870,13 +1477,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "471",
             "locator": "34:24-34:29",
             "type": "Quantity",
             "unit": "year",
             "value": 1
           },
-          "localId": "470",
           "locator": "34:1-34:29",
           "name": "YearExpression"
         },
@@ -1885,25 +1490,10 @@
           "annotation": [
             {
               "s": {
-                "r": "474",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "YearsExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "475",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "years"
-                        ]
-                      }
+                      "define YearsExpression: 10 years"
                     ]
                   }
                 ]
@@ -1913,13 +1503,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "475",
             "locator": "35:25-35:32",
             "type": "Quantity",
             "unit": "years",
             "value": 10
           },
-          "localId": "474",
           "locator": "35:1-35:32",
           "name": "YearsExpression"
         },
@@ -1928,25 +1516,10 @@
           "annotation": [
             {
               "s": {
-                "r": "478",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MonthExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "479",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "month"
-                        ]
-                      }
+                      "define MonthExpression: 1 month"
                     ]
                   }
                 ]
@@ -1956,13 +1529,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "479",
             "locator": "36:25-36:31",
             "type": "Quantity",
             "unit": "month",
             "value": 1
           },
-          "localId": "478",
           "locator": "36:1-36:31",
           "name": "MonthExpression"
         },
@@ -1971,25 +1542,10 @@
           "annotation": [
             {
               "s": {
-                "r": "482",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MonthsExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "483",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "months"
-                        ]
-                      }
+                      "define MonthsExpression: 10 months"
                     ]
                   }
                 ]
@@ -1999,13 +1555,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "483",
             "locator": "37:26-37:34",
             "type": "Quantity",
             "unit": "months",
             "value": 10
           },
-          "localId": "482",
           "locator": "37:1-37:34",
           "name": "MonthsExpression"
         },
@@ -2014,25 +1568,10 @@
           "annotation": [
             {
               "s": {
-                "r": "486",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "WeekExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "487",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "week"
-                        ]
-                      }
+                      "define WeekExpression: 1 week"
                     ]
                   }
                 ]
@@ -2042,13 +1581,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "487",
             "locator": "38:24-38:29",
             "type": "Quantity",
             "unit": "week",
             "value": 1
           },
-          "localId": "486",
           "locator": "38:1-38:29",
           "name": "WeekExpression"
         },
@@ -2057,25 +1594,10 @@
           "annotation": [
             {
               "s": {
-                "r": "490",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "WeeksExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "491",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "weeks"
-                        ]
-                      }
+                      "define WeeksExpression: 10 weeks"
                     ]
                   }
                 ]
@@ -2085,13 +1607,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "491",
             "locator": "39:25-39:32",
             "type": "Quantity",
             "unit": "weeks",
             "value": 10
           },
-          "localId": "490",
           "locator": "39:1-39:32",
           "name": "WeeksExpression"
         },
@@ -2100,25 +1620,10 @@
           "annotation": [
             {
               "s": {
-                "r": "494",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DayExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "495",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "day"
-                        ]
-                      }
+                      "define DayExpression: 1 day"
                     ]
                   }
                 ]
@@ -2128,13 +1633,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "495",
             "locator": "40:23-40:27",
             "type": "Quantity",
             "unit": "day",
             "value": 1
           },
-          "localId": "494",
           "locator": "40:1-40:27",
           "name": "DayExpression"
         },
@@ -2143,25 +1646,10 @@
           "annotation": [
             {
               "s": {
-                "r": "498",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DaysExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "499",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "days"
-                        ]
-                      }
+                      "define DaysExpression: 10 days"
                     ]
                   }
                 ]
@@ -2171,13 +1659,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "499",
             "locator": "41:24-41:30",
             "type": "Quantity",
             "unit": "days",
             "value": 10
           },
-          "localId": "498",
           "locator": "41:1-41:30",
           "name": "DaysExpression"
         },
@@ -2186,25 +1672,10 @@
           "annotation": [
             {
               "s": {
-                "r": "502",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "HourExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "503",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "hour"
-                        ]
-                      }
+                      "define HourExpression: 1 hour"
                     ]
                   }
                 ]
@@ -2214,13 +1685,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "503",
             "locator": "42:24-42:29",
             "type": "Quantity",
             "unit": "hour",
             "value": 1
           },
-          "localId": "502",
           "locator": "42:1-42:29",
           "name": "HourExpression"
         },
@@ -2229,25 +1698,10 @@
           "annotation": [
             {
               "s": {
-                "r": "506",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "HoursExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "507",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "hours"
-                        ]
-                      }
+                      "define HoursExpression: 10 hours"
                     ]
                   }
                 ]
@@ -2257,13 +1711,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "507",
             "locator": "43:25-43:32",
             "type": "Quantity",
             "unit": "hours",
             "value": 10
           },
-          "localId": "506",
           "locator": "43:1-43:32",
           "name": "HoursExpression"
         },
@@ -2272,25 +1724,10 @@
           "annotation": [
             {
               "s": {
-                "r": "510",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MinuteExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "511",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "minute"
-                        ]
-                      }
+                      "define MinuteExpression: 1 minute"
                     ]
                   }
                 ]
@@ -2300,13 +1737,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "511",
             "locator": "44:26-44:33",
             "type": "Quantity",
             "unit": "minute",
             "value": 1
           },
-          "localId": "510",
           "locator": "44:1-44:33",
           "name": "MinuteExpression"
         },
@@ -2315,25 +1750,10 @@
           "annotation": [
             {
               "s": {
-                "r": "514",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MinutesExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "515",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "minutes"
-                        ]
-                      }
+                      "define MinutesExpression: 10 minutes"
                     ]
                   }
                 ]
@@ -2343,13 +1763,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "515",
             "locator": "45:27-45:36",
             "type": "Quantity",
             "unit": "minutes",
             "value": 10
           },
-          "localId": "514",
           "locator": "45:1-45:36",
           "name": "MinutesExpression"
         },
@@ -2358,25 +1776,10 @@
           "annotation": [
             {
               "s": {
-                "r": "518",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SecondExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "519",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "second"
-                        ]
-                      }
+                      "define SecondExpression: 1 second"
                     ]
                   }
                 ]
@@ -2386,13 +1789,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "519",
             "locator": "46:26-46:33",
             "type": "Quantity",
             "unit": "second",
             "value": 1
           },
-          "localId": "518",
           "locator": "46:1-46:33",
           "name": "SecondExpression"
         },
@@ -2401,25 +1802,10 @@
           "annotation": [
             {
               "s": {
-                "r": "522",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SecondsExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "523",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "seconds"
-                        ]
-                      }
+                      "define SecondsExpression: 10 seconds"
                     ]
                   }
                 ]
@@ -2429,13 +1815,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "523",
             "locator": "47:27-47:36",
             "type": "Quantity",
             "unit": "seconds",
             "value": 10
           },
-          "localId": "522",
           "locator": "47:1-47:36",
           "name": "SecondsExpression"
         },
@@ -2444,25 +1828,10 @@
           "annotation": [
             {
               "s": {
-                "r": "526",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MillisecondExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "527",
-                    "s": [
-                      {
-                        "value": [
-                          "1 ",
-                          "millisecond"
-                        ]
-                      }
+                      "define MillisecondExpression: 1 millisecond"
                     ]
                   }
                 ]
@@ -2472,13 +1841,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "527",
             "locator": "48:31-48:43",
             "type": "Quantity",
             "unit": "millisecond",
             "value": 1
           },
-          "localId": "526",
           "locator": "48:1-48:43",
           "name": "MillisecondExpression"
         },
@@ -2487,25 +1854,10 @@
           "annotation": [
             {
               "s": {
-                "r": "530",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MillisecondsExpression",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "531",
-                    "s": [
-                      {
-                        "value": [
-                          "10 ",
-                          "milliseconds"
-                        ]
-                      }
+                      "define MillisecondsExpression: 10 milliseconds"
                     ]
                   }
                 ]
@@ -2515,13 +1867,11 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "531",
             "locator": "49:32-49:46",
             "type": "Quantity",
             "unit": "milliseconds",
             "value": 10
           },
-          "localId": "530",
           "locator": "49:1-49:46",
           "name": "MillisecondsExpression"
         }
@@ -2530,7 +1880,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

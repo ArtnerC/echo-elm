@@ -10,6 +10,7 @@ import (
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/elmops"
+	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/typesystem"
 	"github.com/artnerc/echo-elm/internal/ucum"
@@ -123,24 +124,33 @@ type Translator struct {
 	sourceText           string // original CQL source for annotation s-tree extraction
 	lineOffsets          []int  // byte offsets of each line start in sourceText (1-indexed via [line-1])
 	diags                []Diagnostic
-	syms                 map[string]symKind         // symbol table built before statement pass
-	paramTypes           map[string]string          // maps parameter name → ELM qualified type name (named types only)
-	paramTypeSpecs       map[string]typeSpec        // maps parameter name → full typeSpec (named, list, interval)
-	defTypeSpecs         map[string]typeSpec        // maps statement-def name → full typeSpec inferred from its body
-	queryAliases         []map[string]bool          // stack of alias sets for current query scopes
-	queryLetScopes       []map[string]bool          // stack of let-identifier sets for current query scopes
-	queryAliasTypes      []map[string]string        // stack: alias name → FHIR resource type (e.g. "Encounter")
-	queryAliasTypeSpecs  []map[string]typeSpec      // stack: alias name → element typeSpec (for sig inference)
-	queryLetTypeSpecs    []map[string]typeSpec      // stack: let-id → inferred typeSpec for QueryLetRef inference
-	modelsByAlias        map[string]string          // model local-identifier → model URI (populated per Translate call)
-	primaryModelURI      string                     // URI of the first non-System declared model
-	primaryModelName     string                     // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
-	currentContextName   string                     // context being translated (for age function expansion)
-	functionParamScope   map[string]bool            // set of operand (parameter) names in the current function body
-	operandTypeSpecs     map[string]typeSpec        // function operand name → declared typeSpec, set during function body translation
-	listNodeTypes        map[*elm.ListNode]typeSpec // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
-	fhirHelpersLocalName string                     // local identifier of included FHIRHelpers library, or "" if not included
-	skipLocatorStamp     bool                       // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
+	syms                 map[string]symKind             // symbol table built before statement pass
+	paramTypes           map[string]string              // maps parameter name → ELM qualified type name (named types only)
+	paramTypeSpecs       map[string]typeSpec            // maps parameter name → full typeSpec (named, list, interval)
+	defTypeSpecs         map[string]typeSpec            // maps statement-def name → full typeSpec inferred from its body
+	queryAliases         []map[string]bool              // stack of alias sets for current query scopes
+	queryLetScopes       []map[string]bool              // stack of let-identifier sets for current query scopes
+	queryAliasTypes      []map[string]string            // stack: alias name → FHIR resource type (e.g. "Encounter")
+	queryAliasTypeSpecs  []map[string]typeSpec          // stack: alias name → element typeSpec (for sig inference)
+	queryLetTypeSpecs    []map[string]typeSpec          // stack: let-id → inferred typeSpec for QueryLetRef inference
+	modelsByAlias        map[string]string              // model local-identifier → model URI (populated per Translate call)
+	primaryModelURI      string                         // URI of the first non-System declared model
+	primaryModelName     string                         // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
+	currentContextName   string                         // context being translated (for age function expansion)
+	functionParamScope   map[string]bool                // set of operand (parameter) names in the current function body
+	operandTypeSpecs     map[string]typeSpec            // function operand name → declared typeSpec, set during function body translation
+	listNodeTypes        map[*elm.ListNode]typeSpec     // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
+	fhirHelpersLocalName string                         // local identifier of included FHIRHelpers library, or "" if not included
+	libSyms              map[string]map[string]symKind  // included library alias → name → symKind (for QualifiedRef resolution)
+	skipLocatorStamp     bool                           // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
+	inSortScope          bool                           // when true, identifiers resolve to IdentifierRef (sort-by expressions are scoped to the query result element)
+	noFHIRCoerce         bool                           // when true, the next expression is in an unconsumed position and skips implicit FHIRHelpers coercion
+	localFuncCounts      map[string]int                 // local function name → number of definitions (>1 means overloaded)
+	localFuncReturns     map[string]typeSpec            // local function name → declared return type
+	libDefTypes          map[string]map[string]typeSpec // included library alias → definition name → inferred type
+	defContexts          map[string]string              // definition name → the context it was declared in
+	sortElementTS        typeSpec                       // result element type of the query whose sort clause is being translated
+	skipResultTypeStamp  bool                           // when true, translateExpr skips stamping a result type on its outer result (set by callees that stamped an inner node instead)
 }
 
 // New creates a new Translator with the given options.
@@ -148,6 +158,33 @@ type Translator struct {
 //nolint:gocritic // hugeParam: Options is part of the public API; pointer would break callers
 func New(opts Options) *Translator {
 	return &Translator{opts: opts}
+}
+
+// buildSymMap builds a name→symKind map from an ast.Library, used for cross-library
+// QualifiedRef resolution.
+func buildSymMap(lib *ast.Library) map[string]symKind {
+	m := make(map[string]symKind)
+	for _, vs := range lib.Valuesets {
+		m[vs.Name] = symValueSet
+	}
+	for _, cs := range lib.Codesystems {
+		m[cs.Name] = symCodeSystem
+	}
+	for _, c := range lib.Codes {
+		m[c.Name] = symCode
+	}
+	for _, con := range lib.Concepts {
+		m[con.Name] = symConcept
+	}
+	for _, p := range lib.Parameters {
+		m[p.Name] = symParameter
+	}
+	for _, s := range lib.Statements {
+		if _, already := m[s.Name]; !already {
+			m[s.Name] = symExpression
+		}
+	}
+	return m
 }
 
 func (t *Translator) nextID() string {
@@ -197,6 +234,26 @@ func setLocator(e elm.Expression, loc string) {
 	}
 }
 
+// clearLocator removes the Locator field value from an ELM expression node (if present).
+// Used to match CQF behavior in cases where a locator is not emitted (e.g. parameter defaults).
+func clearLocator(e elm.Expression) {
+	if e == nil {
+		return
+	}
+	v := reflect.ValueOf(e)
+	if v.Kind() != reflect.Pointer || v.IsNil() {
+		return
+	}
+	v = v.Elem()
+	if v.Kind() != reflect.Struct {
+		return
+	}
+	f := v.FieldByName("Locator")
+	if f.IsValid() && f.CanSet() && f.Kind() == reflect.String {
+		f.SetString("")
+	}
+}
+
 // checkUnit validates a CQL Quantity unit against UCUM when the
 // ValidateUnits option is enabled. Following CQF behavior, an unparseable
 // unit produces a Warning diagnostic but does not fail the translation.
@@ -225,32 +282,31 @@ func accessLevelStr(level ast.AccessLevel) string {
 }
 
 // optionsString builds the translator options string for CqlToElmInfo.
-// In CQF mode this is always empty, matching cqframework CLI behavior.
+//
+// The names and their order mirror the CqlTranslatorOptions.Options enum that
+// CQF serializes, so that a consumer reading the ELM sees the same description
+// of how it was produced. Only non-default options appear. ValidateUnits has no
+// counterpart in that enum and so is never reported.
 func (t *Translator) optionsString() string {
-	if t.opts.CQFMode {
-		return ""
-	}
 	var parts []string
-	if t.opts.EnableAnnotations {
-		parts = append(parts, "EnableAnnotations")
-	}
-	if t.opts.EnableLocators {
-		parts = append(parts, "EnableLocators")
-	}
-	if t.opts.DisableListDemotion {
-		parts = append(parts, "DisableListDemotion")
-	}
-	if t.opts.DisableListPromotion {
-		parts = append(parts, "DisableListPromotion")
-	}
-	if t.opts.EnableIntervalDemotion {
-		parts = append(parts, "EnableIntervalDemotion")
-	}
-	if t.opts.EnableIntervalPromotion {
-		parts = append(parts, "EnableIntervalPromotion")
-	}
-	if t.opts.ValidateUnits {
-		parts = append(parts, "ValidateUnits")
+	for _, o := range []struct {
+		on   bool
+		name string
+	}{
+		{t.opts.EnableAnnotations, "EnableAnnotations"},
+		{t.opts.EnableLocators, "EnableLocators"},
+		{t.opts.EnableResultTypes, "EnableResultTypes"},
+		{t.opts.DisableListTraversal, "DisableListTraversal"},
+		{t.opts.DisableListDemotion, "DisableListDemotion"},
+		{t.opts.DisableListPromotion, "DisableListPromotion"},
+		{t.opts.EnableIntervalDemotion, "EnableIntervalDemotion"},
+		{t.opts.EnableIntervalPromotion, "EnableIntervalPromotion"},
+		{t.opts.DisableMethodInvocation, "DisableMethodInvocation"},
+		{t.opts.RequireFromKeyword, "RequireFromKeyword"},
+	} {
+		if o.on {
+			parts = append(parts, o.name)
+		}
 	}
 	return strings.Join(parts, ",")
 }
@@ -537,6 +593,51 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		}
 	}
 
+	// Count local function definitions per name so that SignatureLevel=Overloads
+	// can tell an overloaded call from an unambiguous one, and record each
+	// function's declared return type for calls to resolve against.
+	t.localFuncCounts = make(map[string]int)
+	t.localFuncReturns = make(map[string]typeSpec)
+	t.defContexts = make(map[string]string)
+	for _, s := range lib.Statements {
+		t.defContexts[s.Name] = s.Context
+	}
+	for _, s := range lib.Statements {
+		if !s.IsFunction {
+			continue
+		}
+		t.localFuncCounts[s.Name]++
+		if s.ReturnType != nil {
+			if ts := astTypeSpecToTypeSpec(*s.ReturnType); ts != nil {
+				t.localFuncReturns[s.Name] = ts
+			}
+		}
+	}
+
+	// Build cross-library symbol tables for QualifiedRef resolution.
+	t.libSyms = make(map[string]map[string]symKind)
+	t.libDefTypes = make(map[string]map[string]typeSpec)
+	if t.opts.LibrarySource != nil {
+		for _, inc := range lib.Includes {
+			localName := inc.LocalName
+			if localName == "" {
+				localName = inc.Path
+			}
+			src, found, err := t.opts.LibrarySource.GetLibrarySource(inc.Path, inc.Version)
+			if err == nil && found {
+				if pr, parseErr := parser.ParseBytes(src, inc.Path+".cql"); parseErr == nil {
+					t.libSyms[localName] = buildSymMap(pr.Library)
+					// A qualified reference resolves to the type the included
+					// library gives that definition, so translate it once to
+					// learn those types. Only needed for result types.
+					if t.opts.EnableResultTypes {
+						t.libDefTypes[localName] = includedDefTypes(t.opts, pr.Library, inc.Path)
+					}
+				}
+			}
+		}
+	}
+
 	result := &Result{}
 	out := &elm.Library{
 		SchemaIdentifier: &elm.VersionedIdentifier{
@@ -553,12 +654,12 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		}
 	}
 
-	// CqlToElmInfo annotation
+	// CqlToElmInfo annotation. CQF carries no compatibilityLevel here — the
+	// level shapes the translation but is not reported in the ELM.
 	info := &elm.CqlToElmInfo{
-		TranslatorVersion:  t.opts.TranslatorVersion,
-		TranslatorOptions:  t.optionsString(),
-		SignatureLevel:     t.opts.SignatureLevel,
-		CompatibilityLevel: t.opts.CompatibilityLevel,
+		TranslatorVersion: t.opts.TranslatorVersion,
+		TranslatorOptions: t.optionsString(),
+		SignatureLevel:    t.opts.SignatureLevel,
 	}
 	infoJSON, err := json.Marshal(info)
 	if err == nil {
@@ -665,12 +766,13 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		css := &elm.CodeSystemDefs{}
 		for _, cs := range lib.Codesystems {
 			csd := &elm.CodeSystemDef{
-				LocalID:     t.defID(),
-				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(cs.Loc())),
-				Name:        cs.Name,
-				ID:          cs.ID,
-				Version:     cs.Version,
-				AccessLevel: accessLevelStr(cs.AccessLevel),
+				LocalID:        t.defID(),
+				ResultTypeName: t.declResultType(typesystem.TypeCodeSystem),
+				Annotation:     t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(cs.Loc())),
+				Name:           cs.Name,
+				ID:             cs.ID,
+				Version:        cs.Version,
+				AccessLevel:    accessLevelStr(cs.AccessLevel),
 			}
 			if t.opts.EnableLocators {
 				csd.Locator = locatorStr(cs.Loc())
@@ -685,13 +787,14 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		vss := &elm.ValueSetDefs{}
 		for _, vs := range lib.Valuesets {
 			vsd := &elm.ValueSetDef{
-				LocalID:     t.defID(),
-				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(vs.Loc())),
-				Name:        vs.Name,
-				ID:          vs.ID,
-				Version:     vs.Version,
-				AccessLevel: accessLevelStr(vs.AccessLevel),
-				CodeSystems: json.RawMessage("[]"),
+				LocalID:        t.defID(),
+				ResultTypeName: t.declResultType(typesystem.TypeValueSet),
+				Annotation:     t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(vs.Loc())),
+				Name:           vs.Name,
+				ID:             vs.ID,
+				Version:        vs.Version,
+				AccessLevel:    accessLevelStr(vs.AccessLevel),
+				CodeSystems:    json.RawMessage("[]"),
 			}
 			if t.opts.EnableLocators {
 				vsd.Locator = locatorStr(vs.Loc())
@@ -706,20 +809,22 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		codes := &elm.CodeDefs{}
 		for _, c := range lib.Codes {
 			csRef := &elm.CodeSystemDefinitionRef{
-				Annotation: t.cqfAnnotation(),
-				Name:       c.SystemName,
+				Annotation:     t.cqfAnnotation(),
+				Name:           c.SystemName,
+				ResultTypeName: t.declResultType(typesystem.TypeCodeSystem),
 			}
 			if t.opts.EnableLocators {
 				csRef.Locator = locatorStr(c.SystemLocator)
 			}
 			cd := &elm.CodeDef{
-				LocalID:     t.defID(),
-				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(c.Loc())),
-				Name:        c.Name,
-				ID:          c.Code,
-				Display:     c.Display,
-				AccessLevel: accessLevelStr(c.AccessLevel),
-				CodeSystem:  csRef,
+				LocalID:        t.defID(),
+				ResultTypeName: t.declResultType(typesystem.TypeCode),
+				Annotation:     t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(c.Loc())),
+				Name:           c.Name,
+				ID:             c.Code,
+				Display:        c.Display,
+				AccessLevel:    accessLevelStr(c.AccessLevel),
+				CodeSystem:     csRef,
 			}
 			if t.opts.EnableLocators {
 				cd.Locator = locatorStr(c.Loc())
@@ -734,16 +839,26 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		concepts := &elm.ConceptDefs{}
 		for _, con := range lib.Concepts {
 			cond := &elm.ConceptDef{
-				LocalID:     t.defID(),
-				Name:        con.Name,
-				Display:     con.Display,
-				AccessLevel: accessLevelStr(con.AccessLevel),
+				LocalID:        t.defID(),
+				ResultTypeName: t.declResultType(typesystem.TypeConcept),
+				Annotation:     t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(con.Loc())),
+				Name:           con.Name,
+				Display:        con.Display,
+				AccessLevel:    accessLevelStr(con.AccessLevel),
 			}
 			if t.opts.EnableLocators {
 				cond.Locator = locatorStr(con.Loc())
 			}
-			for _, codeName := range con.Codes {
-				cond.Code = append(cond.Code, &elm.CodeRef{Name: codeName})
+			for _, cref := range con.Codes {
+				cr := &elm.CodeRef{
+					Name:           cref.Name,
+					LibraryName:    cref.LibraryName,
+					ResultTypeName: t.declResultType(typesystem.TypeCode),
+				}
+				if t.opts.EnableLocators {
+					cr.Locator = locatorStr(cref.Locator)
+				}
+				cond.Code = append(cond.Code, cr)
 			}
 			concepts.Def = append(concepts.Def, cond)
 		}
@@ -765,9 +880,24 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			}
 			if p.ParameterType != nil {
 				pd.ParameterTypeSpecifier = t.translateTypeSpecifier(*p.ParameterType)
+				if t.opts.EnableResultTypes {
+					stampTypeSpecifier(pd.ParameterTypeSpecifier)
+				}
+				if t.opts.EnableResultTypes {
+					pd.ResultTypeName, pd.ResultTypeSpecifier = resultTypeOf(astTypeSpecToTypeSpec(*p.ParameterType))
+				}
 			}
 			if p.Default != nil {
 				pd.Default = t.translateExpr(p.Default)
+				// CQF does not stamp a locator on the outermost parameter default expression
+				// (e.g. Interval constructor at the top level of a default clause).
+				clearLocator(pd.Default)
+				// When the declared type is Interval<DateTime> but the default bounds are
+				// Date literals (e.g. Interval[@2024-01-01, @2024-12-31]), CQF inserts an
+				// implicit ToDateTime promotion around each Date bound. Replicate that here.
+				if p.ParameterType != nil {
+					pd.Default = t.promoteIntervalDateBoundsToDateTime(*p.ParameterType, pd.Default)
+				}
 			}
 			params.Def = append(params.Def, pd)
 		}
@@ -817,7 +947,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 
 	if len(lib.Statements) > 0 || len(stmtDefs) > 0 {
 		stmts := &elm.StatementDefs{Def: stmtDefs}
-		for _, s := range lib.Statements {
+		for _, s := range statementEmissionOrder(lib.Statements) {
 			stmtCtx := s.Context
 			if stmtCtx == "" {
 				stmtCtx = "Unfiltered"
@@ -835,8 +965,11 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if t.opts.EnableLocators {
 				sd.Locator = locatorStr(s.Loc())
 			}
-			if s.ReturnType != nil {
-				sd.ResultTypeSpecifier = t.translateTypeSpecifier(*s.ReturnType)
+			// resultTypeSpecifier is result-type information, which CQF only emits
+			// under --result-types. A declared `returns` clause does not by itself
+			// put the type in the ELM.
+			if s.ReturnType != nil && t.opts.EnableResultTypes {
+				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(astTypeSpecToTypeSpec(*s.ReturnType))
 			}
 			// Build function parameter scope before translating the body,
 			// so IdentifierRef nodes matching operand names emit OperandRef.
@@ -859,13 +992,27 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				opd := &elm.OperandDef{Name: op.Name, Annotation: t.cqfAnnotation()}
 				if op.Type != nil {
 					opd.OperandTypeSpecifier = t.translateTypeSpecifier(*op.Type)
+					if t.opts.EnableResultTypes {
+						stampTypeSpecifier(opd.OperandTypeSpecifier)
+					}
 				}
 				sd.Operand = append(sd.Operand, opd)
 			}
 			if s.Expression != nil {
-				sd.Expression = t.translateExpr(s.Expression)
+				sd.Expression = t.translateExprUnconsumed(s.Expression)
 			} else {
 				sd.Expression = &elm.NullNode{Annotation: t.cqfAnnotation()}
+			}
+			// A declared `returns` type wins; otherwise the definition's type is
+			// whatever its body resolved to. Prefer the type already recorded on
+			// the body over re-inferring it — a FHIR property reports its FHIR
+			// type, not the converted one.
+			if t.opts.EnableResultTypes && sd.ResultTypeName == "" && sd.ResultTypeSpecifier == nil {
+				if name, spec := elm.GetResultType(sd.Expression); name != "" || spec != nil {
+					sd.ResultTypeName, sd.ResultTypeSpecifier = name, spec
+				} else {
+					sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(t.inferTypeSpec(sd.Expression))
+				}
 			}
 			if !s.IsFunction {
 				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
@@ -962,6 +1109,93 @@ func (t *Translator) qualifyDataType(rawType string) (dataType, templateID strin
 	return dt, templateID
 }
 
+// declResultType returns the fixed system type CQF records on a terminology
+// declaration under --result-types, or "" when result types are off.
+func (t *Translator) declResultType(typeName string) string {
+	if !t.opts.EnableResultTypes {
+		return ""
+	}
+	return typeName
+}
+
+// includedDefTypes translates an included library far enough to learn the type
+// of each of its definitions. Result types are the only thing that needs this,
+// so it runs only when they are enabled; the translated output is discarded.
+func includedDefTypes(opts Options, lib *ast.Library, path string) map[string]typeSpec {
+	sub := New(opts)
+	// Do not recurse into the include's own includes: one level is enough for
+	// the reference being resolved, and it keeps a cycle from looping.
+	sub.opts.LibrarySource = nil
+	sub.Translate(lib, path+".cql")
+	return sub.defTypeSpecs
+}
+
+// statementEmissionOrder returns the statements in the order CQF emits them.
+//
+// CQF resolves definitions lazily: translating a body that references another
+// define resolves — and therefore emits — that define first. The observable
+// result is dependency order, with source order as the tiebreaker, so a define
+// that forward-references a later one appears after it in the ELM.
+//
+// A reference cycle is invalid CQL; if one is present the statements involved
+// keep source order rather than looping.
+func statementEmissionOrder(stmts []*ast.ExpressionDefinition) []*ast.ExpressionDefinition {
+	byName := make(map[string]*ast.ExpressionDefinition, len(stmts))
+	for _, s := range stmts {
+		if _, dup := byName[s.Name]; !dup {
+			byName[s.Name] = s
+		}
+	}
+
+	out := make([]*ast.ExpressionDefinition, 0, len(stmts))
+	emitted := make(map[*ast.ExpressionDefinition]bool, len(stmts))
+	visiting := make(map[*ast.ExpressionDefinition]bool, len(stmts))
+
+	var emit func(s *ast.ExpressionDefinition)
+	emit = func(s *ast.ExpressionDefinition) {
+		if emitted[s] || visiting[s] {
+			return
+		}
+		visiting[s] = true
+		for _, dep := range localReferences(s, byName) {
+			emit(dep)
+		}
+		visiting[s] = false
+		emitted[s] = true
+		out = append(out, s)
+	}
+	for _, s := range stmts {
+		emit(s)
+	}
+	return out
+}
+
+// localReferences returns the statements in byName that s references, in the
+// order they appear in s's body. A function's own operands shadow nothing here:
+// operand names are not statement names, so a collision would already be a
+// redefinition error upstream.
+func localReferences(s *ast.ExpressionDefinition, byName map[string]*ast.ExpressionDefinition) []*ast.ExpressionDefinition {
+	var deps []*ast.ExpressionDefinition
+	seen := map[*ast.ExpressionDefinition]bool{}
+	add := func(name string) {
+		if dep, ok := byName[name]; ok && dep != s && !seen[dep] {
+			seen[dep] = true
+			deps = append(deps, dep)
+		}
+	}
+	ast.Walk(s.Expression, func(n ast.Node) {
+		switch v := n.(type) {
+		case *ast.IdentifierRef:
+			add(v.Name)
+		case *ast.FunctionRef:
+			if v.LibraryName == "" {
+				add(v.Name)
+			}
+		}
+	})
+	return deps
+}
+
 // buildContextAccessor creates the implicit singleton-from-retrieve statement for the declared context.
 // For example, `context Patient` generates a Patient statement that retrieves the singleton Patient.
 func (t *Translator) buildContextAccessor(contextName string, lib *ast.Library) *elm.StatementDef {
@@ -973,6 +1207,12 @@ func (t *Translator) buildContextAccessor(contextName string, lib *ast.Library) 
 	dataNS := dataNamespaceForModelURI(t.primaryModelName, modelURI)
 	dataType := "{" + dataNS + "}" + contextName
 	templateID := templateIDForModel(t.primaryModelName, dataNS, contextName)
+
+	// The accessor's own nodes are synthesized and carry no result type, but
+	// references to it resolve to the context's model type.
+	if t.defTypeSpecs != nil {
+		t.defTypeSpecs[contextName] = namedTS{dataType}
+	}
 
 	// Find the source locator from the context declaration (if available).
 	ctxLocator := ""
@@ -1192,6 +1432,15 @@ func resolveTypeName(name string) string {
 	return name
 }
 
+// dateTimeComponentOperators maps the `<component> from x` precisions that have
+// their own ELM operator instead of being a DateTimeComponentFrom precision.
+// Every other precision (Year..Millisecond) uses DateTimeComponentFrom.
+var dateTimeComponentOperators = map[string]string{
+	"Date":           "DateFrom",
+	"Time":           "TimeFrom",
+	"TimezoneOffset": "TimezoneOffsetFrom",
+}
+
 // unarySystemOps is the set of CQL built-in function names that map to single-operand
 // ELM operator expressions (i.e., "operand" is a single object, not an array).
 var unarySystemOps = map[string]bool{
@@ -1342,6 +1591,44 @@ func (t *Translator) parseDateLiteral(value string) *elm.DateNode {
 		}
 	}
 	return node
+}
+
+// promoteIntervalDateBoundsToDateTime wraps Date-typed bounds of an IntervalNode in
+// ToDateTime conversion nodes when the declared parameter type is Interval<DateTime>.
+// This replicates CQF's implicit Date→DateTime promotion for parameter defaults.
+func (t *Translator) promoteIntervalDateBoundsToDateTime(declaredType ast.TypeSpecifier, expr elm.Expression) elm.Expression {
+	its, ok := declaredType.(*ast.IntervalTypeSpecifier)
+	if !ok {
+		return expr
+	}
+	nts, ok := its.PointType.(*ast.NamedTypeSpecifier)
+	if !ok || nts.Name != "DateTime" {
+		return expr
+	}
+	ivl, ok := expr.(*elm.IntervalNode)
+	if !ok {
+		return expr
+	}
+	ivl.Low = t.wrapDateInToDateTime(ivl.Low)
+	ivl.High = t.wrapDateInToDateTime(ivl.High)
+	return ivl
+}
+
+// wrapDateInToDateTime wraps a Date expression in a ToDateTime conversion node.
+// If the expression is not a *elm.DateNode it is returned unchanged.
+func (t *Translator) wrapDateInToDateTime(expr elm.Expression) elm.Expression {
+	if expr == nil {
+		return expr
+	}
+	if _, isDate := expr.(*elm.DateNode); !isDate {
+		return expr
+	}
+	return &elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.buildSigFromTypes("ToDateTime", []typeSpec{dateTS}),
+		Operator:   "ToDateTime",
+		Operand:    expr,
+	}
 }
 
 // parseTimeParts parses a time string (HH[:MM[:SS[.mmm]]]) into component expressions.
@@ -1549,7 +1836,98 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 	if expr != nil && t.opts.EnableLocators && !t.skipLocatorStamp {
 		setLocator(result, locatorStr(expr.Loc()))
 	}
+	if expr != nil && t.opts.EnableResultTypes && !t.skipResultTypeStamp {
+		t.stampResultType(result)
+	}
 	t.skipLocatorStamp = false
+	t.skipResultTypeStamp = false
+	return result
+}
+
+// typeNullFromSibling records on a null operand the type of the operand it is
+// being combined with, which is how CQF types an otherwise untyped null.
+func (t *Translator) typeNullFromSibling(target, sibling elm.Expression) {
+	if _, isNull := target.(*elm.NullNode); !isNull {
+		return
+	}
+	if elm.HasResultType(target) {
+		return
+	}
+	name, spec := resultTypeOf(t.nodeResultTS(sibling))
+	if name == "" && spec == nil {
+		return
+	}
+	elm.SetResultType(target, name, spec)
+}
+
+// isDefinitelyAny reports whether a node's Any type is a resolved answer rather
+// than a failure to infer: a null literal, or an operator all of whose operands
+// are nulls.
+func isDefinitelyAny(e elm.Expression) bool {
+	switch v := e.(type) {
+	case *elm.NullNode:
+		return true
+	case *elm.OperatorExpressionNode:
+		if len(v.Operand) == 0 {
+			return false
+		}
+		// Coalesce yields the common type of its alternatives, so a single
+		// untyped null makes the whole thing Any.
+		if v.Operator == "Coalesce" {
+			for _, op := range v.Operand {
+				if isNullLike(op) {
+					return true
+				}
+			}
+			return false
+		}
+		for _, op := range v.Operand {
+			if !isNullLike(op) {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
+// stampResultType records the node's resolved type, as CQF does under
+// --result-types. Only expressions that came from source reach here:
+// synthesized nodes (the implicit context accessor, inserted conversions) are
+// built directly rather than through translateExpr, and CQF leaves those
+// unstamped too.
+func (t *Translator) stampResultType(e elm.Expression) {
+	if e == nil || elm.HasResultType(e) {
+		return
+	}
+	ts := t.inferTypeSpec(e)
+	name, spec := resultTypeOf(ts)
+	if name == "" && spec == nil {
+		// Any is otherwise treated as "not resolved" and left unstamped, but some
+		// expressions really are Any-typed and CQF records them as such: a bare
+		// null literal, and an operator over nothing but nulls.
+		if isDefinitelyAny(e) {
+			elm.SetResultType(e, typesystem.TypeAny, nil)
+		}
+		return
+	}
+	elm.SetResultType(e, name, spec)
+}
+
+// translateExprUnconsumed translates an expression appearing in a position that
+// does not impose a target type — a define body, a query return expression, a
+// list element, or the source of a property navigation. CQF only inserts the
+// implicit FHIRHelpers conversion where a value is consumed as an operand of a
+// typed operator, so these positions keep the raw FHIR property value.
+//
+// The flag applies to the immediate expression only: translateExprCore clears it
+// before descending, so `define X: Patient.gender = 'f'` still coerces the
+// property inside the Equal.
+func (t *Translator) translateExprUnconsumed(expr ast.Expr) elm.Expression {
+	prev := t.noFHIRCoerce
+	t.noFHIRCoerce = true
+	result := t.translateExpr(expr)
+	t.noFHIRCoerce = prev
 	return result
 }
 
@@ -1560,6 +1938,10 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	if expr == nil {
 		return &elm.NullNode{Annotation: t.cqfAnnotation()}
 	}
+	// Read and clear the no-coercion flag: it marks this expression's own
+	// position, not the positions of its operands.
+	noCoerce := t.noFHIRCoerce
+	t.noFHIRCoerce = false
 	ann := t.cqfAnnotation()
 	sig := t.cqfEmptyArrayField() // for OperatorExpression subclasses
 
@@ -1609,6 +1991,18 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		if t.opts.EnableLocators && v.Denominator.Unit != "" {
 			den.Locator = locatorStr(v.Denominator.Loc())
 		}
+		// Both halves of a ratio are quantities; CQF records that on each.
+		// Only a quantity written with a unit is treated as a quantity literal in
+		// its own right; the bare `5:10` form carries no type of its own, which
+		// is the same distinction the locator above uses.
+		if t.opts.EnableResultTypes {
+			if v.Numerator.Unit != "" {
+				num.ResultTypeName = typesystem.TypeQuantity
+			}
+			if v.Denominator.Unit != "" {
+				den.ResultTypeName = typesystem.TypeQuantity
+			}
+		}
 		return &elm.RatioNode{
 			Annotation:  ann,
 			Numerator:   num,
@@ -1617,6 +2011,12 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 
 	// ---- References ----
 	case *ast.IdentifierRef:
+		// Inside a sort-by expression the scope is the query's result element,
+		// which the translator cannot resolve — CQF defers to the engine by
+		// emitting IdentifierRef.
+		if t.inSortScope {
+			return &elm.IdentifierRefNode{Annotation: ann, Name: v.Name}
+		}
 		// Check innermost query let scope first — let variables in queries become QueryLetRef.
 		for i := len(t.queryLetScopes) - 1; i >= 0; i-- {
 			if t.queryLetScopes[i][v.Name] {
@@ -1639,7 +2039,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		case symParameter:
 			return &elm.ParameterRefNode{Annotation: ann, Name: v.Name}
 		case symValueSet:
-			return &elm.ValueSetRefNode{Annotation: ann, Name: v.Name}
+			return t.newValueSetRef(ann, v.Name, "")
 		case symCodeSystem:
 			return &elm.CodeSystemRefNode{Annotation: ann, Name: v.Name}
 		case symCode:
@@ -1650,12 +2050,30 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			return &elm.ExpressionRefNode{Annotation: ann, Name: v.Name}
 		}
 	case *ast.QualifiedRef:
+		// Resolve the kind of the referenced symbol in the included library.
+		if libMap, ok := t.libSyms[v.LibraryName]; ok {
+			switch libMap[v.Name] {
+			case symValueSet:
+				return t.newValueSetRef(ann, v.Name, v.LibraryName)
+			case symCodeSystem:
+				return &elm.CodeSystemRefNode{Annotation: ann, LibraryName: v.LibraryName, Name: v.Name}
+			case symCode:
+				return &elm.CodeRefNode{Annotation: ann, LibraryName: v.LibraryName, Name: v.Name}
+			case symConcept:
+				return &elm.ConceptRefNode{Annotation: ann, LibraryName: v.LibraryName, Name: v.Name}
+			case symParameter:
+				return &elm.ParameterRefNode{Annotation: ann, LibraryName: v.LibraryName, Name: v.Name}
+			}
+		}
 		return &elm.ExpressionRefNode{Annotation: ann, Name: v.Name, LibraryName: v.LibraryName}
 	case *ast.AliasRef:
 		return &elm.AliasRefNode{Annotation: ann, Name: v.Name}
 	case *ast.LetRef:
 		return &elm.LetRefNode{Annotation: ann, Name: v.Name}
 	case *ast.ThisExpr:
+		if t.inSortScope {
+			return &elm.IdentifierRefNode{Annotation: ann, Name: "$this"}
+		}
 		return &elm.QueryThisRefNode{Annotation: ann}
 	case *ast.IndexExpr:
 		return &elm.OperatorExpressionNode{Annotation: ann, Signature: sig, Operator: "QueryIndexRef"}
@@ -1950,12 +2368,33 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
-			Signature:   t.computeSig("FunctionRef", operands),
+			Signature:   t.computeFunctionRefSig(v.LibraryName, v.Name, operands),
 			Name:        v.Name,
 			LibraryName: v.LibraryName,
 			Operand:     operands,
 		}
 	case *ast.PropertyExpr:
+		// When the source is a library alias and the path matches a known symbol in
+		// that library, emit the correct typed Ref node (ValueSetRef, CodeRef, etc.)
+		// rather than a PropertyNode. This handles e.g. Terminology."Office Visit".
+		if ir, ok := v.Source.(*ast.IdentifierRef); ok {
+			if libMap, hasLib := t.libSyms[ir.Name]; hasLib {
+				switch libMap[v.Path] {
+				case symValueSet:
+					return t.newValueSetRef(ann, v.Path, ir.Name)
+				case symCodeSystem:
+					return &elm.CodeSystemRefNode{Annotation: ann, LibraryName: ir.Name, Name: v.Path}
+				case symCode:
+					return &elm.CodeRefNode{Annotation: ann, LibraryName: ir.Name, Name: v.Path}
+				case symConcept:
+					return &elm.ConceptRefNode{Annotation: ann, LibraryName: ir.Name, Name: v.Path}
+				case symParameter:
+					return &elm.ParameterRefNode{Annotation: ann, LibraryName: ir.Name, Name: v.Path}
+				case symExpression:
+					return &elm.ExpressionRefNode{Annotation: ann, LibraryName: ir.Name, Name: v.Path}
+				}
+			}
+		}
 		// When the source is an identifier that resolves to a query alias or let variable,
 		// ELM uses the "scope" string attribute rather than a "source" expression object.
 		var propertyNode elm.Expression
@@ -1986,30 +2425,45 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			}
 		}
 		if propertyNode == nil {
+			// The source of a navigation is the FHIR structure being traversed,
+			// never a converted CQL value, so it is translated unconsumed.
 			propertyNode = &elm.PropertyNode{
 				Annotation: ann,
 				Path:       v.Path,
-				Source:     t.translateExpr(v.Source),
+				Source:     t.translateExprUnconsumed(v.Source),
 			}
 		}
 		// Apply implicit FHIRHelpers coercion when FHIRHelpers is included and the
 		// property resolves to a FHIR primitive type. CQF places the source locator
 		// on the inner PropertyNode, not the synthetic FunctionRef wrapper.
-		if t.fhirHelpersLocalName != "" {
+		// A FHIR property carries its declared FHIR type, not the CQL type it
+		// converts to — the conversion node above it is what produces the CQL
+		// value, and CQF leaves that synthesized node unstamped.
+		if t.opts.EnableResultTypes {
+			if fhirType := t.resolveFHIRPropertyType(v.Source, v.Path); fhirType != "" {
+				fhirTS := typeSpec(namedTS{"{http://hl7.org/fhir}" + fhirType})
+				if sourceType := t.resolveFHIRSourceType(v.Source); sourceType != "" &&
+					typesystem.IsFHIRListProperty(sourceType, v.Path) {
+					fhirTS = listTS{fhirTS}
+				}
+				name, spec := resultTypeOf(fhirTS)
+				elm.SetResultType(propertyNode, name, spec)
+			}
+		}
+		if t.fhirHelpersLocalName != "" && !noCoerce {
 			if fhirFunc := t.resolveFHIRPropertyCoercion(v.Source, v.Path); fhirFunc != "" {
 				if t.opts.EnableLocators {
 					setLocator(propertyNode, locatorStr(v.Loc()))
 					t.skipLocatorStamp = true
 				}
+				// The conversion is synthesized, so it carries no result type.
+				t.skipResultTypeStamp = true
+				// The ModelInfo records the declared type, so a bound property
+				// already reports its binding name here (Patient.gender is
+				// AdministrativeGender) — which is what CQF puts in the signature.
 				wrapperSig := sig
 				if fhirType := t.resolveFHIRPropertyType(v.Source, v.Path); fhirType != "" {
-					typeName := fhirType
-					if sourceType := t.resolveFHIRSourceType(v.Source); sourceType != "" {
-						if bound := typesystem.FHIRPropertyBinding[sourceType+"."+v.Path]; bound != "" {
-							typeName = bound
-						}
-					}
-					argSpec := namedTS{"{http://hl7.org/fhir}" + typeName}
+					argSpec := namedTS{"{http://hl7.org/fhir}" + fhirType}
 					wrapperSig = t.buildSigFromTypes("FunctionRef", []typeSpec{argSpec})
 				}
 				return &elm.FunctionRefNode{
@@ -2131,6 +2585,9 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		return t.translateTypeIs(v)
 	case *ast.TypeAsExpr:
 		ts := t.translateTypeSpecifier(v.TypeSpec)
+		if t.opts.EnableResultTypes {
+			stampTypeSpecifier(ts)
+		}
 		return &elm.AsNode{
 			Annotation:      ann,
 			Signature:       sig,
@@ -2215,6 +2672,9 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		// Null interval bounds: CQF wraps null in an As cast typed from the non-null bound.
 		if _, isNull := low.(*elm.NullNode); isNull {
 			if bndType := t.inferBoundType(v.High); bndType != "" {
+				if t.opts.EnableResultTypes {
+					elm.SetResultType(low, bndType, nil)
+				}
 				low = &elm.AsNode{
 					Annotation: t.cqfAnnotation(),
 					Signature:  t.cqfEmptyArrayField(),
@@ -2225,6 +2685,9 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		if _, isNull := high.(*elm.NullNode); isNull {
 			if bndType := t.inferBoundType(v.Low); bndType != "" {
+				if t.opts.EnableResultTypes {
+					elm.SetResultType(high, bndType, nil)
+				}
 				high = &elm.AsNode{
 					Annotation: t.cqfAnnotation(),
 					Signature:  t.cqfEmptyArrayField(),
@@ -2250,12 +2713,35 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			Operand:    operand,
 		}
 	case *ast.DateTimeComponentExpr:
-		return &elm.PrecisionOperatorNode{
+		// `date from`, `time from` and `timezoneoffset from` are distinct ELM
+		// unary operators, not DateTimeComponentFrom precisions. Only the
+		// calendar/clock components (Year..Millisecond) use DateTimeComponentFrom.
+		src := t.translateExpr(v.Source)
+		if op, ok := dateTimeComponentOperators[v.Precision]; ok {
+			// These three operators are DateTime-only, so a Date operand is
+			// implicitly converted. DateTimeComponentFrom has a Date overload
+			// and takes its operand as-is.
+			if n, isNamed := t.inferTypeSpec(src).(namedTS); isNamed && n.name == typesystem.TypeDate {
+				src = &elm.UnaryExpressionNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  t.computeSig("ToDateTime", []elm.Expression{src}),
+					Operator:   "ToDateTime",
+					Operand:    src,
+				}
+			}
+			return &elm.UnaryExpressionNode{
+				Annotation: ann,
+				Signature:  t.computeSig(op, []elm.Expression{src}),
+				Operator:   op,
+				Operand:    src,
+			}
+		}
+		return &elm.UnaryPrecisionOperatorNode{
 			Annotation: ann,
-			Signature:  sig,
+			Signature:  t.computeSig("DateTimeComponentFrom", []elm.Expression{src}),
 			Operator:   "DateTimeComponentFrom",
 			Precision:  v.Precision,
-			Operand:    []elm.Expression{t.translateExpr(v.Source)},
+			Operand:    src,
 		}
 	case *ast.DurationExpr:
 		src := t.translateExpr(v.Source)
@@ -2354,7 +2840,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			nullType = t.inferListElementType(v.Elements)
 		}
 		for _, e := range v.Elements {
-			elem := t.translateExpr(e)
+			elem := t.translateExprUnconsumed(e)
 			if _, isNull := e.(*ast.NullLiteral); isNull && nullType != "" {
 				elem = &elm.AsNode{
 					Annotation: t.cqfAnnotation(),
@@ -2427,8 +2913,13 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		if v.PerClause != nil {
 			operands = append(operands, t.translateExpr(v.PerClause))
 		} else if v.Op == "Collapse" || v.Op == "Expand" {
-			// CQF always emits null as the second (precision) argument when absent.
-			operands = append(operands, &elm.NullNode{Annotation: t.cqfAnnotation()})
+			// CQF always emits null as the second (per) argument when absent, and
+			// types it as the Quantity that slot declares.
+			perNull := &elm.NullNode{Annotation: t.cqfAnnotation()}
+			if t.opts.EnableResultTypes {
+				perNull.ResultTypeName = typesystem.TypeQuantity
+			}
+			operands = append(operands, perNull)
 		}
 		return &elm.OperatorExpressionNode{Annotation: ann, Signature: t.computeSig(v.Op, operands), Operator: v.Op, Operand: operands}
 
@@ -2443,6 +2934,47 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	default:
 		return &elm.UnimplementedNode{TypeName: fmt.Sprintf("%T", expr)}
 	}
+}
+
+// newValueSetRef builds a ValueSetRef expression node. CQF stamps preserve=true
+// on every ValueSetRef under CQL 1.5 (runtime terminology evaluation); the flag
+// did not exist before 1.5, so it is suppressed at compatibility level 1.4.
+func (t *Translator) newValueSetRef(ann json.RawMessage, name, libraryName string) *elm.ValueSetRefNode {
+	var preserve *bool
+	if compat := t.opts.CompatibilityLevel; compat == "" || compat >= "1.5" {
+		b := true
+		preserve = &b
+	}
+	return &elm.ValueSetRefNode{
+		Annotation:  ann,
+		Name:        name,
+		LibraryName: libraryName,
+		Preserve:    preserve,
+	}
+}
+
+// valueSetRefName resolves expr to a declared value set, returning its name and
+// the local identifier of the library declaring it ("" when declared locally).
+// It accepts the unqualified form ("Diabetes VS") as well as both AST shapes a
+// library-qualified reference can take (Terminology."Diabetes VS").
+func (t *Translator) valueSetRefName(expr ast.Expr) (name, libraryName string, ok bool) {
+	switch e := expr.(type) {
+	case *ast.IdentifierRef:
+		if t.syms[e.Name] == symValueSet {
+			return e.Name, "", true
+		}
+	case *ast.QualifiedRef:
+		if t.libSyms[e.LibraryName][e.Name] == symValueSet {
+			return e.Name, e.LibraryName, true
+		}
+	case *ast.PropertyExpr:
+		if src, isID := e.Source.(*ast.IdentifierRef); isID {
+			if t.libSyms[src.Name][e.Path] == symValueSet {
+				return e.Path, src.Name, true
+			}
+		}
+	}
+	return "", "", false
 }
 
 // isStringLikeExpr is true when expr is a string literal or a chain of
@@ -2462,7 +2994,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	// preserve:true is an ELM R1 / CQL 1.5 feature (runtime terminology evaluation);
 	// suppress it for compatibility level 1.4.
 	if v.Op == "In" {
-		if ref, ok := v.Right.(*ast.IdentifierRef); ok && t.syms[ref.Name] == symValueSet {
+		if vsName, libName, ok := t.valueSetRefName(v.Right); ok {
 			compat := t.opts.CompatibilityLevel
 			emitPreserve := compat == "" || compat >= "1.5"
 			var preservePtr *bool
@@ -2471,12 +3003,16 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 				preservePtr = &b
 			}
 			vs := &elm.ValueSetRefNode{
-				Annotation: t.cqfAnnotation(),
-				Name:       ref.Name,
-				Preserve:   preservePtr,
+				Annotation:  t.cqfAnnotation(),
+				Name:        vsName,
+				LibraryName: libName,
+				Preserve:    preservePtr,
+			}
+			if t.opts.EnableResultTypes {
+				vs.ResultTypeName = typesystem.TypeValueSet
 			}
 			if t.opts.EnableLocators {
-				vs.Locator = locatorStr(ref.Loc())
+				vs.Locator = locatorStr(v.Right.Loc())
 			}
 			codeExpr := t.translateExpr(v.Left)
 			invsSig := t.cqfEmptyArrayField()
@@ -2495,22 +3031,30 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	lhs := t.translateExpr(v.Left)
 	rhs := t.translateExpr(v.Right)
 
-	// IncludedIn → In: when FHIRHelpers is included and the LHS is a FHIR dateTime/instant
-	// property (which coerces to a DateTime point), use "In" instead of "IncludedIn" because
-	// the coerced LHS is a point, not an interval.
-	op := v.Op
-	if op == "IncludedIn" && t.fhirHelpersLocalName != "" {
-		if pe, ok := v.Left.(*ast.PropertyExpr); ok {
-			if fhirType := t.resolveFHIRPropertyType(pe.Source, pe.Path); typesystem.IsFHIRDateTimeType(fhirType) {
-				op = "In"
+	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
+
+	// For the "In" operator, apply either interval promotion or list promotion when
+	// the RHS cannot already satisfy an In overload for the LHS type. The check uses
+	// the inferred types rather than the syntactic form, so a reference to a list- or
+	// interval-valued definition is not wrongly promoted.
+	// A list-valued FHIR primitive on the right of `in` is converted element by
+	// element, not promoted: the list already satisfies In(T, List<T>) once its
+	// elements are converted.
+	if v.Op == "In" {
+		if converted, ok := t.convertFHIRPrimitiveList(v.Right, rhs); ok {
+			rhs = converted
+			operands := []elm.Expression{lhs, rhs}
+			return &elm.OperatorExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.computeInSig(lhs, rhs, false),
+				Operator:   "In",
+				Operand:    operands,
 			}
 		}
 	}
 
-	// For the "In" operator, apply either interval promotion or list promotion when
-	// the RHS is not already an interval or list expression.
 	var listPromoted bool
-	if v.Op == "In" && !t.opts.DisableListPromotion {
+	if v.Op == "In" && !t.opts.DisableListPromotion && !rhsSatisfiesIn(t.inferTypeSpec(lhs), t.inferTypeSpec(rhs)) {
 		if _, isInterval := v.Right.(*ast.IntervalExpr); !isInterval {
 			if _, isList := v.Right.(*ast.ListExpr); !isList {
 				if t.opts.EnableIntervalPromotion {
@@ -2612,7 +3156,26 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		}
 	}
 
+	lhs, rhs = t.promoteDateToDateTime(op, lhs, rhs)
+	if t.opts.EnableResultTypes {
+		t.typeNullFromSibling(lhs, rhs)
+		t.typeNullFromSibling(rhs, lhs)
+	}
+
 	operands := []elm.Expression{lhs, rhs}
+	// For Equivalent (~): when one side is a CodeableConcept (coerces to Concept via ToConcept)
+	// and the other is a CodeRef or CodeSystemRef, promote the code to Concept via ToConcept.
+	if op == "Equivalent" && t.fhirHelpersLocalName != "" {
+		lhsConcept := t.isFHIRConceptExpr(v.Left)
+		rhsConcept := t.isFHIRConceptExpr(v.Right)
+		if lhsConcept && !rhsConcept {
+			rhs = t.wrapToConcept(rhs)
+			operands = []elm.Expression{lhs, rhs}
+		} else if rhsConcept && !lhsConcept {
+			lhs = t.wrapToConcept(lhs)
+			operands = []elm.Expression{lhs, rhs}
+		}
+	}
 	if v.Precision != "" {
 		return &elm.PrecisionOperatorNode{
 			Annotation: t.cqfAnnotation(),
@@ -2622,6 +3185,31 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 			Operand:    operands,
 		}
 	}
+	// CQL `!=` and `!~` have no dedicated ELM operator: CQF lowers them to
+	// Not(Equal(...)) and Not(Equivalent(...)). Both nodes carry the source span
+	// of the whole comparison.
+	if inner, negated := negatedEqualityOps[op]; negated {
+		node := &elm.OperatorExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Signature:  t.computeSig(inner, operands),
+			Operator:   inner,
+			Operand:    operands,
+		}
+		if t.opts.EnableLocators {
+			node.Locator = locatorStr(v.Loc())
+		}
+		// CQF records a result type on the inner comparison as well as the Not.
+		if t.opts.EnableResultTypes {
+			t.stampResultType(node)
+		}
+		return &elm.UnaryExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Signature:  t.computeSig("Not", []elm.Expression{node}),
+			Operator:   "Not",
+			Operand:    node,
+		}
+	}
+
 	// "In" uses special signature logic based on whether promotion was applied.
 	var sig json.RawMessage
 	if op == "In" {
@@ -2637,8 +3225,268 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	}
 }
 
-// resolveFHIRSourceType returns the FHIR resource or backbone type name for the
-// expression, by inspecting query alias type bindings and the current context.
+// dateTimePromotionOps are the operators for which CQF applies the implicit
+// Date→DateTime conversion when comparing a Date against a DateTime. Membership
+// operators are excluded: CQF leaves `dateTime in Interval<Date>` alone.
+var dateTimePromotionOps = map[string]bool{
+	"Equal": true, "NotEqual": true, "Equivalent": true, "NotEquivalent": true,
+	"Less": true, "LessOrEqual": true, "Greater": true, "GreaterOrEqual": true,
+	"Before": true, "After": true, "SameAs": true,
+	"SameOrBefore": true, "SameOrAfter": true,
+}
+
+// promoteDateToDateTime applies CQL's implicit Date→DateTime conversion when one
+// operand of a comparison resolves to DateTime and the other to Date. Two Dates
+// are compared as Dates and are left untouched.
+//
+// A Date-bounded interval literal is promoted through its bounds rather than as a
+// whole, so `dateTime in Interval[@2020-01-01, @2020-12-31]` converts each bound —
+// this applies to membership operators too, which take no scalar promotion.
+func (t *Translator) promoteDateToDateTime(op string, lhs, rhs elm.Expression) (elm.Expression, elm.Expression) {
+	if t.isDateTimeTS(lhs) {
+		rhs = t.promoteIntervalBounds(rhs)
+	}
+	if t.isDateTimeTS(rhs) {
+		lhs = t.promoteIntervalBounds(lhs)
+	}
+	if !dateTimePromotionOps[op] {
+		return lhs, rhs
+	}
+	switch {
+	case t.isDateTimeTS(lhs) && t.isDateTS(rhs):
+		return lhs, t.wrapToDateTime(rhs)
+	case t.isDateTS(lhs) && t.isDateTimeTS(rhs):
+		return t.wrapToDateTime(lhs), rhs
+	}
+	return lhs, rhs
+}
+
+func (t *Translator) isDateTS(e elm.Expression) bool {
+	n, ok := t.inferTypeSpec(e).(namedTS)
+	return ok && n.name == typesystem.TypeDate
+}
+
+func (t *Translator) isDateTimeTS(e elm.Expression) bool {
+	n, ok := t.inferTypeSpec(e).(namedTS)
+	return ok && n.name == typesystem.TypeDateTime
+}
+
+// promoteIntervalBounds converts the bounds of a Date-typed interval literal to
+// DateTime. Only a literal Interval is rewritten: a reference to an interval-valued
+// definition keeps whatever point type that definition declares.
+func (t *Translator) promoteIntervalBounds(e elm.Expression) elm.Expression {
+	iv, ok := e.(*elm.IntervalNode)
+	if !ok || iv.Low == nil || iv.High == nil {
+		return e
+	}
+	if !t.isDateTS(iv.Low) || !t.isDateTS(iv.High) {
+		return e
+	}
+	// The promoted interval is synthetic — CQF stamps no locator on it, only on
+	// the source expressions its bounds still carry.
+	promoted := *iv
+	promoted.Locator = ""
+	promoted.LocalID = ""
+	promoted.ResultTypeName = ""
+	promoted.ResultTypeSpecifier = nil
+	promoted.Low = t.wrapToDateTime(iv.Low)
+	promoted.High = t.wrapToDateTime(iv.High)
+	return &promoted
+}
+
+func (t *Translator) wrapToDateTime(e elm.Expression) elm.Expression {
+	return &elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig("ToDateTime", []elm.Expression{e}),
+		Operator:   "ToDateTime",
+		Operand:    e,
+	}
+}
+
+// negatedEqualityOps maps the CQL negated-equality operators to the ELM
+// operator that CQF wraps in Not(...).
+var negatedEqualityOps = map[string]string{
+	"NotEqual":      "Equal",
+	"NotEquivalent": "Equivalent",
+}
+
+// pointInclusionOps maps the interval-inclusion operators to their
+// point-in-interval counterparts.
+var pointInclusionOps = map[string]string{
+	"IncludedIn":       "In",
+	"ProperIncludedIn": "ProperIn",
+}
+
+// convertFHIRPrimitiveList rewrites a list-valued FHIR primitive property into
+// the implicit per-element conversion query CQF emits:
+//
+//	Query{ source: [X: <property>], return: { distinct: false, expression: To<T>(X) } }
+//
+// Wrapping such a list in ToList instead would produce a List<List<T>>, so this
+// is checked before list promotion. Returns ok=false when expr is not a
+// list-valued FHIR property with a conversion.
+func (t *Translator) convertFHIRPrimitiveList(expr ast.Expr, translated elm.Expression) (elm.Expression, bool) {
+	if t.fhirHelpersLocalName == "" {
+		return nil, false
+	}
+	pe, ok := expr.(*ast.PropertyExpr)
+	if !ok {
+		return nil, false
+	}
+	sourceType := t.resolveFHIRSourceType(pe.Source)
+	if sourceType == "" || !typesystem.IsFHIRListProperty(sourceType, pe.Path) {
+		return nil, false
+	}
+	fhirType := typesystem.FHIRPropertyType[sourceType+"."+pe.Path]
+	fhirFunc := typesystem.FHIRCoercionFor(fhirType)
+	if fhirFunc == "" {
+		return nil, false
+	}
+
+	alias := &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: fhirConversionAlias}
+	distinct := false
+	return &elm.QueryNode{
+		Annotation: t.cqfAnnotation(),
+		Source: []*elm.AliasedQuerySourceELM{{
+			Annotation: t.cqfAnnotation(),
+			Alias:      fhirConversionAlias,
+			Expression: translated,
+		}},
+		Let:          []*elm.LetClauseELM{},
+		Relationship: []*elm.RelationshipClauseELM{},
+		Return: &elm.ReturnClauseELM{
+			Annotation: t.cqfAnnotation(),
+			Distinct:   &distinct,
+			Expression: &elm.FunctionRefNode{
+				Annotation:  t.cqfAnnotation(),
+				Signature:   t.cqfEmptyArrayField(),
+				Name:        fhirFunc,
+				LibraryName: t.fhirHelpersLocalName,
+				Operand:     []elm.Expression{alias},
+			},
+		},
+	}, true
+}
+
+// fhirConversionAlias is the query alias CQF generates for an implicit
+// per-element FHIR conversion.
+const fhirConversionAlias = "X"
+
+// isListOrIntervalTS reports whether ts is a list or interval type specifier.
+func isListOrIntervalTS(ts typeSpec) bool {
+	switch ts.(type) {
+	case listTS, intervalTS:
+		return true
+	}
+	return false
+}
+
+// tsAssignable reports whether a value of type from can satisfy an operand
+// declared as to. Any on either side is treated as compatible because the
+// inference is incomplete, not because the types are known to differ.
+func tsAssignable(to, from typeSpec) bool {
+	if to == nil || from == nil {
+		return false
+	}
+	if n, ok := to.(namedTS); ok && n.name == anyTS.name {
+		return true
+	}
+	if n, ok := from.(namedTS); ok && n.name == anyTS.name {
+		return true
+	}
+	return reflect.DeepEqual(to, from)
+}
+
+// rhsSatisfiesIn reports whether rhs already matches an ELM In overload for a
+// left operand of type lhs — In(T, List<T>) or In(T, Interval<T>). When it does
+// not, CQF promotes the right operand (ToList, or an interval construction).
+// Note that `Interval[a,b] in P` where P is Interval<T> does NOT match: T is
+// itself Interval<T'>, so CQF promotes P to List<Interval<T'>> via ToList.
+func rhsSatisfiesIn(lhs, rhs typeSpec) bool {
+	switch r := rhs.(type) {
+	case listTS:
+		return tsAssignable(lhs, r.elem)
+	case intervalTS:
+		return tsAssignable(lhs, r.point)
+	}
+	return false
+}
+
+// demotePointInclusionOp maps `included in` / `properly included in` (and their
+// `during` synonyms) to the point-in-interval operators `In` / `ProperIn` when
+// the left operand is a point rather than an interval or list. CQF selects the
+// operator by resolved operand type, so `X during P` yields In for a DateTime X
+// but IncludedIn for an Interval<DateTime> X.
+func (t *Translator) demotePointInclusionOp(op string, leftAST ast.Expr, left elm.Expression) string {
+	pointOp, ok := pointInclusionOps[op]
+	if !ok {
+		return op
+	}
+	// A FHIR dateTime/instant property coerces to a DateTime point via FHIRHelpers.
+	if t.fhirHelpersLocalName != "" {
+		if pe, ok := leftAST.(*ast.PropertyExpr); ok {
+			if fhirType := t.resolveFHIRPropertyType(pe.Source, pe.Path); typesystem.IsFHIRDateTimeType(fhirType) {
+				return pointOp
+			}
+		}
+	}
+	ts := t.inferTypeSpec(left)
+	if isListOrIntervalTS(ts) {
+		return op
+	}
+	// An unresolved type is left alone: demoting on Any would change the
+	// operator for expressions whose interval-ness we simply could not infer.
+	if n, isNamed := ts.(namedTS); isNamed && n.name == anyTS.name {
+		return op
+	}
+	return pointOp
+}
+
+// extractRetrieveType returns the FHIR type name from the first Retrieve found in
+// expr (e.g., for Union/Intersect source expressions). Returns "" if not found.
+func (t *Translator) extractRetrieveType(expr ast.Expr) string {
+	switch e := expr.(type) {
+	case *ast.RetrieveExpr:
+		typeName := e.DataType
+		if i := strings.LastIndex(typeName, "."); i >= 0 {
+			typeName = typeName[i+1:]
+		}
+		return typeName
+	case *ast.BinaryExpr:
+		if typeName := t.extractRetrieveType(e.Left); typeName != "" {
+			return typeName
+		}
+		return t.extractRetrieveType(e.Right)
+	case *ast.ListExpr:
+		for _, elem := range e.Elements {
+			if typeName := t.extractRetrieveType(elem); typeName != "" {
+				return typeName
+			}
+		}
+	}
+	return ""
+}
+
+// isFHIRConceptExpr returns true when expr is a PropertyExpr that resolves to a
+// FHIR CodeableConcept type (which gets coerced to CQL Concept via ToConcept).
+func (t *Translator) isFHIRConceptExpr(expr ast.Expr) bool {
+	if pe, ok := expr.(*ast.PropertyExpr); ok {
+		return t.resolveFHIRPropertyType(pe.Source, pe.Path) == "CodeableConcept"
+	}
+	return false
+}
+
+// wrapToConcept wraps an ELM expression in the ELM built-in ToConcept operator.
+// This is used for RHS code promotion in Concept ~ Code comparisons.
+func (t *Translator) wrapToConcept(expr elm.Expression) elm.Expression {
+	return &elm.ToConceptNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.cqfEmptyArrayField(),
+		Operand:    expr,
+	}
+}
+
+// resolveFHIRSourceType returns the FHIR resource or backbone type name for the// expression, by inspecting query alias type bindings and the current context.
 // Returns "" if the type cannot be determined.
 func (t *Translator) resolveFHIRSourceType(expr ast.Expr) string {
 	switch e := expr.(type) {
@@ -2682,14 +3530,23 @@ func (t *Translator) resolveFHIRPropertyType(source ast.Expr, path string) strin
 }
 
 // resolveFHIRPropertyCoercion returns the FHIRHelpers function name (e.g. "ToString",
-// "ToDateTime") to coerce the result of accessing `path` on `source`, or "" if no
-// coercion is needed. Coercion is only applied for FHIR primitive types.
+// "ToDateTime") that converts the result of accessing `path` on `source`, or "" if
+// no conversion applies.
+//
+// A list-valued property is left alone: CQF converts a list of FHIR primitives by
+// lifting the conversion into a per-element query rather than wrapping the list,
+// so emitting a scalar conversion here would produce the wrong tree.
 func (t *Translator) resolveFHIRPropertyCoercion(source ast.Expr, path string) string {
 	fhirType := t.resolveFHIRPropertyType(source, path)
 	if fhirType == "" {
 		return ""
 	}
-	return typesystem.FHIRPrimitiveCoercion[fhirType]
+	if sourceType := t.resolveFHIRSourceType(source); sourceType != "" {
+		if typesystem.IsFHIRListProperty(sourceType, path) {
+			return ""
+		}
+	}
+	return typesystem.FHIRCoercionFor(fhirType)
 }
 
 func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
@@ -2710,6 +3567,9 @@ func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 			if loc != "" {
 				isNull.Locator = loc
 			}
+			if t.opts.EnableResultTypes {
+				t.stampResultType(isNull)
+			}
 			return &elm.UnaryExpressionNode{
 				Annotation: ann,
 				Signature:  t.computeSig("Not", []elm.Expression{isNull}),
@@ -2726,6 +3586,9 @@ func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 			if loc != "" {
 				node.Locator = loc
 			}
+			if t.opts.EnableResultTypes {
+				t.stampResultType(node)
+			}
 			return &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("Not", []elm.Expression{node}), Operator: "Not", Operand: node}
 		}
 		return node
@@ -2737,11 +3600,17 @@ func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 			if loc != "" {
 				node.Locator = loc
 			}
+			if t.opts.EnableResultTypes {
+				t.stampResultType(node)
+			}
 			return &elm.UnaryExpressionNode{Annotation: ann, Signature: t.computeSig("Not", []elm.Expression{node}), Operator: "Not", Operand: node}
 		}
 		return node
 	}
 	ts := t.translateTypeSpecifier(v.TypeSpec)
+	if t.opts.EnableResultTypes {
+		stampTypeSpecifier(ts)
+	}
 	return &elm.IsNode{
 		Annotation:      ann,
 		Signature:       t.cqfEmptyArrayField(),
@@ -2751,24 +3620,16 @@ func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 }
 
 func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
-	op := v.Op
+	lhs := t.translateExpr(v.Left)
+	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
 
-	// IncludedIn → In: when FHIRHelpers is included and the LHS is a FHIR dateTime/instant
-	// property (which coerces to a DateTime point via FHIRHelpers.ToDateTime), the during
-	// operator should produce point-in-interval "In" rather than interval-in-interval "IncludedIn".
-	if op == "IncludedIn" && t.fhirHelpersLocalName != "" {
-		if pe, ok := v.Left.(*ast.PropertyExpr); ok {
-			if fhirType := t.resolveFHIRPropertyType(pe.Source, pe.Path); typesystem.IsFHIRDateTimeType(fhirType) {
-				op = "In"
-			}
-		}
-	}
-
-	operands := []elm.Expression{t.translateExpr(v.Left), t.translateExpr(v.Right)}
+	promotedLHS, promotedRHS := t.promoteDateToDateTime(op, lhs, t.translateExpr(v.Right))
+	operands := []elm.Expression{promotedLHS, promotedRHS}
+	sig := t.computeSig(op, operands)
 	if v.Precision != "" {
 		return &elm.PrecisionOperatorNode{
 			Annotation: t.cqfAnnotation(),
-			Signature:  t.computeSig(op, operands),
+			Signature:  sig,
 			Operator:   op,
 			Precision:  v.Precision,
 			Operand:    operands,
@@ -2776,7 +3637,7 @@ func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
 	}
 	return &elm.OperatorExpressionNode{
 		Annotation: t.cqfAnnotation(),
-		Signature:  t.computeSig(op, operands),
+		Signature:  sig,
 		Operator:   op,
 		Operand:    operands,
 	}
@@ -2796,6 +3657,63 @@ func (t *Translator) translateRetrieve(v *ast.RetrieveExpr) elm.Expression {
 	if v.Codes != nil {
 		r.Codes = t.translateExpr(v.Codes)
 		r.CodeProperty = v.CodeProperty
+		// Infer default codeProperty from FHIR ModelInfo primaryCodePath when not explicit.
+		if r.CodeProperty == "" {
+			// dt format: "{http://hl7.org/fhir}Encounter" — extract the local name.
+			localType := dt
+			if i := strings.LastIndex(localType, "}"); i >= 0 {
+				localType = localType[i+1:]
+			}
+			if cp, ok := typesystem.FHIRPrimaryCodePath[localType]; ok {
+				r.CodeProperty = cp
+			}
+		}
+		// For ValueSetRef codes: set preserve=true and default codeComparator="in".
+		if vsRef, ok := r.Codes.(*elm.ValueSetRefNode); ok {
+			tr := true
+			vsRef.Preserve = &tr
+			if v.CodeComparator != "" {
+				r.CodeComparator = v.CodeComparator
+			} else {
+				r.CodeComparator = "in"
+			}
+		} else {
+			// Non-valueset codes: default codeComparator="~".
+			if v.CodeComparator != "" {
+				r.CodeComparator = v.CodeComparator
+			} else {
+				r.CodeComparator = "~"
+			}
+		}
+
+		// When FHIRHelpers is included and the code property is a reference-choice
+		// type (e.g. MedicationRequest.medication which can be CodeableConcept or
+		// Reference(Medication)), expand to a Union of the direct retrieve and a
+		// reference-resolution sub-query — matching CQF's profile-informed behavior.
+		if t.fhirHelpersLocalName != "" {
+			localType := dt
+			if i := strings.LastIndex(localType, "}"); i >= 0 {
+				localType = localType[i+1:]
+			}
+			if refTarget, ok := typesystem.FHIRReferenceChoiceCodeProperty[localType]; ok {
+				// Only expand when the codes expression is a ValueSetRef (code-in-valueset retrieves).
+				if vsRef2, ok2 := r.Codes.(*elm.ValueSetRefNode); ok2 {
+					// Pass the original retrieve's locator for CQF locator parity.
+					loc := ""
+					if t.opts.EnableLocators {
+						loc = locatorStr(v.Loc())
+					}
+					refQuery := t.buildMedicationReferenceSubQuery(localType, refTarget, vsRef2, loc)
+					ann := t.cqfAnnotation()
+					return &elm.OperatorExpressionNode{
+						Annotation: ann,
+						Signature:  t.cqfEmptyArrayField(),
+						Operator:   "Union",
+						Operand:    []elm.Expression{r, refQuery},
+					}
+				}
+			}
+		}
 	}
 	return r
 }
@@ -2834,6 +3752,15 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 					typeName = typeName[i+1:]
 				}
 				aliasTypes[src.Alias] = typeName
+			} else if src.Alias != "" {
+				// For union/intersect source expressions, find the first Retrieve to determine type.
+				if typeName := t.extractRetrieveType(src.Expression); typeName != "" {
+					aliasTypes[src.Alias] = typeName
+				} else if typeName := t.resolveFHIRSourceType(src.Expression); typeName != "" {
+					// A property-valued source, e.g. (Patient.address) A — the alias
+					// element type is the property's own FHIR type.
+					aliasTypes[src.Alias] = typeName
+				}
 			}
 		}
 		srcExpr := t.translateExpr(src.Expression)
@@ -2917,16 +3844,17 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		qn.Where = t.translateExpr(q.Where)
 	}
 	if q.Return != nil {
+		// Plain 'return' omits the field; explicit 'return all'/'return distinct'
+		// emit distinct:false / distinct:true respectively.
 		var distinct *bool
-		// Only emit distinct:false for explicit 'return all'; plain 'return' omits the field.
-		if q.Return.Distinct != nil && !*q.Return.Distinct {
-			f := false
-			distinct = &f
+		if q.Return.Distinct != nil {
+			d := *q.Return.Distinct
+			distinct = &d
 		}
 		rc := &elm.ReturnClauseELM{
 			Annotation: t.cqfAnnotation(),
 			Distinct:   distinct,
-			Expression: t.translateExpr(q.Return.Expression),
+			Expression: t.translateExprUnconsumed(q.Return.Expression),
 		}
 		if t.opts.EnableLocators {
 			rc.Locator = locatorStr(q.Return.Loc())
@@ -2934,14 +3862,41 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		qn.Return = rc
 	}
 	if q.Aggregate != nil {
-		qn.Aggregate = &elm.AggregateClauseELM{
-			Distinct:   q.Aggregate.Distinct,
+		var distinct *bool
+		if q.Aggregate.Distinct != nil {
+			d := *q.Aggregate.Distinct
+			distinct = &d
+		}
+		// The accumulator identifier is in scope inside the aggregate expression
+		// and resolves to a QueryLetRef, so register it — with the type of the
+		// starting expression — before translating the body.
+		letScope[q.Aggregate.Identifier] = true
+		starting := t.translateExpr(q.Aggregate.Starting)
+		if q.Aggregate.Starting != nil {
+			letTypeSpecs[q.Aggregate.Identifier] = t.inferTypeSpec(starting)
+		}
+		ac := &elm.AggregateClauseELM{
+			Distinct:   distinct,
 			Identifier: q.Aggregate.Identifier,
 			Expression: t.translateExpr(q.Aggregate.Expression),
-			Starting:   t.translateExpr(q.Aggregate.Starting),
+			Starting:   starting,
 		}
+		if t.opts.EnableLocators {
+			ac.Locator = locatorStr(q.Aggregate.Loc())
+		}
+		qn.Aggregate = ac
 	}
 	if q.Sort != nil {
+		// Sort-by expressions are scoped to the query's result element, so record
+		// its type for inferTypeSpec to resolve the IdentifierRefs it contains.
+		prevSortElem := t.sortElementTS
+		if lt, ok := t.inferTypeSpec(qn).(listTS); ok {
+			t.sortElementTS = lt.elem
+		} else {
+			t.sortElementTS = nil
+		}
+		defer func() { t.sortElementTS = prevSortElem }()
+
 		sortClause := &elm.SortClauseELM{Annotation: t.cqfAnnotation()}
 		if t.opts.EnableLocators {
 			sortClause.Locator = locatorStr(q.Sort.Loc())
@@ -2966,11 +3921,53 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			} else if id, ok := item.Expression.(*ast.IdentifierRef); ok && id != nil {
 				sortItem.Path = id.Name
 			} else {
+				prevSortScope := t.inSortScope
+				t.inSortScope = true
 				sortItem.Expression = t.translateExpr(item.Expression)
+				t.inSortScope = prevSortScope
 			}
 			sortClause.By = append(sortClause.By, sortItem)
 		}
 		qn.Sort = sortClause
+	}
+	// The alias and let scopes this query established are popped as soon as it
+	// returns, so result types for the query and its clauses have to be resolved
+	// here rather than by the caller's stamping pass.
+	if t.opts.EnableResultTypes {
+		for _, src := range qn.Source {
+			src.ResultTypeName, src.ResultTypeSpecifier = resultTypeOf(t.nodeResultTS(src.Expression))
+		}
+		for _, l := range qn.Let {
+			l.ResultTypeName, l.ResultTypeSpecifier = resultTypeOf(t.nodeResultTS(l.Expression))
+		}
+		for _, rel := range qn.Relationship {
+			rel.ResultTypeName, rel.ResultTypeSpecifier = resultTypeOf(t.nodeResultTS(rel.Expression))
+		}
+		if qn.Aggregate != nil && qn.Aggregate.Expression != nil {
+			qn.Aggregate.ResultTypeName, qn.Aggregate.ResultTypeSpecifier =
+				resultTypeOf(t.nodeResultTS(qn.Aggregate.Expression))
+		}
+		if qn.Return != nil && qn.Return.Expression != nil {
+			// A return clause yields the list of its element type.
+			qn.Return.ResultTypeName, qn.Return.ResultTypeSpecifier =
+				resultTypeOf(listTS{t.nodeResultTS(qn.Return.Expression)})
+		}
+		if qn.Sort != nil {
+			for _, item := range qn.Sort.By {
+				switch {
+				case item.Expression != nil:
+					item.ResultTypeName, item.ResultTypeSpecifier = resultTypeOf(t.nodeResultTS(item.Expression))
+				case item.Path != "":
+					// ByColumn names a field of the query's result element.
+					if tt, ok := t.sortElementTS.(tupleTS); ok {
+						if fts, found := tt.field(item.Path); found {
+							item.ResultTypeName, item.ResultTypeSpecifier = resultTypeOf(fts)
+						}
+					}
+				}
+			}
+		}
+		t.stampResultType(qn)
 	}
 	return qn
 }
@@ -3075,10 +4072,174 @@ func titleCase(s string) string {
 	return strings.ToUpper(lower[:1]) + lower[1:]
 }
 
+// buildMedicationReferenceSubQuery builds the reference-resolution sub-query for
+// FHIR medication choice-type retrieves. When a retrieve filters by a ValueSet on a
+// property like MedicationRequest.medication[x] (which can be CodeableConcept OR
+// Reference(Medication)), CQF generates a union of the direct retrieve and a
+// sub-query that joins the primary resource with the referenced resource.
+//
+// The generated sub-query:
+//
+//	Query {
+//	  source: [{ alias: "MR", expr: Retrieve{localType} }],
+//	  relationship: [With {
+//	    alias: "M",
+//	    expr: Retrieve{refTarget},
+//	    suchThat: And(
+//	      Equal(FHIRHelpers.ToString(M.id), Last(Split(FHIRHelpers.ToString(MR.medication.reference), "/"))),
+//	      InValueSet(FHIRHelpers.ToConcept(M.code), vsRef)
+//	    )
+//	  }]
+//	}
+//
+// localType: e.g. "MedicationRequest", refTarget: e.g. "Medication"
+// loc: the locator string from the original Retrieve node (CQF reuses it on all synthetic nodes)
+func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget string, vsRef *elm.ValueSetRefNode, loc string) elm.Expression {
+	ann := t.cqfAnnotation()
+	sig := t.cqfEmptyArrayField()
+	fhirNS := "{http://hl7.org/fhir}"
+	fhirBase := "http://hl7.org/fhir/StructureDefinition/"
+	mrAlias := "MR"
+	mAlias := "M"
+
+	// The property name for the reference: e.g. "medication.reference"
+	codeProp := typesystem.FHIRPrimaryCodePath[localType] // e.g. "medication"
+	refPropPath := codeProp + ".reference"
+
+	// Retrieve{localType} — unconstrained, no locator (CQF does not put a locator on this synthetic node)
+	primaryRetrieve := &elm.RetrieveNode{
+		Annotation:  ann,
+		Include:     t.cqfEmptyArrayField(),
+		CodeFilter:  t.cqfEmptyArrayField(),
+		DateFilter:  t.cqfEmptyArrayField(),
+		OtherFilter: t.cqfEmptyArrayField(),
+		DataType:    fhirNS + localType,
+		TemplateID:  fhirBase + localType,
+	}
+
+	// Retrieve{refTarget} — unconstrained, no locator (CQF does not put a locator on this synthetic node)
+	refRetrieve := &elm.RetrieveNode{
+		Annotation:  ann,
+		Include:     t.cqfEmptyArrayField(),
+		CodeFilter:  t.cqfEmptyArrayField(),
+		DateFilter:  t.cqfEmptyArrayField(),
+		OtherFilter: t.cqfEmptyArrayField(),
+		DataType:    fhirNS + refTarget,
+		TemplateID:  fhirBase + refTarget,
+	}
+
+	// FHIRHelpers.ToString(M.id)
+	mIDProp := &elm.PropertyNode{Annotation: ann, Path: "id", Scope: mAlias}
+	mIDStr := &elm.FunctionRefNode{
+		Annotation:  ann,
+		Signature:   sig,
+		Name:        "ToString",
+		LibraryName: t.fhirHelpersLocalName,
+		Operand:     []elm.Expression{mIDProp},
+	}
+
+	// FHIRHelpers.ToString(MR.medication.reference)
+	mrRefProp := &elm.PropertyNode{Annotation: ann, Path: refPropPath, Scope: mrAlias}
+	mrRefStr := &elm.FunctionRefNode{
+		Annotation:  ann,
+		Signature:   sig,
+		Name:        "ToString",
+		LibraryName: t.fhirHelpersLocalName,
+		Operand:     []elm.Expression{mrRefProp},
+	}
+
+	// Split(FHIRHelpers.ToString(MR.medication.reference), "/")
+	sepLit := &elm.LiteralNode{ValueType: "{urn:hl7-org:elm-types:r1}String", Value: "/"}
+	splitExpr := &elm.SplitNode{Annotation: ann, Signature: sig, StringToSplit: mrRefStr, Separator: sepLit}
+
+	// Last(Split(...))
+	lastExpr := &elm.LastNode{Annotation: ann, Signature: sig, Source: splitExpr}
+
+	// Equal(FHIRHelpers.ToString(M.id), Last(Split(...)))
+	eqOperands := []elm.Expression{mIDStr, lastExpr}
+	equalExpr := &elm.OperatorExpressionNode{
+		Annotation: ann,
+		Signature:  sig,
+		Operator:   "Equal",
+		Operand:    eqOperands,
+	}
+
+	// InValueSet(FHIRHelpers.ToConcept(M.code), vsRef)
+	mCodeProp := &elm.PropertyNode{Annotation: ann, Path: "code", Scope: mAlias}
+	mCodeConcept := &elm.FunctionRefNode{
+		Annotation:  ann,
+		Signature:   sig,
+		Name:        "ToConcept",
+		LibraryName: t.fhirHelpersLocalName,
+		Operand:     []elm.Expression{mCodeProp},
+	}
+	// Build a copy of vsRef with preserve=true for the InValueSet valueset field
+	tr := true
+	inVSExpr := &elm.InValueSetNode{
+		Annotation: ann,
+		Signature:  sig,
+		Code:       mCodeConcept,
+		ValueSet: &elm.ValueSetRefNode{
+			Locator:     vsRef.Locator,
+			Name:        vsRef.Name,
+			LibraryName: vsRef.LibraryName,
+			Preserve:    &tr,
+		},
+	}
+
+	// And(equal, inValueSet)
+	suchThat := &elm.OperatorExpressionNode{
+		Annotation: ann,
+		Signature:  sig,
+		Operator:   "And",
+		Operand:    []elm.Expression{equalExpr, inVSExpr},
+	}
+
+	// With clause
+	withClause := &elm.RelationshipClauseELM{
+		Locator:    loc,
+		Kind:       "With",
+		Alias:      mAlias,
+		Expression: refRetrieve,
+		SuchThat:   suchThat,
+	}
+
+	// Empty let slice (CQF emits "let": [])
+	return &elm.QueryNode{
+		Annotation:   ann,
+		Locator:      loc,
+		Source:       []*elm.AliasedQuerySourceELM{{Locator: loc, Alias: mrAlias, Expression: primaryRetrieve}},
+		Let:          []*elm.LetClauseELM{},
+		Relationship: []*elm.RelationshipClauseELM{withClause},
+	}
+}
+
+// isStandardAnnotationTag reports whether a block-comment @tag is emitted into
+// the ELM annotation. CQF does not use an allowlist of spec-defined tag names —
+// it emits any tag whose name is a valid CQL identifier and silently drops the
+// rest, so @measure-component and @dotted.name produce no tag data while
+// @author and @customThing do.
+func isStandardAnnotationTag(name string) bool {
+	if name == "" {
+		return false
+	}
+	for i, r := range name {
+		isAlpha := (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || r == '_'
+		isDigit := r >= '0' && r <= '9'
+		if !isAlpha && !(i > 0 && isDigit) {
+			return false
+		}
+	}
+	return true
+}
+
 // buildStatementAnnotation builds the ELM annotation for a statement definition.
-// In CQFMode it emits [] (empty) when there are no CQL @tag annotations, or
-// produces the structured annotation array when the AST carries @tag annotations.
-// CQL compatibility level 1.4 suppresses @tag annotation data (CQF behaviour).
+// In CQFMode:
+//   - @tag data (t:[]) is ALWAYS emitted when block-comment @tag annotations exist,
+//     regardless of EnableAnnotations (CQF emits tag metadata unconditionally).
+//   - source-text s-tree is emitted only when EnableAnnotations=true.
+//
+// Outside CQFMode: nothing is emitted unless EnableAnnotations is true.
 func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.RawMessage {
 	if !t.opts.CQFMode && !t.opts.EnableAnnotations {
 		return nil
@@ -3106,13 +4267,19 @@ func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.
 
 	// Build the single Annotation entry that combines @tag annotations and
 	// the source-text s-tree (CQF emits both inside one Annotation map).
+	// CQF emits t:[...] tag data unconditionally (not gated on --annotations);
+	// s-tree is only emitted when EnableAnnotations=true.
 	combined := annJSON{Type: "Annotation"}
 	if len(s.Annotations) > 0 && emitTagData {
 		// CQF merges all @tag pairs across preceding block comments into one
 		// flat tag list on the single Annotation entry.
+		// CQF only emits standard CQL spec-defined annotation tag names;
+		// custom application-specific tags (e.g. @measure-component:) are not emitted.
 		for _, ann := range s.Annotations {
 			for _, tag := range ann.Tags {
-				combined.T = append(combined.T, tagJSON{Name: tag.Name, Value: tag.Value})
+				if isStandardAnnotationTag(tag.Name) {
+					combined.T = append(combined.T, tagJSON{Name: tag.Name, Value: tag.Value})
+				}
 			}
 		}
 	}

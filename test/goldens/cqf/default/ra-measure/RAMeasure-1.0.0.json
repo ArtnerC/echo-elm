@@ -1,0 +1,1662 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "RAMeasure",
+      "version": "1.0.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        },
+        {
+          "localIdentifier": "Terminology",
+          "path": "RAMeasureTerminology",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "default": {
+            "high": {
+              "operand": {
+                "day": {
+                  "type": "Literal",
+                  "value": "31",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              "signature": [],
+              "type": "ToDateTime"
+            },
+            "highClosed": true,
+            "low": {
+              "operand": {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              "signature": [],
+              "type": "ToDateTime"
+            },
+            "lowClosed": true,
+            "type": "Interval"
+          },
+          "name": "Measurement Period",
+          "parameterTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Qualifying encounters — office visits or rheumatology visits\nthat are finished and whose period falls during the measurement period.\nUsed in both the IPP eligibility test and the encounter count test."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "operand": [
+                    {
+                      "codeComparator": "in",
+                      "codeFilter": [],
+                      "codeProperty": "type",
+                      "codes": {
+                        "libraryName": "Terminology",
+                        "name": "Office Visit",
+                        "preserve": true,
+                        "type": "ValueSetRef"
+                      },
+                      "dataType": "{http://hl7.org/fhir}Encounter",
+                      "dateFilter": [],
+                      "include": [],
+                      "otherFilter": [],
+                      "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                      "type": "Retrieve"
+                    },
+                    {
+                      "codeComparator": "in",
+                      "codeFilter": [],
+                      "codeProperty": "type",
+                      "codes": {
+                        "libraryName": "Terminology",
+                        "name": "Rheumatology Visit",
+                        "preserve": true,
+                        "type": "ValueSetRef"
+                      },
+                      "dataType": "{http://hl7.org/fhir}Encounter",
+                      "dateFilter": [],
+                      "include": [],
+                      "otherFilter": [],
+                      "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                      "type": "Retrieve"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Union"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": [
+                    {
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToString",
+                      "operand": [
+                        {
+                          "path": "status",
+                          "scope": "E",
+                          "type": "Property"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    {
+                      "type": "Literal",
+                      "value": "finished",
+                      "valueType": "{urn:hl7-org:elm-types:r1}String"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                {
+                  "operand": [
+                    {
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToInterval",
+                      "operand": [
+                        {
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    {
+                      "name": "Measurement Period",
+                      "type": "ParameterRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "IncludedIn"
+                }
+              ],
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "name": "Qualifying Encounters"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Active, confirmed RA conditions recorded on or before the end\nof the measurement period. Includes recurrence and relapse per clinical\nstatus semantics — these represent ongoing disease activity, not resolved\nepisodes. Excludes inactive, remission, and resolved status per measure spec."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "C",
+                "expression": {
+                  "codeComparator": "in",
+                  "codeFilter": [],
+                  "codeProperty": "code",
+                  "codes": {
+                    "libraryName": "Terminology",
+                    "name": "Rheumatoid Arthritis",
+                    "preserve": true,
+                    "type": "ValueSetRef"
+                  },
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": [
+                    {
+                      "operand": [
+                        {
+                          "operand": [
+                            {
+                              "operand": [
+                                {
+                                  "libraryName": "FHIRHelpers",
+                                  "name": "ToConcept",
+                                  "operand": [
+                                    {
+                                      "path": "clinicalStatus",
+                                      "scope": "C",
+                                      "type": "Property"
+                                    }
+                                  ],
+                                  "signature": [],
+                                  "type": "FunctionRef"
+                                },
+                                {
+                                  "operand": {
+                                    "libraryName": "Terminology",
+                                    "name": "active",
+                                    "type": "CodeRef"
+                                  },
+                                  "signature": [],
+                                  "type": "ToConcept"
+                                }
+                              ],
+                              "signature": [],
+                              "type": "Equivalent"
+                            },
+                            {
+                              "operand": [
+                                {
+                                  "libraryName": "FHIRHelpers",
+                                  "name": "ToConcept",
+                                  "operand": [
+                                    {
+                                      "path": "clinicalStatus",
+                                      "scope": "C",
+                                      "type": "Property"
+                                    }
+                                  ],
+                                  "signature": [],
+                                  "type": "FunctionRef"
+                                },
+                                {
+                                  "operand": {
+                                    "libraryName": "Terminology",
+                                    "name": "recurrence",
+                                    "type": "CodeRef"
+                                  },
+                                  "signature": [],
+                                  "type": "ToConcept"
+                                }
+                              ],
+                              "signature": [],
+                              "type": "Equivalent"
+                            }
+                          ],
+                          "signature": [],
+                          "type": "Or"
+                        },
+                        {
+                          "operand": [
+                            {
+                              "libraryName": "FHIRHelpers",
+                              "name": "ToConcept",
+                              "operand": [
+                                {
+                                  "path": "clinicalStatus",
+                                  "scope": "C",
+                                  "type": "Property"
+                                }
+                              ],
+                              "signature": [],
+                              "type": "FunctionRef"
+                            },
+                            {
+                              "operand": {
+                                "libraryName": "Terminology",
+                                "name": "relapse",
+                                "type": "CodeRef"
+                              },
+                              "signature": [],
+                              "type": "ToConcept"
+                            }
+                          ],
+                          "signature": [],
+                          "type": "Equivalent"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Or"
+                    },
+                    {
+                      "operand": [
+                        {
+                          "libraryName": "FHIRHelpers",
+                          "name": "ToConcept",
+                          "operand": [
+                            {
+                              "path": "verificationStatus",
+                              "scope": "C",
+                              "type": "Property"
+                            }
+                          ],
+                          "signature": [],
+                          "type": "FunctionRef"
+                        },
+                        {
+                          "operand": {
+                            "libraryName": "Terminology",
+                            "name": "confirmed",
+                            "type": "CodeRef"
+                          },
+                          "signature": [],
+                          "type": "ToConcept"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Equivalent"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "And"
+                },
+                {
+                  "operand": [
+                    {
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToDateTime",
+                      "operand": [
+                        {
+                          "path": "recordedDate",
+                          "scope": "C",
+                          "type": "Property"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    {
+                      "operand": {
+                        "name": "Measurement Period",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Before"
+                }
+              ],
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "name": "Active RA Diagnoses"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "signature": [],
+                "source": {
+                  "name": "Qualifying Encounters",
+                  "type": "ExpressionRef"
+                },
+                "type": "Count"
+              },
+              {
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "GreaterOrEqual"
+          },
+          "name": "Has Two or More Qualifying Encounters"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Adult patients (≥ 18 years old at the start of the measurement\nperiod) with an established, active rheumatoid arthritis diagnosis AND at\nleast two qualifying encounters (office visit or rheumatology visit) during\nthe measurement period. The two-encounter threshold aligns with ACR guidance\non minimum monitoring frequency and screens out patients with only a single\nincidental RA-related contact."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "operand": [
+                      {
+                        "operand": [
+                          {
+                            "operand": {
+                              "path": "birthDate.value",
+                              "source": {
+                                "name": "Patient",
+                                "type": "ExpressionRef"
+                              },
+                              "type": "Property"
+                            },
+                            "signature": [],
+                            "type": "ToDateTime"
+                          },
+                          {
+                            "operand": {
+                              "name": "Measurement Period",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "Start"
+                          }
+                        ],
+                        "precision": "Year",
+                        "signature": [],
+                        "type": "CalculateAgeAt"
+                      },
+                      {
+                        "type": "Literal",
+                        "value": "18",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "GreaterOrEqual"
+                  },
+                  {
+                    "operand": {
+                      "name": "Active RA Diagnoses",
+                      "type": "ExpressionRef"
+                    },
+                    "signature": [],
+                    "type": "Exists"
+                  }
+                ],
+                "signature": [],
+                "type": "And"
+              },
+              {
+                "name": "Has Two or More Qualifying Encounters",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "Initial Population"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "All patients in the Initial Population. The denominator equals\nthe IPP for this measure — no additional criteria are applied."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "name": "Initial Population",
+            "type": "ExpressionRef"
+          },
+          "name": "Denominator"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "True if the patient has any active DMARD contraindication\n— pregnancy, active TB, or severe hepatic impairment — documented on\nor before the end of the measurement period."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "C",
+                  "expression": {
+                    "operand": [
+                      {
+                        "operand": [
+                          {
+                            "codeComparator": "in",
+                            "codeFilter": [],
+                            "codeProperty": "code",
+                            "codes": {
+                              "libraryName": "Terminology",
+                              "name": "Pregnancy",
+                              "preserve": true,
+                              "type": "ValueSetRef"
+                            },
+                            "dataType": "{http://hl7.org/fhir}Condition",
+                            "dateFilter": [],
+                            "include": [],
+                            "otherFilter": [],
+                            "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                            "type": "Retrieve"
+                          },
+                          {
+                            "codeComparator": "in",
+                            "codeFilter": [],
+                            "codeProperty": "code",
+                            "codes": {
+                              "libraryName": "Terminology",
+                              "name": "Active Tuberculosis",
+                              "preserve": true,
+                              "type": "ValueSetRef"
+                            },
+                            "dataType": "{http://hl7.org/fhir}Condition",
+                            "dateFilter": [],
+                            "include": [],
+                            "otherFilter": [],
+                            "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                            "type": "Retrieve"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Union"
+                      },
+                      {
+                        "codeComparator": "in",
+                        "codeFilter": [],
+                        "codeProperty": "code",
+                        "codes": {
+                          "libraryName": "Terminology",
+                          "name": "Severe Hepatic Impairment",
+                          "preserve": true,
+                          "type": "ValueSetRef"
+                        },
+                        "dataType": "{http://hl7.org/fhir}Condition",
+                        "dateFilter": [],
+                        "include": [],
+                        "otherFilter": [],
+                        "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                        "type": "Retrieve"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Union"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToConcept",
+                        "operand": [
+                          {
+                            "path": "clinicalStatus",
+                            "scope": "C",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "operand": {
+                          "libraryName": "Terminology",
+                          "name": "active",
+                          "type": "CodeRef"
+                        },
+                        "signature": [],
+                        "type": "ToConcept"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Equivalent"
+                  },
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToDateTime",
+                        "operand": [
+                          {
+                            "path": "recordedDate",
+                            "scope": "C",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "operand": {
+                          "name": "Measurement Period",
+                          "type": "ParameterRef"
+                        },
+                        "signature": [],
+                        "type": "End"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Before"
+                  }
+                ],
+                "signature": [],
+                "type": "And"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "Has DMARD Contraindication"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "True if the patient had an active hospice encounter during\nthe measurement period. Standard CMS exclusion pattern."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeComparator": "in",
+                    "codeFilter": [],
+                    "codeProperty": "type",
+                    "codes": {
+                      "libraryName": "Terminology",
+                      "name": "Hospice Care Ambulatory",
+                      "preserve": true,
+                      "type": "ValueSetRef"
+                    },
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToString",
+                        "operand": [
+                          {
+                            "path": "status",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "element": [
+                          {
+                            "type": "Literal",
+                            "value": "finished",
+                            "valueType": "{urn:hl7-org:elm-types:r1}String"
+                          },
+                          {
+                            "type": "Literal",
+                            "value": "in-progress",
+                            "valueType": "{urn:hl7-org:elm-types:r1}String"
+                          }
+                        ],
+                        "type": "List"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "In"
+                  },
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "path": "period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "name": "Measurement Period",
+                        "type": "ParameterRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Overlaps"
+                  }
+                ],
+                "signature": [],
+                "type": "And"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "Has Hospice During Measurement Period"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patients with active contraindications to DMARD therapy:\npregnancy, active tuberculosis, or severe hepatic impairment. Each\ncondition must be clinically active and recorded on or before the end of\nthe measurement period. Patients enrolled in hospice care are also excluded\nper standard CMS quality measure exclusion logic."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "Has DMARD Contraindication",
+                "type": "ExpressionRef"
+              },
+              {
+                "name": "Has Hospice During Measurement Period",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Denominator Exclusion"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "True if the patient has an active or completed DMARD or\nbiologic therapy order (intent = 'order') with authoredOn during the\nmeasurement period. Includes both synthetic DMARDs (methotrexate,\nhydroxychloroquine, sulfasalazine, leflunomide) and biologic agents\n(TNF inhibitors, IL-6 inhibitors, JAK inhibitors, etc.)."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "MR",
+                  "expression": {
+                    "operand": [
+                      {
+                        "operand": [
+                          {
+                            "codeComparator": "in",
+                            "codeFilter": [],
+                            "codeProperty": "medication",
+                            "codes": {
+                              "libraryName": "Terminology",
+                              "name": "DMARD Therapy",
+                              "preserve": true,
+                              "type": "ValueSetRef"
+                            },
+                            "dataType": "{http://hl7.org/fhir}MedicationRequest",
+                            "dateFilter": [],
+                            "include": [],
+                            "otherFilter": [],
+                            "templateId": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                            "type": "Retrieve"
+                          },
+                          {
+                            "let": [],
+                            "relationship": [
+                              {
+                                "alias": "M",
+                                "expression": {
+                                  "codeFilter": [],
+                                  "dataType": "{http://hl7.org/fhir}Medication",
+                                  "dateFilter": [],
+                                  "include": [],
+                                  "otherFilter": [],
+                                  "templateId": "http://hl7.org/fhir/StructureDefinition/Medication",
+                                  "type": "Retrieve"
+                                },
+                                "suchThat": {
+                                  "operand": [
+                                    {
+                                      "operand": [
+                                        {
+                                          "libraryName": "FHIRHelpers",
+                                          "name": "ToString",
+                                          "operand": [
+                                            {
+                                              "path": "id",
+                                              "scope": "M",
+                                              "type": "Property"
+                                            }
+                                          ],
+                                          "signature": [],
+                                          "type": "FunctionRef"
+                                        },
+                                        {
+                                          "signature": [],
+                                          "source": {
+                                            "separator": {
+                                              "type": "Literal",
+                                              "value": "/",
+                                              "valueType": "{urn:hl7-org:elm-types:r1}String"
+                                            },
+                                            "signature": [],
+                                            "stringToSplit": {
+                                              "libraryName": "FHIRHelpers",
+                                              "name": "ToString",
+                                              "operand": [
+                                                {
+                                                  "path": "medication.reference",
+                                                  "scope": "MR",
+                                                  "type": "Property"
+                                                }
+                                              ],
+                                              "signature": [],
+                                              "type": "FunctionRef"
+                                            },
+                                            "type": "Split"
+                                          },
+                                          "type": "Last"
+                                        }
+                                      ],
+                                      "signature": [],
+                                      "type": "Equal"
+                                    },
+                                    {
+                                      "code": {
+                                        "libraryName": "FHIRHelpers",
+                                        "name": "ToConcept",
+                                        "operand": [
+                                          {
+                                            "path": "code",
+                                            "scope": "M",
+                                            "type": "Property"
+                                          }
+                                        ],
+                                        "signature": [],
+                                        "type": "FunctionRef"
+                                      },
+                                      "signature": [],
+                                      "type": "InValueSet",
+                                      "valueset": {
+                                        "libraryName": "Terminology",
+                                        "name": "DMARD Therapy",
+                                        "preserve": true
+                                      }
+                                    }
+                                  ],
+                                  "signature": [],
+                                  "type": "And"
+                                },
+                                "type": "With"
+                              }
+                            ],
+                            "source": [
+                              {
+                                "alias": "MR",
+                                "expression": {
+                                  "codeFilter": [],
+                                  "dataType": "{http://hl7.org/fhir}MedicationRequest",
+                                  "dateFilter": [],
+                                  "include": [],
+                                  "otherFilter": [],
+                                  "templateId": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                                  "type": "Retrieve"
+                                }
+                              }
+                            ],
+                            "type": "Query"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Union"
+                      },
+                      {
+                        "operand": [
+                          {
+                            "codeComparator": "in",
+                            "codeFilter": [],
+                            "codeProperty": "medication",
+                            "codes": {
+                              "libraryName": "Terminology",
+                              "name": "Biologics for Rheumatoid Arthritis",
+                              "preserve": true,
+                              "type": "ValueSetRef"
+                            },
+                            "dataType": "{http://hl7.org/fhir}MedicationRequest",
+                            "dateFilter": [],
+                            "include": [],
+                            "otherFilter": [],
+                            "templateId": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                            "type": "Retrieve"
+                          },
+                          {
+                            "let": [],
+                            "relationship": [
+                              {
+                                "alias": "M",
+                                "expression": {
+                                  "codeFilter": [],
+                                  "dataType": "{http://hl7.org/fhir}Medication",
+                                  "dateFilter": [],
+                                  "include": [],
+                                  "otherFilter": [],
+                                  "templateId": "http://hl7.org/fhir/StructureDefinition/Medication",
+                                  "type": "Retrieve"
+                                },
+                                "suchThat": {
+                                  "operand": [
+                                    {
+                                      "operand": [
+                                        {
+                                          "libraryName": "FHIRHelpers",
+                                          "name": "ToString",
+                                          "operand": [
+                                            {
+                                              "path": "id",
+                                              "scope": "M",
+                                              "type": "Property"
+                                            }
+                                          ],
+                                          "signature": [],
+                                          "type": "FunctionRef"
+                                        },
+                                        {
+                                          "signature": [],
+                                          "source": {
+                                            "separator": {
+                                              "type": "Literal",
+                                              "value": "/",
+                                              "valueType": "{urn:hl7-org:elm-types:r1}String"
+                                            },
+                                            "signature": [],
+                                            "stringToSplit": {
+                                              "libraryName": "FHIRHelpers",
+                                              "name": "ToString",
+                                              "operand": [
+                                                {
+                                                  "path": "medication.reference",
+                                                  "scope": "MR",
+                                                  "type": "Property"
+                                                }
+                                              ],
+                                              "signature": [],
+                                              "type": "FunctionRef"
+                                            },
+                                            "type": "Split"
+                                          },
+                                          "type": "Last"
+                                        }
+                                      ],
+                                      "signature": [],
+                                      "type": "Equal"
+                                    },
+                                    {
+                                      "code": {
+                                        "libraryName": "FHIRHelpers",
+                                        "name": "ToConcept",
+                                        "operand": [
+                                          {
+                                            "path": "code",
+                                            "scope": "M",
+                                            "type": "Property"
+                                          }
+                                        ],
+                                        "signature": [],
+                                        "type": "FunctionRef"
+                                      },
+                                      "signature": [],
+                                      "type": "InValueSet",
+                                      "valueset": {
+                                        "libraryName": "Terminology",
+                                        "name": "Biologics for Rheumatoid Arthritis",
+                                        "preserve": true
+                                      }
+                                    }
+                                  ],
+                                  "signature": [],
+                                  "type": "And"
+                                },
+                                "type": "With"
+                              }
+                            ],
+                            "source": [
+                              {
+                                "alias": "MR",
+                                "expression": {
+                                  "codeFilter": [],
+                                  "dataType": "{http://hl7.org/fhir}MedicationRequest",
+                                  "dateFilter": [],
+                                  "include": [],
+                                  "otherFilter": [],
+                                  "templateId": "http://hl7.org/fhir/StructureDefinition/MedicationRequest",
+                                  "type": "Retrieve"
+                                }
+                              }
+                            ],
+                            "type": "Query"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Union"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Union"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "operand": [
+                      {
+                        "operand": [
+                          {
+                            "libraryName": "FHIRHelpers",
+                            "name": "ToString",
+                            "operand": [
+                              {
+                                "path": "status",
+                                "scope": "MR",
+                                "type": "Property"
+                              }
+                            ],
+                            "signature": [],
+                            "type": "FunctionRef"
+                          },
+                          {
+                            "element": [
+                              {
+                                "type": "Literal",
+                                "value": "active",
+                                "valueType": "{urn:hl7-org:elm-types:r1}String"
+                              },
+                              {
+                                "type": "Literal",
+                                "value": "completed",
+                                "valueType": "{urn:hl7-org:elm-types:r1}String"
+                              }
+                            ],
+                            "type": "List"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "In"
+                      },
+                      {
+                        "operand": [
+                          {
+                            "libraryName": "FHIRHelpers",
+                            "name": "ToString",
+                            "operand": [
+                              {
+                                "path": "intent",
+                                "scope": "MR",
+                                "type": "Property"
+                              }
+                            ],
+                            "signature": [],
+                            "type": "FunctionRef"
+                          },
+                          {
+                            "type": "Literal",
+                            "value": "order",
+                            "valueType": "{urn:hl7-org:elm-types:r1}String"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Equal"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "And"
+                  },
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToDateTime",
+                        "operand": [
+                          {
+                            "path": "authoredOn",
+                            "scope": "MR",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "name": "Measurement Period",
+                        "type": "ParameterRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "In"
+                  }
+                ],
+                "signature": [],
+                "type": "And"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "Has Active DMARD or Biologic Therapy"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "True if the patient has at least one disease activity\nassessment observation (DAS28-ESR, DAS28-CRP, CDAI, SDAI, or\nequivalent LOINC-coded score) with a final/amended/corrected status\nduring the measurement period."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "O",
+                  "expression": {
+                    "codeComparator": "in",
+                    "codeFilter": [],
+                    "codeProperty": "code",
+                    "codes": {
+                      "libraryName": "Terminology",
+                      "name": "Disease Activity Assessment",
+                      "preserve": true,
+                      "type": "ValueSetRef"
+                    },
+                    "dataType": "{http://hl7.org/fhir}Observation",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToString",
+                        "operand": [
+                          {
+                            "path": "status",
+                            "scope": "O",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "element": [
+                          {
+                            "type": "Literal",
+                            "value": "final",
+                            "valueType": "{urn:hl7-org:elm-types:r1}String"
+                          },
+                          {
+                            "type": "Literal",
+                            "value": "amended",
+                            "valueType": "{urn:hl7-org:elm-types:r1}String"
+                          },
+                          {
+                            "type": "Literal",
+                            "value": "corrected",
+                            "valueType": "{urn:hl7-org:elm-types:r1}String"
+                          }
+                        ],
+                        "type": "List"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "In"
+                  },
+                  {
+                    "operand": [
+                      {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToDateTime",
+                        "operand": [
+                          {
+                            "path": "issued",
+                            "scope": "O",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      {
+                        "name": "Measurement Period",
+                        "type": "ParameterRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "In"
+                  }
+                ],
+                "signature": [],
+                "type": "And"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "Has Disease Activity Assessment"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patients with BOTH an active DMARD or biologic therapy order\nAND at least one documented disease activity assessment during the\nmeasurement period. Both elements must be present:\n— DMARD/biologic: evidences treat-to-target therapy is underway.\n— Disease activity assessment: evidences monitoring is occurring.\nImprovement notation is INCREASE — more patients meeting both criteria\nis the desired direction."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "Has Active DMARD or Biologic Therapy",
+                "type": "ExpressionRef"
+              },
+              {
+                "name": "Has Disease Activity Assessment",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "Numerator"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patients aged 18–44 years at the start of the measurement\nperiod. RA onset in this group is often more aggressive; monitoring\nadherence in younger adults is a clinical priority."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "operand": {
+                      "path": "birthDate.value",
+                      "source": {
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "ToDateTime"
+                  },
+                  {
+                    "operand": {
+                      "name": "Measurement Period",
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  }
+                ],
+                "precision": "Year",
+                "signature": [],
+                "type": "CalculateAgeAt"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "44",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "18",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "Stratifier Age 18-44"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patients aged 45–64 years at the start of the measurement\nperiod."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "operand": {
+                      "path": "birthDate.value",
+                      "source": {
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "ToDateTime"
+                  },
+                  {
+                    "operand": {
+                      "name": "Measurement Period",
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  }
+                ],
+                "precision": "Year",
+                "signature": [],
+                "type": "CalculateAgeAt"
+              },
+              {
+                "high": {
+                  "type": "Literal",
+                  "value": "64",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "highClosed": true,
+                "low": {
+                  "type": "Literal",
+                  "value": "45",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "Stratifier Age 45-64"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patients aged 65 years or older at the start of the\nmeasurement period. This group has heightened DMARD safety considerations\n(renal function, infection risk, drug interactions)."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "operand": {
+                      "path": "birthDate.value",
+                      "source": {
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "ToDateTime"
+                  },
+                  {
+                    "operand": {
+                      "name": "Measurement Period",
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  }
+                ],
+                "precision": "Year",
+                "signature": [],
+                "type": "CalculateAgeAt"
+              },
+              {
+                "type": "Literal",
+                "value": "65",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "GreaterOrEqual"
+          },
+          "name": "Stratifier Age 65 and Over"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patient administrative sex for stratified reporting.\nRA disproportionately affects women; sex-based reporting supports\nequity analysis."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "path": "gender",
+            "source": {
+              "name": "Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "name": "SDE Sex"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Patient age in whole years at the start of the measurement\nperiod. Used for risk adjustment and equity analytics."
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": {
+                  "path": "birthDate.value",
+                  "source": {
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "operand": {
+                  "name": "Measurement Period",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "precision": "Year",
+            "signature": [],
+            "type": "CalculateAgeAt"
+          },
+          "name": "SDE Age"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

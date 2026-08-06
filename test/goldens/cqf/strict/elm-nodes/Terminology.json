@@ -1,0 +1,184 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "DisableListTraversal,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "id": "http://snomed.info/sct",
+          "name": "SNOMED"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://loinc.org",
+          "name": "LOINC",
+          "version": "2.74"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMED"
+          },
+          "display": "Diabetes mellitus",
+          "id": "73211009",
+          "name": "Diabetes"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Glucose",
+          "id": "2345-7",
+          "name": "Glucose"
+        }
+      ]
+    },
+    "concepts": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "code": [
+            {
+              "name": "Diabetes"
+            }
+          ],
+          "display": "Diabetes concept",
+          "name": "Diabetes Concept"
+        },
+        {
+          "accessLevel": "Public",
+          "code": [
+            {
+              "name": "Diabetes"
+            },
+            {
+              "name": "Glucose"
+            }
+          ],
+          "display": "Several codes",
+          "name": "Multi Code Concept"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "Terminology",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "SNOMED",
+            "type": "CodeSystemRef"
+          },
+          "name": "CodeSystemReference"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Diabetes",
+            "type": "CodeRef"
+          },
+          "name": "CodeReference"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Diabetes Concept",
+            "type": "ConceptRef"
+          },
+          "name": "ConceptReference"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Diabetes VS",
+            "preserve": true,
+            "type": "ValueSetRef"
+          },
+          "name": "ValueSetReference"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "name": "Diabetes",
+              "type": "CodeRef"
+            },
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "name": "CodeInValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "type": "Literal",
+              "value": "some-code",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "name": "Versioned VS",
+              "preserve": true
+            }
+          },
+          "name": "StringInValueSet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
+          "name": "Diabetes VS"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:1.2.3",
+          "name": "Versioned VS",
+          "version": "20240101"
+        }
+      ]
+    }
+  }
+}

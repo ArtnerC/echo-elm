@@ -1,0 +1,2521 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for issues/03-cqf-parity-gaps.md B7 / B10 / B11 / B13.\n//\n// Covers the query clauses that the HEDIS comparison flagged: sort (by column,\n// by expression, by direction, multi-key), aggregate (starting literal, all,\n// distinct), let, and return all/distinct. Also pins the two identifier-scope\n// rules: the aggregate accumulator is a QueryLetRef, and identifiers inside a\n// sort-by expression stay unresolved as IdentifierRef.\nlibrary QueryClauses version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "QueryClauses",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Items\": {\n  Tuple { id: 1, score: 10, p: Interval[@2024-01-01, @2024-02-01] },\n  Tuple { id: 2, score: 5, p: Interval[@2024-03-01, @2024-04-01] }\n}"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "locator": "11:15",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "score",
+                    "value": {
+                      "locator": "11:25-11:26",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "p",
+                    "value": {
+                      "high": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "locator": "11:54-11:64",
+                        "month": {
+                          "type": "Literal",
+                          "value": "2",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "highClosed": true,
+                      "locator": "11:32-11:65",
+                      "low": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "locator": "11:41-11:51",
+                        "month": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "lowClosed": true,
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Date",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "Interval"
+                    }
+                  }
+                ],
+                "locator": "11:3-11:67",
+                "resultTypeSpecifier": {
+                  "element": [
+                    {
+                      "elementType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "id"
+                    },
+                    {
+                      "elementType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "score"
+                    },
+                    {
+                      "elementType": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Date",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "name": "p"
+                    }
+                  ],
+                  "type": "TupleTypeSpecifier"
+                },
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "locator": "12:15",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "score",
+                    "value": {
+                      "locator": "12:25",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "p",
+                    "value": {
+                      "high": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "locator": "12:53-12:63",
+                        "month": {
+                          "type": "Literal",
+                          "value": "4",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "highClosed": true,
+                      "locator": "12:31-12:64",
+                      "low": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "locator": "12:40-12:50",
+                        "month": {
+                          "type": "Literal",
+                          "value": "3",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "lowClosed": true,
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Date",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "Interval"
+                    }
+                  }
+                ],
+                "locator": "12:3-12:66",
+                "resultTypeSpecifier": {
+                  "element": [
+                    {
+                      "elementType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "id"
+                    },
+                    {
+                      "elementType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Integer",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "score"
+                    },
+                    {
+                      "elementType": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Date",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "name": "p"
+                    }
+                  ],
+                  "type": "TupleTypeSpecifier"
+                },
+                "type": "Tuple"
+              }
+            ],
+            "locator": "10:17-13:1",
+            "resultTypeSpecifier": {
+              "elementType": {
+                "element": [
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "id"
+                  },
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "score"
+                  },
+                  {
+                    "elementType": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "name": "p"
+                  }
+                ],
+                "type": "TupleTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "List"
+          },
+          "locator": "10:1-13:1",
+          "name": "Items",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "element": [
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "id"
+                },
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "score"
+                },
+                {
+                  "elementType": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "name": "p"
+                }
+              ],
+              "type": "TupleTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── sort ──────────────────────────────────────────────────────────────────────\n\ndefine \"SortByColumn\":\n  \"Items\" I\n    sort by score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "18:3-19:17",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "element": [
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "id"
+                  },
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "score"
+                  },
+                  {
+                    "elementType": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "name": "p"
+                  }
+                ],
+                "type": "TupleTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "locator": "19:13-19:17",
+                  "path": "score",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "ByColumn"
+                }
+              ],
+              "locator": "19:5-19:17"
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "18:3-18:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "18:3-18:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "17:1-19:17",
+          "name": "SortByColumn",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "element": [
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "id"
+                },
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "score"
+                },
+                {
+                  "elementType": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "name": "p"
+                }
+              ],
+              "type": "TupleTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByColumnDesc\":\n  \"Items\" I\n    sort by score desc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "22:3-23:22",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "element": [
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "id"
+                  },
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "score"
+                  },
+                  {
+                    "elementType": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "name": "p"
+                  }
+                ],
+                "type": "TupleTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "desc",
+                  "locator": "23:13-23:22",
+                  "path": "score",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "ByColumn"
+                }
+              ],
+              "locator": "23:5-23:22"
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "22:3-22:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "22:3-22:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "21:1-23:22",
+          "name": "SortByColumnDesc",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "element": [
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "id"
+                },
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "score"
+                },
+                {
+                  "elementType": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "name": "p"
+                }
+              ],
+              "type": "TupleTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByDirectionOnly\":\n  \"Items\" I\n    return I.score\n    sort asc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "26:3-28:12",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "27:12-27:18",
+                "path": "score",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "scope": "I",
+                "type": "Property"
+              },
+              "locator": "27:5-27:18",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "type": "ByDirection"
+                }
+              ],
+              "locator": "28:5-28:12"
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "26:3-26:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "26:3-26:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "25:1-28:12",
+          "name": "SortByDirectionOnly",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByMultipleKeys\":\n  \"Items\" I\n    sort by id asc, score desc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "31:3-32:30",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "element": [
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "id"
+                  },
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "score"
+                  },
+                  {
+                    "elementType": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "name": "p"
+                  }
+                ],
+                "type": "TupleTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "locator": "32:13-32:18",
+                  "path": "id",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "ByColumn"
+                },
+                {
+                  "direction": "desc",
+                  "locator": "32:21-32:30",
+                  "path": "score",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "ByColumn"
+                }
+              ],
+              "locator": "32:5-32:30"
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "31:3-31:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "31:3-31:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "30:1-32:30",
+          "name": "SortByMultipleKeys",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "element": [
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "id"
+                },
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "score"
+                },
+                {
+                  "elementType": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "name": "p"
+                }
+              ],
+              "type": "TupleTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Identifiers in a sort-by expression are scoped to the query result element,\n// so CQF defers resolution to the engine via IdentifierRef.\ndefine \"SortByExpression\":\n  \"Items\" I\n    sort by start of p"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "37:3-38:22",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "element": [
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "id"
+                  },
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "score"
+                  },
+                  {
+                    "elementType": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "name": "p"
+                  }
+                ],
+                "type": "TupleTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "expression": {
+                    "locator": "38:13-38:22",
+                    "operand": {
+                      "locator": "38:22",
+                      "name": "p",
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Date",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "IdentifierRef"
+                    },
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "locator": "38:13-38:22",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "ByExpression"
+                }
+              ],
+              "locator": "38:5-38:22"
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "37:3-37:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "37:3-37:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "36:1-38:22",
+          "name": "SortByExpression",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "element": [
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "id"
+                },
+                {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "score"
+                },
+                {
+                  "elementType": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "name": "p"
+                }
+              ],
+              "type": "TupleTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByThis\":\n  \"Items\" I\n    return I.p\n    sort by start of $this"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "41:3-43:26",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "42:12-42:14",
+                "path": "p",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "scope": "I",
+                "type": "Property"
+              },
+              "locator": "42:5-42:14",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "expression": {
+                    "locator": "43:13-43:26",
+                    "operand": {
+                      "locator": "43:22-43:26",
+                      "name": "$this",
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Date",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "IdentifierRef"
+                    },
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "locator": "43:13-43:26",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "ByExpression"
+                }
+              ],
+              "locator": "43:5-43:26"
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "41:3-41:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "41:3-41:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "40:1-43:26",
+          "name": "SortByThis",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── aggregate ─────────────────────────────────────────────────────────────────\n\n// `starting` takes a simpleLiteral, a quantity, or a parenthesised expression.\ndefine \"AggregateStartingLiteral\":\n  \"Items\" I\n    aggregate Total starting 0: Total + I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "locator": "50:33-50:47",
+                "operand": [
+                  {
+                    "locator": "50:33-50:37",
+                    "name": "Total",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "locator": "50:41-50:47",
+                    "path": "score",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "signature": [],
+                "type": "Add"
+              },
+              "identifier": "Total",
+              "locator": "50:5-50:47",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "starting": {
+                "locator": "50:21-50:30",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "locator": "49:3-50:47",
+            "relationship": [],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "49:3-49:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "49:3-49:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "48:1-50:47",
+          "name": "AggregateStartingLiteral",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateStartingString\":\n  \"Items\" I\n    aggregate Acc starting 'x': Acc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "locator": "54:33-54:35",
+                "name": "Acc",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "QueryLetRef"
+              },
+              "identifier": "Acc",
+              "locator": "54:5-54:35",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "starting": {
+                "locator": "54:19-54:30",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "Literal",
+                "value": "x",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            },
+            "let": [],
+            "locator": "53:3-54:35",
+            "relationship": [],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "53:3-53:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "53:3-53:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "52:1-54:35",
+          "name": "AggregateStartingString",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateStartingExpression\":\n  \"Items\" I\n    aggregate Total starting (1 + 1): Total + I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "locator": "58:39-58:53",
+                "operand": [
+                  {
+                    "locator": "58:39-58:43",
+                    "name": "Total",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "locator": "58:47-58:53",
+                    "path": "score",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "signature": [],
+                "type": "Add"
+              },
+              "identifier": "Total",
+              "locator": "58:5-58:53",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "starting": {
+                "locator": "58:21-58:36",
+                "operand": [
+                  {
+                    "locator": "58:31",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "58:35",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "signature": [],
+                "type": "Add"
+              }
+            },
+            "let": [],
+            "locator": "57:3-58:53",
+            "relationship": [],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "57:3-57:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "57:3-57:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "56:1-58:53",
+          "name": "AggregateStartingExpression",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateAll\":\n  \"Items\" I\n    aggregate all Acc starting 1: Acc * I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "distinct": false,
+              "expression": {
+                "locator": "62:35-62:47",
+                "operand": [
+                  {
+                    "locator": "62:35-62:37",
+                    "name": "Acc",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "locator": "62:41-62:47",
+                    "path": "score",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "signature": [],
+                "type": "Multiply"
+              },
+              "identifier": "Acc",
+              "locator": "62:5-62:47",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "starting": {
+                "locator": "62:23-62:32",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "locator": "61:3-62:47",
+            "relationship": [],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "61:3-61:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "61:3-61:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "60:1-62:47",
+          "name": "AggregateAll",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateDistinct\":\n  \"Items\" I\n    aggregate distinct Acc starting 1: Acc * I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "distinct": true,
+              "expression": {
+                "locator": "66:40-66:52",
+                "operand": [
+                  {
+                    "locator": "66:40-66:42",
+                    "name": "Acc",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "locator": "66:46-66:52",
+                    "path": "score",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "signature": [],
+                "type": "Multiply"
+              },
+              "identifier": "Acc",
+              "locator": "66:5-66:52",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "starting": {
+                "locator": "66:28-66:37",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "locator": "65:3-66:52",
+            "relationship": [],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "65:3-65:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "65:3-65:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "64:1-66:52",
+          "name": "AggregateDistinct",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── let / return ──────────────────────────────────────────────────────────────\n\ndefine \"LetClause\":\n  \"Items\" I\n    let s: I.score\n    where s \u003e 1\n    return s"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "locator": "72:12-72:18",
+                  "path": "score",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "scope": "I",
+                  "type": "Property"
+                },
+                "identifier": "s",
+                "locator": "72:9-72:18",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "locator": "71:3-74:12",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "74:12",
+                "name": "s",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "QueryLetRef"
+              },
+              "locator": "74:5-74:12",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "71:3-71:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "71:3-71:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "73:5-73:15",
+              "operand": [
+                {
+                  "locator": "73:11",
+                  "name": "s",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "QueryLetRef"
+                },
+                {
+                  "locator": "73:15",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "locator": "70:1-74:12",
+          "name": "LetClause",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ReturnDistinct\":\n  \"Items\" I\n    return distinct I.id"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "77:3-78:24",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "distinct": true,
+              "expression": {
+                "locator": "78:21-78:24",
+                "path": "id",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "scope": "I",
+                "type": "Property"
+              },
+              "locator": "78:5-78:24",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "77:3-77:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "77:3-77:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "76:1-78:24",
+          "name": "ReturnDistinct",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ReturnAll\":\n  \"Items\" I\n    return all I.id"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "locator": "81:3-82:19",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "distinct": false,
+              "expression": {
+                "locator": "82:16-82:19",
+                "path": "id",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "scope": "I",
+                "type": "Property"
+              },
+              "locator": "82:5-82:19",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "locator": "81:3-81:9",
+                  "name": "Items",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "element": [
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "id"
+                        },
+                        {
+                          "elementType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Integer",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "name": "score"
+                        },
+                        {
+                          "elementType": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}Date",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "name": "p"
+                        }
+                      ],
+                      "type": "TupleTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "81:3-81:11",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "element": [
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "id"
+                      },
+                      {
+                        "elementType": {
+                          "name": "{urn:hl7-org:elm-types:r1}Integer",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "name": "score"
+                      },
+                      {
+                        "elementType": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}Date",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "name": "p"
+                      }
+                    ],
+                    "type": "TupleTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "80:1-82:19",
+          "name": "ReturnAll",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

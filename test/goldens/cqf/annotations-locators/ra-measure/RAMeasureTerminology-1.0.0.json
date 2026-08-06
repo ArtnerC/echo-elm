@@ -1,0 +1,730 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "/**\n * Measure: Rheumatoid Arthritis — Disease Activity Monitoring with DMARD Therapy\n * Library: RAMeasureTerminology\n * Version: 1.0.0\n * Steward: echo-elm project (illustrative measure)\n * Description: Terminology library for the RA Disease Activity Monitoring measure.\n *              Contains all value set declarations, code system declarations, and\n *              direct-reference codes. Contains no logic — imported by RAMeasure.\n *\n * Value set OIDs are from VSAC and reflect standard eCQM authoring conventions.\n * Verify and pin version strings when preparing for CMS eCQM submission.\n */\nlibrary RAMeasureTerminology version '1.0.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── Code Systems ──────────────────────────────────────────────────────────────\n\ncodesystem \"SNOMEDCT\": 'http://snomed.info/sct'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://snomed.info/sct",
+          "locator": "17:1-17:47",
+          "name": "SNOMEDCT"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"LOINC\": 'http://loinc.org'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://loinc.org",
+          "locator": "18:1-18:38",
+          "name": "LOINC"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"ICD10CM\": 'http://hl7.org/fhir/sid/icd-10-cm'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://hl7.org/fhir/sid/icd-10-cm",
+          "locator": "19:1-19:57",
+          "name": "ICD10CM"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"RxNorm\": 'http://www.nlm.nih.gov/research/umls/rxnorm'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://www.nlm.nih.gov/research/umls/rxnorm",
+          "locator": "20:1-20:66",
+          "name": "RxNorm"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"CPT\": 'http://www.ama-assn.org/go/cpt'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://www.ama-assn.org/go/cpt",
+          "locator": "21:1-21:50",
+          "name": "CPT"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"HCPCS\": 'https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+          "locator": "22:1-22:78",
+          "name": "HCPCS"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"ConditionClinicalStatus\":\n  'http://terminology.hl7.org/CodeSystem/condition-clinical'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+          "locator": "24:1-25:60",
+          "name": "ConditionClinicalStatus"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"ConditionVerificationStatus\":\n  'http://terminology.hl7.org/CodeSystem/condition-ver-status'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+          "locator": "26:1-27:62",
+          "name": "ConditionVerificationStatus"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── Direct-Reference Codes ────────────────────────────────────────────────────\n\n// RA-specific SNOMED finding\ncode \"Rheumatoid arthritis\": '69896004' from \"SNOMEDCT\"\n  display 'Rheumatoid arthritis (disorder)'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "76:46-76:55",
+            "name": "SNOMEDCT"
+          },
+          "display": "Rheumatoid arthritis (disorder)",
+          "id": "69896004",
+          "locator": "76:1-77:43",
+          "name": "Rheumatoid arthritis"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Disease activity score LOINC codes (used for observation retrieval / annotation)\ncode \"DAS28-ESR score\": '54793-3' from \"LOINC\"\n  display 'Disease activity score in 28 joints using ESR'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "80:40-80:46",
+            "name": "LOINC"
+          },
+          "display": "Disease activity score in 28 joints using ESR",
+          "id": "54793-3",
+          "locator": "80:1-81:57",
+          "name": "DAS28-ESR score"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"DAS28-CRP score\": '55805-4' from \"LOINC\"\n  display 'Disease activity score in 28 joints using CRP'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "82:40-82:46",
+            "name": "LOINC"
+          },
+          "display": "Disease activity score in 28 joints using CRP",
+          "id": "55805-4",
+          "locator": "82:1-83:57",
+          "name": "DAS28-CRP score"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"CDAI score\": '85352-4' from \"LOINC\"\n  display 'Clinical Disease Activity Index score'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "84:35-84:41",
+            "name": "LOINC"
+          },
+          "display": "Clinical Disease Activity Index score",
+          "id": "85352-4",
+          "locator": "84:1-85:49",
+          "name": "CDAI score"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"SDAI score\": '85354-0' from \"LOINC\"\n  display 'Simplified Disease Activity Index score'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "86:35-86:41",
+            "name": "LOINC"
+          },
+          "display": "Simplified Disease Activity Index score",
+          "id": "85354-0",
+          "locator": "86:1-87:51",
+          "name": "SDAI score"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Condition status codes (inline — no FHIRCommon dependency)\ncode \"active\": 'active' from \"ConditionClinicalStatus\"\n  display 'Active'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "90:30-90:54",
+            "name": "ConditionClinicalStatus"
+          },
+          "display": "Active",
+          "id": "active",
+          "locator": "90:1-91:18",
+          "name": "active"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"recurrence\": 'recurrence' from \"ConditionClinicalStatus\"\n  display 'Recurrence'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "92:38-92:62",
+            "name": "ConditionClinicalStatus"
+          },
+          "display": "Recurrence",
+          "id": "recurrence",
+          "locator": "92:1-93:22",
+          "name": "recurrence"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"relapse\": 'relapse' from \"ConditionClinicalStatus\"\n  display 'Relapse'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "94:32-94:56",
+            "name": "ConditionClinicalStatus"
+          },
+          "display": "Relapse",
+          "id": "relapse",
+          "locator": "94:1-95:19",
+          "name": "relapse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"confirmed\": 'confirmed' from \"ConditionVerificationStatus\"\n  display 'Confirmed'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "locator": "96:36-96:64",
+            "name": "ConditionVerificationStatus"
+          },
+          "display": "Confirmed",
+          "id": "confirmed",
+          "locator": "96:1-97:21",
+          "name": "confirmed"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "RAMeasureTerminology",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── Value Sets ────────────────────────────────────────────────────────────────\n\n// Diagnosis\nvalueset \"Rheumatoid Arthritis\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.113.12.1005'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.113.12.1005",
+          "locator": "32:1-33:81",
+          "name": "Rheumatoid Arthritis"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Qualifying encounters\nvalueset \"Office Visit\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.101.12.1001'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.101.12.1001",
+          "locator": "36:1-37:81",
+          "name": "Office Visit"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Rheumatology Visit\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1143'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1143",
+          "locator": "38:1-39:71",
+          "name": "Rheumatology Visit"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Treatments\nvalueset \"DMARD Therapy\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1273'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1273",
+          "locator": "42:1-43:71",
+          "name": "DMARD Therapy"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Biologics for Rheumatoid Arthritis\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1272'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1272",
+          "locator": "44:1-45:71",
+          "name": "Biologics for Rheumatoid Arthritis"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Disease activity assessments (LOINC-coded clinical observations)\nvalueset \"Disease Activity Assessment\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1448'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1448",
+          "locator": "48:1-49:71",
+          "name": "Disease Activity Assessment"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Laboratory monitoring (required for DMARD safety)\nvalueset \"Complete Blood Count Panel\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1050'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1050",
+          "locator": "52:1-53:81",
+          "name": "Complete Blood Count Panel"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Hepatic Function Panel\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1015'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1015",
+          "locator": "54:1-55:81",
+          "name": "Hepatic Function Panel"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"C-Reactive Protein Test\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1225'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1225",
+          "locator": "56:1-57:71",
+          "name": "C-Reactive Protein Test"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Erythrocyte Sedimentation Rate\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1226'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1226",
+          "locator": "58:1-59:71",
+          "name": "Erythrocyte Sedimentation Rate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Exclusion conditions — DMARD contraindications\nvalueset \"Pregnancy\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.378'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.378",
+          "locator": "62:1-63:70",
+          "name": "Pregnancy"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Active Tuberculosis\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.111.12.1012'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.111.12.1012",
+          "locator": "64:1-65:81",
+          "name": "Active Tuberculosis"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Severe Hepatic Impairment\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.199.12.1070'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.199.12.1070",
+          "locator": "66:1-67:81",
+          "name": "Severe Hepatic Impairment"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// General exclusion\nvalueset \"Hospice Care Ambulatory\":\n  'http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1584'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1584",
+          "locator": "70:1-71:71",
+          "name": "Hospice Care Ambulatory"
+        }
+      ]
+    }
+  }
+}

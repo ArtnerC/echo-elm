@@ -2,11 +2,12 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
         "type": "CqlToElmInfo"
       }
     ],
     "identifier": {},
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -18,27 +19,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SimpleRatio",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "213",
-                    "s": [
-                      {
-                        "r": "209",
-                        "value": [
-                          "5",
-                          " : ",
-                          "5"
-                        ]
-                      }
+                      "define SimpleRatio: 5 : 5"
                     ]
                   }
                 ]
@@ -49,19 +33,15 @@
           "context": "Unfiltered",
           "expression": {
             "denominator": {
-              "localId": "212",
               "unit": "1",
               "value": 5
             },
-            "localId": "213",
             "numerator": {
-              "localId": "210",
               "unit": "1",
               "value": 5
             },
             "type": "Ratio"
           },
-          "localId": "208",
           "name": "SimpleRatio"
         },
         {
@@ -69,46 +49,10 @@
           "annotation": [
             {
               "s": {
-                "r": "216",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "QuantityRatio",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "219",
-                    "s": [
-                      {
-                        "r": "217",
-                        "s": [
-                          {
-                            "value": [
-                              "5 ",
-                              "'mg'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " : "
-                        ]
-                      },
-                      {
-                        "r": "218",
-                        "s": [
-                          {
-                            "value": [
-                              "100 ",
-                              "'mL'"
-                            ]
-                          }
-                        ]
-                      }
+                      "define QuantityRatio: 5 'mg' : 100 'mL'"
                     ]
                   }
                 ]
@@ -119,19 +63,15 @@
           "context": "Unfiltered",
           "expression": {
             "denominator": {
-              "localId": "218",
               "unit": "mL",
               "value": 100
             },
-            "localId": "219",
             "numerator": {
-              "localId": "217",
               "unit": "mg",
               "value": 5
             },
             "type": "Ratio"
           },
-          "localId": "216",
           "name": "QuantityRatio"
         }
       ]
@@ -139,7 +79,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

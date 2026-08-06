@@ -1,0 +1,229 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for cross-library terminology resolution.\n//\n// Every HEDIS measure library pulls its value sets and codes from a shared\n// terminology library, so a library-qualified reference must resolve to the\n// typed node (ValueSetRef / CodeRef / CodeSystemRef with libraryName) rather\n// than degrading to a Property access on an ExpressionRef. Resolving this\n// requires the include to be loaded, which is why the translate CLI searches\n// the input file's own directory.\nlibrary CrossLibraryTerminology version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "CrossLibraryTerminology",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "include SharedTerminology version '1.0' called T"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "T",
+          "path": "SharedTerminology",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedCodeSystem\": T.\"SNOMED\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "SNOMED",
+            "type": "CodeSystemRef"
+          },
+          "name": "QualifiedCodeSystem"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedCode\": T.\"Diabetes\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "Diabetes",
+            "type": "CodeRef"
+          },
+          "name": "QualifiedCode"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedValueSet\": T.\"Diabetes VS\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "Diabetes VS",
+            "preserve": true,
+            "type": "ValueSetRef"
+          },
+          "name": "QualifiedValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedExpression\": T.\"SharedExpression\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "name": "SharedExpression",
+            "type": "ExpressionRef"
+          },
+          "name": "QualifiedExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedCodeInQualifiedValueSet\": T.\"Diabetes\" in T.\"Diabetes VS\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "libraryName": "T",
+              "name": "Diabetes",
+              "type": "CodeRef"
+            },
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "libraryName": "T",
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "name": "QualifiedCodeInQualifiedValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"StringInQualifiedValueSet\": 'some-code' in T.\"Diabetes VS\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "type": "Literal",
+              "value": "some-code",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "libraryName": "T",
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "name": "StringInQualifiedValueSet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

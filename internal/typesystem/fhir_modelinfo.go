@@ -1,366 +1,63 @@
 package typesystem
 
-// FHIRPropertyType maps "TypeName.propertyName" to the FHIR type name of that property,
-// based on FHIR R4 4.0.1 StructureDefinitions. This is used to determine which properties
-// need implicit FHIRHelpers coercion when translating CQL that uses FHIR with FHIRHelpers.
+// This file holds the FHIR knowledge that does NOT come from the ModelInfo:
+// which conversions FHIRHelpers actually defines, and the handful of retrieve
+// shapes echo-elm special-cases. The ModelInfo-derived tables — property types,
+// list-valued properties, primitive value types and primary code paths — are
+// generated into fhir_modelinfo_gen.go by internal/tools/modelinfogen.
+
+// FHIRComplexCoercion maps a FHIR complex type to the FHIRHelpers function that
+// converts it to a CQL system type. Primitives and binding types are not listed:
+// their conversion follows from the System type of their "value" element, which
+// the ModelInfo records (see FHIRPrimitiveValueType).
+var FHIRComplexCoercion = map[string]string{
+	"Period":          "ToInterval",
+	"Range":           "ToInterval",
+	"Quantity":        "ToQuantity",
+	"Ratio":           "ToRatio",
+	"CodeableConcept": "ToConcept",
+	"Coding":          "ToCode",
+}
+
+// systemTypeCoercion maps the System type of a FHIR primitive's "value" element
+// to the FHIRHelpers function that produces it.
+var systemTypeCoercion = map[string]string{
+	"String":   "ToString",
+	"Boolean":  "ToBoolean",
+	"Integer":  "ToInteger",
+	"Long":     "ToLong",
+	"Decimal":  "ToDecimal",
+	"DateTime": "ToDateTime",
+	"Date":     "ToDate",
+	"Time":     "ToTime",
+	"Quantity": "ToQuantity",
+	"Ratio":    "ToRatio",
+	"Concept":  "ToConcept",
+	"Code":     "ToCode",
+}
+
+// FHIRCoercionFor returns the FHIRHelpers function that converts a value of the
+// given FHIR type to its CQL system type, or "" when no conversion applies.
 //
-// Values are either:
-//   - FHIR primitive type names ("code", "string", "dateTime", "boolean", etc.) — these
-//     need FHIRHelpers coercion (see FHIRPrimitiveCoercion).
-//   - FHIR complex type names ("Period", "CodeableConcept", "Reference", etc.) — these
-//     are used for traversal only (no coercion at this level).
-var FHIRPropertyType = map[string]string{
-	// ---- Patient ----
-	"Patient.active":               "boolean",
-	"Patient.gender":               "code",
-	"Patient.deceasedBoolean":      "boolean",
-	"Patient.deceasedDateTime":     "dateTime",
-	"Patient.multipleBirthBoolean": "boolean",
-	"Patient.multipleBirthInteger": "integer",
-	"Patient.identifier":           "Identifier",
-	"Patient.name":                 "HumanName",
-	"Patient.telecom":              "ContactPoint",
-	"Patient.address":              "Address",
-	"Patient.maritalStatus":        "CodeableConcept",
-	"Patient.contact":              "BackboneElement",
-	"Patient.communication":        "BackboneElement",
-	"Patient.generalPractitioner":  "Reference",
-	"Patient.managingOrganization": "Reference",
-	"Patient.link":                 "BackboneElement",
-
-	// ---- Encounter ----
-	"Encounter.status":          "code",
-	"Encounter.class":           "Coding",
-	"Encounter.type":            "CodeableConcept",
-	"Encounter.serviceType":     "CodeableConcept",
-	"Encounter.priority":        "CodeableConcept",
-	"Encounter.subject":         "Reference",
-	"Encounter.period":          "Period",
-	"Encounter.reasonCode":      "CodeableConcept",
-	"Encounter.hospitalization": "BackboneElement",
-	"Encounter.location":        "BackboneElement",
-	"Encounter.serviceProvider": "Reference",
-	"Encounter.partOf":          "Reference",
-	"Encounter.identifier":      "Identifier",
-	"Encounter.basedOn":         "Reference",
-	"Encounter.participant":     "BackboneElement",
-	"Encounter.appointment":     "Reference",
-	"Encounter.length":          "Duration",
-	"Encounter.reasonReference": "Reference",
-	"Encounter.diagnosis":       "BackboneElement",
-	"Encounter.account":         "Reference",
-
-	// ---- Condition ----
-	"Condition.clinicalStatus":     "CodeableConcept",
-	"Condition.verificationStatus": "CodeableConcept",
-	"Condition.category":           "CodeableConcept",
-	"Condition.severity":           "CodeableConcept",
-	"Condition.code":               "CodeableConcept",
-	"Condition.bodySite":           "CodeableConcept",
-	"Condition.subject":            "Reference",
-	"Condition.encounter":          "Reference",
-	"Condition.onsetDateTime":      "dateTime",
-	"Condition.onsetPeriod":        "Period",
-	"Condition.onsetRange":         "Range",
-	"Condition.onsetString":        "string",
-	"Condition.abatementDateTime":  "dateTime",
-	"Condition.abatementPeriod":    "Period",
-	"Condition.abatementRange":     "Range",
-	"Condition.abatementString":    "string",
-	"Condition.recordedDate":       "dateTime",
-	"Condition.recorder":           "Reference",
-	"Condition.asserter":           "Reference",
-	"Condition.note":               "Annotation",
-	"Condition.identifier":         "Identifier",
-	"Condition.stage":              "BackboneElement",
-	"Condition.evidence":           "BackboneElement",
-
-	// ---- Observation ----
-	"Observation.status":               "code",
-	"Observation.category":             "CodeableConcept",
-	"Observation.code":                 "CodeableConcept",
-	"Observation.subject":              "Reference",
-	"Observation.focus":                "Reference",
-	"Observation.encounter":            "Reference",
-	"Observation.effectiveDateTime":    "dateTime",
-	"Observation.effectivePeriod":      "Period",
-	"Observation.effectiveInstant":     "instant",
-	"Observation.issued":               "instant",
-	"Observation.valueQuantity":        "Quantity",
-	"Observation.valueCodeableConcept": "CodeableConcept",
-	"Observation.valueString":          "string",
-	"Observation.valueBoolean":         "boolean",
-	"Observation.valueInteger":         "integer",
-	"Observation.valueRange":           "Range",
-	"Observation.valueRatio":           "Ratio",
-	"Observation.valueTime":            "time",
-	"Observation.valueDateTime":        "dateTime",
-	"Observation.valuePeriod":          "Period",
-	"Observation.dataAbsentReason":     "CodeableConcept",
-	"Observation.interpretation":       "CodeableConcept",
-	"Observation.bodySite":             "CodeableConcept",
-	"Observation.method":               "CodeableConcept",
-	"Observation.specimen":             "Reference",
-	"Observation.device":               "Reference",
-	"Observation.identifier":           "Identifier",
-	"Observation.note":                 "Annotation",
-	"Observation.referenceRange":       "BackboneElement",
-	"Observation.hasMember":            "Reference",
-	"Observation.derivedFrom":          "Reference",
-	"Observation.component":            "BackboneElement",
-
-	// ---- Procedure ----
-	"Procedure.status":            "code",
-	"Procedure.statusReason":      "CodeableConcept",
-	"Procedure.category":          "CodeableConcept",
-	"Procedure.code":              "CodeableConcept",
-	"Procedure.subject":           "Reference",
-	"Procedure.encounter":         "Reference",
-	"Procedure.performedDateTime": "dateTime",
-	"Procedure.performedPeriod":   "Period",
-	"Procedure.performedString":   "string",
-	"Procedure.recorder":          "Reference",
-	"Procedure.asserter":          "Reference",
-	"Procedure.location":          "Reference",
-	"Procedure.outcome":           "CodeableConcept",
-	"Procedure.identifier":        "Identifier",
-
-	// ---- MedicationRequest ----
-	"MedicationRequest.status":                    "code",
-	"MedicationRequest.intent":                    "code",
-	"MedicationRequest.priority":                  "code",
-	"MedicationRequest.doNotPerform":              "boolean",
-	"MedicationRequest.subject":                   "Reference",
-	"MedicationRequest.encounter":                 "Reference",
-	"MedicationRequest.authoredOn":                "dateTime",
-	"MedicationRequest.requester":                 "Reference",
-	"MedicationRequest.performer":                 "Reference",
-	"MedicationRequest.performerType":             "CodeableConcept",
-	"MedicationRequest.recorder":                  "Reference",
-	"MedicationRequest.medicationCodeableConcept": "CodeableConcept",
-	"MedicationRequest.medicationReference":       "Reference",
-	"MedicationRequest.identifier":                "Identifier",
-
-	// ---- MedicationAdministration ----
-	"MedicationAdministration.status":                    "code",
-	"MedicationAdministration.subject":                   "Reference",
-	"MedicationAdministration.context":                   "Reference",
-	"MedicationAdministration.effectiveDateTime":         "dateTime",
-	"MedicationAdministration.effectivePeriod":           "Period",
-	"MedicationAdministration.medicationCodeableConcept": "CodeableConcept",
-	"MedicationAdministration.medicationReference":       "Reference",
-	"MedicationAdministration.identifier":                "Identifier",
-
-	// ---- MedicationDispense ----
-	"MedicationDispense.status":                    "code",
-	"MedicationDispense.subject":                   "Reference",
-	"MedicationDispense.context":                   "Reference",
-	"MedicationDispense.whenPrepared":              "dateTime",
-	"MedicationDispense.whenHandedOver":            "dateTime",
-	"MedicationDispense.medicationCodeableConcept": "CodeableConcept",
-	"MedicationDispense.medicationReference":       "Reference",
-	"MedicationDispense.identifier":                "Identifier",
-
-	// ---- DiagnosticReport ----
-	"DiagnosticReport.status":            "code",
-	"DiagnosticReport.category":          "CodeableConcept",
-	"DiagnosticReport.code":              "CodeableConcept",
-	"DiagnosticReport.subject":           "Reference",
-	"DiagnosticReport.encounter":         "Reference",
-	"DiagnosticReport.effectiveDateTime": "dateTime",
-	"DiagnosticReport.effectivePeriod":   "Period",
-	"DiagnosticReport.issued":            "instant",
-	"DiagnosticReport.result":            "Reference",
-	"DiagnosticReport.conclusion":        "string",
-	"DiagnosticReport.conclusionCode":    "CodeableConcept",
-	"DiagnosticReport.identifier":        "Identifier",
-
-	// ---- Immunization ----
-	"Immunization.status":             "code",
-	"Immunization.statusReason":       "CodeableConcept",
-	"Immunization.vaccineCode":        "CodeableConcept",
-	"Immunization.patient":            "Reference",
-	"Immunization.encounter":          "Reference",
-	"Immunization.occurrenceDateTime": "dateTime",
-	"Immunization.occurrenceString":   "string",
-	"Immunization.recorded":           "dateTime",
-	"Immunization.primarySource":      "boolean",
-	"Immunization.location":           "Reference",
-	"Immunization.manufacturer":       "Reference",
-	"Immunization.lotNumber":          "string",
-	"Immunization.expirationDate":     "date",
-	"Immunization.site":               "CodeableConcept",
-	"Immunization.route":              "CodeableConcept",
-	"Immunization.doseQuantity":       "Quantity",
-	"Immunization.identifier":         "Identifier",
-
-	// ---- AllergyIntolerance ----
-	"AllergyIntolerance.clinicalStatus":     "CodeableConcept",
-	"AllergyIntolerance.verificationStatus": "CodeableConcept",
-	"AllergyIntolerance.type":               "code",
-	"AllergyIntolerance.category":           "code",
-	"AllergyIntolerance.criticality":        "code",
-	"AllergyIntolerance.code":               "CodeableConcept",
-	"AllergyIntolerance.patient":            "Reference",
-	"AllergyIntolerance.encounter":          "Reference",
-	"AllergyIntolerance.onsetDateTime":      "dateTime",
-	"AllergyIntolerance.onsetPeriod":        "Period",
-	"AllergyIntolerance.onsetRange":         "Range",
-	"AllergyIntolerance.onsetString":        "string",
-	"AllergyIntolerance.recordedDate":       "dateTime",
-	"AllergyIntolerance.recorder":           "Reference",
-	"AllergyIntolerance.asserter":           "Reference",
-	"AllergyIntolerance.lastOccurrence":     "dateTime",
-	"AllergyIntolerance.note":               "Annotation",
-	"AllergyIntolerance.identifier":         "Identifier",
-
-	// ---- ServiceRequest ----
-	"ServiceRequest.status":             "code",
-	"ServiceRequest.intent":             "code",
-	"ServiceRequest.priority":           "code",
-	"ServiceRequest.doNotPerform":       "boolean",
-	"ServiceRequest.code":               "CodeableConcept",
-	"ServiceRequest.subject":            "Reference",
-	"ServiceRequest.encounter":          "Reference",
-	"ServiceRequest.occurrenceDateTime": "dateTime",
-	"ServiceRequest.occurrencePeriod":   "Period",
-	"ServiceRequest.authoredOn":         "dateTime",
-	"ServiceRequest.requester":          "Reference",
-	"ServiceRequest.performer":          "Reference",
-	"ServiceRequest.identifier":         "Identifier",
-
-	// ---- Communication types ----
-	"Period.start": "dateTime",
-	"Period.end":   "dateTime",
-
-	"Range.low":  "Quantity",
-	"Range.high": "Quantity",
-
-	"Ratio.numerator":   "Quantity",
-	"Ratio.denominator": "Quantity",
-
-	"Quantity.value":      "decimal",
-	"Quantity.comparator": "code",
-	"Quantity.unit":       "string",
-	"Quantity.system":     "uri",
-	"Quantity.code":       "code",
-
-	"Coding.system":       "uri",
-	"Coding.version":      "string",
-	"Coding.code":         "code",
-	"Coding.display":      "string",
-	"Coding.userSelected": "boolean",
-
-	"CodeableConcept.coding": "Coding",
-	"CodeableConcept.text":   "string",
-
-	"Identifier.use":      "code",
-	"Identifier.type":     "CodeableConcept",
-	"Identifier.system":   "uri",
-	"Identifier.value":    "string",
-	"Identifier.period":   "Period",
-	"Identifier.assigner": "Reference",
-
-	"Reference.reference":  "string",
-	"Reference.type":       "uri",
-	"Reference.display":    "string",
-	"Reference.identifier": "Identifier",
-
-	"HumanName.use":    "code",
-	"HumanName.text":   "string",
-	"HumanName.family": "string",
-	"HumanName.given":  "string",
-	"HumanName.prefix": "string",
-	"HumanName.suffix": "string",
-
-	"Address.use":        "code",
-	"Address.type":       "code",
-	"Address.text":       "string",
-	"Address.line":       "string",
-	"Address.city":       "string",
-	"Address.district":   "string",
-	"Address.state":      "string",
-	"Address.postalCode": "string",
-	"Address.country":    "string",
-	"Address.period":     "Period",
-
-	"ContactPoint.system": "code",
-	"ContactPoint.value":  "string",
-	"ContactPoint.use":    "code",
-	"ContactPoint.rank":   "positiveInt",
-	"ContactPoint.period": "Period",
-
-	"Annotation.authorString": "string",
-	"Annotation.time":         "dateTime",
-	"Annotation.text":         "markdown",
-
-	"Timing.event": "dateTime",
-	"Timing.code":  "CodeableConcept",
-
-	"Meta.versionId":   "id",
-	"Meta.lastUpdated": "instant",
-	"Meta.source":      "uri",
-	"Meta.profile":     "canonical",
-	"Meta.security":    "Coding",
-	"Meta.tag":         "Coding",
-
-	"Narrative.status": "code",
-	"Narrative.div":    "string",
-
-	"Extension.url": "uri",
-
-	"Attachment.contentType": "code",
-	"Attachment.language":    "code",
-	"Attachment.data":        "base64Binary",
-	"Attachment.url":         "url",
-	"Attachment.size":        "unsignedInt",
-	"Attachment.hash":        "base64Binary",
-	"Attachment.title":       "string",
-	"Attachment.creation":    "dateTime",
-
-	"Signature.type": "Coding",
-	"Signature.when": "instant",
-	"Signature.who":  "Reference",
-	"Signature.data": "base64Binary",
-
-	"Duration.value":  "decimal",
-	"Duration.unit":   "string",
-	"Duration.system": "uri",
-	"Duration.code":   "code",
+// Complex types convert through an explicitly defined FHIRHelpers overload;
+// primitives and binding types (FHIR.code, FHIR.AdministrativeGender) convert
+// according to the System type of their "value" element.
+func FHIRCoercionFor(fhirType string) string {
+	if fhirType == "" {
+		return ""
+	}
+	if fn, ok := FHIRComplexCoercion[fhirType]; ok {
+		return fn
+	}
+	return systemTypeCoercion[FHIRPrimitiveValueType[fhirType]]
 }
 
-// FHIRPrimitiveCoercion maps a FHIR primitive type name to the FHIRHelpers function
-// that converts it to the corresponding CQL system type. Only primitive FHIR types
-// appear in this map; complex types (Period, CodeableConcept, Reference, etc.) do not.
-var FHIRPrimitiveCoercion = map[string]string{
-	"code":         "ToString",
-	"string":       "ToString",
-	"uri":          "ToString",
-	"url":          "ToString",
-	"canonical":    "ToString",
-	"markdown":     "ToString",
-	"id":           "ToString",
-	"oid":          "ToString",
-	"uuid":         "ToString",
-	"base64Binary": "ToString",
-	"integer":      "ToInteger",
-	"positiveInt":  "ToInteger",
-	"unsignedInt":  "ToInteger",
-	"decimal":      "ToDecimal",
-	"boolean":      "ToBoolean",
-	"dateTime":     "ToDateTime",
-	"instant":      "ToDateTime",
-	"date":         "ToDate",
-	"time":         "ToTime",
-}
-
-// FHIRPropertyBinding maps "TypeName.propertyName" to a FHIR bound code
-// enum/type name when the property carries a required ValueSet binding. The
-// CQFramework compiler reports the bound type (e.g. AdministrativeGender) as
-// the operand type of FHIRHelpers.ToString for these properties; we mirror
-// that behavior in our emitted signatures.
-var FHIRPropertyBinding = map[string]string{
-	"Patient.gender": "AdministrativeGender",
+// IsFHIRListProperty reports whether "TypeName.propertyName" is list-valued.
+// CQF converts a list of FHIR primitives by lifting the conversion into a
+// per-element query rather than wrapping the list, so echo-elm leaves these
+// uncoerced instead of emitting a conversion that would be wrong.
+func IsFHIRListProperty(sourceType, path string) bool {
+	return FHIRListProperty[sourceType+"."+path]
 }
 
 // IsFHIRDateTimeType returns true when fhirType is a FHIR type that
@@ -368,5 +65,19 @@ var FHIRPropertyBinding = map[string]string{
 // used to decide whether `during` (IncludedIn) should be emitted as In
 // instead of IncludedIn.
 func IsFHIRDateTimeType(fhirType string) bool {
-	return fhirType == "dateTime" || fhirType == "instant"
+	return FHIRPrimitiveValueType[fhirType] == "DateTime"
+}
+
+// FHIRReferenceChoiceCodeProperty maps FHIR resource type names to the target
+// resource type when the code property is a choice of CodeableConcept|Reference(X).
+// For these resources, a retrieve using the code property must be expanded into a
+// Union of a direct code retrieve and a reference-resolution sub-query.
+//
+// Key: FHIR resource type (e.g. "MedicationRequest")
+// Value: target reference resource type (e.g. "Medication")
+var FHIRReferenceChoiceCodeProperty = map[string]string{
+	"MedicationRequest":        "Medication",
+	"MedicationAdministration": "Medication",
+	"MedicationDispense":       "Medication",
+	"MedicationStatement":      "Medication",
 }

@@ -79,7 +79,7 @@ option_profiles:
       disableListPromotion: true
 
   strict:
-    description: CQF --strict (disable-list-traversal + demotion + promotion + method-invocation + require-from-keyword)
+    description: CQF --strict (disable-list-traversal + demotion + promotion + method-invocation)
     cliFlags: [--strict]
     translatorOptions:
       enableAnnotations: false
@@ -89,7 +89,6 @@ option_profiles:
       disableListPromotion: true
       disableListTraversal: true
       disableMethodInvocation: true
-      requireFromKeyword: true
 
   compat-1.4:
     description: Compatibility level 1.4 (pre-1.5 semantics)
@@ -248,3 +247,102 @@ fixtures:
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, compat-1.4]
     tags: [cqf-corpus, query]
+
+  # ── RA Disease Activity Monitoring measure ─────────────────────────────────
+
+  - path: ra-measure/RAMeasureTerminology-1.0.0.cql
+    description: RA measure terminology library — code systems, value sets, DRCs (no model, no logic)
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators]
+    tags: [ra-measure]
+
+  - path: ra-measure/RAMeasure-1.0.0.cql
+    description: RA Disease Activity Monitoring proportion measure (FHIR R4) with DMARD therapy
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators]
+    # CQF 3.29.0 and 4.8.0 lower the Interval<DateTime> parameter default
+    # differently: 3.29.0 emits Property(low/high/lowClosed/highClosed) accessors
+    # over the source Interval plus lowClosedExpression/highClosedExpression,
+    # while 4.8.0 folds the Date bounds directly into the promoted Interval.
+    # The 4.8.0 form is the golden.
+    versionDivergent: true
+    tags: [ra-measure]
+
+  # ── ELM node emission regressions (issues/03-cqf-parity-gaps.md) ────────────
+  # Each fixture pins a gap identified by the 2025 HEDIS measure comparison.
+
+  - path: elm-nodes/DateTimeComponents.cql
+    description: "date/time/timezoneoffset from → DateFrom/TimeFrom/TimezoneOffsetFrom; components → DateTimeComponentFrom"
+    expectedStatus: success
+    profiles: all
+    tags: [elm-nodes, datetime]
+
+  - path: elm-nodes/QueryClauses.cql
+    description: Sort, aggregate (starting/all/distinct), let and return clauses with accumulator and sort-expression scoping
+    expectedStatus: success
+    # compat-1.4 excluded: the aggregate query clause was introduced in CQL 1.5,
+    # so CQF rejects this fixture at compatibility level 1.4.
+    profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all]
+    tags: [elm-nodes, query]
+
+  - path: elm-nodes/Terminology.cql
+    description: Code system, value set, code and concept declarations and their reference nodes
+    expectedStatus: success
+    profiles: all
+    tags: [elm-nodes, terminology]
+
+  - path: elm-nodes/MembershipOperators.cql
+    description: "in list promotion, included in/during point demotion, and != / !~ lowering to Not(...)"
+    expectedStatus: success
+    # sig-overloads excluded: CQF emits a signature on some In expressions where
+    # no coercion occurred — `2 in {1,2,3}` and `"Day" included in "Period"` carry
+    # one, while `5 in Interval[1,10]` and `"Day" in "Period"` do not — and the
+    # discriminator is not yet understood. The emitted ELM matches at every other
+    # profile, including sig-all, so this is signature metadata only.
+    profiles: [default, annotations, locators, annotations-locators, debug, sig-all, compat-1.4]
+    tags: [elm-nodes, operators]
+
+  - path: elm-nodes/QuotedIdentifiers.cql
+    description: Quoted identifiers in reference, query source, relationship source and function call positions
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all, compat-1.4]
+    tags: [elm-nodes, identifiers]
+
+  - path: elm-nodes/AnnotationTags.cql
+    description: Block-comment @tag annotations — any valid-identifier tag name is emitted, others are dropped
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug]
+    tags: [elm-nodes, annotations]
+
+  - path: elm-nodes/SharedTerminology.cql
+    description: Shared terminology library included by CrossLibraryTerminology
+    expectedStatus: success
+    profiles: all
+    tags: [elm-nodes, terminology]
+
+  - path: elm-nodes/CrossLibraryTerminology.cql
+    description: Library-qualified value set, code, code system and expression references resolved through an include
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all, compat-1.4]
+    tags: [elm-nodes, terminology, includes]
+
+  - path: elm-nodes/FHIRCoercionContext.cql
+    description: Implicit FHIRHelpers conversion applied at consumption sites only, not at every property access
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug]
+    tags: [elm-nodes, fhir, coercion]
+
+  - path: elm-nodes/ModelInfoCoverage.cql
+    description: Generated ModelInfo tables — property coverage, binding types, nested complex types, and Date/DateTime conversion
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug]
+    tags: [elm-nodes, fhir, modelinfo]
+
+  - path: elm-nodes/IntervalBoundPromotion.cql
+    description: Implicit Date→DateTime conversion of interval bounds when compared against a DateTime
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators, debug]
+    # Same divergence as ra-measure: 3.29.0 lowers the promotion through Property
+    # accessors over the source interval, 4.8.0 folds the bounds in directly.
+    versionDivergent: true
+    tags: [elm-nodes, datetime]

@@ -2,6 +2,8 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "Overloads",
+        "translatorOptions": "",
         "type": "CqlToElmInfo"
       }
     ],
@@ -300,12 +302,12 @@
                   "value": "Beethoven"
                 },
                 {
-                  "name": "description",
-                  "value": "Determines the cumulative duration of a list of intervals"
-                },
-                {
                   "name": "comment",
                   "value": "#This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#"
+                },
+                {
+                  "name": "description",
+                  "value": "Determines the cumulative duration of a list of intervals"
                 }
               ],
               "type": "Annotation"

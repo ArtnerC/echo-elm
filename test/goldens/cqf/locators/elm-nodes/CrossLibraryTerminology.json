@@ -1,0 +1,136 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "CrossLibraryTerminology",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "T",
+          "locator": "11:1-11:48",
+          "path": "SharedTerminology",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "locator": "13:31-13:40",
+            "name": "SNOMED",
+            "type": "CodeSystemRef"
+          },
+          "locator": "13:1-13:40",
+          "name": "QualifiedCodeSystem"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "locator": "14:25-14:36",
+            "name": "Diabetes",
+            "type": "CodeRef"
+          },
+          "locator": "14:1-14:36",
+          "name": "QualifiedCode"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "locator": "15:29-15:43",
+            "name": "Diabetes VS",
+            "preserve": true,
+            "type": "ValueSetRef"
+          },
+          "locator": "15:1-15:43",
+          "name": "QualifiedValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "T",
+            "locator": "16:31-16:50",
+            "name": "SharedExpression",
+            "type": "ExpressionRef"
+          },
+          "locator": "16:1-16:50",
+          "name": "QualifiedExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "libraryName": "T",
+              "locator": "18:44-18:55",
+              "name": "Diabetes",
+              "type": "CodeRef"
+            },
+            "locator": "18:44-18:74",
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "libraryName": "T",
+              "locator": "18:60-18:74",
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "locator": "18:1-18:74",
+          "name": "QualifiedCodeInQualifiedValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "locator": "19:37-19:47",
+              "type": "Literal",
+              "value": "some-code",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "locator": "19:37-19:66",
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "libraryName": "T",
+              "locator": "19:52-19:66",
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "locator": "19:1-19:66",
+          "name": "StringInQualifiedValueSet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}
