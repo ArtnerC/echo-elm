@@ -36,7 +36,13 @@ Verified with CQF 4.8.0 CLI output for a `case` expression:
 
 No `"type": "CaseItem"`. Echo-elm matches the CLI here.
 
-**Consequence:** adding `type` everywhere would *break* CQF CLI parity, which is echo-elm's stated compatibility target. Emitting the fully-discriminated form for Firely SDK consumption is a legitimate but **separate** feature — an opt-in output mode, not a fix to default output. Tracked separately; not done here.
+**Consequence:** adding `type` everywhere would *break* CQF CLI parity, which is echo-elm's stated compatibility target. The fully-discriminated form belongs in an opt-in output mode, not in default output.
+
+**Implemented** as `--target firely` (default `cqf`), and `TranslateResult.FirelyJSON()` on the Go API. It is a post-serialization pass over the ELM JSON — the same positional knowledge the CLI serializer relies on, spelled back out — so it needs nothing from the translator and cannot perturb default output. Nodes that already carry a `type` keep it, so `FunctionDef`, the `With`/`Without` relationship clauses and the sort-by variants are untouched.
+
+The property that matters to a deserializer dispatching on `type` is that no node with structure is left bare, and one fixture cannot show that holds for every construct: `TestFirelyTargetTypesEveryNode` asserts it across the whole corpus. It immediately caught a rule a hand-written sample had missed (`Ratio.numerator` / `.denominator`).
+
+`--target firely` is rejected with `--format XML`, where every node already carries `xsi:type`.
 
 ### Part B claims that were artifacts of the above
 
@@ -162,7 +168,6 @@ Two reductions remain, both deliberate and now documented in `normalizeJSON`:
 - **`sig-overloads` signature emission for membership operators** — see below; unchanged.
 - **Diagnostic annotations are not emitted.** CQF writes `CqlToElmError` annotations into the ELM (178 across the corpus, all `errorSeverity: warning` — overload-ambiguity notices under `SignatureLevel=None`, "List-valued expression was demoted to a singleton", "Interval-valued expression was demoted to a point"). echo-elm reports diagnostics on stderr but emits none into the ELM, so normalization drops them. A measure author reading the ELM would want these.
 - **`sig-overloads` signature emission for membership operators.** CQF emits a signature on some `In` expressions where no coercion occurred — `2 in {1,2,3}` and `"Day" included in "Period"` carry one, while `5 in Interval[1,10]` and `"Day" in "Period"` do not. Literal-vs-reference and rewrite-vs-direct both fit part of the data and neither fits all of it. The emitted ELM matches at every other profile including `sig-all`, so this is signature metadata only. `elm-nodes/MembershipOperators.cql` excludes `sig-overloads` with this note.
-- **Firely-targeted output mode** (fully type-discriminated ELM JSON) — see Part A above.
 - **Conversion at the consumption site.** echo-elm attaches the implicit FHIRHelpers conversion where a property is *translated*, whereas CQF applies it where the value is *consumed*. The direct list case is now handled — `'Main St' in A.line` emits CQF's per-element conversion query (previously it wrapped the list in `ToList`, producing a `List<List<String>>` that no engine could evaluate) — but two shapes remain:
   - A scalar extracted from a FHIR list: `First(A.line) = 'x'` should be `ToString(First(…))`; echo-elm emits `First(…)` with no conversion.
   - Implicit list traversal: `'z' in C.category.text` where `category` is `List<CodeableConcept>` needs a nested `$this` traversal query inside the conversion query.

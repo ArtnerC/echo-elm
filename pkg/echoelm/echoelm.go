@@ -162,3 +162,19 @@ func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult,
 
 	return result, nil
 }
+
+// FirelyJSON returns the ELM as fully type-discriminated JSON — the shape the
+// JAXB/MOXy `elm-json` writer produces, which is what appears inside FHIR
+// Library resources and what the Firely CQL SDK deserializes.
+//
+// The cql-to-elm CLI omits `"type"` on declaration, container and clause nodes
+// because their position determines what they are. That is echo-elm's default
+// output, since CLI parity is the compatibility target; a deserializer that
+// dispatches on `"type"` needs this form instead.
+func (r *TranslateResult) FirelyJSON() ([]byte, error) {
+	plain, err := r.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return elm.AddTypeDiscriminators(plain)
+}

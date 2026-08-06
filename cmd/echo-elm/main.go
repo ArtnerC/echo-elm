@@ -83,6 +83,7 @@ func runTranslate(args []string, cqfMode bool) {
 		input    string
 		output   string
 		format   string
+		target   string
 		validate bool
 	)
 	var libDirs multiFlag
@@ -90,6 +91,7 @@ func runTranslate(args []string, cqfMode bool) {
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
 	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
+	fs.StringVar(&target, "target", "cqf", "ELM shape: cqf (cql-to-elm CLI parity) or firely (fully type-discriminated JSON)")
 	fs.BoolVar(&validate, "validate", false, "Run structural validation on the serialized ELM before writing it")
 	fs.Var(&libDirs, "lib-dir", "Additional directory to search for included CQL libraries (repeatable; the input file's own directory is always searched)")
 	tf := registerTranslatorFlags(fs, cqfMode)
@@ -158,10 +160,23 @@ func runTranslate(args []string, cqfMode bool) {
 	outPath := resolveOutput(input, output, format)
 
 	// Serialize.
+	firely := strings.EqualFold(target, "firely")
+	if !firely && !strings.EqualFold(target, "cqf") {
+		fmt.Fprintf(os.Stderr, "error: --target must be cqf or firely (got %q)\n", target)
+		os.Exit(2)
+	}
 	var outBytes []byte
-	switch strings.ToUpper(format) {
-	case "XML":
+	switch {
+	case strings.EqualFold(format, "XML"):
+		if firely {
+			// The discriminated shape is a property of the elm-json writer; XML
+			// already carries xsi:type on every node.
+			fmt.Fprintln(os.Stderr, "error: --target firely applies to JSON output only")
+			os.Exit(2)
+		}
 		outBytes, err = result.XMLBytes()
+	case firely:
+		outBytes, err = result.FirelyJSON()
 	default: // JSON
 		outBytes, err = json.MarshalIndent(result, "", "   ")
 	}

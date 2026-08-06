@@ -4,11 +4,13 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
+	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/parity"
 	"github.com/artnerc/echo-elm/pkg/bundle"
 )
@@ -204,4 +206,75 @@ func bundleEntry(t *testing.T, name, version, cqlPath, elmPath string) map[strin
 			},
 		},
 	}
+}
+
+// TestFirelyTargetTypesEveryNode runs the discriminated form over the whole
+// corpus. The property a schema-driven deserializer needs is that no node with
+// structure is left without a "type"; a single fixture cannot show that holds
+// across every construct the translator emits.
+func TestFirelyTargetTypesEveryNode(t *testing.T) {
+	corpusDir := filepath.Join("..", "..", "test", "corpus", "cqframework")
+	corpus, err := parity.LoadCorpus(corpusDir)
+	if err != nil {
+		t.Fatalf("load corpus: %v", err)
+	}
+	translate := parity.ProfileTranslateFunc(corpus.OptionProfiles["default"])
+
+	checked := 0
+	for _, fix := range corpus.Fixtures {
+		if fix.ExpectedStatus != "success" {
+			continue
+		}
+		fix := fix
+		t.Run(strings.TrimSuffix(fix.Path, ".cql"), func(t *testing.T) {
+			plain, err := translate(filepath.Join(corpusDir, fix.Path))
+			if err != nil {
+				t.Fatalf("translate: %v", err)
+			}
+			discriminated, err := elm.AddTypeDiscriminators(plain)
+			if err != nil {
+				t.Fatalf("add discriminators: %v", err)
+			}
+			var doc map[string]any
+			if err := json.Unmarshal(discriminated, &doc); err != nil {
+				t.Fatalf("unmarshal: %v", err)
+			}
+			for _, path := range untypedNodes(doc["library"], "library") {
+				t.Errorf("no type discriminator at %s", path)
+			}
+		})
+		checked++
+	}
+	if checked == 0 {
+		t.Fatal("no fixtures checked")
+	}
+}
+
+// untypedNodes returns the paths of nodes that have structure but no "type".
+func untypedNodes(v any, path string) []string {
+	var bare []string
+	switch node := v.(type) {
+	case map[string]any:
+		hasChildren := false
+		for _, child := range node {
+			switch child.(type) {
+			case map[string]any, []any:
+				hasChildren = true
+			}
+		}
+		if _, typed := node["type"]; !typed && hasChildren {
+			// Annotation s-trees are free-form source spans, not ELM nodes.
+			if !strings.Contains(path, ".annotation") {
+				bare = append(bare, path)
+			}
+		}
+		for k, child := range node {
+			bare = append(bare, untypedNodes(child, path+"."+k)...)
+		}
+	case []any:
+		for i, item := range node {
+			bare = append(bare, untypedNodes(item, fmt.Sprintf("%s[%d]", path, i))...)
+		}
+	}
+	return bare
 }
