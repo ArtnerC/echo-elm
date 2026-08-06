@@ -65,9 +65,9 @@ func run() error {
 		return fmt.Errorf("load corpus: %w", err)
 	}
 	divergent := make(map[string]bool)
-	for _, fix := range corpus.Fixtures {
-		if fix.VersionDivergent {
-			divergent[fix.Path] = true
+	for i := range corpus.Fixtures {
+		if corpus.Fixtures[i].VersionDivergent {
+			divergent[corpus.Fixtures[i].Path] = true
 		}
 	}
 

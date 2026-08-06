@@ -93,8 +93,9 @@ func declaredExpressionTypeNames(t *testing.T) []string {
 		t.Fatalf("read model.go: %v", err)
 	}
 	re := regexp.MustCompile(`func \(\*([A-Za-z]+)\) isExpression\(\)`)
-	var names []string
-	for _, m := range re.FindAllStringSubmatch(string(src), -1) {
+	matches := re.FindAllStringSubmatch(string(src), -1)
+	names := make([]string, 0, len(matches))
+	for _, m := range matches {
 		names = append(names, m[1])
 	}
 	if len(names) == 0 {

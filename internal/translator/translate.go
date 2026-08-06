@@ -631,7 +631,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 					// library gives that definition, so translate it once to
 					// learn those types. Only needed for result types.
 					if t.opts.EnableResultTypes {
-						t.libDefTypes[localName] = includedDefTypes(t.opts, pr.Library, inc.Path)
+						t.libDefTypes[localName] = includedDefTypes(&t.opts, pr.Library, inc.Path)
 					}
 				}
 			}
@@ -1121,8 +1121,8 @@ func (t *Translator) declResultType(typeName string) string {
 // includedDefTypes translates an included library far enough to learn the type
 // of each of its definitions. Result types are the only thing that needs this,
 // so it runs only when they are enabled; the translated output is discarded.
-func includedDefTypes(opts Options, lib *ast.Library, path string) map[string]typeSpec {
-	sub := New(opts)
+func includedDefTypes(opts *Options, lib *ast.Library, path string) map[string]typeSpec {
+	sub := New(*opts)
 	// Do not recurse into the include's own includes: one level is enough for
 	// the reference being resolved, and it keeps a cycle from looping.
 	sub.opts.LibrarySource = nil
@@ -1618,7 +1618,7 @@ func (t *Translator) promoteIntervalDateBoundsToDateTime(declaredType ast.TypeSp
 // If the expression is not a *elm.DateNode it is returned unchanged.
 func (t *Translator) wrapDateInToDateTime(expr elm.Expression) elm.Expression {
 	if expr == nil {
-		return expr
+		return nil
 	}
 	if _, isDate := expr.(*elm.DateNode); !isDate {
 		return expr
@@ -4128,7 +4128,7 @@ func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget strin
 		TemplateID:  fhirBase + refTarget,
 	}
 
-	// FHIRHelpers.ToString(M.id)
+	// The Medication resource id, converted to a string.
 	mIDProp := &elm.PropertyNode{Annotation: ann, Path: "id", Scope: mAlias}
 	mIDStr := &elm.FunctionRefNode{
 		Annotation:  ann,
@@ -4138,7 +4138,7 @@ func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget strin
 		Operand:     []elm.Expression{mIDProp},
 	}
 
-	// FHIRHelpers.ToString(MR.medication.reference)
+	// The request medication reference, converted to a string.
 	mrRefProp := &elm.PropertyNode{Annotation: ann, Path: refPropPath, Scope: mrAlias}
 	mrRefStr := &elm.FunctionRefNode{
 		Annotation:  ann,
@@ -4148,7 +4148,7 @@ func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget strin
 		Operand:     []elm.Expression{mrRefProp},
 	}
 
-	// Split(FHIRHelpers.ToString(MR.medication.reference), "/")
+	// That reference split on "/", so its trailing id can be taken.
 	sepLit := &elm.LiteralNode{ValueType: "{urn:hl7-org:elm-types:r1}String", Value: "/"}
 	splitExpr := &elm.SplitNode{Annotation: ann, Signature: sig, StringToSplit: mrRefStr, Separator: sepLit}
 
@@ -4164,7 +4164,7 @@ func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget strin
 		Operand:    eqOperands,
 	}
 
-	// InValueSet(FHIRHelpers.ToConcept(M.code), vsRef)
+	// The Medication code, converted to a Concept and tested against the value set.
 	mCodeProp := &elm.PropertyNode{Annotation: ann, Path: "code", Scope: mAlias}
 	mCodeConcept := &elm.FunctionRefNode{
 		Annotation:  ann,
@@ -4187,7 +4187,7 @@ func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget strin
 		},
 	}
 
-	// And(equal, inValueSet)
+	// Both conditions together: the reference matches and the code is in the set.
 	suchThat := &elm.OperatorExpressionNode{
 		Annotation: ann,
 		Signature:  sig,
@@ -4226,7 +4226,7 @@ func isStandardAnnotationTag(name string) bool {
 	for i, r := range name {
 		isAlpha := (r >= 'a' && r <= 'z') || (r >= 'A' && r <= 'Z') || r == '_'
 		isDigit := r >= '0' && r <= '9'
-		if !isAlpha && !(i > 0 && isDigit) {
+		if !isAlpha && (i == 0 || !isDigit) {
 			return false
 		}
 	}

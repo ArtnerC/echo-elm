@@ -493,16 +493,6 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 	return tags
 }
 
-// isOnlyWhitespace returns true if all runes in s are whitespace.
-func isOnlyWhitespace(s string) bool {
-	for _, r := range s {
-		if r != ' ' && r != '\t' && r != '\r' && r != '\n' {
-			return false
-		}
-	}
-	return true
-}
-
 // isLeadingJunk returns true if s contains only whitespace and/or '*' characters,
 // i.e. the prefix before an @ tag in a block comment like " * @description:".
 func isLeadingJunk(s string) bool {

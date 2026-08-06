@@ -448,6 +448,144 @@ define "Cardiac Device Ordered":
 
 ---
 
+## Specialty care and chronic disease patterns
+
+These patterns appear frequently in specialty care quality measures (rheumatology, oncology,
+cardiology) but are not illustrated in the common primary-care examples above.
+
+### At-least-N encounters with a specialist or in a specialty setting
+
+```cql
+// Minimum 2 rheumatology (or qualifying office) visits during the measurement period
+// Uses union of encounter types common in specialty quality programs
+define "Qualifying Encounters":
+  ( [Encounter: "Rheumatology Visit"]
+    union [Encounter: "Office Visit"] ) E
+    where E.status = 'finished'
+      and E.period during "Measurement Period"
+
+define "Has Two or More Qualifying Encounters":
+  Count("Qualifying Encounters") >= 2
+
+// Encounter linked to a specific diagnosis (via with)
+define "Encounters With RA Diagnosis":
+  [Encounter: "Office Visit"] E
+    with [Condition: "Rheumatoid Arthritis"] C
+      such that C.clinicalStatus ~ "active"
+        and C.encounter.references(E)
+    where E.status = 'finished'
+      and E.period during "Measurement Period"
+```
+
+### DMARD / biologic therapy ordering and monitoring
+
+Disease-Modifying Antirheumatic Drug (DMARD) measures typically require:
+1. An active or completed MedicationRequest during the measurement period, AND
+2. Associated lab monitoring within a specified window
+
+```cql
+// Step 1: DMARD or biologic ordered during the measurement period
+define "Active DMARD Therapy":
+  ( [MedicationRequest: "DMARD Therapy"]
+    union [MedicationRequest: "Biologics for Rheumatoid Arthritis"] ) MR
+    where MR.status in { 'active', 'completed' }
+      and MR.intent = 'order'
+      and MR.authoredOn.toInterval() during "Measurement Period"
+
+// Step 2: Safety lab required within 3 months of DMARD order
+//  (Common example: CBC within 3 months of methotrexate initiation)
+define "DMARD With Required Lab Monitoring":
+  "Active DMARD Therapy" MR
+    with [Observation: "CBC Panel"] O
+      such that O.status in { 'final', 'amended', 'corrected' }
+        and O.effective.toInterval() starts 3 months or less after
+            FHIRHelpers.ToDateTime(MR.authoredOn)
+
+// Step 3: Combined — medication AND lab within window
+define "Has DMARD With Monitoring":
+  exists "DMARD With Required Lab Monitoring"
+```
+
+### Lab result within N days of a qualifying encounter
+
+```cql
+// Disease activity assessment (e.g., DAS28, CRP, ESR) performed within
+// 6 months before or on the date of any qualifying encounter
+define "Disease Activity Assessment During or Before Visit":
+  exists (
+    "Qualifying Encounters" E
+      with [Observation: "Disease Activity Assessment"] O
+        such that O.status in { 'final', 'amended', 'corrected' }
+          and O.effective.toInterval() starts 6 months or less before
+              end of E.period
+          and O.effective.toInterval() starts on or before end of E.period
+  )
+
+// Lab result any time during the measurement period (no encounter link)
+define "Has Disease Activity Lab During Period":
+  exists (
+    [Observation: "Disease Activity Assessment"] O
+      where O.status in { 'final', 'amended', 'corrected' }
+        and O.effective.toInterval() during "Measurement Period"
+  )
+```
+
+### Lab result within a lookback window relative to measurement period end
+
+```cql
+// Monitoring lab within the 12 months ending at the close of the measurement period
+// (Captures labs drawn slightly before the period start that count toward the measure)
+define "Lab In Measurement Year":
+  exists (
+    [Observation: "CBC Panel"] O
+      where O.status in { 'final', 'amended', 'corrected' }
+        and O.effective.toInterval() during
+            Interval[end of "Measurement Period" - 12 months,
+                     end of "Measurement Period"]
+  )
+```
+
+### Most recent lab result (with explicit FHIR.dateTime sort)
+
+Use this pattern in self-contained measures that do not have a shared `effectiveDateTime()` helper:
+
+```cql
+define "Most Recent DAS28 Score":
+  Last(
+    [Observation: "Disease Activity Assessment"] O
+      where O.status in { 'final', 'amended', 'corrected' }
+        and O.effective.toInterval() during "Measurement Period"
+      sort by FHIRHelpers.ToDateTime(O.effective as FHIR.dateTime) ascending
+  )
+
+// When effective[x] may be a Period or instant, sort by issued
+define "Most Recent Assessment Result":
+  Last(
+    [Observation: "Disease Activity Assessment"] O
+      where O.status in { 'final', 'amended', 'corrected' }
+        and O.effective.toInterval() during "Measurement Period"
+      sort by FHIRHelpers.ToDateTime(O.issued) ascending
+  )
+```
+
+### Comorbidity exclusion for specialty care
+
+```cql
+// Exclusion: pregnancy, active TB, or hepatic impairment — conditions that
+// contraindicate DMARD therapy. Each condition must be active and recorded
+// within or before the measurement period.
+define "Has DMARD Contraindication":
+  exists (
+    ( [Condition: "Pregnancy"]
+      union [Condition: "Active Tuberculosis"]
+      union [Condition: "Severe Hepatic Impairment"] ) C
+      where C.clinicalStatus ~ "active"
+        and C.recordedDate before end of "Measurement Period"
+  )
+```
+
+---
+
 ## Common performance anti-patterns
 
 ```cql

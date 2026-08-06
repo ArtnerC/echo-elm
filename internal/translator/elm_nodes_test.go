@@ -532,7 +532,7 @@ define "Uses Later": "Declared Later" + 1
 define "Declared Later": 41
 define "Independent": 0`)
 
-	var order []string
+	order := make([]string, 0, len(r.Library.Statements.Def))
 	for _, def := range r.Library.Statements.Def {
 		order = append(order, def.Name)
 	}

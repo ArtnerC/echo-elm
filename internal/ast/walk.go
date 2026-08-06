@@ -31,7 +31,7 @@ func walkValue(v reflect.Value, fn func(Node), seen map[uintptr]bool) {
 		walkValue(v.Elem(), fn, seen)
 		return
 
-	case reflect.Ptr:
+	case reflect.Pointer:
 		if v.IsNil() {
 			return
 		}

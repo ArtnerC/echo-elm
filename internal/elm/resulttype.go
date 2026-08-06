@@ -14,7 +14,7 @@ func SetResultType(e Expression, name string, spec TypeSpecifier) {
 		return
 	}
 	v := reflect.ValueOf(e)
-	if v.Kind() != reflect.Ptr || v.IsNil() {
+	if v.Kind() != reflect.Pointer || v.IsNil() {
 		return
 	}
 	v = v.Elem()
@@ -39,7 +39,7 @@ func HasResultType(e Expression) bool {
 		return false
 	}
 	v := reflect.ValueOf(e)
-	if v.Kind() != reflect.Ptr || v.IsNil() {
+	if v.Kind() != reflect.Pointer || v.IsNil() {
 		return false
 	}
 	v = v.Elem()
@@ -61,7 +61,7 @@ func GetResultType(e Expression) (string, TypeSpecifier) {
 		return "", nil
 	}
 	v := reflect.ValueOf(e)
-	if v.Kind() != reflect.Ptr || v.IsNil() {
+	if v.Kind() != reflect.Pointer || v.IsNil() {
 		return "", nil
 	}
 	v = v.Elem()

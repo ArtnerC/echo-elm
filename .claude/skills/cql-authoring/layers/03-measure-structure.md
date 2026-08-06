@@ -487,6 +487,190 @@ define "Numerator":
 ## Composite measure structure
 
 ```cql
+---
+
+## Self-contained single-file measure (no shared library dependencies)
+
+When a shared helper library ecosystem (FHIRCommon, ClinicalHelpers, PatientCharacteristics)
+is not available, write a fully self-contained measure in a single CQL file.
+Inline all helpers and status codes that would otherwise come from shared libraries.
+
+### When to use this pattern
+- New domain / clinical specialty without an existing shared library
+- Standalone test fixtures or parity corpus entries
+- Initial prototyping before extracting helpers to shared libraries
+- Translator/engine parity tests where dependency resolution must be self-contained
+
+### Self-contained measure template
+
+```cql
+/**
+ * Measure: <Measure Title>
+ * Library: <LibraryName>
+ * Version: 1.0.0
+ * Type: Proportion
+ * Improvement Notation: increase | decrease
+ * Description: <One-sentence clinical purpose>
+ */
+library <LibraryName> version '1.0.0'
+
+using FHIR version '4.0.1'
+
+include FHIRHelpers version '4.0.1' called FHIRHelpers
+
+// ── Code Systems ─────────────────────────────────────────────────────────────
+
+codesystem "SNOMEDCT": 'http://snomed.info/sct'
+codesystem "LOINC": 'http://loinc.org'
+codesystem "ICD10CM": 'http://hl7.org/fhir/sid/icd-10-cm'
+codesystem "RxNorm": 'http://www.nlm.nih.gov/research/umls/rxnorm'
+codesystem "CPT": 'http://www.ama-assn.org/go/cpt'
+
+// Inline condition status codes (substitutes for FHIRCommon imports)
+codesystem "ConditionClinicalStatus":
+  'http://terminology.hl7.org/CodeSystem/condition-clinical'
+codesystem "ConditionVerificationStatus":
+  'http://terminology.hl7.org/CodeSystem/condition-ver-status'
+
+// ── Value Sets ───────────────────────────────────────────────────────────────
+
+valueset "<Clinical Concept>": '<VSAC canonical URL>'
+
+// ── Inline Status Codes ───────────────────────────────────────────────────────
+
+code "active": 'active' from "ConditionClinicalStatus" display 'Active'
+code "recurrence": 'recurrence' from "ConditionClinicalStatus" display 'Recurrence'
+code "relapse": 'relapse' from "ConditionClinicalStatus" display 'Relapse'
+code "confirmed": 'confirmed' from "ConditionVerificationStatus" display 'Confirmed'
+
+// ── Parameters ───────────────────────────────────────────────────────────────
+
+parameter "Measurement Period" Interval<DateTime>
+  default Interval[@2024-01-01, @2024-12-31]
+
+// ── Context ───────────────────────────────────────────────────────────────────
+
+context Patient
+
+// ── Inline Helper Functions ───────────────────────────────────────────────────
+
+/*
+ * @description: Convert FHIR.Period or FHIR.dateTime to CQL Interval<DateTime>.
+ * Inlined from ClinicalHelpers to make this library self-contained.
+ */
+define fluent function toInterval(choice Choice<FHIR.dateTime, FHIR.Period>):
+  case
+    when choice is FHIR.dateTime then
+      Interval[FHIRHelpers.ToDateTime(choice as FHIR.dateTime),
+               FHIRHelpers.ToDateTime(choice as FHIR.dateTime)]
+    when choice is FHIR.Period then
+      FHIRHelpers.ToInterval(choice as FHIR.Period)
+    else null as Interval<DateTime>
+  end
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  INITIAL POPULATION                                                      ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+/*
+ * @measure-component: initial-population
+ * @description: <IPP clinical criteria>
+ */
+define "Initial Population":
+  AgeInYearsAt(date from start of "Measurement Period") >= 18
+    and exists "Qualifying Encounters"
+    and "Has Active Diagnosis"
+
+define "Qualifying Encounters":
+  [Encounter: "<Encounter Value Set>"] E
+    where E.status = 'finished'
+      and E.period during "Measurement Period"
+
+define "Has Active Diagnosis":
+  exists (
+    [Condition: "<Diagnosis Value Set>"] C
+      where C.clinicalStatus ~ "active"
+        and C.verificationStatus ~ "confirmed"
+        and C.recordedDate before end of "Measurement Period"
+  )
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  DENOMINATOR                                                             ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+/*
+ * @measure-component: denominator
+ * @description: All patients in the Initial Population.
+ */
+define "Denominator":
+  "Initial Population"
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  DENOMINATOR EXCLUSION                                                   ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+/*
+ * @measure-component: denominator-exclusion
+ * @description: <Exclusion clinical criteria>
+ */
+define "Denominator Exclusion":
+  "Has Exclusionary Condition"
+
+define "Has Exclusionary Condition":
+  exists (
+    [Condition: "<Exclusion Value Set>"] C
+      where C.clinicalStatus ~ "active"
+        and C.recordedDate before end of "Measurement Period"
+  )
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  NUMERATOR                                                               ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+/*
+ * @measure-component: numerator
+ * @description: <Numerator clinical criteria>
+ * @improvement-notation: increase
+ */
+define "Numerator":
+  "Has Qualifying Intervention"
+
+define "Has Qualifying Intervention":
+  exists (
+    [MedicationRequest: "<Treatment Value Set>"] MR
+      where MR.status in { 'active', 'completed' }
+        and MR.intent = 'order'
+        and MR.authoredOn.toInterval() during "Measurement Period"
+  )
+
+// ╔══════════════════════════════════════════════════════════════════════════╗
+// ║  SUPPLEMENTAL DATA ELEMENTS                                              ║
+// ╚══════════════════════════════════════════════════════════════════════════╝
+
+/*
+ * @measure-component: supplemental-data
+ * @sde-name: SDE Sex
+ */
+define "SDE Sex":
+  Patient.gender
+
+/*
+ * @measure-component: supplemental-data
+ * @sde-name: SDE Age
+ */
+define "SDE Age":
+  AgeInYearsAt(date from start of "Measurement Period")
+```
+
+### Notes on the self-contained pattern
+
+- **`toInterval()` fluent function**: Inline the definition rather than importing from a helper library.
+- **Condition status codes**: Define `"active"` and `"confirmed"` codes from the FHIR terminology code systems rather than using `FHIRCommon."active"`.
+- **`authoredOn.toInterval()`**: `MedicationRequest.authoredOn` is a `FHIR.dateTime`; calling `.toInterval()` on it works when the fluent function accepts `Choice<FHIR.dateTime, FHIR.Period>`.
+- **SDE Race/Ethnicity**: For a self-contained measure, SDE Race and Ethnicity may be omitted or simplified to avoid US Core extension traversal complexity. Include them when the runtime supports extension access.
+
+---
+
 /**
  * Composite measure: Comprehensive Diabetes Care
  * Scoring: Opportunity (patients meeting numerator across all components)
