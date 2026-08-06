@@ -55,6 +55,15 @@ type Config struct {
 	CorpusDir string
 	// ProfileFilter, if non-empty, runs only this profile name.
 	ProfileFilter string
+	// RefDir, when non-empty, reads reference ELM from
+	// <RefDir>/<profile>/<fixture>.json instead of invoking the CQF JAR. Use it
+	// to compare against ELM that already exists — a measure bundle's compiled
+	// ELM, or a committed golden set — and in environments without Java.
+	RefDir string
+	// LibDir, when non-empty, is searched for included CQL libraries in addition
+	// to each fixture's own directory. A bundle extracted to one flat directory
+	// needs this, since its libraries do not sit beside the fixture.
+	LibDir string
 }
 
 // DefaultConfig returns a Config pointing at the default corpus.
@@ -118,11 +127,22 @@ func profileOptions(profile OptionProfile) translator.Options {
 //
 //nolint:gocritic // hugeParam: internal helper with stable interface
 func translateWithProfile(cqlPath string, opts translator.Options) ([]byte, error) {
+	return translateWithProfileAndLibDir(cqlPath, opts, "")
+}
+
+// translateWithProfileAndLibDir translates cqlPath, resolving includes from the
+// fixture's own directory first and then from libDir when one is given.
+//
+//nolint:gocritic // hugeParam: internal helper with stable interface
+func translateWithProfileAndLibDir(cqlPath string, opts translator.Options, libDir string) ([]byte, error) {
 	src, err := os.ReadFile(cqlPath)
 	if err != nil {
 		return nil, fmt.Errorf("read %s: %w", cqlPath, err)
 	}
-	libSrc := resolver.NewDirSource(filepath.Dir(cqlPath))
+	var libSrc resolver.LibrarySource = resolver.NewDirSource(filepath.Dir(cqlPath))
+	if libDir != "" {
+		libSrc = resolver.NewMultiSource(libSrc, resolver.NewDirSource(libDir))
+	}
 	result, err := echoelm.Translate(src, filepath.Base(cqlPath),
 		echoelm.WithOptions(opts),
 		echoelm.WithLibrarySource(libSrc),
@@ -155,6 +175,16 @@ func ProfileTranslateFunc(profile OptionProfile) func(cqlPath string) ([]byte, e
 	}
 }
 
+// ProfileTranslateFuncWithLibDir is ProfileTranslateFunc with an additional
+// library search directory, for corpora whose libraries do not sit beside the
+// fixture that includes them.
+func ProfileTranslateFuncWithLibDir(profile OptionProfile, libDir string) func(cqlPath string) ([]byte, error) {
+	opts := profileOptions(profile)
+	return func(cqlPath string) ([]byte, error) {
+		return translateWithProfileAndLibDir(cqlPath, opts, libDir)
+	}
+}
+
 //nolint:gocritic // hugeParam: public API
 func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]FixtureResult, error) {
 	corpus, err := LoadCorpus(cfg.CorpusDir)
@@ -180,10 +210,12 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 			}
 			profile := corpus.OptionProfiles[profileName]
 			opts := profileOptions(profile)
+			libDir := cfg.LibDir
 			translateProfileFn := func(cqlPath string) ([]byte, error) {
-				return translateWithProfile(cqlPath, opts)
+				return translateWithProfileAndLibDir(cqlPath, opts, libDir)
 			}
-			r := runFixture(fix, corpus.Root, launcher, profile.CLIFlags, translateProfileFn)
+			r := runFixtureWithRef(fix, corpus.Root, launcher, profile.CLIFlags,
+				translateProfileFn, cfg.RefDir, profileName)
 			r.Profile = profileName
 			results = append(results, r)
 		}
@@ -191,8 +223,23 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 	return results, nil
 }
 
+// referenceELM returns the reference ELM for a fixture. With refDir set it is
+// read from <refDir>/<profile>/<fixture>.json; otherwise the upstream CQF CLI
+// produces it.
+func referenceELM(refDir, profileName, corpusRoot, launcher string, fix *Fixture, extraFlags []string) (elmJSON, stderr string, err error) {
+	if refDir == "" {
+		return runUpstream(launcher, filepath.Join(corpusRoot, fix.Path), extraFlags)
+	}
+	refPath := filepath.Join(refDir, profileName, strings.TrimSuffix(fix.Path, ".cql")+".json")
+	data, readErr := os.ReadFile(refPath)
+	if readErr != nil {
+		return "", "", fmt.Errorf("reference ELM not found: %w", readErr)
+	}
+	return string(data), "", nil
+}
+
 //nolint:gocritic // hugeParam: internal helper with stable interface
-func runFixture(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error)) FixtureResult {
+func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error), refDir, profileName string) FixtureResult {
 	start := time.Now()
 	cqlPath := filepath.Join(corpusRoot, fix.Path)
 
@@ -201,8 +248,8 @@ func runFixture(fix Fixture, corpusRoot, launcher string, extraFlags []string, t
 		Description: fix.Description,
 	}
 
-	// Run upstream cqframework CLI.
-	upJSON, upStderr, err := runUpstream(launcher, cqlPath, extraFlags)
+	// Reference ELM: pre-built when --ref-dir is given, else from the CQF CLI.
+	upJSON, upStderr, err := referenceELM(refDir, profileName, corpusRoot, launcher, &fix, extraFlags)
 	r.UpstreamStderr = upStderr
 	if err != nil {
 		if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {

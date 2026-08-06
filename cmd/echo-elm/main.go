@@ -53,6 +53,8 @@ func main() {
 		runUI(os.Args[2:])
 	case "mcp":
 		runMCP(os.Args[2:])
+	case "bundle":
+		runBundle(os.Args[2:])
 	case "parity":
 		runParity(os.Args[2:])
 	default:
@@ -68,6 +70,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  cqf translate    Translate CQL to ELM (cqframework-compatible)")
 	fmt.Fprintln(os.Stderr, "  ui               Start local workbench UI")
 	fmt.Fprintln(os.Stderr, "  mcp              Start MCP server")
+	fmt.Fprintln(os.Stderr, "  bundle           Read/write CQL and ELM in a FHIR Bundle")
 	fmt.Fprintln(os.Stderr, "  parity           Run CQFramework parity harness")
 	fmt.Fprintln(os.Stderr, "  version          Print version")
 }
@@ -332,6 +335,9 @@ func runParity(args []string) {
 		tag        string
 		outDir     string
 		runID      string
+		refDir     string
+		parityLib  string
+		profile    string
 	)
 	fs.StringVar(&cqfVersion, "cqf-version", "4.8.0", "CQFramework version to compare against: 3.29.0|4.8.0")
 	fs.StringVar(&corpus, "corpus", "test/corpus/cqframework", "Corpus directory containing corpus.yaml")
@@ -339,6 +345,9 @@ func runParity(args []string) {
 	fs.StringVar(&tag, "tag", "", "Run only fixtures with this tag (default: all)")
 	fs.StringVar(&outDir, "out", "", "Output directory for report.json and report.md (default: parity/runs/<id>)")
 	fs.StringVar(&runID, "run-id", "", "Run identifier (default: timestamp)")
+	fs.StringVar(&refDir, "ref-dir", "", "Read reference ELM from <ref-dir>/<profile>/<fixture>.json instead of running the CQF JAR")
+	fs.StringVar(&parityLib, "lib-dir", "", "Additional directory to search for included CQL libraries")
+	fs.StringVar(&profile, "profile", "", "Run only fixtures under this option profile (default: all)")
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
@@ -352,13 +361,16 @@ func runParity(args []string) {
 	}
 
 	cfg := parity.Config{
-		CQFVersion: cqfVersion,
-		ToolsDir:   toolsDir,
-		CorpusDir:  corpus,
-		TagFilter:  tag,
+		CQFVersion:    cqfVersion,
+		ToolsDir:      toolsDir,
+		CorpusDir:     corpus,
+		TagFilter:     tag,
+		ProfileFilter: profile,
+		RefDir:        refDir,
+		LibDir:        parityLib,
 	}
 
-	fmt.Fprintf(os.Stderr, "echo-elm parity  run=%s  cqf=%s  corpus=%s\n", runID, cqfVersion, corpus)
+	fmt.Fprintf(os.Stderr, "echo-elm parity  run=%s  %s  corpus=%s\n", runID, referenceLabel(cqfVersion, refDir), corpus)
 
 	results, err := parity.Run(cfg, func(cqlPath string) ([]byte, error) {
 		data, err := os.ReadFile(cqlPath)
@@ -423,4 +435,12 @@ func resolveOutput(input, output, format string) string {
 		return filepath.Join(output, base+ext)
 	}
 	return output
+}
+
+// referenceLabel names where a parity run takes its reference ELM from.
+func referenceLabel(cqfVersion, refDir string) string {
+	if refDir != "" {
+		return "ref-dir=" + refDir
+	}
+	return "cqf=" + cqfVersion
 }
