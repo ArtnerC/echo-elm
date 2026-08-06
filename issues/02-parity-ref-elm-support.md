@@ -1,7 +1,22 @@
 # Issue: `parity` — Accept Pre-Built Reference ELM Without CQF JAR
 
-**Priority:** Enhancement  
-**Labels:** parity, cli, feature  
+**Priority:** Enhancement
+**Labels:** parity, cli, feature
+**Status:** Implemented — `parity --ref-dir`, `--lib-dir` and `--profile`.
+
+---
+
+## Implementation notes
+
+`Config` gained `RefDir` and `LibDir`; `ProfileFilter` was already present and is
+now reachable from the CLI. `runFixtureWithRef` selects the reference source, and
+`translateWithProfileAndLibDir` extends include resolution.
+
+A missing reference file is reported as `upstream-error`, not as a match, so a
+partial reference set cannot pass silently — `TestRunWithRefDirMissingReference`
+covers that. `TestRunWithRefDir` runs the whole default profile against the
+committed goldens with no `ToolsDir` set at all, which is the proof that the path
+never shells out to Java.
 
 ---
 

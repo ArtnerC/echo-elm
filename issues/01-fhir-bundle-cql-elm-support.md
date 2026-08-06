@@ -1,7 +1,35 @@
 # Issue: FHIR Measure Bundle CQL/ELM Read and Write Support
 
-**Priority:** Enhancement  
-**Labels:** feature, cli, bundle, fhir  
+**Priority:** Enhancement
+**Labels:** feature, cli, bundle, fhir
+**Status:** Implemented — `pkg/bundle` and `echo-elm bundle extract|translate`.
+
+---
+
+## Implementation notes
+
+The package is `pkg/bundle`; the API differs slightly from the sketch below:
+
+- `bundle.Load(io.Reader)` rather than `LoadBundle`.
+- `(*Bundle).SetELM(name, version, elmJSON)` rather than `WriteELM(name, elmJSON)` —
+  a bundle can hold two versions of a library, so the version participates in the
+  lookup. An empty version matches when only one library carries that name.
+- `(*Bundle).LibrarySource()` returns a `*bundle.Source`, which satisfies
+  `resolver.LibrarySource`. This is the part that matters: a measure's `include`
+  declarations resolve against sibling libraries **in the bundle**, so nothing has
+  to be written to disk first.
+- `Marshal` round-trips through the original JSON, so every field the package does
+  not model — `id`, `meta`, `fullUrl`, `status`, and anything else — survives a
+  write-back. `TestMarshalPreservesUnmodelledFields` covers that.
+
+Dependency order is not computed. It is not needed: `LibrarySource` resolves
+includes on demand during translation, which is how the translator already works.
+
+`echo-elm parity --bundle` (floated under "Relation to `parity` command" below) was
+**not** added. The same workflow already composes from pieces that are each tested:
+`bundle extract --out-dir <dir>` followed by `parity --ref-dir <dir> --lib-dir <dir>`.
+Adding `--bundle` would mean synthesising a corpus with no `corpus.yaml`, which
+changes `parity.Run`'s contract for a shorthand.
 
 ---
 
