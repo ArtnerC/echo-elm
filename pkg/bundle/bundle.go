@@ -183,30 +183,46 @@ func (s *Source) GetLibrarySource(name, version string) ([]byte, bool, error) {
 // SetELM replaces (or adds) the application/elm+json attachment of the named
 // library. An empty version matches the sole library of that name.
 func (b *Bundle) SetELM(name, version string, elmJSON []byte) error {
+	return b.SetContent(name, version, ContentTypeELMJSON, elmJSON)
+}
+
+// SetContent replaces (or adds) the attachment of the given content type on the
+// named library. An empty version matches the sole library of that name.
+func (b *Bundle) SetContent(name, version, contentType string, data []byte) error {
 	target := b.findEntry(name, version)
 	if target == nil {
 		return fmt.Errorf("bundle: no Library resource named %q", libraryLabel(name, version))
 	}
 
-	encoded := base64.StdEncoding.EncodeToString(elmJSON)
+	encoded := base64.StdEncoding.EncodeToString(data)
 	contents, _ := target.resource["content"].([]any)
 	for _, c := range contents {
 		cm, ok := c.(map[string]any)
 		if !ok {
 			continue
 		}
-		if ct, _ := cm["contentType"].(string); ct == ContentTypeELMJSON {
+		if ct, _ := cm["contentType"].(string); ct == contentType {
 			cm["data"] = encoded
-			target.library.ReferenceELM = elmJSON
+			target.rememberContent(contentType, data)
 			return nil
 		}
 	}
 	target.resource["content"] = append(contents, map[string]any{
-		"contentType": ContentTypeELMJSON,
+		"contentType": contentType,
 		"data":        encoded,
 	})
-	target.library.ReferenceELM = elmJSON
+	target.rememberContent(contentType, data)
 	return nil
+}
+
+// rememberContent keeps the decoded view in step with the raw resource.
+func (e *entry) rememberContent(contentType string, data []byte) {
+	switch contentType {
+	case ContentTypeCQL:
+		e.library.CQLSource = data
+	case ContentTypeELMJSON:
+		e.library.ReferenceELM = data
+	}
 }
 
 // findEntry locates the entry for a library by name and optional version.

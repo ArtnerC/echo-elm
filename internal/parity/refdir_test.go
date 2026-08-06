@@ -1,12 +1,16 @@
 package parity_test
 
 import (
+	"bytes"
+	"encoding/base64"
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
 
 	"github.com/artnerc/echo-elm/internal/parity"
+	"github.com/artnerc/echo-elm/pkg/bundle"
 )
 
 // TestRunWithRefDir exercises the --ref-dir path: parity compares against ELM
@@ -118,5 +122,86 @@ func TestRunWithLibDir(t *testing.T) {
 	}
 	if !strings.Contains(string(got), `"type": "ValueSetRef"`) {
 		t.Error("qualified value set reference did not resolve through --lib-dir")
+	}
+}
+
+// TestMaterializeBundle covers `parity --bundle`: a bundle is laid out as a
+// corpus and compared against the ELM it already carries, with no CQF JAR and no
+// manual extraction step.
+func TestMaterializeBundle(t *testing.T) {
+	repoRoot := filepath.Join("..", "..")
+	corpusDir := filepath.Join(repoRoot, "test", "corpus", "cqframework", "elm-nodes")
+	goldenDir := filepath.Join(repoRoot, "test", "goldens", "cqf", "default", "elm-nodes")
+
+	// Two libraries where one includes the other, so the run also proves includes
+	// resolve across the extracted corpus.
+	doc := map[string]any{
+		"resourceType": "Bundle",
+		"type":         "collection",
+		"entry": []any{
+			bundleEntry(t, "SharedTerminology", "1.0",
+				filepath.Join(corpusDir, "SharedTerminology.cql"),
+				filepath.Join(goldenDir, "SharedTerminology.json")),
+			bundleEntry(t, "CrossLibraryTerminology", "1.0",
+				filepath.Join(corpusDir, "CrossLibraryTerminology.cql"),
+				filepath.Join(goldenDir, "CrossLibraryTerminology.json")),
+		},
+	}
+	raw, err := json.Marshal(doc)
+	if err != nil {
+		t.Fatalf("build bundle: %v", err)
+	}
+	b, err := bundle.Load(bytes.NewReader(raw))
+	if err != nil {
+		t.Fatalf("load bundle: %v", err)
+	}
+
+	cfg, err := parity.MaterializeBundle(b, t.TempDir(), "default")
+	if err != nil {
+		t.Fatalf("materialize: %v", err)
+	}
+
+	corpus, err := parity.LoadCorpus(cfg.CorpusDir)
+	if err != nil {
+		t.Fatalf("load generated corpus: %v", err)
+	}
+	results, err := parity.Run(cfg, parity.ProfileTranslateFuncWithLibDir(
+		corpus.OptionProfiles["default"], cfg.LibDir))
+	if err != nil {
+		t.Fatalf("run: %v", err)
+	}
+	if len(results) != 2 {
+		t.Fatalf("got %d results, want 2", len(results))
+	}
+	for i := range results {
+		if results[i].Status != parity.StatusMatch {
+			t.Errorf("%s: %s\n%s", results[i].Fixture, results[i].Status, results[i].Diff)
+		}
+	}
+}
+
+// bundleEntry builds one Library entry from files on disk.
+func bundleEntry(t *testing.T, name, version, cqlPath, elmPath string) map[string]any {
+	t.Helper()
+	cql, err := os.ReadFile(cqlPath)
+	if err != nil {
+		t.Fatalf("read %s: %v", cqlPath, err)
+	}
+	elm, err := os.ReadFile(elmPath)
+	if err != nil {
+		t.Fatalf("read %s: %v", elmPath, err)
+	}
+	return map[string]any{
+		"resource": map[string]any{
+			"resourceType": "Library",
+			"name":         name,
+			"version":      version,
+			"content": []any{
+				map[string]any{"contentType": bundle.ContentTypeCQL,
+					"data": base64.StdEncoding.EncodeToString(cql)},
+				map[string]any{"contentType": bundle.ContentTypeELMJSON,
+					"data": base64.StdEncoding.EncodeToString(elm)},
+			},
+		},
 	}
 }

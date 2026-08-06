@@ -11,6 +11,10 @@
 The package is `pkg/bundle`; the API differs slightly from the sketch below:
 
 - `bundle.Load(io.Reader)` rather than `LoadBundle`.
+- `bundle translate` takes `--format json|xml` and the same translator flags as
+  `echo-elm translate` (they share one flag set, so they cannot drift). `--verify`
+  is rejected with `--format XML`: the bundled reference attachment is
+  `application/elm+json`, so there would be nothing comparable to check against.
 - `(*Bundle).SetELM(name, version, elmJSON)` rather than `WriteELM(name, elmJSON)` —
   a bundle can hold two versions of a library, so the version participates in the
   lookup. An empty version matches when only one library carries that name.
@@ -25,11 +29,17 @@ The package is `pkg/bundle`; the API differs slightly from the sketch below:
 Dependency order is not computed. It is not needed: `LibrarySource` resolves
 includes on demand during translation, which is how the translator already works.
 
-`echo-elm parity --bundle` (floated under "Relation to `parity` command" below) was
-**not** added. The same workflow already composes from pieces that are each tested:
-`bundle extract --out-dir <dir>` followed by `parity --ref-dir <dir> --lib-dir <dir>`.
-Adding `--bundle` would mean synthesising a corpus with no `corpus.yaml`, which
-changes `parity.Run`'s contract for a shorthand.
+`echo-elm parity --bundle` is implemented too, without changing `parity.Run`'s
+contract: `MaterializeBundle` writes the bundle's CQL into a temporary corpus with
+a generated `corpus.yaml` and its ELM into a reference directory, then runs the
+ordinary `--ref-dir` / `--lib-dir` path over it. A library carrying CQL but no ELM
+is still extracted, so its dependents can resolve includes to it, but it does not
+become a fixture — there is nothing to compare it against.
+
+One caveat is worth stating: a bundle carries exactly one compiled ELM per library,
+produced with whatever options its publisher used, so comparing it against several
+option profiles is not meaningful. `--bundle` therefore runs a single profile,
+`default` unless `--profile` names another.
 
 ---
 

@@ -10,7 +10,6 @@ import (
 	"strings"
 
 	"github.com/artnerc/echo-elm/internal/parity"
-	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/bundle"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -133,14 +132,15 @@ func runBundleTranslate(args []string) {
 		input   string
 		output  string
 		library string
+		format  string
 		verify  bool
-		sigLvl  string
 	)
 	fs.StringVar(&input, "input", "", "FHIR Bundle JSON file (required)")
 	fs.StringVar(&output, "output", "", "Write an updated bundle with the generated ELM to this path")
 	fs.StringVar(&library, "library", "", "Translate only this library (default: all)")
+	fs.StringVar(&format, "format", "JSON", "ELM output format: JSON or XML")
 	fs.BoolVar(&verify, "verify", false, "Compare generated ELM against the bundled ELM and report differences")
-	fs.StringVar(&sigLvl, "signatures", "None", "Signature level: None|Differing|Overloads|All")
+	tf := registerTranslatorFlags(fs, true)
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
@@ -150,12 +150,21 @@ func runBundleTranslate(args []string) {
 		fs.Usage()
 		os.Exit(2)
 	}
+	asXML := strings.EqualFold(format, "XML")
+	if !asXML && !strings.EqualFold(format, "JSON") {
+		fmt.Fprintf(os.Stderr, "error: --format must be JSON or XML (got %q)\n", format)
+		os.Exit(2)
+	}
+	if asXML && verify {
+		// The bundled reference attachment is application/elm+json; there is
+		// nothing comparable to check XML output against.
+		fmt.Fprintln(os.Stderr, "error: --verify compares against the bundled elm+json and cannot be combined with --format XML")
+		os.Exit(2)
+	}
 
 	b := loadBundle(input)
 	libSrc := b.LibrarySource()
-
-	opts := translator.CQFDefaultOptions()
-	opts.SignatureLevel = sigLvl
+	opts := tf.options()
 
 	var translated, differed, failed int
 	var verifyFailures []string
@@ -173,7 +182,12 @@ func runBundleTranslate(args []string) {
 			failed++
 			continue
 		}
-		elmJSON, err := json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
+		var elmBytes []byte
+		if asXML {
+			elmBytes, err = result.XMLBytes()
+		} else {
+			elmBytes, err = json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
+		}
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "✗  %-40s marshal error: %v\n", lib.Name, err)
 			failed++
@@ -185,7 +199,7 @@ func runBundleTranslate(args []string) {
 			switch {
 			case len(lib.ReferenceELM) == 0:
 				fmt.Fprintf(os.Stderr, "–  %-40s no bundled ELM to verify against\n", lib.Name)
-			case parity.NormalizeForGolden(string(lib.ReferenceELM)) == parity.NormalizeForGolden(string(elmJSON)):
+			case parity.NormalizeForGolden(string(lib.ReferenceELM)) == parity.NormalizeForGolden(string(elmBytes)):
 				fmt.Fprintf(os.Stderr, "✓  %-40s match\n", lib.Name)
 			default:
 				fmt.Fprintf(os.Stderr, "✗  %-40s differs\n", lib.Name)
@@ -195,7 +209,11 @@ func runBundleTranslate(args []string) {
 		}
 
 		if output != "" {
-			if err := b.SetELM(lib.Name, lib.Version, elmJSON); err != nil {
+			contentType := bundle.ContentTypeELMJSON
+			if asXML {
+				contentType = bundle.ContentTypeELMXML
+			}
+			if err := b.SetContent(lib.Name, lib.Version, contentType, elmBytes); err != nil {
 				fmt.Fprintf(os.Stderr, "error: %v\n", err)
 				os.Exit(1)
 			}
