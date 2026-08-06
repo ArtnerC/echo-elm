@@ -330,12 +330,18 @@ func readJarEntry(jarPath, entry string) ([]byte, error) {
 		if f.Name != entry {
 			continue
 		}
-		rc, oErr := f.Open()
-		if oErr != nil {
-			return nil, fmt.Errorf("open entry %s: %w", entry, oErr)
-		}
-		defer func() { _ = rc.Close() }()
-		return io.ReadAll(rc)
+		return readZipEntry(f, entry)
 	}
 	return nil, fmt.Errorf("%s not found in %s", entry, jarPath)
+}
+
+// readZipEntry reads one entry, closing it before returning so the reader is
+// not held open by a deferred close inside the caller's loop.
+func readZipEntry(f *zip.File, entry string) ([]byte, error) {
+	rc, err := f.Open()
+	if err != nil {
+		return nil, fmt.Errorf("open entry %s: %w", entry, err)
+	}
+	defer func() { _ = rc.Close() }()
+	return io.ReadAll(rc)
 }
