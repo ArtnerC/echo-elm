@@ -138,6 +138,11 @@ tasks:
     cmds:
       - go generate ./...
 
+  generate:modelinfo:
+    desc: Regenerate the FHIR ModelInfo tables from the cqframework quick JAR (requires parity:jar)
+    cmds:
+      - go run ./internal/tools/modelinfogen
+
   generate:grammar:
     desc: Download ANTLR 4.13.2 and regenerate CQL parser from grammar/cql.g4
     vars:
