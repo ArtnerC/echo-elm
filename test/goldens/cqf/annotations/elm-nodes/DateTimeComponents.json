@@ -1,0 +1,666 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for issues/03-cqf-parity-gaps.md B8 / C4.\n//\n// `date from`, `time from` and `timezoneoffset from` are their own ELM unary\n// operators (DateFrom / TimeFrom / TimezoneOffsetFrom). Only the calendar and\n// clock components use DateTimeComponentFrom, and that node is a UnaryExpression\n// so its \"operand\" is a single object rather than an array.\nlibrary DateTimeComponents version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "DateTimeComponents",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"DateFromDateTime\": date from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "DateFrom"
+          },
+          "name": "DateFromDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"TimeFromDateTime\": time from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "TimeFrom"
+          },
+          "name": "TimeFromDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"TimezoneOffsetFromDateTime\": timezoneoffset from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "TimezoneOffsetFrom"
+          },
+          "name": "TimezoneOffsetFromDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"YearComponent\": year from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Year",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "YearComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"MonthComponent\": month from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Month",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "MonthComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"DayComponent\": day from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Day",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "DayComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"HourComponent\": hour from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Hour",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "HourComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"MinuteComponent\": minute from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Minute",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "MinuteComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SecondComponent\": second from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Second",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "SecondComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"MillisecondComponent\": millisecond from @2025-01-15T10:30:00"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "day": {
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "precision": "Millisecond",
+            "signature": [],
+            "type": "DateTimeComponentFrom"
+          },
+          "name": "MillisecondComponent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"DateFromDate\": date from @2025-01-15"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "operand": {
+              "operand": {
+                "day": {
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2025",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              "signature": [],
+              "type": "ToDateTime"
+            },
+            "signature": [],
+            "type": "DateFrom"
+          },
+          "name": "DateFromDate"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

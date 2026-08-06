@@ -1,0 +1,273 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for the implicit Date→DateTime conversion of interval bounds.\n//\n// Comparing a DateTime against a Date-bounded interval literal converts each bound\n// rather than the interval as a whole.\n//\n// This fixture is version-divergent: CQF 3.29.0 lowers the promotion through\n// Property(low/high/lowClosed/highClosed) accessors over the source interval plus\n// lowClosedExpression/highClosedExpression, while 4.8.0 folds the converted bounds\n// directly into the promoted Interval. The 4.8.0 form is the golden.\nlibrary IntervalBoundPromotion version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "IntervalBoundPromotion",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"DateTimeInDateInterval\":\n  @2020-06-01T10:00:00 in Interval[@2020-01-01, @2020-12-31]"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "13:3-13:60",
+            "operand": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "hour": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "13:3-13:22",
+                "minute": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "second": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "DateTime",
+                "year": {
+                  "type": "Literal",
+                  "value": "2020",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "high": {
+                  "operand": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "31",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "locator": "13:49-13:59",
+                    "month": {
+                      "type": "Literal",
+                      "value": "12",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "highClosed": true,
+                "low": {
+                  "operand": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "locator": "13:36-13:46",
+                    "month": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "12:1-13:60",
+          "name": "DateTimeInDateInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"DateTimeDuringDateInterval\":\n  @2020-06-01T10:00:00 during Interval[@2020-01-01, @2020-12-31]"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "16:3-16:64",
+            "operand": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "hour": {
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "16:3-16:22",
+                "minute": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "second": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "DateTime",
+                "year": {
+                  "type": "Literal",
+                  "value": "2020",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "high": {
+                  "operand": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "31",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "locator": "16:53-16:63",
+                    "month": {
+                      "type": "Literal",
+                      "value": "12",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "highClosed": true,
+                "low": {
+                  "operand": {
+                    "day": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "locator": "16:40-16:50",
+                    "month": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2020",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "15:1-16:64",
+          "name": "DateTimeDuringDateInterval"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

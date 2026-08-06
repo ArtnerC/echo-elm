@@ -507,6 +507,19 @@ func (b *astBuilder) buildInvocationInner(ctx cqlparser.IInvocationContext, sour
 	}
 }
 
+// buildQualifiedIdentifierExpr converts a qualifiedIdentifierExpression parse node
+// to an IdentifierRef (unqualified) or QualifiedRef (with library qualifier).
+func (b *astBuilder) buildQualifiedIdentifierExpr(ctx *cqlparser.QualifiedIdentifierExpressionContext) ast.Expr {
+	name := unquoteIdentifier(ctx.ReferentialIdentifier().GetText())
+	qualifiers := ctx.AllQualifierExpression()
+	if len(qualifiers) == 0 {
+		return setLoc(&ast.IdentifierRef{Name: name}, ctx)
+	}
+	// Use the first qualifier as the library name (CQL only allows one qualifier for library refs).
+	libName := unquoteIdentifier(qualifiers[0].(*cqlparser.QualifierExpressionContext).ReferentialIdentifier().GetText())
+	return setLoc(&ast.QualifiedRef{LibraryName: libName, Name: name}, ctx)
+}
+
 func (b *astBuilder) buildQualifiedInvocation(ctx cqlparser.IQualifiedInvocationContext, source ast.Expr) ast.Expr {
 	return setLoc(b.buildQualifiedInvocationInner(ctx, source), ctx)
 }
@@ -797,7 +810,12 @@ func (b *astBuilder) buildRetrieveInner(ctx cqlparser.IRetrieveContext) ast.Expr
 	}
 
 	if term := rc.Terminology(); term != nil {
-		re.Codes = b.buildExpr(term.(*cqlparser.TerminologyContext).Expression())
+		tc := term.(*cqlparser.TerminologyContext)
+		if expr := tc.Expression(); expr != nil {
+			re.Codes = b.buildExpr(expr)
+		} else if qie := tc.QualifiedIdentifierExpression(); qie != nil {
+			re.Codes = b.buildQualifiedIdentifierExpr(qie.(*cqlparser.QualifiedIdentifierExpressionContext))
+		}
 	}
 
 	return re
@@ -891,18 +909,27 @@ func (b *astBuilder) buildQueryInner(ctx cqlparser.IQueryContext) ast.Expr {
 	if ac := qc.AggregateClause(); ac != nil {
 		acc := ac.(*cqlparser.AggregateClauseContext)
 		text := strings.ToLower(acc.GetText())
+		// plain 'aggregate' → distinct stays nil (default distinct, no ELM field emitted)
+		var aggDistinct *bool
+		if strings.HasPrefix(text, "aggregatedistinct") {
+			t := true
+			aggDistinct = &t
+		} else if strings.HasPrefix(text, "aggregateall") {
+			f := false
+			aggDistinct = &f
+		}
 		agg := &ast.AggregateClause{
-			Distinct:   strings.Contains(text, "distinct"),
+			Distinct:   aggDistinct,
 			Identifier: unquoteIdentifier(acc.Identifier().GetText()),
 			Expression: b.buildExpr(acc.Expression()),
 		}
 		if sc := acc.StartingClause(); sc != nil {
-			if scExpr := sc.(*cqlparser.StartingClauseContext); scExpr != nil {
-				if e := scExpr.Expression(); e != nil {
-					agg.Starting = b.buildExpr(e)
-				}
-			}
+			scc := sc.(*cqlparser.StartingClauseContext)
+			// CQF spans the starting expression over the whole clause, including
+			// the 'starting' keyword.
+			agg.Starting = setLoc(b.buildStartingClause(scc), scc)
 		}
+		agg.SetLoc(intervalFromCtx(acc))
 		q.Aggregate = agg
 	}
 
@@ -929,9 +956,9 @@ func (b *astBuilder) buildAliasedQuerySource(ctx cqlparser.IAliasedQuerySourceCo
 		if ret := qsc.Retrieve(); ret != nil {
 			aqs.Expression = b.buildRetrieve(ret)
 		} else if qie := qsc.QualifiedIdentifierExpression(); qie != nil {
-			ref := &ast.IdentifierRef{Name: qie.GetText()}
-			ref.SetLoc(intervalFromCtx(qie.(*cqlparser.QualifiedIdentifierExpressionContext)))
-			aqs.Expression = ref
+			// Route through buildQualifiedIdentifierExpr so quoted identifiers are
+			// unquoted and library-qualified sources become QualifiedRef.
+			aqs.Expression = b.buildQualifiedIdentifierExpr(qie.(*cqlparser.QualifiedIdentifierExpressionContext))
 		} else if expr := qsc.Expression(); expr != nil {
 			e := b.buildExpr(expr)
 			// querySource: '(' expression ')' — widen the expression's loc to include the parens.
@@ -941,6 +968,38 @@ func (b *astBuilder) buildAliasedQuerySource(ctx cqlparser.IAliasedQuerySourceCo
 	}
 	aqs.SetLoc(intervalFromCtx(aqsc))
 	return aqs
+}
+
+// buildStartingClause handles the three alternatives of
+// `startingClause: 'starting' (simpleLiteral | quantity | '(' expression ')')`.
+func (b *astBuilder) buildStartingClause(ctx *cqlparser.StartingClauseContext) ast.Expr {
+	if ctx == nil {
+		return nil
+	}
+	if sl := ctx.SimpleLiteral(); sl != nil {
+		var lit ast.Expr
+		switch c := sl.(type) {
+		case *cqlparser.SimpleStringLiteralContext:
+			lit = &ast.StringLiteral{Value: unquoteString(c.GetText())}
+		case *cqlparser.SimpleNumberLiteralContext:
+			text := c.GetText()
+			if strings.Contains(text, ".") {
+				lit = &ast.DecimalLiteral{Value: text}
+			} else {
+				lit = &ast.IntegerLiteral{Value: parseInt(text)}
+			}
+		default:
+			return nil
+		}
+		return setLoc(lit, sl.(antlr.ParserRuleContext))
+	}
+	if q := ctx.Quantity(); q != nil {
+		return setLoc(b.buildQuantityLiteral(q), q.(antlr.ParserRuleContext))
+	}
+	if e := ctx.Expression(); e != nil {
+		return b.buildExpr(e)
+	}
+	return nil
 }
 
 func (b *astBuilder) buildSortClause(ctx cqlparser.ISortClauseContext) *ast.SortClause {

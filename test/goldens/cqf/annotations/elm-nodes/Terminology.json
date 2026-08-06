@@ -1,0 +1,392 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for issues/03-cqf-parity-gaps.md B3 / B4 / B13.\n//\n// Covers the declaration and reference forms for code systems, value sets,\n// codes and concepts. Pins three details the HEDIS comparison flagged: a\n// concept's code list holds bare names (unquoted, and with no \"type\"\n// discriminator, unlike a CodeRef expression), a concept carries its display\n// clause, and every ValueSetRef expression is stamped preserve=true.\nlibrary Terminology version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"SNOMED\": 'http://snomed.info/sct'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://snomed.info/sct",
+          "name": "SNOMED"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "codesystem \"LOINC\": 'http://loinc.org' version '2.74'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "id": "http://loinc.org",
+          "name": "LOINC",
+          "version": "2.74"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"Diabetes\": '73211009' from \"SNOMED\" display 'Diabetes mellitus'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "name": "SNOMED"
+          },
+          "display": "Diabetes mellitus",
+          "id": "73211009",
+          "name": "Diabetes"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "code \"Glucose\": '2345-7' from \"LOINC\" display 'Glucose'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Glucose",
+          "id": "2345-7",
+          "name": "Glucose"
+        }
+      ]
+    },
+    "concepts": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "concept \"Diabetes Concept\": { \"Diabetes\" } display 'Diabetes concept'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "code": [
+            {
+              "name": "Diabetes"
+            }
+          ],
+          "display": "Diabetes concept",
+          "name": "Diabetes Concept"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "concept \"Multi Code Concept\": { \"Diabetes\", \"Glucose\" } display 'Several codes'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "code": [
+            {
+              "name": "Diabetes"
+            },
+            {
+              "name": "Glucose"
+            }
+          ],
+          "display": "Several codes",
+          "name": "Multi Code Concept"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "Terminology",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"CodeSystemReference\": \"SNOMED\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "name": "SNOMED",
+            "type": "CodeSystemRef"
+          },
+          "name": "CodeSystemReference"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"CodeReference\": \"Diabetes\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Diabetes",
+            "type": "CodeRef"
+          },
+          "name": "CodeReference"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ConceptReference\": \"Diabetes Concept\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Diabetes Concept",
+            "type": "ConceptRef"
+          },
+          "name": "ConceptReference"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ValueSetReference\": \"Diabetes VS\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Diabetes VS",
+            "preserve": true,
+            "type": "ValueSetRef"
+          },
+          "name": "ValueSetReference"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"CodeInValueSet\": \"Diabetes\" in \"Diabetes VS\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "name": "Diabetes",
+              "type": "CodeRef"
+            },
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "name": "Diabetes VS",
+              "preserve": true
+            }
+          },
+          "name": "CodeInValueSet"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"StringInValueSet\": 'some-code' in \"Versioned VS\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "code": {
+              "type": "Literal",
+              "value": "some-code",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "InValueSet",
+            "valueset": {
+              "name": "Versioned VS",
+              "preserve": true
+            }
+          },
+          "name": "StringInValueSet"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Diabetes VS\": 'urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
+          "name": "Diabetes VS"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "valueset \"Versioned VS\": 'urn:oid:1.2.3' version '20240101'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "codeSystem": [],
+          "id": "urn:oid:1.2.3",
+          "name": "Versioned VS",
+          "version": "20240101"
+        }
+      ]
+    }
+  }
+}

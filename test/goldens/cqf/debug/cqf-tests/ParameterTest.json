@@ -2,11 +2,12 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
         "type": "CqlToElmInfo"
       }
     ],
     "identifier": {},
-    "localId": "0",
     "parameters": {
       "def": [
         {
@@ -14,50 +15,10 @@
           "annotation": [
             {
               "s": {
-                "r": "206",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "parameter ",
-                      "x",
-                      " "
-                    ]
-                  },
-                  {
-                    "r": "207",
-                    "s": [
-                      {
-                        "value": [
-                          "Tuple { "
-                        ]
-                      },
-                      {
-                        "r": "208",
-                        "s": [
-                          {
-                            "value": [
-                              "x",
-                              " "
-                            ]
-                          },
-                          {
-                            "r": "209",
-                            "s": [
-                              {
-                                "value": [
-                                  "Boolean"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " }"
-                        ]
-                      }
+                      "parameter x Tuple { x Boolean }"
                     ]
                   }
                 ]
@@ -65,39 +26,32 @@
               "type": "Annotation"
             }
           ],
-          "localId": "206",
           "locator": "1:1-1:31",
           "name": "x",
           "parameterTypeSpecifier": {
             "element": [
               {
                 "elementType": {
-                  "localId": "209",
                   "locator": "1:23-1:29",
                   "name": "{urn:hl7-org:elm-types:r1}Boolean",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
                   "type": "NamedTypeSpecifier"
                 },
-                "localId": "208",
                 "locator": "1:21-1:29",
                 "name": "x"
               }
             ],
-            "localId": "207",
             "locator": "1:13-1:31",
             "resultTypeSpecifier": {
               "element": [
                 {
                   "elementType": {
-                    "localId": "212",
                     "name": "{urn:hl7-org:elm-types:r1}Boolean",
                     "type": "NamedTypeSpecifier"
                   },
-                  "localId": "211",
                   "name": "x"
                 }
               ],
-              "localId": "210",
               "type": "TupleTypeSpecifier"
             },
             "type": "TupleTypeSpecifier"
@@ -106,15 +60,12 @@
             "element": [
               {
                 "elementType": {
-                  "localId": "216",
                   "name": "{urn:hl7-org:elm-types:r1}Boolean",
                   "type": "NamedTypeSpecifier"
                 },
-                "localId": "215",
                 "name": "x"
               }
             ],
-            "localId": "214",
             "type": "TupleTypeSpecifier"
           }
         },
@@ -123,54 +74,10 @@
           "annotation": [
             {
               "s": {
-                "r": "217",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "parameter ",
-                      "a",
-                      " "
-                    ]
-                  },
-                  {
-                    "r": "218",
-                    "s": [
-                      {
-                        "value": [
-                          "List\u003c"
-                        ]
-                      },
-                      {
-                        "r": "219",
-                        "s": [
-                          {
-                            "value": [
-                              "List\u003c"
-                            ]
-                          },
-                          {
-                            "r": "220",
-                            "s": [
-                              {
-                                "value": [
-                                  "Boolean"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              "\u003e"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          "\u003e"
-                        ]
-                      }
+                      "parameter a List\u003cList\u003cBoolean\u003e\u003e"
                     ]
                   }
                 ]
@@ -178,44 +85,35 @@
               "type": "Annotation"
             }
           ],
-          "localId": "217",
           "locator": "2:1-2:31",
           "name": "a",
           "parameterTypeSpecifier": {
             "elementType": {
               "elementType": {
-                "localId": "220",
                 "locator": "2:23-2:29",
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               },
-              "localId": "219",
               "locator": "2:18-2:30",
               "resultTypeSpecifier": {
                 "elementType": {
-                  "localId": "222",
                   "name": "{urn:hl7-org:elm-types:r1}Boolean",
                   "type": "NamedTypeSpecifier"
                 },
-                "localId": "221",
                 "type": "ListTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
-            "localId": "218",
             "locator": "2:13-2:31",
             "resultTypeSpecifier": {
               "elementType": {
                 "elementType": {
-                  "localId": "225",
                   "name": "{urn:hl7-org:elm-types:r1}Boolean",
                   "type": "NamedTypeSpecifier"
                 },
-                "localId": "224",
                 "type": "ListTypeSpecifier"
               },
-              "localId": "223",
               "type": "ListTypeSpecifier"
             },
             "type": "ListTypeSpecifier"
@@ -223,14 +121,11 @@
           "resultTypeSpecifier": {
             "elementType": {
               "elementType": {
-                "localId": "229",
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               },
-              "localId": "228",
               "type": "ListTypeSpecifier"
             },
-            "localId": "227",
             "type": "ListTypeSpecifier"
           }
         }
@@ -247,50 +142,10 @@
           "annotation": [
             {
               "s": {
-                "r": "232",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "b",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "233",
-                    "s": [
-                      {
-                        "r": "234",
-                        "s": [
-                          {
-                            "r": "235",
-                            "s": [
-                              {
-                                "value": [
-                                  "a"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "r": "239",
-                            "value": [
-                              "[",
-                              "1",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "242",
-                        "value": [
-                          "[",
-                          "1",
-                          "]"
-                        ]
-                      }
+                      "define b: a[1][1]"
                     ]
                   }
                 ]
@@ -300,34 +155,27 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "233",
             "locator": "4:11-4:17",
             "operand": [
               {
-                "localId": "234",
                 "locator": "4:11-4:14",
                 "operand": [
                   {
-                    "localId": "235",
                     "locator": "4:11",
                     "name": "a",
                     "resultTypeSpecifier": {
                       "elementType": {
                         "elementType": {
-                          "localId": "238",
                           "name": "{urn:hl7-org:elm-types:r1}Boolean",
                           "type": "NamedTypeSpecifier"
                         },
-                        "localId": "237",
                         "type": "ListTypeSpecifier"
                       },
-                      "localId": "236",
                       "type": "ListTypeSpecifier"
                     },
                     "type": "ParameterRef"
                   },
                   {
-                    "localId": "239",
                     "locator": "4:13",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "Literal",
@@ -337,18 +185,15 @@
                 ],
                 "resultTypeSpecifier": {
                   "elementType": {
-                    "localId": "241",
                     "name": "{urn:hl7-org:elm-types:r1}Boolean",
                     "type": "NamedTypeSpecifier"
                   },
-                  "localId": "240",
                   "type": "ListTypeSpecifier"
                 },
                 "signature": [],
                 "type": "Indexer"
               },
               {
-                "localId": "242",
                 "locator": "4:16",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -360,7 +205,6 @@
             "signature": [],
             "type": "Indexer"
           },
-          "localId": "232",
           "locator": "4:1-4:17",
           "name": "b",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -370,64 +214,10 @@
           "annotation": [
             {
               "s": {
-                "r": "245",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "c",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "246",
-                    "s": [
-                      {
-                        "value": [
-                          "if "
-                        ]
-                      },
-                      {
-                        "r": "247",
-                        "s": [
-                          {
-                            "value": [
-                              "b"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " then "
-                        ]
-                      },
-                      {
-                        "r": "248",
-                        "s": [
-                          {
-                            "value": [
-                              "'yes'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " else "
-                        ]
-                      },
-                      {
-                        "r": "250",
-                        "s": [
-                          {
-                            "value": [
-                              "'no'"
-                            ]
-                          }
-                        ]
-                      }
+                      "define c: if b then 'yes' else 'no'"
                     ]
                   }
                 ]
@@ -438,25 +228,21 @@
           "context": "Unfiltered",
           "expression": {
             "condition": {
-              "localId": "247",
               "locator": "6:14",
               "name": "b",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
               "type": "ExpressionRef"
             },
             "else": {
-              "localId": "250",
               "locator": "6:32-6:35",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
               "value": "no",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
-            "localId": "246",
             "locator": "6:11-6:35",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
             "then": {
-              "localId": "248",
               "locator": "6:21-6:25",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -465,7 +251,6 @@
             },
             "type": "If"
           },
-          "localId": "245",
           "locator": "6:1-6:35",
           "name": "c",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -475,7 +260,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

@@ -1,0 +1,394 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "14:1-14:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "FHIRCoercionContext",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "locator": "10:1-10:35",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "locator": "12:1-12:49",
+          "name": "Measurement Period",
+          "parameterTypeSpecifier": {
+            "locator": "12:32-12:49",
+            "pointType": {
+              "locator": "12:41-12:48",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "14:1-14:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "14:1-14:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "18:22-18:35",
+            "path": "gender",
+            "source": {
+              "locator": "18:22-18:28",
+              "name": "Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "locator": "18:1-18:35",
+          "name": "BareGender"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "19:25-19:41",
+            "path": "birthDate",
+            "source": {
+              "locator": "19:25-19:31",
+              "name": "Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "locator": "19:1-19:41",
+          "name": "BareBirthDate"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "locator": "20:26-20:39",
+                "path": "gender",
+                "source": {
+                  "locator": "20:26-20:32",
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              }
+            ],
+            "locator": "20:24-20:41",
+            "type": "List"
+          },
+          "locator": "20:1-20:41",
+          "name": "GenderInList"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "21:36-21:66",
+            "relationship": [],
+            "return": {
+              "expression": {
+                "locator": "21:59-21:66",
+                "path": "period",
+                "scope": "E",
+                "type": "Property"
+              },
+              "locator": "21:52-21:66"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "21:36-21:48",
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                  "type": "Retrieve"
+                },
+                "locator": "21:36-21:50"
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "21:1-21:66",
+          "name": "PeriodAsReturnExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "25:3-25:73",
+            "operand": {
+              "let": [],
+              "locator": "25:10-25:73",
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "locator": "25:10-25:22",
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  },
+                  "locator": "25:10-25:24"
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "locator": "25:26-25:73",
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "locator": "25:32-25:45",
+                        "path": "start",
+                        "source": {
+                          "locator": "25:32-25:39",
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "locator": "25:54-25:73",
+                    "name": "Measurement Period",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "locator": "24:1-25:73",
+          "name": "NavigatedPeriodStart"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "29:26-29:50",
+            "operand": [
+              {
+                "libraryName": "FHIRHelpers",
+                "name": "ToString",
+                "operand": [
+                  {
+                    "locator": "29:26-29:39",
+                    "path": "gender",
+                    "source": {
+                      "locator": "29:26-29:32",
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "locator": "29:43-29:50",
+                "type": "Literal",
+                "value": "female",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "29:1-29:50",
+          "name": "GenderCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "30:29-30:64",
+            "operand": [
+              {
+                "libraryName": "FHIRHelpers",
+                "name": "ToDate",
+                "operand": [
+                  {
+                    "locator": "30:29-30:45",
+                    "path": "birthDate",
+                    "source": {
+                      "locator": "30:29-30:35",
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "30:54-30:64",
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2000",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "signature": [],
+            "type": "Before"
+          },
+          "locator": "30:1-30:64",
+          "name": "BirthDateCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "32:3-32:67",
+            "operand": {
+              "let": [],
+              "locator": "32:10-32:67",
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "locator": "32:10-32:22",
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  },
+                  "locator": "32:10-32:24"
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "locator": "32:26-32:67",
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "locator": "32:32-32:39",
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "locator": "32:48-32:67",
+                    "name": "Measurement Period",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "IncludedIn"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "locator": "31:1-32:67",
+          "name": "PeriodAsInterval"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "locator": "9:1-9:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

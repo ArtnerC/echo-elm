@@ -409,8 +409,13 @@ define "Poor Glycemic Control":
 
 ### Age-based eligibility
 ```cql
+// Pass the DateTime directly — AgeInYearsAt accepts both Date and DateTime, so
+// `date from start of ...` only adds a DateFrom the operator does not need.
 define "Patient Age 18 to 75":
-  AgeInYearsAt(date from start of "Measurement Period") in Interval[18, 75]
+  AgeInYearsAt(start of "Measurement Period") in Interval[18, 75]
+
+define "Patient Age 18 and Over":
+  AgeInYearsAt(start of "Measurement Period") >= 18
 ```
 
 ### Most recent result
@@ -454,6 +459,125 @@ define "Has Palliative Care During Measurement Period":
       where PC.status = 'completed'
         and PC.performed.toInterval() overlaps "Measurement Period"
   )
+```
+
+### At-least-N encounters (Count with predicate)
+
+Use `Count()` on a query expression — **not** `Count()` on a pre-defined list — when the
+minimum-count test is the full condition. Both forms are equivalent; the query form is
+preferred because it avoids a named intermediate list.
+
+```cql
+// At least 2 qualifying visits during the measurement period
+define "Has Two or More Qualifying Visits":
+  Count(
+    [Encounter: "Office Visit"] E
+      where E.status = 'finished'
+        and E.period during "Measurement Period"
+  ) >= 2
+
+// Referencing a pre-defined list is also valid
+define "Qualifying Encounters":
+  [Encounter: "Office Visit"] E
+    where E.status = 'finished'
+      and E.period during "Measurement Period"
+
+define "Has Two or More Qualifying Visits":
+  Count("Qualifying Encounters") >= 2
+
+// At least 1 specialist encounter
+define "Has Specialist Visit":
+  exists (
+    [Encounter: "Rheumatology Visit"] E
+      where E.status = 'finished'
+        and E.period during "Measurement Period"
+  )
+```
+
+### Lookback window / prior period construction
+
+```cql
+// 12-month lookback ending at the start of the measurement period (prior year)
+define "Prior Year":
+  Interval[start of "Measurement Period" - 12 months, start of "Measurement Period")
+
+// 6-month lookback ending at the end of the measurement period
+define "Six Month Lookback":
+  Interval[end of "Measurement Period" - 6 months, end of "Measurement Period"]
+
+// Any time on or before the end of the measurement period (open start)
+define "On or Before Measurement Period End":
+  Interval[null, end of "Measurement Period"]
+
+// Usage example — condition onset before the measurement period ends
+define "Has Established Diagnosis":
+  exists (
+    [Condition: "Rheumatoid Arthritis"] C
+      where C.clinicalStatus ~ "active"
+        and C.recordedDate before end of "Measurement Period"
+  )
+
+// Usage example — lab test in the 12 months ending at measurement period end
+define "Lab In Prior 12 Months":
+  exists (
+    [Observation: "CRP Test"] O
+      where O.status in { 'final', 'amended', 'corrected' }
+        and O.effective.toInterval() during
+            Interval[end of "Measurement Period" - 12 months, end of "Measurement Period"]
+  )
+```
+
+### `sort by` on FHIR choice effective[x] without helper function
+
+When a shared `effectiveDateTime()` fluent function is not available, sort directly:
+
+```cql
+// Sort Observations by effective dateTime (effective[x] = dateTime)
+Last(
+  [Observation: "Lab Test"] O
+    where O.status in { 'final', 'amended', 'corrected' }
+      and O.effective.toInterval() during "Measurement Period"
+    sort by FHIRHelpers.ToDateTime(O.effective as FHIR.dateTime) ascending
+)
+
+// When effective[x] may also be a Period, sort by issued instead
+Last(
+  [Observation: "Lab Test"] O
+    where O.status in { 'final', 'amended', 'corrected' }
+      and O.effective.toInterval() during "Measurement Period"
+    sort by FHIRHelpers.ToDateTime(O.issued) ascending
+)
+```
+
+### Inline condition status codes (when FHIRCommon is not imported)
+
+When authoring a self-contained measure that does not include `FHIRCommon`, define the
+standard condition status codes directly. These are the canonical system URLs used by
+FHIR R4 and referenced by `FHIRCommon` internally.
+
+```cql
+codesystem "ConditionClinicalStatus":
+  'http://terminology.hl7.org/CodeSystem/condition-clinical'
+
+codesystem "ConditionVerificationStatus":
+  'http://terminology.hl7.org/CodeSystem/condition-ver-status'
+
+code "active": 'active' from "ConditionClinicalStatus" display 'Active'
+code "recurrence": 'recurrence' from "ConditionClinicalStatus" display 'Recurrence'
+code "relapse": 'relapse' from "ConditionClinicalStatus" display 'Relapse'
+code "inactive": 'inactive' from "ConditionClinicalStatus" display 'Inactive'
+code "remission": 'remission' from "ConditionClinicalStatus" display 'Remission'
+code "resolved": 'resolved' from "ConditionClinicalStatus" display 'Resolved'
+
+code "confirmed": 'confirmed' from "ConditionVerificationStatus" display 'Confirmed'
+code "unconfirmed": 'unconfirmed' from "ConditionVerificationStatus" display 'Unconfirmed'
+code "refuted": 'refuted' from "ConditionVerificationStatus" display 'Refuted'
+
+// Usage in expressions (identical to FHIRCommon."active" pattern)
+define "Active RA Diagnoses":
+  [Condition: "Rheumatoid Arthritis"] C
+    where C.clinicalStatus ~ "active"
+      and C.verificationStatus ~ "confirmed"
 ```
 
 ---

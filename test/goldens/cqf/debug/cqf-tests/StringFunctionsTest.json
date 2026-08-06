@@ -2,15 +2,15 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "386",
           "s": [
             {
               "value": [
-                "",
                 "library StringFunctionsTest"
               ]
             }
@@ -22,7 +22,6 @@
     "identifier": {
       "id": "StringFunctionsTest"
     },
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -34,40 +33,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringLen",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "213",
-                    "s": [
-                      {
-                        "value": [
-                          "Length",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "209",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringLen: Length('Hello World')"
                     ]
                   }
                 ]
@@ -77,10 +46,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "213",
             "locator": "3:19-3:39",
             "operand": {
-              "localId": "209",
               "locator": "3:26-3:38",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -91,7 +58,6 @@
             "signature": [],
             "type": "Length"
           },
-          "localId": "208",
           "locator": "3:1-3:39",
           "name": "StringLen",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
@@ -101,40 +67,10 @@
           "annotation": [
             {
               "s": {
-                "r": "216",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringUpper",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "221",
-                    "s": [
-                      {
-                        "value": [
-                          "Upper",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "217",
-                        "s": [
-                          {
-                            "value": [
-                              "'hello'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringUpper: Upper('hello')"
                     ]
                   }
                 ]
@@ -144,10 +80,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "221",
             "locator": "4:21-4:34",
             "operand": {
-              "localId": "217",
               "locator": "4:27-4:33",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -158,7 +92,6 @@
             "signature": [],
             "type": "Upper"
           },
-          "localId": "216",
           "locator": "4:1-4:34",
           "name": "StringUpper",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -168,40 +101,10 @@
           "annotation": [
             {
               "s": {
-                "r": "224",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringLower",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "229",
-                    "s": [
-                      {
-                        "value": [
-                          "Lower",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "225",
-                        "s": [
-                          {
-                            "value": [
-                              "'HELLO'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringLower: Lower('HELLO')"
                     ]
                   }
                 ]
@@ -211,10 +114,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "229",
             "locator": "5:21-5:34",
             "operand": {
-              "localId": "225",
               "locator": "5:27-5:33",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -225,7 +126,6 @@
             "signature": [],
             "type": "Lower"
           },
-          "localId": "224",
           "locator": "5:1-5:34",
           "name": "StringLower",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -235,43 +135,10 @@
           "annotation": [
             {
               "s": {
-                "r": "232",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringSubstring",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "238",
-                    "s": [
-                      {
-                        "value": [
-                          "Substring",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "233",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "235",
-                        "value": [
-                          ", ",
-                          "6",
-                          ")"
-                        ]
-                      }
+                      "define StringSubstring: Substring('Hello World', 6)"
                     ]
                   }
                 ]
@@ -281,12 +148,10 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "238",
             "locator": "6:25-6:51",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
             "signature": [],
             "startIndex": {
-              "localId": "235",
               "locator": "6:50",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "Literal",
@@ -294,7 +159,6 @@
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "stringToSub": {
-              "localId": "233",
               "locator": "6:35-6:47",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -303,7 +167,6 @@
             },
             "type": "Substring"
           },
-          "localId": "232",
           "locator": "6:1-6:51",
           "name": "StringSubstring",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -313,45 +176,10 @@
           "annotation": [
             {
               "s": {
-                "r": "241",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringSubstringLen",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "248",
-                    "s": [
-                      {
-                        "value": [
-                          "Substring",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "242",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "244",
-                        "value": [
-                          ", ",
-                          "6",
-                          ", ",
-                          "5",
-                          ")"
-                        ]
-                      }
+                      "define StringSubstringLen: Substring('Hello World', 6, 5)"
                     ]
                   }
                 ]
@@ -362,19 +190,16 @@
           "context": "Unfiltered",
           "expression": {
             "length": {
-              "localId": "245",
               "locator": "7:56",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "Literal",
               "value": "5",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "248",
             "locator": "7:28-7:57",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
             "signature": [],
             "startIndex": {
-              "localId": "244",
               "locator": "7:53",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "Literal",
@@ -382,7 +207,6 @@
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "stringToSub": {
-              "localId": "242",
               "locator": "7:38-7:50",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -391,7 +215,6 @@
             },
             "type": "Substring"
           },
-          "localId": "241",
           "locator": "7:1-7:57",
           "name": "StringSubstringLen",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -401,55 +224,10 @@
           "annotation": [
             {
               "s": {
-                "r": "251",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringIndexOf",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "259",
-                    "s": [
-                      {
-                        "value": [
-                          "IndexOf",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "252",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "254",
-                        "s": [
-                          {
-                            "value": [
-                              "'World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringIndexOf: IndexOf('Hello World', 'World')"
                     ]
                   }
                 ]
@@ -460,21 +238,17 @@
           "context": "Unfiltered",
           "expression": {
             "element": {
-              "localId": "254",
               "locator": "8:46-8:52",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
               "value": "World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
-            "localId": "259",
             "locator": "8:23-8:53",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
             "signature": [],
             "source": {
-              "localId": "260",
               "operand": {
-                "localId": "252",
                 "locator": "8:31-8:43",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -486,7 +260,6 @@
             },
             "type": "IndexOf"
           },
-          "localId": "251",
           "locator": "8:1-8:53",
           "name": "StringIndexOf",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
@@ -496,55 +269,10 @@
           "annotation": [
             {
               "s": {
-                "r": "263",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringStartsWith",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "270",
-                    "s": [
-                      {
-                        "value": [
-                          "StartsWith",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "264",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "266",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringStartsWith: StartsWith('Hello World', 'Hello')"
                     ]
                   }
                 ]
@@ -554,11 +282,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "270",
             "locator": "9:26-9:59",
             "operand": [
               {
-                "localId": "264",
                 "locator": "9:37-9:49",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -566,7 +292,6 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
-                "localId": "266",
                 "locator": "9:52-9:58",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -578,7 +303,6 @@
             "signature": [],
             "type": "StartsWith"
           },
-          "localId": "263",
           "locator": "9:1-9:59",
           "name": "StringStartsWith",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -588,55 +312,10 @@
           "annotation": [
             {
               "s": {
-                "r": "273",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringEndsWith",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "280",
-                    "s": [
-                      {
-                        "value": [
-                          "EndsWith",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "274",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "276",
-                        "s": [
-                          {
-                            "value": [
-                              "'World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringEndsWith: EndsWith('Hello World', 'World')"
                     ]
                   }
                 ]
@@ -646,11 +325,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "280",
             "locator": "10:24-10:55",
             "operand": [
               {
-                "localId": "274",
                 "locator": "10:33-10:45",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -658,7 +335,6 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
-                "localId": "276",
                 "locator": "10:48-10:54",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -670,7 +346,6 @@
             "signature": [],
             "type": "EndsWith"
           },
-          "localId": "273",
           "locator": "10:1-10:55",
           "name": "StringEndsWith",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -680,55 +355,10 @@
           "annotation": [
             {
               "s": {
-                "r": "283",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringContains",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "291",
-                    "s": [
-                      {
-                        "value": [
-                          "Contains",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "284",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "286",
-                        "s": [
-                          {
-                            "value": [
-                              "'lo W'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringContains: Contains('Hello World', 'lo W')"
                     ]
                   }
                 ]
@@ -738,13 +368,10 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "291",
             "locator": "11:24-11:54",
             "operand": [
               {
-                "localId": "292",
                 "operand": {
-                  "localId": "284",
                   "locator": "11:33-11:45",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -755,7 +382,6 @@
                 "type": "ToList"
               },
               {
-                "localId": "286",
                 "locator": "11:48-11:53",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -767,7 +393,6 @@
             "signature": [],
             "type": "Contains"
           },
-          "localId": "283",
           "locator": "11:1-11:54",
           "name": "StringContains",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -777,55 +402,10 @@
           "annotation": [
             {
               "s": {
-                "r": "295",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringMatches",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "302",
-                    "s": [
-                      {
-                        "value": [
-                          "Matches",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "296",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello123'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "298",
-                        "s": [
-                          {
-                            "value": [
-                              "'[A-Za-z]+[0-9]+'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define StringMatches: Matches('Hello123', '[A-Za-z]+[0-9]+')"
                     ]
                   }
                 ]
@@ -835,11 +415,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "302",
             "locator": "12:23-12:60",
             "operand": [
               {
-                "localId": "296",
                 "locator": "12:31-12:40",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -847,7 +425,6 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
-                "localId": "298",
                 "locator": "12:43-12:59",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -859,7 +436,6 @@
             "signature": [],
             "type": "Matches"
           },
-          "localId": "295",
           "locator": "12:1-12:60",
           "name": "StringMatches",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -869,64 +445,10 @@
           "annotation": [
             {
               "s": {
-                "r": "305",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "StringConcat",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "315",
-                    "s": [
-                      {
-                        "r": "312",
-                        "s": [
-                          {
-                            "r": "308",
-                            "s": [
-                              {
-                                "value": [
-                                  "'Hello'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              " + "
-                            ]
-                          },
-                          {
-                            "r": "310",
-                            "s": [
-                              {
-                                "value": [
-                                  "' '"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " + "
-                        ]
-                      },
-                      {
-                        "r": "313",
-                        "s": [
-                          {
-                            "value": [
-                              "'World'"
-                            ]
-                          }
-                        ]
-                      }
+                      "define StringConcat: 'Hello' + ' ' + 'World'"
                     ]
                   }
                 ]
@@ -936,15 +458,12 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "315",
             "locator": "13:22-13:44",
             "operand": [
               {
-                "localId": "312",
                 "locator": "13:22-13:34",
                 "operand": [
                   {
-                    "localId": "308",
                     "locator": "13:22-13:28",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                     "type": "Literal",
@@ -952,7 +471,6 @@
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
-                    "localId": "310",
                     "locator": "13:32-13:34",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                     "type": "Literal",
@@ -965,7 +483,6 @@
                 "type": "Concatenate"
               },
               {
-                "localId": "313",
                 "locator": "13:38-13:44",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -977,7 +494,6 @@
             "signature": [],
             "type": "Concatenate"
           },
-          "localId": "305",
           "locator": "13:1-13:44",
           "name": "StringConcat",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -987,85 +503,10 @@
           "annotation": [
             {
               "s": {
-                "r": "318",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "CombineList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "330",
-                    "s": [
-                      {
-                        "value": [
-                          "Combine",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "319",
-                        "s": [
-                          {
-                            "value": [
-                              "{"
-                            ]
-                          },
-                          {
-                            "r": "320",
-                            "s": [
-                              {
-                                "value": [
-                                  "'a'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "322",
-                            "s": [
-                              {
-                                "value": [
-                                  "'b'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "324",
-                            "s": [
-                              {
-                                "value": [
-                                  "'c'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define CombineList: Combine({'a', 'b', 'c'})"
                     ]
                   }
                 ]
@@ -1075,14 +516,12 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "330",
             "locator": "14:21-14:44",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "320",
                   "locator": "14:30-14:32",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -1090,7 +529,6 @@
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
-                  "localId": "322",
                   "locator": "14:35-14:37",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -1098,7 +536,6 @@
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
-                  "localId": "324",
                   "locator": "14:40-14:42",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -1106,22 +543,18 @@
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 }
               ],
-              "localId": "319",
               "locator": "14:29-14:43",
               "resultTypeSpecifier": {
                 "elementType": {
-                  "localId": "327",
                   "name": "{urn:hl7-org:elm-types:r1}String",
                   "type": "NamedTypeSpecifier"
                 },
-                "localId": "326",
                 "type": "ListTypeSpecifier"
               },
               "type": "List"
             },
             "type": "Combine"
           },
-          "localId": "318",
           "locator": "14:1-14:44",
           "name": "CombineList",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -1131,100 +564,10 @@
           "annotation": [
             {
               "s": {
-                "r": "333",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "CombineWithSep",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "347",
-                    "s": [
-                      {
-                        "value": [
-                          "Combine",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "334",
-                        "s": [
-                          {
-                            "value": [
-                              "{"
-                            ]
-                          },
-                          {
-                            "r": "335",
-                            "s": [
-                              {
-                                "value": [
-                                  "'a'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "337",
-                            "s": [
-                              {
-                                "value": [
-                                  "'b'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "339",
-                            "s": [
-                              {
-                                "value": [
-                                  "'c'"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "343",
-                        "s": [
-                          {
-                            "value": [
-                              "', '"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define CombineWithSep: Combine({'a', 'b', 'c'}, ', ')"
                     ]
                   }
                 ]
@@ -1234,11 +577,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "347",
             "locator": "15:24-15:53",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
             "separator": {
-              "localId": "343",
               "locator": "15:49-15:52",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1249,7 +590,6 @@
             "source": {
               "element": [
                 {
-                  "localId": "335",
                   "locator": "15:33-15:35",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -1257,7 +597,6 @@
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
-                  "localId": "337",
                   "locator": "15:38-15:40",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -1265,7 +604,6 @@
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
-                  "localId": "339",
                   "locator": "15:43-15:45",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                   "type": "Literal",
@@ -1273,22 +611,18 @@
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 }
               ],
-              "localId": "334",
               "locator": "15:32-15:46",
               "resultTypeSpecifier": {
                 "elementType": {
-                  "localId": "342",
                   "name": "{urn:hl7-org:elm-types:r1}String",
                   "type": "NamedTypeSpecifier"
                 },
-                "localId": "341",
                 "type": "ListTypeSpecifier"
               },
               "type": "List"
             },
             "type": "Combine"
           },
-          "localId": "333",
           "locator": "15:1-15:53",
           "name": "CombineWithSep",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -1298,55 +632,10 @@
           "annotation": [
             {
               "s": {
-                "r": "350",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SplitStr",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "357",
-                    "s": [
-                      {
-                        "value": [
-                          "Split",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "351",
-                        "s": [
-                          {
-                            "value": [
-                              "'a,b,c'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "353",
-                        "s": [
-                          {
-                            "value": [
-                              "','"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define SplitStr: Split('a,b,c', ',')"
                     ]
                   }
                 ]
@@ -1356,19 +645,15 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "357",
             "locator": "16:18-16:36",
             "resultTypeSpecifier": {
               "elementType": {
-                "localId": "359",
                 "name": "{urn:hl7-org:elm-types:r1}String",
                 "type": "NamedTypeSpecifier"
               },
-              "localId": "358",
               "type": "ListTypeSpecifier"
             },
             "separator": {
-              "localId": "353",
               "locator": "16:33-16:35",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1377,7 +662,6 @@
             },
             "signature": [],
             "stringToSplit": {
-              "localId": "351",
               "locator": "16:24-16:30",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1386,16 +670,13 @@
             },
             "type": "Split"
           },
-          "localId": "350",
           "locator": "16:1-16:36",
           "name": "SplitStr",
           "resultTypeSpecifier": {
             "elementType": {
-              "localId": "361",
               "name": "{urn:hl7-org:elm-types:r1}String",
               "type": "NamedTypeSpecifier"
             },
-            "localId": "360",
             "type": "ListTypeSpecifier"
           }
         },
@@ -1404,70 +685,10 @@
           "annotation": [
             {
               "s": {
-                "r": "364",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ReplaceStr",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "373",
-                    "s": [
-                      {
-                        "value": [
-                          "ReplaceMatches",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "365",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "367",
-                        "s": [
-                          {
-                            "value": [
-                              "'World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "369",
-                        "s": [
-                          {
-                            "value": [
-                              "'CQL'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ReplaceStr: ReplaceMatches('Hello World', 'World', 'CQL')"
                     ]
                   }
                 ]
@@ -1477,11 +698,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "373",
             "locator": "17:20-17:64",
             "operand": [
               {
-                "localId": "365",
                 "locator": "17:35-17:47",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -1489,7 +708,6 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
-                "localId": "367",
                 "locator": "17:50-17:56",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -1497,7 +715,6 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
-                "localId": "369",
                 "locator": "17:59-17:63",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -1509,7 +726,6 @@
             "signature": [],
             "type": "ReplaceMatches"
           },
-          "localId": "364",
           "locator": "17:1-17:64",
           "name": "ReplaceStr",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
@@ -1519,55 +735,10 @@
           "annotation": [
             {
               "s": {
-                "r": "376",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "PositionOf",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "383",
-                    "s": [
-                      {
-                        "value": [
-                          "PositionOf",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "377",
-                        "s": [
-                          {
-                            "value": [
-                              "'l'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "379",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define PositionOf: PositionOf('l', 'Hello World')"
                     ]
                   }
                 ]
@@ -1577,10 +748,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "383",
             "locator": "18:20-18:49",
             "pattern": {
-              "localId": "377",
               "locator": "18:31-18:33",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1590,7 +759,6 @@
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
             "signature": [],
             "string": {
-              "localId": "379",
               "locator": "18:36-18:48",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1599,7 +767,6 @@
             },
             "type": "PositionOf"
           },
-          "localId": "376",
           "locator": "18:1-18:49",
           "name": "PositionOf",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1609,55 +776,10 @@
           "annotation": [
             {
               "s": {
-                "r": "386",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "LastPositionOf",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "393",
-                    "s": [
-                      {
-                        "value": [
-                          "LastPositionOf",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "387",
-                        "s": [
-                          {
-                            "value": [
-                              "'l'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ", "
-                        ]
-                      },
-                      {
-                        "r": "389",
-                        "s": [
-                          {
-                            "value": [
-                              "'Hello World'"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define LastPositionOf: LastPositionOf('l', 'Hello World')"
                     ]
                   }
                 ]
@@ -1667,10 +789,8 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "393",
             "locator": "19:24-19:57",
             "pattern": {
-              "localId": "387",
               "locator": "19:39-19:41",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1680,7 +800,6 @@
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
             "signature": [],
             "string": {
-              "localId": "389",
               "locator": "19:44-19:56",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "type": "Literal",
@@ -1689,7 +808,6 @@
             },
             "type": "LastPositionOf"
           },
-          "localId": "386",
           "locator": "19:1-19:57",
           "name": "LastPositionOf",
           "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1699,7 +817,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

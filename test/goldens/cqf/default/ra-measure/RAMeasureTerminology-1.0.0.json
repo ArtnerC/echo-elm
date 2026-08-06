@@ -1,0 +1,244 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "id": "http://snomed.info/sct",
+          "name": "SNOMEDCT"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://loinc.org",
+          "name": "LOINC"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://hl7.org/fhir/sid/icd-10-cm",
+          "name": "ICD10CM"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://www.nlm.nih.gov/research/umls/rxnorm",
+          "name": "RxNorm"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://www.ama-assn.org/go/cpt",
+          "name": "CPT"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "https://www.cms.gov/Medicare/Coding/HCPCSReleaseCodeSets",
+          "name": "HCPCS"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+          "name": "ConditionClinicalStatus"
+        },
+        {
+          "accessLevel": "Public",
+          "id": "http://terminology.hl7.org/CodeSystem/condition-ver-status",
+          "name": "ConditionVerificationStatus"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "SNOMEDCT"
+          },
+          "display": "Rheumatoid arthritis (disorder)",
+          "id": "69896004",
+          "name": "Rheumatoid arthritis"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Disease activity score in 28 joints using ESR",
+          "id": "54793-3",
+          "name": "DAS28-ESR score"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Disease activity score in 28 joints using CRP",
+          "id": "55805-4",
+          "name": "DAS28-CRP score"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Clinical Disease Activity Index score",
+          "id": "85352-4",
+          "name": "CDAI score"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "LOINC"
+          },
+          "display": "Simplified Disease Activity Index score",
+          "id": "85354-0",
+          "name": "SDAI score"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ConditionClinicalStatus"
+          },
+          "display": "Active",
+          "id": "active",
+          "name": "active"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ConditionClinicalStatus"
+          },
+          "display": "Recurrence",
+          "id": "recurrence",
+          "name": "recurrence"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ConditionClinicalStatus"
+          },
+          "display": "Relapse",
+          "id": "relapse",
+          "name": "relapse"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "name": "ConditionVerificationStatus"
+          },
+          "display": "Confirmed",
+          "id": "confirmed",
+          "name": "confirmed"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "RAMeasureTerminology",
+      "version": "1.0.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.113.12.1005",
+          "name": "Rheumatoid Arthritis"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.101.12.1001",
+          "name": "Office Visit"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1143",
+          "name": "Rheumatology Visit"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1273",
+          "name": "DMARD Therapy"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1272",
+          "name": "Biologics for Rheumatoid Arthritis"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1448",
+          "name": "Disease Activity Assessment"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1050",
+          "name": "Complete Blood Count Panel"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.198.12.1015",
+          "name": "Hepatic Function Panel"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1225",
+          "name": "C-Reactive Protein Test"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1226",
+          "name": "Erythrocyte Sedimentation Rate"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.378",
+          "name": "Pregnancy"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.111.12.1012",
+          "name": "Active Tuberculosis"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.464.1003.199.12.1070",
+          "name": "Severe Hepatic Impairment"
+        },
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://cts.nlm.nih.gov/fhir/ValueSet/2.16.840.1.113883.3.526.3.1584",
+          "name": "Hospice Care Ambulatory"
+        }
+      ]
+    }
+  }
+}

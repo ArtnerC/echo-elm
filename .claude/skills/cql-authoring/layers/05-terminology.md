@@ -100,6 +100,74 @@ code "Discharged to SNF": '03' from "UB04RevenueCodes" display 'Skilled Nursing 
 
 ---
 
+## Inline condition status codes (self-contained measure pattern)
+
+When a shared `FHIRCommon` library is **not** imported, define these codes directly in
+your measure library. They are identical to the codes `FHIRCommon` exposes.
+
+```cql
+codesystem "ConditionClinicalStatus":
+  'http://terminology.hl7.org/CodeSystem/condition-clinical'
+codesystem "ConditionVerificationStatus":
+  'http://terminology.hl7.org/CodeSystem/condition-ver-status'
+
+// Clinical status codes
+code "active": 'active' from "ConditionClinicalStatus" display 'Active'
+code "recurrence": 'recurrence' from "ConditionClinicalStatus" display 'Recurrence'
+code "relapse": 'relapse' from "ConditionClinicalStatus" display 'Relapse'
+code "inactive": 'inactive' from "ConditionClinicalStatus" display 'Inactive'
+code "remission": 'remission' from "ConditionClinicalStatus" display 'Remission'
+code "resolved": 'resolved' from "ConditionClinicalStatus" display 'Resolved'
+
+// Verification status codes
+code "confirmed": 'confirmed' from "ConditionVerificationStatus" display 'Confirmed'
+code "unconfirmed": 'unconfirmed' from "ConditionVerificationStatus" display 'Unconfirmed'
+code "refuted": 'refuted' from "ConditionVerificationStatus" display 'Refuted'
+code "entered-in-error-ver": 'entered-in-error' from "ConditionVerificationStatus"
+  display 'Entered in Error'
+
+// Usage — identical to FHIRCommon."active" / FHIRCommon."confirmed" patterns
+define "Active Conditions":
+  [Condition: "Rheumatoid Arthritis"] C
+    where C.clinicalStatus ~ "active"
+      and C.verificationStatus ~ "confirmed"
+```
+
+**When `FHIRCommon` IS imported**, use `FHIRCommon."active"` and `FHIRCommon."confirmed"` instead.
+Do **not** duplicate these codes if FHIRCommon is already in scope — it will cause a
+naming conflict.
+
+---
+
+## VSAC OID guidance for specialty clinical domains
+
+VSAC OIDs shown throughout this skill are illustrative. For production use, verify and
+retrieve OIDs from VSAC (`https://vsac.nlm.nih.gov/`) or MADIE (`https://madie.cms.gov/`).
+
+### Common specialty value set patterns
+
+| Clinical Domain | Example Value Set Name | Notes |
+|----------------|----------------------|-------|
+| Rheumatoid Arthritis | "Rheumatoid Arthritis" | SNOMED + ICD-10-CM codes |
+| Rheumatology encounters | "Rheumatology Visit" | CPT + SNOMED specialty visit codes |
+| DMARD therapy | "DMARD Therapy" | RxNorm ingredient codes |
+| Biologics (RA) | "Biologics for Rheumatoid Arthritis" | RxNorm; separate from synthetic DMARDs |
+| Disease activity scores | "Disease Activity Assessment" | LOINC; DAS28-ESR, DAS28-CRP, CDAI, SDAI |
+| Contraindication conditions | "Active Tuberculosis", "Severe Hepatic Impairment", "Pregnancy" | Used for exclusions |
+| Immunosuppression | "Immunosuppressive Drugs" | Broader than RA-specific DMARDs |
+| Oncology | "Cancer" (multiple subtypes) | SNOMED + ICD-10-CM; specify histology type |
+| Cardiac | "Myocardial Infarction" | SNOMED + ICD-10-CM |
+| Mental health | "Depression Diagnosis" | SNOMED + ICD-10-CM DSM codes |
+
+### How to find the right value set
+
+1. **VSAC search** (`https://vsac.nlm.nih.gov/`): Search by clinical term; filter by steward (CMS, NCQA, AHA) and program (eCQM, HEDIS).
+2. **MADIE** (`https://madie.cms.gov/`): Browse existing CMS eCQMs that use similar clinical logic; copy or reference their value set OIDs.
+3. **HL7 FHIR base value sets** (`http://hl7.org/fhir/R4/valueset-*`): Pre-defined FHIR status codes and administrative classifications.
+4. **Construct your own** (last resort): Create a FHIR `ValueSet` resource in your org's terminology server with a non-VSAC canonical URL.
+
+---
+
 ## Terminology operators
 
 ### `in` — value set membership

@@ -1,0 +1,1211 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for issues/03-cqf-parity-gaps.md C2 / C5 / C6.\n//\n// Three operator-lowering rules the HEDIS comparison flagged:\n//   - `in` promotes its right operand with ToList only when that operand does\n//     not already satisfy an In overload for the left operand's type. A\n//     reference to a list- or interval-valued define must not be promoted.\n//   - `during` / `included in` select In (ProperIn) for a point left operand\n//     and IncludedIn (ProperIncludedIn) for an interval one.\n//   - `!=` and `!~` have no ELM operator of their own; they lower to\n//     Not(Equal(...)) and Not(Equivalent(...)).\nlibrary MembershipOperators version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "MembershipOperators",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Period\": Interval[@2024-01-01, @2024-12-31]"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "day": {
+                "type": "Literal",
+                "value": "31",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "13:40-13:50",
+              "month": {
+                "type": "Literal",
+                "value": "12",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "highClosed": true,
+            "locator": "13:18-13:51",
+            "low": {
+              "day": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "13:27-13:37",
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "lowClosed": true,
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "Interval"
+          },
+          "locator": "13:1-13:51",
+          "name": "Period",
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Day\": @2024-06-01"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "day": {
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "locator": "14:15-14:25",
+            "month": {
+              "type": "Literal",
+              "value": "6",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+            "signature": [],
+            "type": "Date",
+            "year": {
+              "type": "Literal",
+              "value": "2024",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "locator": "14:1-14:25",
+          "name": "Day",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Date"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Numbers\": { 1, 2, 3 }"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "locator": "15:21",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "15:24",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "15:27",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "locator": "15:19-15:29",
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "List"
+          },
+          "locator": "15:1-15:29",
+          "name": "Numbers",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── in: promotion only when the right operand does not already match ──────────\n\ndefine \"PointInIntervalRef\": \"Day\" in \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "19:30-19:46",
+            "operand": [
+              {
+                "locator": "19:30-19:34",
+                "name": "Day",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ExpressionRef"
+              },
+              {
+                "locator": "19:39-19:46",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "19:1-19:46",
+          "name": "PointInIntervalRef",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PointInListRef\": 2 in \"Numbers\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "20:26-20:39",
+            "operand": [
+              {
+                "locator": "20:26",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "20:31-20:39",
+                "name": "Numbers",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "20:1-20:39",
+          "name": "PointInListRef",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PointInListLiteral\": 2 in { 1, 2, 3 }"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "21:30-21:45",
+            "operand": [
+              {
+                "locator": "21:30",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "element": [
+                  {
+                    "locator": "21:37",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:40",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "locator": "21:43",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "locator": "21:35-21:45",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "List"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "21:1-21:45",
+          "name": "PointInListLiteral",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PointInIntervalLiteral\": @2024-06-01 in Interval[@2024-01-01, @2024-12-31]"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "22:34-22:82",
+            "operand": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "22:34-22:44",
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "high": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "31",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "22:71-22:81",
+                  "month": {
+                    "type": "Literal",
+                    "value": "12",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": true,
+                "locator": "22:49-22:82",
+                "low": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "22:58-22:68",
+                  "month": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "lowClosed": true,
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "Interval"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "22:1-22:82",
+          "name": "PointInIntervalLiteral",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// The left operand is itself an interval, so this resolves to In(T, List\u003cT\u003e)\n// with T = Interval\u003cDateTime\u003e and the right operand IS promoted with ToList.\ndefine \"IntervalInIntervalRef\": Interval[@2024-02-01, @2024-03-01] in \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "25:33-25:78",
+            "operand": [
+              {
+                "high": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "25:55-25:65",
+                  "month": {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": true,
+                "locator": "25:33-25:66",
+                "low": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "25:42-25:52",
+                  "month": {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "lowClosed": true,
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "Interval"
+              },
+              {
+                "operand": {
+                  "locator": "25:71-25:78",
+                  "name": "Period",
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "signature": [],
+                "type": "ToList"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "25:1-25:78",
+          "name": "IntervalInIntervalRef",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── included in / during / properly included in ───────────────────────────────\n\ndefine \"PointIncludedIn\": \"Day\" included in \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "29:27-29:52",
+            "operand": [
+              {
+                "locator": "29:27-29:31",
+                "name": "Day",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ExpressionRef"
+              },
+              {
+                "locator": "29:45-29:52",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "29:1-29:52",
+          "name": "PointIncludedIn",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PointDuring\": \"Day\" during \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "30:23-30:43",
+            "operand": [
+              {
+                "locator": "30:23-30:27",
+                "name": "Day",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ExpressionRef"
+              },
+              {
+                "locator": "30:36-30:43",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "30:1-30:43",
+          "name": "PointDuring",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PointProperlyIncludedIn\": \"Day\" properly included in \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "31:35-31:69",
+            "operand": [
+              {
+                "locator": "31:35-31:39",
+                "name": "Day",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ExpressionRef"
+              },
+              {
+                "locator": "31:62-31:69",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "ProperIn"
+          },
+          "locator": "31:1-31:69",
+          "name": "PointProperlyIncludedIn",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"IntervalIncludedIn\": Interval[@2024-02-01, @2024-03-01] included in \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "32:30-32:84",
+            "operand": [
+              {
+                "high": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "32:52-32:62",
+                  "month": {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": true,
+                "locator": "32:30-32:63",
+                "low": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "32:39-32:49",
+                  "month": {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "lowClosed": true,
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "Interval"
+              },
+              {
+                "locator": "32:77-32:84",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "IncludedIn"
+          },
+          "locator": "32:1-32:84",
+          "name": "IntervalIncludedIn",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"IntervalProperlyIncludedIn\": Interval[@2024-02-01, @2024-03-01] properly included in \"Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "33:38-33:101",
+            "operand": [
+              {
+                "high": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "33:60-33:70",
+                  "month": {
+                    "type": "Literal",
+                    "value": "3",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": true,
+                "locator": "33:38-33:71",
+                "low": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "33:47-33:57",
+                  "month": {
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "lowClosed": true,
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "Interval"
+              },
+              {
+                "locator": "33:94-33:101",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "ProperIncludedIn"
+          },
+          "locator": "33:1-33:101",
+          "name": "IntervalProperlyIncludedIn",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"IntervalContains\": \"Period\" contains \"Day\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "34:28-34:50",
+            "operand": [
+              {
+                "locator": "34:28-34:35",
+                "name": "Period",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              },
+              {
+                "locator": "34:46-34:50",
+                "name": "Day",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Contains"
+          },
+          "locator": "34:1-34:50",
+          "name": "IntervalContains",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── negated equality ──────────────────────────────────────────────────────────\n\ndefine \"NotEqualInteger\": 1 != 2"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "38:27-38:32",
+            "operand": {
+              "locator": "38:27-38:32",
+              "operand": [
+                {
+                  "locator": "38:27",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "38:32",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Equal"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Not"
+          },
+          "locator": "38:1-38:32",
+          "name": "NotEqualInteger",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"NotEquivalentInteger\": 1 !~ 2"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "39:32-39:37",
+            "operand": {
+              "locator": "39:32-39:37",
+              "operand": [
+                {
+                  "locator": "39:32",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "locator": "39:37",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Equivalent"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Not"
+          },
+          "locator": "39:1-39:37",
+          "name": "NotEquivalentInteger",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"NotEqualString\": 'a' != 'b'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "40:26-40:35",
+            "operand": {
+              "locator": "40:26-40:35",
+              "operand": [
+                {
+                  "locator": "40:26-40:28",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "locator": "40:33-40:35",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Equal"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Not"
+          },
+          "locator": "40:1-40:35",
+          "name": "NotEqualString",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"EqualInteger\": 1 = 2"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "41:24-41:28",
+            "operand": [
+              {
+                "locator": "41:24",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "41:28",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "41:1-41:28",
+          "name": "EqualInteger",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"EquivalentInteger\": 1 ~ 2"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "42:29-42:33",
+            "operand": [
+              {
+                "locator": "42:29",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "42:33",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Equivalent"
+          },
+          "locator": "42:1-42:33",
+          "name": "EquivalentInteger",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

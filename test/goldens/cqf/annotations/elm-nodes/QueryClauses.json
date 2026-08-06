@@ -1,0 +1,912 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for issues/03-cqf-parity-gaps.md B7 / B10 / B11 / B13.\n//\n// Covers the query clauses that the HEDIS comparison flagged: sort (by column,\n// by expression, by direction, multi-key), aggregate (starting literal, all,\n// distinct), let, and return all/distinct. Also pins the two identifier-scope\n// rules: the aggregate accumulator is a QueryLetRef, and identifiers inside a\n// sort-by expression stay unresolved as IdentifierRef.\nlibrary QueryClauses version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "QueryClauses",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Items\": {\n  Tuple { id: 1, score: 10, p: Interval[@2024-01-01, @2024-02-01] },\n  Tuple { id: 2, score: 5, p: Interval[@2024-03-01, @2024-04-01] }\n}"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "score",
+                    "value": {
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "p",
+                    "value": {
+                      "high": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "2",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "score",
+                    "value": {
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "p",
+                    "value": {
+                      "high": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "4",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "3",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "Items"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── sort ──────────────────────────────────────────────────────────────────────\n\ndefine \"SortByColumn\":\n  \"Items\" I\n    sort by score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "path": "score",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByColumn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByColumnDesc\":\n  \"Items\" I\n    sort by score desc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "desc",
+                  "path": "score",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByColumnDesc"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByDirectionOnly\":\n  \"Items\" I\n    return I.score\n    sort asc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "score",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "type": "ByDirection"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByDirectionOnly"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByMultipleKeys\":\n  \"Items\" I\n    sort by id asc, score desc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "path": "id",
+                  "type": "ByColumn"
+                },
+                {
+                  "direction": "desc",
+                  "path": "score",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByMultipleKeys"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Identifiers in a sort-by expression are scoped to the query result element,\n// so CQF defers resolution to the engine via IdentifierRef.\ndefine \"SortByExpression\":\n  \"Items\" I\n    sort by start of p"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "expression": {
+                    "operand": {
+                      "name": "p",
+                      "type": "IdentifierRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "type": "ByExpression"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"SortByThis\":\n  \"Items\" I\n    return I.p\n    sort by start of $this"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "p",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "expression": {
+                    "operand": {
+                      "name": "$this",
+                      "type": "IdentifierRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "type": "ByExpression"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByThis"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── aggregate ─────────────────────────────────────────────────────────────────\n\n// `starting` takes a simpleLiteral, a quantity, or a parenthesised expression.\ndefine \"AggregateStartingLiteral\":\n  \"Items\" I\n    aggregate Total starting 0: Total + I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Total",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              "identifier": "Total",
+              "starting": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateStartingLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateStartingString\":\n  \"Items\" I\n    aggregate Acc starting 'x': Acc"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "name": "Acc",
+                "type": "QueryLetRef"
+              },
+              "identifier": "Acc",
+              "starting": {
+                "type": "Literal",
+                "value": "x",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateStartingString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateStartingExpression\":\n  \"Items\" I\n    aggregate Total starting (1 + 1): Total + I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Total",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              "identifier": "Total",
+              "starting": {
+                "operand": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateStartingExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateAll\":\n  \"Items\" I\n    aggregate all Acc starting 1: Acc * I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "distinct": false,
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Acc",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              "identifier": "Acc",
+              "starting": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateAll"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AggregateDistinct\":\n  \"Items\" I\n    aggregate distinct Acc starting 1: Acc * I.score"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "distinct": true,
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Acc",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              "identifier": "Acc",
+              "starting": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateDistinct"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── let / return ──────────────────────────────────────────────────────────────\n\ndefine \"LetClause\":\n  \"Items\" I\n    let s: I.score\n    where s \u003e 1\n    return s"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "path": "score",
+                  "scope": "I",
+                  "type": "Property"
+                },
+                "identifier": "s"
+              }
+            ],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "name": "s",
+                "type": "QueryLetRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "name": "s",
+                  "type": "QueryLetRef"
+                },
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "name": "LetClause"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ReturnDistinct\":\n  \"Items\" I\n    return distinct I.id"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "distinct": true,
+              "expression": {
+                "path": "id",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "ReturnDistinct"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ReturnAll\":\n  \"Items\" I\n    return all I.id"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "distinct": false,
+              "expression": {
+                "path": "id",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "ReturnAll"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

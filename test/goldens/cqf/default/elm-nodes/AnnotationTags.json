@@ -1,0 +1,214 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "AnnotationTags",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "UPPER",
+                  "value": "UP"
+                },
+                {
+                  "name": "_leading",
+                  "value": "L"
+                },
+                {
+                  "name": "author",
+                  "value": "Chopin"
+                },
+                {
+                  "name": "comment",
+                  "value": "C"
+                },
+                {
+                  "name": "customThing",
+                  "value": "CT"
+                },
+                {
+                  "name": "deprecated",
+                  "value": "X"
+                },
+                {
+                  "name": "description",
+                  "value": "Every tag name here is a valid identifier"
+                },
+                {
+                  "name": "jurisdiction",
+                  "value": "J"
+                },
+                {
+                  "name": "notes",
+                  "value": "N"
+                },
+                {
+                  "name": "region",
+                  "value": "R"
+                },
+                {
+                  "name": "seealso",
+                  "value": "S"
+                },
+                {
+                  "name": "terminologyKey",
+                  "value": "T"
+                },
+                {
+                  "name": "with2digits",
+                  "value": "D2"
+                },
+                {
+                  "name": "with_underscore",
+                  "value": "U"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "name": "ValidTagNames"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "kept"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "name": "InvalidTagNames"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "comment",
+                  "value": "#This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#"
+                },
+                {
+                  "name": "description",
+                  "value": "Determines the cumulative duration of a list of intervals"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "source": {
+              "let": [],
+              "relationship": [],
+              "return": {
+                "distinct": false,
+                "expression": {
+                  "operand": [
+                    {
+                      "operand": {
+                        "name": "X",
+                        "type": "AliasRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "operand": {
+                        "name": "X",
+                        "type": "AliasRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    }
+                  ],
+                  "precision": "Day",
+                  "signature": [],
+                  "type": "DurationBetween"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "expression": {
+                    "operand": [
+                      {
+                        "name": "Intervals",
+                        "type": "OperandRef"
+                      },
+                      {
+                        "type": "Null"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Collapse"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Sum"
+          },
+          "name": "CumulativeDuration",
+          "operand": [
+            {
+              "name": "Intervals",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

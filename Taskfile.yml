@@ -6,7 +6,7 @@ vars:
   MODULE: github.com/artnerc/echo-elm
   JDK_VERSION: 17
   JDK_DIR: tools/jdk
-  GOLANGCI_VERSION: v1.64.8
+  GOLANGCI_VERSION: v2.12.2
 
 tasks:
   default:
@@ -84,6 +84,11 @@ tasks:
     cmds:
       - go run ./demo/parity_full
 
+  parity:showdiff:
+    desc: Show where the two pinned CQF versions disagree for one golden (requires parity:jdk + parity:jar)
+    cmds:
+      - go run ./demo/showdiff {{.CLI_ARGS}}
+
   parity:goldens:
     desc: Generate committed golden files for both CQF versions (requires parity:jdk + parity:jar)
     cmds:
@@ -131,12 +136,17 @@ tasks:
   tools:golangci:
     desc: Install golangci-lint locally
     cmds:
-      - go install github.com/golangci/golangci-lint/cmd/golangci-lint@{{.GOLANGCI_VERSION}}
+      - go install github.com/golangci/golangci-lint/v2/cmd/golangci-lint@{{.GOLANGCI_VERSION}}
 
   generate:
     desc: Run go generate across the repo (parser must exist; use generate:grammar to regenerate)
     cmds:
       - go generate ./...
+
+  generate:modelinfo:
+    desc: Regenerate the FHIR ModelInfo tables from the cqframework quick JAR (requires parity:jar)
+    cmds:
+      - go run ./internal/tools/modelinfogen
 
   generate:grammar:
     desc: Download ANTLR 4.13.2 and regenerate CQL parser from grammar/cql.g4

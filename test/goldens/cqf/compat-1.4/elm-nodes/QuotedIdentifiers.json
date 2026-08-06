@@ -1,0 +1,244 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "QuotedIdentifiers",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "My Items"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "42",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Plain"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "My Items",
+            "type": "ExpressionRef"
+          },
+          "name": "QuotedDirectRef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Plain",
+            "type": "ExpressionRef"
+          },
+          "name": "UnquotedDirectRef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "name": "I",
+                "type": "AliasRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "My Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "QuotedQuerySource"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "name": "I",
+                "type": "AliasRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "My Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "name": "I",
+                  "type": "AliasRef"
+                },
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "name": "QuotedQuerySourceWhere"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [
+              {
+                "alias": "J",
+                "expression": {
+                  "name": "My Items",
+                  "type": "ExpressionRef"
+                },
+                "suchThat": {
+                  "operand": [
+                    {
+                      "name": "I",
+                      "type": "AliasRef"
+                    },
+                    {
+                      "name": "J",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                },
+                "type": "With"
+              }
+            ],
+            "return": {
+              "expression": {
+                "name": "I",
+                "type": "AliasRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "My Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "QuotedRelationshipSource"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "x",
+                "type": "OperandRef"
+              },
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "My Function",
+          "operand": [
+            {
+              "name": "x",
+              "operandTypeSpecifier": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "My Function",
+            "operand": [
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "QuotedFunctionCall"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

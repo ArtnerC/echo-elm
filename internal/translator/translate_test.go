@@ -106,8 +106,10 @@ define "InitPop": true`
 	if err := json.Unmarshal(r.Library.Annotation[0], &info); err != nil {
 		t.Fatalf("unmarshal info: %v", err)
 	}
-	if info.TranslatorOptions != "" {
-		t.Errorf("CQF mode translatorOptions: want empty, got %q", info.TranslatorOptions)
+	// CQF reports the non-default options it was given; this fixture is
+	// translated with locators on.
+	if info.TranslatorOptions != "EnableLocators" {
+		t.Errorf("CQF mode translatorOptions: want %q, got %q", "EnableLocators", info.TranslatorOptions)
 	}
 
 	// Every UsingDef should have annotation:[]
@@ -161,8 +163,10 @@ using FHIR version '4.0.1'`
 		_ = json.Unmarshal(modernResult.Library.Annotation[0], &modernInfo)
 	}
 
-	if cqfInfo.TranslatorOptions != "" {
-		t.Errorf("CQF translatorOptions: want empty, got %q", cqfInfo.TranslatorOptions)
+	// Both modes report their own non-default options; the string describes how
+	// the ELM was produced and is not a mode marker.
+	if cqfInfo.TranslatorOptions != "EnableLocators" {
+		t.Errorf("CQF translatorOptions: want %q, got %q", "EnableLocators", cqfInfo.TranslatorOptions)
 	}
 	if modernInfo.TranslatorOptions == "" {
 		t.Errorf("modern translatorOptions: want non-empty")
@@ -614,7 +618,7 @@ define F1: 1 + 2`
 	}
 }
 
-func TestCompatibilityLevelInHeader(t *testing.T) {
+func TestCompatibilityLevelNotInHeader(t *testing.T) {
 	cql := "library CompatTest version '1.0'"
 
 	r := translate(t, cql, func(o *translator.Options) {
@@ -631,9 +635,10 @@ func TestCompatibilityLevelInHeader(t *testing.T) {
 	if err := json.Unmarshal(r.Library.Annotation[0], &info); err != nil {
 		t.Fatalf("unmarshal annotation: %v", err)
 	}
-	// We now emit compatibilityLevel in the annotation.
-	if info.CompatibilityLevel != "1.5" {
-		t.Errorf("compatibilityLevel: want 1.5, got %q", info.CompatibilityLevel)
+	// CQF does not report compatibilityLevel in CqlToElmInfo — the level shapes
+	// the translation but is not described in the ELM.
+	if info.CompatibilityLevel != "" {
+		t.Errorf("compatibilityLevel: want it absent, got %q", info.CompatibilityLevel)
 	}
 }
 

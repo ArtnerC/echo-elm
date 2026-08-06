@@ -2,15 +2,15 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "447",
           "s": [
             {
               "value": [
-                "",
                 "library IntervalOpsTest"
               ]
             }
@@ -22,7 +22,6 @@
     "identifier": {
       "id": "IntervalOpsTest"
     },
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -34,29 +33,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntInterval",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "211",
-                    "s": [
-                      {
-                        "r": "209",
-                        "value": [
-                          "Interval[",
-                          "1",
-                          ", ",
-                          "10",
-                          "]"
-                        ]
-                      }
+                      "define IntInterval: Interval[1, 10]"
                     ]
                   }
                 ]
@@ -67,17 +47,14 @@
           "context": "Unfiltered",
           "expression": {
             "high": {
-              "localId": "210",
               "locator": "3:33-3:34",
               "type": "Literal",
               "value": "10",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "highClosed": true,
-            "localId": "211",
             "locator": "3:21-3:35",
             "low": {
-              "localId": "209",
               "locator": "3:30",
               "type": "Literal",
               "value": "1",
@@ -86,7 +63,6 @@
             "lowClosed": true,
             "type": "Interval"
           },
-          "localId": "208",
           "locator": "3:1-3:35",
           "name": "IntInterval"
         },
@@ -95,29 +71,10 @@
           "annotation": [
             {
               "s": {
-                "r": "214",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntIntervalOpen",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "217",
-                    "s": [
-                      {
-                        "r": "215",
-                        "value": [
-                          "Interval(",
-                          "0",
-                          ", ",
-                          "11",
-                          ")"
-                        ]
-                      }
+                      "define IntIntervalOpen: Interval(0, 11)"
                     ]
                   }
                 ]
@@ -128,17 +85,14 @@
           "context": "Unfiltered",
           "expression": {
             "high": {
-              "localId": "216",
               "locator": "4:37-4:38",
               "type": "Literal",
               "value": "11",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "highClosed": false,
-            "localId": "217",
             "locator": "4:25-4:39",
             "low": {
-              "localId": "215",
               "locator": "4:34",
               "type": "Literal",
               "value": "0",
@@ -147,7 +101,6 @@
             "lowClosed": false,
             "type": "Interval"
           },
-          "localId": "214",
           "locator": "4:1-4:39",
           "name": "IntIntervalOpen"
         },
@@ -156,29 +109,10 @@
           "annotation": [
             {
               "s": {
-                "r": "220",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntIntervalHalfOpen",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "223",
-                    "s": [
-                      {
-                        "r": "221",
-                        "value": [
-                          "Interval[",
-                          "1",
-                          ", ",
-                          "11",
-                          ")"
-                        ]
-                      }
+                      "define IntIntervalHalfOpen: Interval[1, 11)"
                     ]
                   }
                 ]
@@ -189,17 +123,14 @@
           "context": "Unfiltered",
           "expression": {
             "high": {
-              "localId": "222",
               "locator": "5:41-5:42",
               "type": "Literal",
               "value": "11",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "highClosed": false,
-            "localId": "223",
             "locator": "5:29-5:43",
             "low": {
-              "localId": "221",
               "locator": "5:38",
               "type": "Literal",
               "value": "1",
@@ -208,7 +139,6 @@
             "lowClosed": true,
             "type": "Interval"
           },
-          "localId": "220",
           "locator": "5:1-5:43",
           "name": "IntIntervalHalfOpen"
         },
@@ -217,54 +147,10 @@
           "annotation": [
             {
               "s": {
-                "r": "226",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalUnion",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "233",
-                    "s": [
-                      {
-                        "r": "229",
-                        "s": [
-                          {
-                            "r": "227",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " union "
-                        ]
-                      },
-                      {
-                        "r": "232",
-                        "s": [
-                          {
-                            "r": "230",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "8",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalUnion: Interval[1, 5] union Interval[3, 8]"
                     ]
                   }
                 ]
@@ -274,22 +160,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "233",
             "locator": "7:23-7:57",
             "operand": [
               {
                 "high": {
-                  "localId": "228",
                   "locator": "7:35",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "229",
                 "locator": "7:23-7:36",
                 "low": {
-                  "localId": "227",
                   "locator": "7:32",
                   "type": "Literal",
                   "value": "1",
@@ -300,17 +182,14 @@
               },
               {
                 "high": {
-                  "localId": "231",
                   "locator": "7:56",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "232",
                 "locator": "7:44-7:57",
                 "low": {
-                  "localId": "230",
                   "locator": "7:53",
                   "type": "Literal",
                   "value": "3",
@@ -323,7 +202,6 @@
             "signature": [],
             "type": "Union"
           },
-          "localId": "226",
           "locator": "7:1-7:57",
           "name": "IntervalUnion"
         },
@@ -332,54 +210,10 @@
           "annotation": [
             {
               "s": {
-                "r": "236",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalIntersect",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "243",
-                    "s": [
-                      {
-                        "r": "239",
-                        "s": [
-                          {
-                            "r": "237",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "8",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " intersect "
-                        ]
-                      },
-                      {
-                        "r": "242",
-                        "s": [
-                          {
-                            "r": "240",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalIntersect: Interval[1, 8] intersect Interval[3, 10]"
                     ]
                   }
                 ]
@@ -389,22 +223,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "243",
             "locator": "8:27-8:66",
             "operand": [
               {
                 "high": {
-                  "localId": "238",
                   "locator": "8:39",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "239",
                 "locator": "8:27-8:40",
                 "low": {
-                  "localId": "237",
                   "locator": "8:36",
                   "type": "Literal",
                   "value": "1",
@@ -415,17 +245,14 @@
               },
               {
                 "high": {
-                  "localId": "241",
                   "locator": "8:64-8:65",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "242",
                 "locator": "8:52-8:66",
                 "low": {
-                  "localId": "240",
                   "locator": "8:61",
                   "type": "Literal",
                   "value": "3",
@@ -438,7 +265,6 @@
             "signature": [],
             "type": "Intersect"
           },
-          "localId": "236",
           "locator": "8:1-8:66",
           "name": "IntervalIntersect"
         },
@@ -447,54 +273,10 @@
           "annotation": [
             {
               "s": {
-                "r": "246",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalExcept",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "253",
-                    "s": [
-                      {
-                        "r": "249",
-                        "s": [
-                          {
-                            "r": "247",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " except "
-                        ]
-                      },
-                      {
-                        "r": "252",
-                        "s": [
-                          {
-                            "r": "250",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "7",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalExcept: Interval[1, 10] except Interval[3, 7]"
                     ]
                   }
                 ]
@@ -504,22 +286,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "253",
             "locator": "9:24-9:60",
             "operand": [
               {
                 "high": {
-                  "localId": "248",
                   "locator": "9:36-9:37",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "249",
                 "locator": "9:24-9:38",
                 "low": {
-                  "localId": "247",
                   "locator": "9:33",
                   "type": "Literal",
                   "value": "1",
@@ -530,17 +308,14 @@
               },
               {
                 "high": {
-                  "localId": "251",
                   "locator": "9:59",
                   "type": "Literal",
                   "value": "7",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "252",
                 "locator": "9:47-9:60",
                 "low": {
-                  "localId": "250",
                   "locator": "9:56",
                   "type": "Literal",
                   "value": "3",
@@ -553,7 +328,6 @@
             "signature": [],
             "type": "Except"
           },
-          "localId": "246",
           "locator": "9:1-9:60",
           "name": "IntervalExcept"
         },
@@ -562,41 +336,10 @@
           "annotation": [
             {
               "s": {
-                "r": "256",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "PointInInterval",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "261",
-                    "s": [
-                      {
-                        "r": "257",
-                        "value": [
-                          "5",
-                          " in "
-                        ]
-                      },
-                      {
-                        "r": "260",
-                        "s": [
-                          {
-                            "r": "258",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define PointInInterval: 5 in Interval[1, 10]"
                     ]
                   }
                 ]
@@ -606,11 +349,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "261",
             "locator": "11:25-11:44",
             "operand": [
               {
-                "localId": "257",
                 "locator": "11:25",
                 "type": "Literal",
                 "value": "5",
@@ -618,17 +359,14 @@
               },
               {
                 "high": {
-                  "localId": "259",
                   "locator": "11:42-11:43",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "260",
                 "locator": "11:30-11:44",
                 "low": {
-                  "localId": "258",
                   "locator": "11:39",
                   "type": "Literal",
                   "value": "1",
@@ -641,7 +379,6 @@
             "signature": [],
             "type": "In"
           },
-          "localId": "256",
           "locator": "11:1-11:44",
           "name": "PointInInterval"
         },
@@ -650,41 +387,10 @@
           "annotation": [
             {
               "s": {
-                "r": "264",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalContainsPoint",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "269",
-                    "s": [
-                      {
-                        "r": "267",
-                        "s": [
-                          {
-                            "r": "265",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "268",
-                        "value": [
-                          " contains ",
-                          "5"
-                        ]
-                      }
+                      "define IntervalContainsPoint: Interval[1, 10] contains 5"
                     ]
                   }
                 ]
@@ -694,22 +400,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "269",
             "locator": "12:31-12:56",
             "operand": [
               {
                 "high": {
-                  "localId": "266",
                   "locator": "12:43-12:44",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "267",
                 "locator": "12:31-12:45",
                 "low": {
-                  "localId": "265",
                   "locator": "12:40",
                   "type": "Literal",
                   "value": "1",
@@ -719,7 +421,6 @@
                 "type": "Interval"
               },
               {
-                "localId": "268",
                 "locator": "12:56",
                 "type": "Literal",
                 "value": "5",
@@ -729,7 +430,6 @@
             "signature": [],
             "type": "Contains"
           },
-          "localId": "264",
           "locator": "12:1-12:56",
           "name": "IntervalContainsPoint"
         },
@@ -738,57 +438,10 @@
           "annotation": [
             {
               "s": {
-                "r": "272",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalOverlaps",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "279",
-                    "s": [
-                      {
-                        "r": "275",
-                        "s": [
-                          {
-                            "r": "273",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "279",
-                        "value": [
-                          " ",
-                          "overlaps",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "278",
-                        "s": [
-                          {
-                            "r": "276",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "8",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalOverlaps: Interval[1, 5] overlaps Interval[3, 8]"
                     ]
                   }
                 ]
@@ -798,22 +451,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "279",
             "locator": "13:26-13:63",
             "operand": [
               {
                 "high": {
-                  "localId": "274",
                   "locator": "13:38",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "275",
                 "locator": "13:26-13:39",
                 "low": {
-                  "localId": "273",
                   "locator": "13:35",
                   "type": "Literal",
                   "value": "1",
@@ -824,17 +473,14 @@
               },
               {
                 "high": {
-                  "localId": "277",
                   "locator": "13:62",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "278",
                 "locator": "13:50-13:63",
                 "low": {
-                  "localId": "276",
                   "locator": "13:59",
                   "type": "Literal",
                   "value": "3",
@@ -847,7 +493,6 @@
             "signature": [],
             "type": "Overlaps"
           },
-          "localId": "272",
           "locator": "13:1-13:63",
           "name": "IntervalOverlaps"
         },
@@ -856,57 +501,10 @@
           "annotation": [
             {
               "s": {
-                "r": "282",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalOverlapsBefore",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "289",
-                    "s": [
-                      {
-                        "r": "285",
-                        "s": [
-                          {
-                            "r": "283",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "289",
-                        "value": [
-                          " ",
-                          "overlaps before",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "288",
-                        "s": [
-                          {
-                            "r": "286",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "8",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalOverlapsBefore: Interval[1, 5] overlaps before Interval[3, 8]"
                     ]
                   }
                 ]
@@ -916,22 +514,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "289",
             "locator": "14:32-14:76",
             "operand": [
               {
                 "high": {
-                  "localId": "284",
                   "locator": "14:44",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "285",
                 "locator": "14:32-14:45",
                 "low": {
-                  "localId": "283",
                   "locator": "14:41",
                   "type": "Literal",
                   "value": "1",
@@ -942,17 +536,14 @@
               },
               {
                 "high": {
-                  "localId": "287",
                   "locator": "14:75",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "288",
                 "locator": "14:63-14:76",
                 "low": {
-                  "localId": "286",
                   "locator": "14:72",
                   "type": "Literal",
                   "value": "3",
@@ -965,7 +556,6 @@
             "signature": [],
             "type": "OverlapsBefore"
           },
-          "localId": "282",
           "locator": "14:1-14:76",
           "name": "IntervalOverlapsBefore"
         },
@@ -974,57 +564,10 @@
           "annotation": [
             {
               "s": {
-                "r": "292",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalOverlapsAfter",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "299",
-                    "s": [
-                      {
-                        "r": "295",
-                        "s": [
-                          {
-                            "r": "293",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "8",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "299",
-                        "value": [
-                          " ",
-                          "overlaps after",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "298",
-                        "s": [
-                          {
-                            "r": "296",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalOverlapsAfter: Interval[3, 8] overlaps after Interval[1, 5]"
                     ]
                   }
                 ]
@@ -1034,22 +577,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "299",
             "locator": "15:31-15:74",
             "operand": [
               {
                 "high": {
-                  "localId": "294",
                   "locator": "15:43",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "295",
                 "locator": "15:31-15:44",
                 "low": {
-                  "localId": "293",
                   "locator": "15:40",
                   "type": "Literal",
                   "value": "3",
@@ -1060,17 +599,14 @@
               },
               {
                 "high": {
-                  "localId": "297",
                   "locator": "15:73",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "298",
                 "locator": "15:61-15:74",
                 "low": {
-                  "localId": "296",
                   "locator": "15:70",
                   "type": "Literal",
                   "value": "1",
@@ -1083,7 +619,6 @@
             "signature": [],
             "type": "OverlapsAfter"
           },
-          "localId": "292",
           "locator": "15:1-15:74",
           "name": "IntervalOverlapsAfter"
         },
@@ -1092,57 +627,10 @@
           "annotation": [
             {
               "s": {
-                "r": "302",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalIncludes",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "309",
-                    "s": [
-                      {
-                        "r": "305",
-                        "s": [
-                          {
-                            "r": "303",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "309",
-                        "value": [
-                          " ",
-                          "includes",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "308",
-                        "s": [
-                          {
-                            "r": "306",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "7",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalIncludes: Interval[1, 10] includes Interval[3, 7]"
                     ]
                   }
                 ]
@@ -1152,22 +640,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "309",
             "locator": "16:26-16:64",
             "operand": [
               {
                 "high": {
-                  "localId": "304",
                   "locator": "16:38-16:39",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "305",
                 "locator": "16:26-16:40",
                 "low": {
-                  "localId": "303",
                   "locator": "16:35",
                   "type": "Literal",
                   "value": "1",
@@ -1178,17 +662,14 @@
               },
               {
                 "high": {
-                  "localId": "307",
                   "locator": "16:63",
                   "type": "Literal",
                   "value": "7",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "308",
                 "locator": "16:51-16:64",
                 "low": {
-                  "localId": "306",
                   "locator": "16:60",
                   "type": "Literal",
                   "value": "3",
@@ -1201,7 +682,6 @@
             "signature": [],
             "type": "Includes"
           },
-          "localId": "302",
           "locator": "16:1-16:64",
           "name": "IntervalIncludes"
         },
@@ -1210,57 +690,10 @@
           "annotation": [
             {
               "s": {
-                "r": "314",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalIncludedIn",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "321",
-                    "s": [
-                      {
-                        "r": "317",
-                        "s": [
-                          {
-                            "r": "315",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "7",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "321",
-                        "value": [
-                          " ",
-                          "included in",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "320",
-                        "s": [
-                          {
-                            "r": "318",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalIncludedIn: Interval[3, 7] included in Interval[1, 10]"
                     ]
                   }
                 ]
@@ -1270,22 +703,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "321",
             "locator": "17:28-17:69",
             "operand": [
               {
                 "high": {
-                  "localId": "316",
                   "locator": "17:40",
                   "type": "Literal",
                   "value": "7",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "317",
                 "locator": "17:28-17:41",
                 "low": {
-                  "localId": "315",
                   "locator": "17:37",
                   "type": "Literal",
                   "value": "3",
@@ -1296,17 +725,14 @@
               },
               {
                 "high": {
-                  "localId": "319",
                   "locator": "17:67-17:68",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "320",
                 "locator": "17:55-17:69",
                 "low": {
-                  "localId": "318",
                   "locator": "17:64",
                   "type": "Literal",
                   "value": "1",
@@ -1319,7 +745,6 @@
             "signature": [],
             "type": "IncludedIn"
           },
-          "localId": "314",
           "locator": "17:1-17:69",
           "name": "IntervalIncludedIn"
         },
@@ -1328,57 +753,10 @@
           "annotation": [
             {
               "s": {
-                "r": "326",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ProperIncludes",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "333",
-                    "s": [
-                      {
-                        "r": "329",
-                        "s": [
-                          {
-                            "r": "327",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "333",
-                        "value": [
-                          " ",
-                          "properly includes",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "332",
-                        "s": [
-                          {
-                            "r": "330",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "7",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ProperIncludes: Interval[1, 10] properly includes Interval[3, 7]"
                     ]
                   }
                 ]
@@ -1388,22 +766,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "333",
             "locator": "18:24-18:71",
             "operand": [
               {
                 "high": {
-                  "localId": "328",
                   "locator": "18:36-18:37",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "329",
                 "locator": "18:24-18:38",
                 "low": {
-                  "localId": "327",
                   "locator": "18:33",
                   "type": "Literal",
                   "value": "1",
@@ -1414,17 +788,14 @@
               },
               {
                 "high": {
-                  "localId": "331",
                   "locator": "18:70",
                   "type": "Literal",
                   "value": "7",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "332",
                 "locator": "18:58-18:71",
                 "low": {
-                  "localId": "330",
                   "locator": "18:67",
                   "type": "Literal",
                   "value": "3",
@@ -1437,7 +808,6 @@
             "signature": [],
             "type": "ProperIncludes"
           },
-          "localId": "326",
           "locator": "18:1-18:71",
           "name": "ProperIncludes"
         },
@@ -1446,57 +816,10 @@
           "annotation": [
             {
               "s": {
-                "r": "338",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ProperIncludedIn",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "345",
-                    "s": [
-                      {
-                        "r": "341",
-                        "s": [
-                          {
-                            "r": "339",
-                            "value": [
-                              "Interval[",
-                              "3",
-                              ", ",
-                              "7",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "345",
-                        "value": [
-                          " ",
-                          "properly included in",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "344",
-                        "s": [
-                          {
-                            "r": "342",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ProperIncludedIn: Interval[3, 7] properly included in Interval[1, 10]"
                     ]
                   }
                 ]
@@ -1506,22 +829,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "345",
             "locator": "19:26-19:76",
             "operand": [
               {
                 "high": {
-                  "localId": "340",
                   "locator": "19:38",
                   "type": "Literal",
                   "value": "7",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "341",
                 "locator": "19:26-19:39",
                 "low": {
-                  "localId": "339",
                   "locator": "19:35",
                   "type": "Literal",
                   "value": "3",
@@ -1532,17 +851,14 @@
               },
               {
                 "high": {
-                  "localId": "343",
                   "locator": "19:74-19:75",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "344",
                 "locator": "19:62-19:76",
                 "low": {
-                  "localId": "342",
                   "locator": "19:71",
                   "type": "Literal",
                   "value": "1",
@@ -1555,7 +871,6 @@
             "signature": [],
             "type": "ProperIncludedIn"
           },
-          "localId": "338",
           "locator": "19:1-19:76",
           "name": "ProperIncludedIn"
         },
@@ -1564,39 +879,10 @@
           "annotation": [
             {
               "s": {
-                "r": "350",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalStart",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "351",
-                    "s": [
-                      {
-                        "value": [
-                          "start of "
-                        ]
-                      },
-                      {
-                        "r": "354",
-                        "s": [
-                          {
-                            "r": "352",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalStart: start of Interval[1, 10]"
                     ]
                   }
                 ]
@@ -1606,21 +892,17 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "351",
             "locator": "21:23-21:46",
             "operand": {
               "high": {
-                "localId": "353",
                 "locator": "21:44-21:45",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               "highClosed": true,
-              "localId": "354",
               "locator": "21:32-21:46",
               "low": {
-                "localId": "352",
                 "locator": "21:41",
                 "type": "Literal",
                 "value": "1",
@@ -1632,7 +914,6 @@
             "signature": [],
             "type": "Start"
           },
-          "localId": "350",
           "locator": "21:1-21:46",
           "name": "IntervalStart"
         },
@@ -1641,39 +922,10 @@
           "annotation": [
             {
               "s": {
-                "r": "357",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalEnd",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "358",
-                    "s": [
-                      {
-                        "value": [
-                          "end of "
-                        ]
-                      },
-                      {
-                        "r": "361",
-                        "s": [
-                          {
-                            "r": "359",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalEnd: end of Interval[1, 10]"
                     ]
                   }
                 ]
@@ -1683,21 +935,17 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "358",
             "locator": "22:21-22:42",
             "operand": {
               "high": {
-                "localId": "360",
                 "locator": "22:40-22:41",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               "highClosed": true,
-              "localId": "361",
               "locator": "22:28-22:42",
               "low": {
-                "localId": "359",
                 "locator": "22:37",
                 "type": "Literal",
                 "value": "1",
@@ -1709,7 +957,6 @@
             "signature": [],
             "type": "End"
           },
-          "localId": "357",
           "locator": "22:1-22:42",
           "name": "IntervalEnd"
         },
@@ -1718,39 +965,10 @@
           "annotation": [
             {
               "s": {
-                "r": "364",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "IntervalWidth",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "365",
-                    "s": [
-                      {
-                        "value": [
-                          "width of "
-                        ]
-                      },
-                      {
-                        "r": "368",
-                        "s": [
-                          {
-                            "r": "366",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define IntervalWidth: width of Interval[1, 10]"
                     ]
                   }
                 ]
@@ -1760,21 +978,17 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "365",
             "locator": "23:23-23:46",
             "operand": {
               "high": {
-                "localId": "367",
                 "locator": "23:44-23:45",
                 "type": "Literal",
                 "value": "10",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               "highClosed": true,
-              "localId": "368",
               "locator": "23:32-23:46",
               "low": {
-                "localId": "366",
                 "locator": "23:41",
                 "type": "Literal",
                 "value": "1",
@@ -1786,7 +1000,6 @@
             "signature": [],
             "type": "Width"
           },
-          "localId": "364",
           "locator": "23:1-23:46",
           "name": "IntervalWidth"
         },
@@ -1795,29 +1008,10 @@
           "annotation": [
             {
               "s": {
-                "r": "371",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DateInterval",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "382",
-                    "s": [
-                      {
-                        "r": "376",
-                        "value": [
-                          "Interval[",
-                          "@2020-01-01",
-                          ", ",
-                          "@2020-12-31",
-                          "]"
-                        ]
-                      }
+                      "define DateInterval: Interval[@2020-01-01, @2020-12-31]"
                     ]
                   }
                 ]
@@ -1829,15 +1023,12 @@
           "expression": {
             "high": {
               "day": {
-                "localId": "380",
                 "type": "Literal",
                 "value": "31",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
-              "localId": "381",
               "locator": "25:44-25:54",
               "month": {
-                "localId": "379",
                 "type": "Literal",
                 "value": "12",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1845,26 +1036,21 @@
               "signature": [],
               "type": "Date",
               "year": {
-                "localId": "378",
                 "type": "Literal",
                 "value": "2020",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               }
             },
             "highClosed": true,
-            "localId": "382",
             "locator": "25:22-25:55",
             "low": {
               "day": {
-                "localId": "375",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
-              "localId": "376",
               "locator": "25:31-25:41",
               "month": {
-                "localId": "374",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1872,7 +1058,6 @@
               "signature": [],
               "type": "Date",
               "year": {
-                "localId": "373",
                 "type": "Literal",
                 "value": "2020",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1881,7 +1066,6 @@
             "lowClosed": true,
             "type": "Interval"
           },
-          "localId": "371",
           "locator": "25:1-25:55",
           "name": "DateInterval"
         },
@@ -1890,53 +1074,10 @@
           "annotation": [
             {
               "s": {
-                "r": "385",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DateIntervalBefore",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "403",
-                    "s": [
-                      {
-                        "r": "390",
-                        "value": [
-                          "@2020-06-15",
-                          " ",
-                          "before",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "391",
-                        "s": [
-                          {
-                            "value": [
-                              "end of "
-                            ]
-                          },
-                          {
-                            "r": "402",
-                            "s": [
-                              {
-                                "r": "396",
-                                "value": [
-                                  "Interval[",
-                                  "@2020-01-01",
-                                  ", ",
-                                  "@2020-12-31",
-                                  "]"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      "define DateIntervalBefore: @2020-06-15 before end of Interval[@2020-01-01, @2020-12-31]"
                     ]
                   }
                 ]
@@ -1946,20 +1087,16 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "403",
             "locator": "26:28-26:87",
             "operand": [
               {
                 "day": {
-                  "localId": "389",
                   "type": "Literal",
                   "value": "15",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
-                "localId": "390",
                 "locator": "26:28-26:38",
                 "month": {
-                  "localId": "388",
                   "type": "Literal",
                   "value": "6",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1967,27 +1104,22 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
-                  "localId": "387",
                   "type": "Literal",
                   "value": "2020",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               },
               {
-                "localId": "391",
                 "locator": "26:47-26:87",
                 "operand": {
                   "high": {
                     "day": {
-                      "localId": "400",
                       "type": "Literal",
                       "value": "31",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
-                    "localId": "401",
                     "locator": "26:76-26:86",
                     "month": {
-                      "localId": "399",
                       "type": "Literal",
                       "value": "12",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1995,26 +1127,21 @@
                     "signature": [],
                     "type": "Date",
                     "year": {
-                      "localId": "398",
                       "type": "Literal",
                       "value": "2020",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   },
                   "highClosed": true,
-                  "localId": "402",
                   "locator": "26:54-26:87",
                   "low": {
                     "day": {
-                      "localId": "395",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
-                    "localId": "396",
                     "locator": "26:63-26:73",
                     "month": {
-                      "localId": "394",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -2022,7 +1149,6 @@
                     "signature": [],
                     "type": "Date",
                     "year": {
-                      "localId": "393",
                       "type": "Literal",
                       "value": "2020",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -2038,7 +1164,6 @@
             "signature": [],
             "type": "Before"
           },
-          "localId": "385",
           "locator": "26:1-26:87",
           "name": "DateIntervalBefore"
         },
@@ -2047,53 +1172,10 @@
           "annotation": [
             {
               "s": {
-                "r": "406",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "DateIntervalAfter",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "424",
-                    "s": [
-                      {
-                        "r": "411",
-                        "value": [
-                          "@2020-06-15",
-                          " ",
-                          "after",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "412",
-                        "s": [
-                          {
-                            "value": [
-                              "start of "
-                            ]
-                          },
-                          {
-                            "r": "423",
-                            "s": [
-                              {
-                                "r": "417",
-                                "value": [
-                                  "Interval[",
-                                  "@2020-01-01",
-                                  ", ",
-                                  "@2020-12-31",
-                                  "]"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      "define DateIntervalAfter: @2020-06-15 after start of Interval[@2020-01-01, @2020-12-31]"
                     ]
                   }
                 ]
@@ -2103,20 +1185,16 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "424",
             "locator": "27:27-27:87",
             "operand": [
               {
                 "day": {
-                  "localId": "410",
                   "type": "Literal",
                   "value": "15",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
-                "localId": "411",
                 "locator": "27:27-27:37",
                 "month": {
-                  "localId": "409",
                   "type": "Literal",
                   "value": "6",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -2124,27 +1202,22 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
-                  "localId": "408",
                   "type": "Literal",
                   "value": "2020",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               },
               {
-                "localId": "412",
                 "locator": "27:45-27:87",
                 "operand": {
                   "high": {
                     "day": {
-                      "localId": "421",
                       "type": "Literal",
                       "value": "31",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
-                    "localId": "422",
                     "locator": "27:76-27:86",
                     "month": {
-                      "localId": "420",
                       "type": "Literal",
                       "value": "12",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -2152,26 +1225,21 @@
                     "signature": [],
                     "type": "Date",
                     "year": {
-                      "localId": "419",
                       "type": "Literal",
                       "value": "2020",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   },
                   "highClosed": true,
-                  "localId": "423",
                   "locator": "27:54-27:87",
                   "low": {
                     "day": {
-                      "localId": "416",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
-                    "localId": "417",
                     "locator": "27:63-27:73",
                     "month": {
-                      "localId": "415",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -2179,7 +1247,6 @@
                     "signature": [],
                     "type": "Date",
                     "year": {
-                      "localId": "414",
                       "type": "Literal",
                       "value": "2020",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -2195,7 +1262,6 @@
             "signature": [],
             "type": "After"
           },
-          "localId": "406",
           "locator": "27:1-27:87",
           "name": "DateIntervalAfter"
         },
@@ -2204,57 +1270,10 @@
           "annotation": [
             {
               "s": {
-                "r": "427",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MeetsBefore",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "434",
-                    "s": [
-                      {
-                        "r": "430",
-                        "s": [
-                          {
-                            "r": "428",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "434",
-                        "value": [
-                          " ",
-                          "meets before",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "433",
-                        "s": [
-                          {
-                            "r": "431",
-                            "value": [
-                              "Interval[",
-                              "6",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define MeetsBefore: Interval[1, 5] meets before Interval[6, 10]"
                     ]
                   }
                 ]
@@ -2264,22 +1283,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "434",
             "locator": "29:21-29:63",
             "operand": [
               {
                 "high": {
-                  "localId": "429",
                   "locator": "29:33",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "430",
                 "locator": "29:21-29:34",
                 "low": {
-                  "localId": "428",
                   "locator": "29:30",
                   "type": "Literal",
                   "value": "1",
@@ -2290,17 +1305,14 @@
               },
               {
                 "high": {
-                  "localId": "432",
                   "locator": "29:61-29:62",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "433",
                 "locator": "29:49-29:63",
                 "low": {
-                  "localId": "431",
                   "locator": "29:58",
                   "type": "Literal",
                   "value": "6",
@@ -2313,7 +1325,6 @@
             "signature": [],
             "type": "MeetsBefore"
           },
-          "localId": "427",
           "locator": "29:1-29:63",
           "name": "MeetsBefore"
         },
@@ -2322,57 +1333,10 @@
           "annotation": [
             {
               "s": {
-                "r": "437",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MeetsAfter",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "444",
-                    "s": [
-                      {
-                        "r": "440",
-                        "s": [
-                          {
-                            "r": "438",
-                            "value": [
-                              "Interval[",
-                              "6",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "444",
-                        "value": [
-                          " ",
-                          "meets after",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "443",
-                        "s": [
-                          {
-                            "r": "441",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define MeetsAfter: Interval[6, 10] meets after Interval[1, 5]"
                     ]
                   }
                 ]
@@ -2382,22 +1346,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "444",
             "locator": "30:20-30:61",
             "operand": [
               {
                 "high": {
-                  "localId": "439",
                   "locator": "30:32-30:33",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "440",
                 "locator": "30:20-30:34",
                 "low": {
-                  "localId": "438",
                   "locator": "30:29",
                   "type": "Literal",
                   "value": "6",
@@ -2408,17 +1368,14 @@
               },
               {
                 "high": {
-                  "localId": "442",
                   "locator": "30:60",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "443",
                 "locator": "30:48-30:61",
                 "low": {
-                  "localId": "441",
                   "locator": "30:57",
                   "type": "Literal",
                   "value": "1",
@@ -2431,7 +1388,6 @@
             "signature": [],
             "type": "MeetsAfter"
           },
-          "localId": "437",
           "locator": "30:1-30:61",
           "name": "MeetsAfter"
         },
@@ -2440,57 +1396,10 @@
           "annotation": [
             {
               "s": {
-                "r": "447",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "Meets",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "454",
-                    "s": [
-                      {
-                        "r": "450",
-                        "s": [
-                          {
-                            "r": "448",
-                            "value": [
-                              "Interval[",
-                              "1",
-                              ", ",
-                              "5",
-                              "]"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "454",
-                        "value": [
-                          " ",
-                          "meets",
-                          " "
-                        ]
-                      },
-                      {
-                        "r": "453",
-                        "s": [
-                          {
-                            "r": "451",
-                            "value": [
-                              "Interval[",
-                              "6",
-                              ", ",
-                              "10",
-                              "]"
-                            ]
-                          }
-                        ]
-                      }
+                      "define Meets: Interval[1, 5] meets Interval[6, 10]"
                     ]
                   }
                 ]
@@ -2500,22 +1409,18 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "454",
             "locator": "31:15-31:50",
             "operand": [
               {
                 "high": {
-                  "localId": "449",
                   "locator": "31:27",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "450",
                 "locator": "31:15-31:28",
                 "low": {
-                  "localId": "448",
                   "locator": "31:24",
                   "type": "Literal",
                   "value": "1",
@@ -2526,17 +1431,14 @@
               },
               {
                 "high": {
-                  "localId": "452",
                   "locator": "31:48-31:49",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
-                "localId": "453",
                 "locator": "31:36-31:50",
                 "low": {
-                  "localId": "451",
                   "locator": "31:45",
                   "type": "Literal",
                   "value": "6",
@@ -2549,7 +1451,6 @@
             "signature": [],
             "type": "Meets"
           },
-          "localId": "447",
           "locator": "31:1-31:50",
           "name": "Meets"
         }
@@ -2558,7 +1459,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

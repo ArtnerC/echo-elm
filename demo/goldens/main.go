@@ -58,8 +58,21 @@ func run() error {
 		fmt.Printf("  wrote %d golden file(s)\n", n)
 	}
 
+	// Fixtures marked versionDivergent in corpus.yaml are known to differ
+	// between the pinned upstream versions; they take the newest version's output.
+	corpus, err := parity.LoadCorpus(parity.DefaultConfig("4.8.0").CorpusDir)
+	if err != nil {
+		return fmt.Errorf("load corpus: %w", err)
+	}
+	divergent := make(map[string]bool)
+	for i := range corpus.Fixtures {
+		if corpus.Fixtures[i].VersionDivergent {
+			divergent[corpus.Fixtures[i].Path] = true
+		}
+	}
+
 	fmt.Println("\nComparing versions...")
-	diffs, err := parity.CompareVersionGoldens(goldensDir, ".tmp-3.29.0", ".tmp-4.8.0")
+	diffs, err := parity.CompareVersionGoldens(goldensDir, ".tmp-3.29.0", ".tmp-4.8.0", divergent)
 	if err != nil {
 		return fmt.Errorf("compare error: %w", err)
 	}
@@ -72,7 +85,11 @@ func run() error {
 		return fmt.Errorf("versions diverged — canonical goldens NOT updated")
 	}
 
-	// Versions are identical — collapse to canonical set from 4.8.0 (latest).
+	if len(divergent) > 0 {
+		fmt.Printf("  (%d fixture(s) marked versionDivergent — taking 4.8.0 output)\n", len(divergent))
+	}
+
+	// Versions agree everywhere else — collapse to canonical set from 4.8.0 (latest).
 	fmt.Println("✓ Versions identical — writing canonical set to test/goldens/cqf/")
 	if err := os.RemoveAll(canonical); err != nil {
 		return fmt.Errorf("remove %s: %w", canonical, err)

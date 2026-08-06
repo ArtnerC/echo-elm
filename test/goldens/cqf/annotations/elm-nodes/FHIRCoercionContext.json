@@ -1,0 +1,509 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for the implicit FHIRHelpers coercion rule.\n//\n// CQF inserts the FHIRHelpers conversion where a FHIR value is *consumed* as an\n// operand of a typed operator — not at every property access. A property that is\n// a define body, a query return expression, a list element, or the source of a\n// further navigation keeps its raw FHIR value.\nlibrary FHIRCoercionContext version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "FHIRCoercionContext",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "include FHIRHelpers version '4.0.1'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "parameter \"Measurement Period\" Interval\u003cDateTime\u003e"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "name": "Measurement Period",
+          "parameterTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── unconsumed positions: no conversion ───────────────────────────────────────\n\ndefine \"BareGender\": Patient.gender"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "path": "gender",
+            "source": {
+              "name": "Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "name": "BareGender"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"BareBirthDate\": Patient.birthDate"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "path": "birthDate",
+            "source": {
+              "name": "Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "name": "BareBirthDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"GenderInList\": { Patient.gender }"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "path": "gender",
+                "source": {
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "GenderInList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PeriodAsReturnExpression\": [\"Encounter\"] E return E.period"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "period",
+                "scope": "E",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "PeriodAsReturnExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// E.period is navigated into, so the structure — not a converted Interval — is\n// the source; only the resulting dateTime is converted.\ndefine \"NavigatedPeriodStart\":\n  exists [\"Encounter\"] E where E.period.start during \"Measurement Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "path": "start",
+                        "source": {
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "name": "Measurement Period",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "NavigatedPeriodStart"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── consumed positions: conversion applied ────────────────────────────────────\n\ndefine \"GenderCompared\": Patient.gender = 'female'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "libraryName": "FHIRHelpers",
+                "name": "ToString",
+                "operand": [
+                  {
+                    "path": "gender",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "type": "Literal",
+                "value": "female",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "GenderCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"BirthDateCompared\": Patient.birthDate before @2000-01-01"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "libraryName": "FHIRHelpers",
+                "name": "ToDate",
+                "operand": [
+                  {
+                    "path": "birthDate",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2000",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "signature": [],
+            "type": "Before"
+          },
+          "name": "BirthDateCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"PeriodAsInterval\":\n  exists [\"Encounter\"] E where E.period during \"Measurement Period\""
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "name": "Measurement Period",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "IncludedIn"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "PeriodAsInterval"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "using FHIR version '4.0.1'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

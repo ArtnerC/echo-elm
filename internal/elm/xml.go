@@ -308,7 +308,6 @@ func writeLibraryXML(enc *xml.Encoder, lib *Library) error {
 			for _, cr := range con.Code {
 				crAttrs := []xml.Attr{
 					{Name: xml.Name{Local: "name"}, Value: cr.Name},
-					{Name: xml.Name{Local: "xsi:type"}, Value: "CodeRef"},
 				}
 				if cr.LibraryName != "" {
 					crAttrs = append(crAttrs, xml.Attr{Name: xml.Name{Local: "libraryName"}, Value: cr.LibraryName})

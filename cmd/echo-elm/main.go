@@ -13,13 +13,23 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/mcpserver"
 	"github.com/artnerc/echo-elm/internal/parity"
-	"github.com/artnerc/echo-elm/internal/translator"
+	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/ui"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
 // Version is set at build time via -ldflags.
 var Version = "0.0.0-dev"
+
+// multiFlag collects a repeatable string flag into a slice.
+type multiFlag []string
+
+func (m *multiFlag) String() string { return strings.Join(*m, ",") }
+
+func (m *multiFlag) Set(v string) error {
+	*m = append(*m, v)
+	return nil
+}
 
 func main() {
 	if len(os.Args) < 2 {
@@ -42,6 +52,8 @@ func main() {
 		runUI(os.Args[2:])
 	case "mcp":
 		runMCP(os.Args[2:])
+	case "bundle":
+		runBundle(os.Args[2:])
 	case "parity":
 		runParity(os.Args[2:])
 	default:
@@ -57,6 +69,7 @@ func usage() {
 	fmt.Fprintln(os.Stderr, "  cqf translate    Translate CQL to ELM (cqframework-compatible)")
 	fmt.Fprintln(os.Stderr, "  ui               Start local workbench UI")
 	fmt.Fprintln(os.Stderr, "  mcp              Start MCP server")
+	fmt.Fprintln(os.Stderr, "  bundle           Read/write CQL and ELM in a FHIR Bundle")
 	fmt.Fprintln(os.Stderr, "  parity           Run CQFramework parity harness")
 	fmt.Fprintln(os.Stderr, "  version          Print version")
 }
@@ -67,57 +80,19 @@ func runTranslate(args []string, cqfMode bool) {
 	fs := flag.NewFlagSet("translate", flag.ContinueOnError)
 
 	var (
-		input                   string
-		output                  string
-		format                  string
-		annotations             bool
-		locators                bool
-		sigLevel                string
-		validate                bool
-		disableListDemotion     bool
-		disableListPromotion    bool
-		disableListTraversal    bool
-		disableMethodInvocation bool
-		requireFromKeyword      bool
-		enableIntervalDemotion  bool
-		enableIntervalPromotion bool
-		compatLevel             string
+		input    string
+		output   string
+		format   string
+		validate bool
 	)
+	var libDirs multiFlag
 
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
 	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
 	fs.BoolVar(&validate, "validate", false, "Run structural validation on the serialized ELM before writing it")
-
-	// Default flags differ by mode to match each mode's natural behavior.
-	annotationsDefault := !cqfMode // modern: true, CQF: false (no annotation content without --annotations)
-	locatorsDefault := !cqfMode    // modern: true, CQF: false (no localId without --locators)
-
-	fs.BoolVar(&annotations, "annotations", annotationsDefault, "Emit ELM annotations")
-	fs.BoolVar(&locators, "locators", locatorsDefault, "Emit source locators")
-	fs.BoolVar(&disableListDemotion, "disable-list-demotion", false, "Disable implicit list demotion")
-	fs.BoolVar(&disableListPromotion, "disable-list-promotion", false, "Disable implicit list promotion")
-	fs.BoolVar(&disableListTraversal, "disable-list-traversal", false, "Disable implicit list traversal")
-	fs.BoolVar(&disableMethodInvocation, "disable-method-invocation", false, "Disable method-style invocation syntax")
-	fs.BoolVar(&requireFromKeyword, "require-from-keyword", false, "Require explicit 'from' in queries")
-	fs.BoolVar(&enableIntervalDemotion, "enable-interval-demotion", false, "Enable implicit interval demotion")
-	fs.BoolVar(&enableIntervalPromotion, "enable-interval-promotion", false, "Enable implicit interval promotion")
-
-	if cqfMode {
-		sigLevel = "None"
-		compatLevel = "1.5"
-		fs.StringVar(&sigLevel, "signatures", sigLevel, "Signature level: None|Differing|Overloads|All")
-		fs.StringVar(&compatLevel, "compatibility-level", compatLevel, "Compatibility level: 1.3|1.4|1.5")
-	} else {
-		sigLevel = "Overloads"
-		compatLevel = "1.5"
-		fs.StringVar(&sigLevel, "signatures", sigLevel, "Signature level: None|Differing|Overloads|All")
-		fs.StringVar(&compatLevel, "compatibility-level", compatLevel, "Compatibility level: 1.3|1.4|1.5")
-	}
-
-	// --strict expands: disable-list-traversal + demotion + promotion + method-invocation + require-from-keyword
-	var strict bool
-	fs.BoolVar(&strict, "strict", false, "Strict mode (disables list traversal, demotion, promotion, method invocation; requires from keyword)")
+	fs.Var(&libDirs, "lib-dir", "Additional directory to search for included CQL libraries (repeatable; the input file's own directory is always searched)")
+	tf := registerTranslatorFlags(fs, cqfMode)
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
@@ -134,29 +109,18 @@ func runTranslate(args []string, cqfMode bool) {
 		os.Exit(1)
 	}
 
+	// Includes resolve from the input file's own directory first (matching the
+	// CQF CLI), then from any --lib-dir directories in the order given.
+	searchDirs := append([]string{filepath.Dir(input)}, libDirs...)
+	sources := make([]echoelm.LibrarySource, 0, len(searchDirs))
+	for _, dir := range searchDirs {
+		sources = append(sources, resolver.NewDirSource(dir))
+	}
+
 	opts := []echoelm.Option{
-		echoelm.WithAnnotations(annotations),
-		echoelm.WithLocators(locators),
-		echoelm.WithSignatureLevel(sigLevel),
+		echoelm.WithOptions(tf.options()),
 		echoelm.WithCQFMode(cqfMode),
-		echoelm.WithIntervalDemotion(enableIntervalDemotion),
-		echoelm.WithIntervalPromotion(enableIntervalPromotion),
-		func(o *translator.Options) {
-			if strict {
-				o.DisableListTraversal = true
-				o.DisableListDemotion = true
-				o.DisableListPromotion = true
-				o.DisableMethodInvocation = true
-				o.RequireFromKeyword = true
-			} else {
-				o.DisableListDemotion = disableListDemotion
-				o.DisableListPromotion = disableListPromotion
-				o.DisableListTraversal = disableListTraversal
-				o.DisableMethodInvocation = disableMethodInvocation
-				o.RequireFromKeyword = requireFromKeyword
-			}
-			o.CompatibilityLevel = compatLevel
-		},
+		echoelm.WithLibrarySource(resolver.NewMultiSource(sources...)),
 	}
 
 	result, err := echoelm.Translate(src, filepath.Base(input), opts...)
@@ -297,6 +261,10 @@ func runParity(args []string) {
 		tag        string
 		outDir     string
 		runID      string
+		refDir     string
+		parityLib  string
+		profile    string
+		bundlePath string
 	)
 	fs.StringVar(&cqfVersion, "cqf-version", "4.8.0", "CQFramework version to compare against: 3.29.0|4.8.0")
 	fs.StringVar(&corpus, "corpus", "test/corpus/cqframework", "Corpus directory containing corpus.yaml")
@@ -304,6 +272,10 @@ func runParity(args []string) {
 	fs.StringVar(&tag, "tag", "", "Run only fixtures with this tag (default: all)")
 	fs.StringVar(&outDir, "out", "", "Output directory for report.json and report.md (default: parity/runs/<id>)")
 	fs.StringVar(&runID, "run-id", "", "Run identifier (default: timestamp)")
+	fs.StringVar(&refDir, "ref-dir", "", "Read reference ELM from <ref-dir>/<profile>/<fixture>.json instead of running the CQF JAR")
+	fs.StringVar(&parityLib, "lib-dir", "", "Additional directory to search for included CQL libraries")
+	fs.StringVar(&profile, "profile", "", "Run only fixtures under this option profile (default: all)")
+	fs.StringVar(&bundlePath, "bundle", "", "Compare against the ELM inside a FHIR Bundle, taking its libraries as the corpus")
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
@@ -317,13 +289,42 @@ func runParity(args []string) {
 	}
 
 	cfg := parity.Config{
-		CQFVersion: cqfVersion,
-		ToolsDir:   toolsDir,
-		CorpusDir:  corpus,
-		TagFilter:  tag,
+		CQFVersion:    cqfVersion,
+		ToolsDir:      toolsDir,
+		CorpusDir:     corpus,
+		TagFilter:     tag,
+		ProfileFilter: profile,
+		RefDir:        refDir,
+		LibDir:        parityLib,
+	}
+	label := referenceLabel(cqfVersion, refDir)
+
+	// --bundle lays the bundle out as a corpus and compares against the ELM it
+	// already carries, which is the extract-then-compare workflow in one step.
+	// The extracted corpus is removed once the run is done. Cleanup is not
+	// deferred: several paths below end in os.Exit, which would skip it.
+	var bundleWorkDir string
+	if bundlePath != "" {
+		workDir, err := os.MkdirTemp("", "echo-elm-bundle-")
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(1)
+		}
+		bundleWorkDir = workDir
+
+		bundleCfg, err := parity.MaterializeBundle(loadBundle(bundlePath), workDir, profile)
+		if err != nil {
+			_ = os.RemoveAll(workDir)
+			fmt.Fprintf(os.Stderr, "error: %v\n", err)
+			os.Exit(1)
+		}
+		bundleCfg.TagFilter = tag
+		cfg = bundleCfg
+		corpus = bundlePath
+		label = "bundle=" + filepath.Base(bundlePath)
 	}
 
-	fmt.Fprintf(os.Stderr, "echo-elm parity  run=%s  cqf=%s  corpus=%s\n", runID, cqfVersion, corpus)
+	fmt.Fprintf(os.Stderr, "echo-elm parity  run=%s  %s  corpus=%s\n", runID, label, corpus)
 
 	results, err := parity.Run(cfg, func(cqlPath string) ([]byte, error) {
 		data, err := os.ReadFile(cqlPath)
@@ -338,6 +339,9 @@ func runParity(args []string) {
 		}
 		return json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
 	})
+	if bundleWorkDir != "" {
+		_ = os.RemoveAll(bundleWorkDir)
+	}
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error: %v\n", err)
 		os.Exit(1)
@@ -388,4 +392,12 @@ func resolveOutput(input, output, format string) string {
 		return filepath.Join(output, base+ext)
 	}
 	return output
+}
+
+// referenceLabel names where a parity run takes its reference ELM from.
+func referenceLabel(cqfVersion, refDir string) string {
+	if refDir != "" {
+		return "ref-dir=" + refDir
+	}
+	return "cqf=" + cqfVersion
 }

@@ -1,0 +1,690 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "QueryClauses",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "element": [
+              {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "score",
+                    "value": {
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "p",
+                    "value": {
+                      "high": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "2",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              },
+              {
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "score",
+                    "value": {
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  },
+                  {
+                    "name": "p",
+                    "value": {
+                      "high": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "4",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "day": {
+                          "type": "Literal",
+                          "value": "1",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "month": {
+                          "type": "Literal",
+                          "value": "3",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        "signature": [],
+                        "type": "Date",
+                        "year": {
+                          "type": "Literal",
+                          "value": "2024",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  }
+                ],
+                "type": "Tuple"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "Items"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "path": "score",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByColumn"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "desc",
+                  "path": "score",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByColumnDesc"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "score",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "type": "ByDirection"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByDirectionOnly"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "path": "id",
+                  "type": "ByColumn"
+                },
+                {
+                  "direction": "desc",
+                  "path": "score",
+                  "type": "ByColumn"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByMultipleKeys"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "expression": {
+                    "operand": {
+                      "name": "p",
+                      "type": "IdentifierRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "type": "ByExpression"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "p",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "sort": {
+              "by": [
+                {
+                  "direction": "asc",
+                  "expression": {
+                    "operand": {
+                      "name": "$this",
+                      "type": "IdentifierRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "type": "ByExpression"
+                }
+              ]
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "SortByThis"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Total",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              "identifier": "Total",
+              "starting": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateStartingLiteral"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "name": "Acc",
+                "type": "QueryLetRef"
+              },
+              "identifier": "Acc",
+              "starting": {
+                "type": "Literal",
+                "value": "x",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateStartingString"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Total",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              "identifier": "Total",
+              "starting": {
+                "operand": [
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateStartingExpression"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "distinct": false,
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Acc",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              "identifier": "Acc",
+              "starting": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateAll"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "aggregate": {
+              "distinct": true,
+              "expression": {
+                "operand": [
+                  {
+                    "name": "Acc",
+                    "type": "QueryLetRef"
+                  },
+                  {
+                    "path": "score",
+                    "scope": "I",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              "identifier": "Acc",
+              "starting": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AggregateDistinct"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [
+              {
+                "expression": {
+                  "path": "score",
+                  "scope": "I",
+                  "type": "Property"
+                },
+                "identifier": "s"
+              }
+            ],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "name": "s",
+                "type": "QueryLetRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "name": "s",
+                  "type": "QueryLetRef"
+                },
+                {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "name": "LetClause"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "distinct": true,
+              "expression": {
+                "path": "id",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "ReturnDistinct"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "distinct": false,
+              "expression": {
+                "path": "id",
+                "scope": "I",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "I",
+                "expression": {
+                  "name": "Items",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "ReturnAll"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

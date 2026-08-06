@@ -2,16 +2,16 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "307",
           "s": [
             {
               "value": [
-                "// Test Comment\n",
-                "library TestComments"
+                "// Test Comment\nlibrary TestComments"
               ]
             }
           ]
@@ -26,15 +26,10 @@
           "annotation": [
             {
               "s": {
-                "r": "210",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "codesystem ",
-                      "\"LOINC\"",
-                      ": ",
-                      "'http://loinc.org'"
+                      "// Test Comment\ncodesystem \"LOINC\": 'http://loinc.org'"
                     ]
                   }
                 ]
@@ -43,7 +38,6 @@
             }
           ],
           "id": "http://loinc.org",
-          "localId": "210",
           "name": "LOINC"
         }
       ]
@@ -55,32 +49,10 @@
           "annotation": [
             {
               "s": {
-                "r": "220",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "code ",
-                      "\"Blood Pressure\"",
-                      ": ",
-                      "'55284-4'",
-                      " from "
-                    ]
-                  },
-                  {
-                    "r": "221",
-                    "s": [
-                      {
-                        "value": [
-                          "\"LOINC\""
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "value": [
-                      " display ",
-                      "'Blood pressure'"
+                      "// Test Comment\ncode \"Blood Pressure\": '55284-4' from \"LOINC\" display 'Blood pressure'"
                     ]
                   }
                 ]
@@ -89,12 +61,10 @@
             }
           ],
           "codeSystem": {
-            "localId": "221",
             "name": "LOINC"
           },
           "display": "Blood pressure",
           "id": "55284-4",
-          "localId": "220",
           "name": "Blood Pressure"
         },
         {
@@ -102,32 +72,10 @@
           "annotation": [
             {
               "s": {
-                "r": "223",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "code ",
-                      "\"Systolic Blood Pressure\"",
-                      ": ",
-                      "'8480-6'",
-                      " from "
-                    ]
-                  },
-                  {
-                    "r": "224",
-                    "s": [
-                      {
-                        "value": [
-                          "\"LOINC\""
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "value": [
-                      " display ",
-                      "'Systolic blood pressure'"
+                      "code \"Systolic Blood Pressure\": '8480-6' from \"LOINC\" display 'Systolic blood pressure'"
                     ]
                   }
                 ]
@@ -136,12 +84,10 @@
             }
           ],
           "codeSystem": {
-            "localId": "224",
             "name": "LOINC"
           },
           "display": "Systolic blood pressure",
           "id": "8480-6",
-          "localId": "223",
           "name": "Systolic Blood Pressure"
         },
         {
@@ -149,32 +95,10 @@
           "annotation": [
             {
               "s": {
-                "r": "226",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "code ",
-                      "\"Diastolic Blood Pressure\"",
-                      ": ",
-                      "'8462-4'",
-                      " from "
-                    ]
-                  },
-                  {
-                    "r": "227",
-                    "s": [
-                      {
-                        "value": [
-                          "\"LOINC\""
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "value": [
-                      " display ",
-                      "'Diastolic blood pressure'"
+                      "code \"Diastolic Blood Pressure\": '8462-4' from \"LOINC\" display 'Diastolic blood pressure'"
                     ]
                   }
                 ]
@@ -183,12 +107,10 @@
             }
           ],
           "codeSystem": {
-            "localId": "227",
             "name": "LOINC"
           },
           "display": "Diastolic blood pressure",
           "id": "8462-4",
-          "localId": "226",
           "name": "Diastolic Blood Pressure"
         }
       ]
@@ -196,7 +118,6 @@
     "contexts": {
       "def": [
         {
-          "localId": "236",
           "name": "Patient"
         }
       ]
@@ -210,27 +131,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "include "
-                    ]
-                  },
-                  {
-                    "s": [
-                      {
-                        "value": [
-                          "FHIRHelpers"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "value": [
-                      " version ",
-                      "'4.0.1'"
+                      "// Test Comment\ninclude FHIRHelpers version '4.0.1'"
                     ]
                   }
                 ]
@@ -238,14 +142,12 @@
               "type": "Annotation"
             }
           ],
-          "localId": "208",
           "localIdentifier": "FHIRHelpers",
           "path": "FHIRHelpers",
           "version": "4.0.1"
         }
       ]
     },
-    "localId": "0",
     "parameters": {
       "def": [
         {
@@ -253,39 +155,10 @@
           "annotation": [
             {
               "s": {
-                "r": "229",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "parameter ",
-                      "MeasurementPeriod",
-                      " "
-                    ]
-                  },
-                  {
-                    "r": "230",
-                    "s": [
-                      {
-                        "value": [
-                          "Interval\u003c"
-                        ]
-                      },
-                      {
-                        "r": "231",
-                        "s": [
-                          {
-                            "value": [
-                              "DateTime"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          "\u003e"
-                        ]
-                      }
+                      "// Test Comment\nparameter MeasurementPeriod Interval\u003cDateTime\u003e"
                     ]
                   }
                 ]
@@ -293,12 +166,9 @@
               "type": "Annotation"
             }
           ],
-          "localId": "229",
           "name": "MeasurementPeriod",
           "parameterTypeSpecifier": {
-            "localId": "230",
             "pointType": {
-              "localId": "231",
               "name": "{urn:hl7-org:elm-types:r1}DateTime",
               "type": "NamedTypeSpecifier"
             },
@@ -316,13 +186,11 @@
         {
           "context": "Patient",
           "expression": {
-            "localId": "235",
             "operand": {
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
               "include": [],
-              "localId": "233",
               "otherFilter": [],
               "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
               "type": "Retrieve"
@@ -330,7 +198,6 @@
             "signature": [],
             "type": "SingletonFrom"
           },
-          "localId": "234",
           "name": "Patient"
         },
         {
@@ -338,184 +205,10 @@
           "annotation": [
             {
               "s": {
-                "r": "239",
                 "s": [
                   {
                     "value": [
-                      "/*\n@author: Chopin\n@description: Defines whether the patient is included in the initial population\n*/\n",
-                      "define ",
-                      "InInitialPopulation",
-                      ":\n  "
-                    ]
-                  },
-                  {
-                    "r": "240",
-                    "s": [
-                      {
-                        "r": "241",
-                        "s": [
-                          {
-                            "r": "242",
-                            "s": [
-                              {
-                                "r": "251",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "AgeInYearsAt",
-                                      "("
-                                    ]
-                                  },
-                                  {
-                                    "r": "243",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "start of "
-                                        ]
-                                      },
-                                      {
-                                        "r": "244",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "MeasurementPeriod"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "value": [
-                                      ")"
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "r": "252",
-                                "value": [
-                                  " ",
-                                  "\u003e=",
-                                  " ",
-                                  "16"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              "\n    // Test in the middle\n    and "
-                            ]
-                          },
-                          {
-                            "r": "253",
-                            "s": [
-                              {
-                                "r": "262",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "AgeInYearsAt",
-                                      "("
-                                    ]
-                                  },
-                                  {
-                                    "r": "254",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "start of "
-                                        ]
-                                      },
-                                      {
-                                        "r": "255",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "MeasurementPeriod"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "value": [
-                                      ")"
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "r": "263",
-                                "value": [
-                                  " ",
-                                  "\u003c",
-                                  " ",
-                                  "24"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          "\n    /* Test multi-line in the middle */\n    and "
-                        ]
-                      },
-                      {
-                        "r": "267",
-                        "s": [
-                          {
-                            "r": "265",
-                            "s": [
-                              {
-                                "r": "264",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "Patient"
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "value": [
-                                  "."
-                                ]
-                              },
-                              {
-                                "r": "265",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "gender"
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              " in "
-                            ]
-                          },
-                          {
-                            "r": "266",
-                            "s": [
-                              {
-                                "value": [
-                                  "\"Female Administrative Sex\""
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      "/*\n@author: Chopin\n@description: Defines whether the patient is included in the initial population\n*/\ndefine InInitialPopulation:\n  AgeInYearsAt(start of MeasurementPeriod) \u003e= 16\n    // Test in the middle\n    and AgeInYearsAt(start of MeasurementPeriod) \u003c 24\n    /* Test multi-line in the middle */\n    and Patient.gender in \"Female Administrative Sex\""
                     ]
                   }
                 ]
@@ -535,24 +228,17 @@
           ],
           "context": "Patient",
           "expression": {
-            "localId": "240",
             "operand": [
               {
-                "localId": "241",
                 "operand": [
                   {
-                    "localId": "242",
                     "operand": [
                       {
-                        "localId": "251",
                         "operand": [
                           {
-                            "localId": "250",
                             "operand": {
-                              "localId": "248",
                               "path": "birthDate.value",
                               "source": {
-                                "localId": "247",
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -562,9 +248,7 @@
                             "type": "ToDateTime"
                           },
                           {
-                            "localId": "243",
                             "operand": {
-                              "localId": "244",
                               "name": "MeasurementPeriod",
                               "type": "ParameterRef"
                             },
@@ -577,7 +261,6 @@
                         "type": "CalculateAgeAt"
                       },
                       {
-                        "localId": "252",
                         "type": "Literal",
                         "value": "16",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -587,18 +270,13 @@
                     "type": "GreaterOrEqual"
                   },
                   {
-                    "localId": "253",
                     "operand": [
                       {
-                        "localId": "262",
                         "operand": [
                           {
-                            "localId": "261",
                             "operand": {
-                              "localId": "259",
                               "path": "birthDate.value",
                               "source": {
-                                "localId": "258",
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -608,9 +286,7 @@
                             "type": "ToDateTime"
                           },
                           {
-                            "localId": "254",
                             "operand": {
-                              "localId": "255",
                               "name": "MeasurementPeriod",
                               "type": "ParameterRef"
                             },
@@ -623,7 +299,6 @@
                         "type": "CalculateAgeAt"
                       },
                       {
-                        "localId": "263",
                         "type": "Literal",
                         "value": "24",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -639,14 +314,11 @@
               {
                 "code": {
                   "libraryName": "FHIRHelpers",
-                  "localId": "268",
                   "name": "ToString",
                   "operand": [
                     {
-                      "localId": "265",
                       "path": "gender",
                       "source": {
-                        "localId": "264",
                         "name": "Patient",
                         "type": "ExpressionRef"
                       },
@@ -656,11 +328,9 @@
                   "signature": [],
                   "type": "FunctionRef"
                 },
-                "localId": "267",
                 "signature": [],
                 "type": "InValueSet",
                 "valueset": {
-                  "localId": "266",
                   "name": "Female Administrative Sex",
                   "preserve": true
                 }
@@ -669,7 +339,6 @@
             "signature": [],
             "type": "And"
           },
-          "localId": "239",
           "name": "InInitialPopulation"
         },
         {
@@ -677,123 +346,10 @@
           "annotation": [
             {
               "s": {
-                "r": "269",
                 "s": [
                   {
                     "value": [
-                      "/*\n@author: Beethoven\n@description: Determines the cumulative duration of a list of intervals\n@comment: #This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#\n */\n",
-                      "define function CumulativeDuration(Intervals List\u003cInterval\u003cDateTime\u003e\u003e):\n  "
-                    ]
-                  },
-                  {
-                    "r": "289",
-                    "s": [
-                      {
-                        "r": "289",
-                        "s": [
-                          {
-                            "value": [
-                              "Sum",
-                              "("
-                            ]
-                          },
-                          {
-                            "r": "286",
-                            "s": [
-                              {
-                                "s": [
-                                  {
-                                    "r": "276",
-                                    "s": [
-                                      {
-                                        "r": "279",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "("
-                                            ]
-                                          },
-                                          {
-                                            "r": "279",
-                                            "s": [
-                                              {
-                                                "value": [
-                                                  "collapse "
-                                                ]
-                                              },
-                                              {
-                                                "r": "277",
-                                                "s": [
-                                                  {
-                                                    "value": [
-                                                      "Intervals"
-                                                    ]
-                                                  }
-                                                ]
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "value": [
-                                              ")"
-                                            ]
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "value": [
-                                          " ",
-                                          "X"
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "value": [
-                                  " "
-                                ]
-                              },
-                              {
-                                "r": "281",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "return all "
-                                    ]
-                                  },
-                                  {
-                                    "r": "285",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "duration in days of "
-                                        ]
-                                      },
-                                      {
-                                        "r": "282",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "X"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ")"
-                            ]
-                          }
-                        ]
-                      }
+                      "/*\n@author: Beethoven\n@description: Determines the cumulative duration of a list of intervals\n@comment: #This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#\n */\ndefine function CumulativeDuration(Intervals List\u003cInterval\u003cDateTime\u003e\u003e):\n  Sum((collapse Intervals) X return all duration in days of X)"
                     ]
                   }
                 ]
@@ -804,12 +360,12 @@
                   "value": "Beethoven"
                 },
                 {
-                  "name": "description",
-                  "value": "Determines the cumulative duration of a list of intervals"
-                },
-                {
                   "name": "comment",
                   "value": "#This function collapses the input intervals prior to determining the cumulative duration\nto ensure overlapping intervals do not contribute multiple times to the result#"
+                },
+                {
+                  "name": "description",
+                  "value": "Determines the cumulative duration of a list of intervals"
                 }
               ],
               "type": "Annotation"
@@ -817,21 +373,16 @@
           ],
           "context": "Patient",
           "expression": {
-            "localId": "289",
             "signature": [],
             "source": {
               "let": [],
-              "localId": "286",
               "relationship": [],
               "return": {
                 "distinct": false,
                 "expression": {
-                  "localId": "285",
                   "operand": [
                     {
-                      "localId": "283",
                       "operand": {
-                        "localId": "282",
                         "name": "X",
                         "type": "AliasRef"
                       },
@@ -839,9 +390,7 @@
                       "type": "Start"
                     },
                     {
-                      "localId": "284",
                       "operand": {
-                        "localId": "282",
                         "name": "X",
                         "type": "AliasRef"
                       },
@@ -852,52 +401,42 @@
                   "precision": "Day",
                   "signature": [],
                   "type": "DurationBetween"
-                },
-                "localId": "281"
+                }
               },
               "source": [
                 {
                   "alias": "X",
                   "expression": {
-                    "localId": "279",
                     "operand": [
                       {
-                        "localId": "277",
                         "name": "Intervals",
                         "type": "OperandRef"
                       },
                       {
-                        "localId": "278",
                         "type": "Null"
                       }
                     ],
                     "signature": [],
                     "type": "Collapse"
-                  },
-                  "localId": "276"
+                  }
                 }
               ],
               "type": "Query"
             },
             "type": "Sum"
           },
-          "localId": "269",
           "name": "CumulativeDuration",
           "operand": [
             {
-              "localId": "273",
               "name": "Intervals",
               "operandTypeSpecifier": {
                 "elementType": {
-                  "localId": "271",
                   "pointType": {
-                    "localId": "272",
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
                   "type": "IntervalTypeSpecifier"
                 },
-                "localId": "270",
                 "type": "ListTypeSpecifier"
               }
             }
@@ -909,149 +448,10 @@
           "annotation": [
             {
               "s": {
-                "r": "292",
                 "s": [
                   {
                     "value": [
-                      "/* Multi-line works fine */\n// Single-line comment does not work\n",
-                      "define ",
-                      "\"boolIpp\"",
-                      ":\n  "
-                    ]
-                  },
-                  {
-                    "r": "293",
-                    "s": [
-                      {
-                        "value": [
-                          "exists "
-                        ]
-                      },
-                      {
-                        "r": "304",
-                        "s": [
-                          {
-                            "s": [
-                              {
-                                "r": "294",
-                                "s": [
-                                  {
-                                    "r": "295",
-                                    "s": [
-                                      {
-                                        "r": "295",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "[",
-                                              "\"Encounter\"",
-                                              "]"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "value": [
-                                      " ",
-                                      "E"
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              " "
-                            ]
-                          },
-                          {
-                            "r": "302",
-                            "s": [
-                              {
-                                "value": [
-                                  "where "
-                                ]
-                              },
-                              {
-                                "r": "302",
-                                "s": [
-                                  {
-                                    "r": "299",
-                                    "s": [
-                                      {
-                                        "r": "298",
-                                        "s": [
-                                          {
-                                            "r": "297",
-                                            "s": [
-                                              {
-                                                "value": [
-                                                  "E"
-                                                ]
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "value": [
-                                              "."
-                                            ]
-                                          },
-                                          {
-                                            "r": "298",
-                                            "s": [
-                                              {
-                                                "value": [
-                                                  "period"
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "value": [
-                                          "."
-                                        ]
-                                      },
-                                      {
-                                        "r": "299",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "start"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "r": "302",
-                                    "value": [
-                                      " ",
-                                      "during",
-                                      " "
-                                    ]
-                                  },
-                                  {
-                                    "r": "300",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "MeasurementPeriod"
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      "/* Multi-line works fine */\n// Single-line comment does not work\ndefine \"boolIpp\":\n  exists [\"Encounter\"] E where E.period.start during MeasurementPeriod"
                     ]
                   }
                 ]
@@ -1061,10 +461,8 @@
           ],
           "context": "Patient",
           "expression": {
-            "localId": "293",
             "operand": {
               "let": [],
-              "localId": "304",
               "relationship": [],
               "source": [
                 {
@@ -1074,28 +472,22 @@
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
                     "include": [],
-                    "localId": "295",
                     "otherFilter": [],
                     "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
                     "type": "Retrieve"
-                  },
-                  "localId": "294"
+                  }
                 }
               ],
               "type": "Query",
               "where": {
-                "localId": "302",
                 "operand": [
                   {
                     "libraryName": "FHIRHelpers",
-                    "localId": "303",
                     "name": "ToDateTime",
                     "operand": [
                       {
-                        "localId": "299",
                         "path": "start",
                         "source": {
-                          "localId": "298",
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -1107,7 +499,6 @@
                     "type": "FunctionRef"
                   },
                   {
-                    "localId": "300",
                     "name": "MeasurementPeriod",
                     "type": "ParameterRef"
                   }
@@ -1119,7 +510,6 @@
             "signature": [],
             "type": "Exists"
           },
-          "localId": "292",
           "name": "boolIpp"
         },
         {
@@ -1127,149 +517,10 @@
           "annotation": [
             {
               "s": {
-                "r": "307",
                 "s": [
                   {
                     "value": [
-                      "// Unmixed single-line comment works\n",
-                      "define ",
-                      "\"singleLineCommentTest\"",
-                      ":\n  "
-                    ]
-                  },
-                  {
-                    "r": "308",
-                    "s": [
-                      {
-                        "value": [
-                          "exists "
-                        ]
-                      },
-                      {
-                        "r": "319",
-                        "s": [
-                          {
-                            "s": [
-                              {
-                                "r": "309",
-                                "s": [
-                                  {
-                                    "r": "310",
-                                    "s": [
-                                      {
-                                        "r": "310",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "[",
-                                              "\"Encounter\"",
-                                              "]"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "value": [
-                                      " ",
-                                      "E"
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              " "
-                            ]
-                          },
-                          {
-                            "r": "317",
-                            "s": [
-                              {
-                                "value": [
-                                  "where "
-                                ]
-                              },
-                              {
-                                "r": "317",
-                                "s": [
-                                  {
-                                    "r": "314",
-                                    "s": [
-                                      {
-                                        "r": "313",
-                                        "s": [
-                                          {
-                                            "r": "312",
-                                            "s": [
-                                              {
-                                                "value": [
-                                                  "E"
-                                                ]
-                                              }
-                                            ]
-                                          },
-                                          {
-                                            "value": [
-                                              "."
-                                            ]
-                                          },
-                                          {
-                                            "r": "313",
-                                            "s": [
-                                              {
-                                                "value": [
-                                                  "period"
-                                                ]
-                                              }
-                                            ]
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "value": [
-                                          "."
-                                        ]
-                                      },
-                                      {
-                                        "r": "314",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "start"
-                                            ]
-                                          }
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "r": "317",
-                                    "value": [
-                                      " ",
-                                      "during",
-                                      " "
-                                    ]
-                                  },
-                                  {
-                                    "r": "315",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "\"MeasurementPeriod\""
-                                        ]
-                                      }
-                                    ]
-                                  }
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      }
+                      "// Unmixed single-line comment works\ndefine \"singleLineCommentTest\":\n  exists [\"Encounter\"] E where E.period.start during \"MeasurementPeriod\""
                     ]
                   }
                 ]
@@ -1279,10 +530,8 @@
           ],
           "context": "Patient",
           "expression": {
-            "localId": "308",
             "operand": {
               "let": [],
-              "localId": "319",
               "relationship": [],
               "source": [
                 {
@@ -1292,28 +541,22 @@
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
                     "include": [],
-                    "localId": "310",
                     "otherFilter": [],
                     "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
                     "type": "Retrieve"
-                  },
-                  "localId": "309"
+                  }
                 }
               ],
               "type": "Query",
               "where": {
-                "localId": "317",
                 "operand": [
                   {
                     "libraryName": "FHIRHelpers",
-                    "localId": "318",
                     "name": "ToDateTime",
                     "operand": [
                       {
-                        "localId": "314",
                         "path": "start",
                         "source": {
-                          "localId": "313",
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -1325,7 +568,6 @@
                     "type": "FunctionRef"
                   },
                   {
-                    "localId": "315",
                     "name": "MeasurementPeriod",
                     "type": "ParameterRef"
                   }
@@ -1337,7 +579,6 @@
             "signature": [],
             "type": "Exists"
           },
-          "localId": "307",
           "name": "singleLineCommentTest"
         }
       ]
@@ -1345,7 +586,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
@@ -1353,26 +593,10 @@
           "annotation": [
             {
               "s": {
-                "r": "206",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "using "
-                    ]
-                  },
-                  {
-                    "s": [
-                      {
-                        "value": [
-                          "FHIR"
-                        ]
-                      }
-                    ]
-                  },
-                  {
-                    "value": [
-                      " version '4.0.1'"
+                      "// Test Comment\nusing FHIR version '4.0.1'"
                     ]
                   }
                 ]
@@ -1380,7 +604,6 @@
               "type": "Annotation"
             }
           ],
-          "localId": "206",
           "localIdentifier": "FHIR",
           "uri": "http://hl7.org/fhir",
           "version": "4.0.1"
@@ -1394,15 +617,10 @@
           "annotation": [
             {
               "s": {
-                "r": "212",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "valueset ",
-                      "\"Acute Pharyngitis\"",
-                      ": ",
-                      "'urn:oid:2.16.840.1.113883.3.464.1003.102.12.1011'"
+                      "// Test Comment\nvalueset \"Acute Pharyngitis\": 'urn:oid:2.16.840.1.113883.3.464.1003.102.12.1011'"
                     ]
                   }
                 ]
@@ -1412,7 +630,6 @@
           ],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.102.12.1011",
-          "localId": "212",
           "name": "Acute Pharyngitis"
         },
         {
@@ -1420,15 +637,10 @@
           "annotation": [
             {
               "s": {
-                "r": "214",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "valueset ",
-                      "\"Acute Tonsillitis\"",
-                      ": ",
-                      "'urn:oid:2.16.840.1.113883.3.464.1003.102.12.1012'"
+                      "// Test Comment\nvalueset \"Acute Tonsillitis\": 'urn:oid:2.16.840.1.113883.3.464.1003.102.12.1012'"
                     ]
                   }
                 ]
@@ -1438,7 +650,6 @@
           ],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.102.12.1012",
-          "localId": "214",
           "name": "Acute Tonsillitis"
         },
         {
@@ -1446,15 +657,10 @@
           "annotation": [
             {
               "s": {
-                "r": "216",
                 "s": [
                   {
                     "value": [
-                      "// Test Comment\n",
-                      "valueset ",
-                      "\"Ambulatory/ED Visit\"",
-                      ": ",
-                      "'urn:oid:2.16.840.1.113883.3.464.1003.101.12.1061'"
+                      "// Test Comment\nvalueset \"Ambulatory/ED Visit\": 'urn:oid:2.16.840.1.113883.3.464.1003.101.12.1061'"
                     ]
                   }
                 ]
@@ -1464,7 +670,6 @@
           ],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.101.12.1061",
-          "localId": "216",
           "name": "Ambulatory/ED Visit"
         },
         {
@@ -1472,15 +677,10 @@
           "annotation": [
             {
               "s": {
-                "r": "218",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "valueset ",
-                      "\"Female Administrative Sex\"",
-                      ": ",
-                      "'urn:oid:2.16.840.1.113883.3.560.100.2'"
+                      "valueset \"Female Administrative Sex\": 'urn:oid:2.16.840.1.113883.3.560.100.2'"
                     ]
                   }
                 ]
@@ -1490,7 +690,6 @@
           ],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.560.100.2",
-          "localId": "218",
           "name": "Female Administrative Sex"
         }
       ]

@@ -2,15 +2,15 @@
   "library": {
     "annotation": [
       {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
         "type": "CqlToElmInfo"
       },
       {
         "s": {
-          "r": "512",
           "s": [
             {
               "value": [
-                "",
                 "library ListOperationsTest"
               ]
             }
@@ -22,7 +22,6 @@
     "identifier": {
       "id": "ListOperationsTest"
     },
-    "localId": "0",
     "schemaIdentifier": {
       "id": "urn:hl7-org:elm",
       "version": "r1"
@@ -34,35 +33,10 @@
           "annotation": [
             {
               "s": {
-                "r": "208",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MyList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "209",
-                    "s": [
-                      {
-                        "r": "210",
-                        "value": [
-                          "{",
-                          "1",
-                          ", ",
-                          "2",
-                          ", ",
-                          "3",
-                          ", ",
-                          "4",
-                          ", ",
-                          "5",
-                          "}"
-                        ]
-                      }
+                      "define MyList: {1, 2, 3, 4, 5}"
                     ]
                   }
                 ]
@@ -74,40 +48,33 @@
           "expression": {
             "element": [
               {
-                "localId": "210",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "211",
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "212",
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "213",
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "214",
                 "type": "Literal",
                 "value": "5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               }
             ],
-            "localId": "209",
             "type": "List"
           },
-          "localId": "208",
           "name": "MyList"
         },
         {
@@ -115,50 +82,10 @@
           "annotation": [
             {
               "s": {
-                "r": "217",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "TypedList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "219",
-                    "s": [
-                      {
-                        "value": [
-                          "List\u003c"
-                        ]
-                      },
-                      {
-                        "r": "218",
-                        "s": [
-                          {
-                            "value": [
-                              "Integer"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "221",
-                        "value": [
-                          "\u003e{",
-                          "1",
-                          ", ",
-                          "2",
-                          ", ",
-                          "3",
-                          ", ",
-                          "4",
-                          ", ",
-                          "5",
-                          "}"
-                        ]
-                      }
+                      "define TypedList: List\u003cInteger\u003e{1, 2, 3, 4, 5}"
                     ]
                   }
                 ]
@@ -170,40 +97,33 @@
           "expression": {
             "element": [
               {
-                "localId": "221",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "222",
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "223",
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "224",
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
-                "localId": "225",
                 "type": "Literal",
                 "value": "5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               }
             ],
-            "localId": "219",
             "type": "List"
           },
-          "localId": "217",
           "name": "TypedList"
         },
         {
@@ -211,51 +131,10 @@
           "annotation": [
             {
               "s": {
-                "r": "228",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListFirst",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "237",
-                    "s": [
-                      {
-                        "value": [
-                          "First",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "229",
-                        "s": [
-                          {
-                            "r": "230",
-                            "value": [
-                              "{",
-                              "3",
-                              ", ",
-                              "1",
-                              ", ",
-                              "4",
-                              ", ",
-                              "1",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ListFirst: First({3, 1, 4, 1, 5})"
                     ]
                   }
                 ]
@@ -265,47 +144,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "237",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "230",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "231",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "232",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "233",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "234",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "229",
               "type": "List"
             },
             "type": "First"
           },
-          "localId": "228",
           "name": "ListFirst"
         },
         {
@@ -313,51 +184,10 @@
           "annotation": [
             {
               "s": {
-                "r": "240",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListLast",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "249",
-                    "s": [
-                      {
-                        "value": [
-                          "Last",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "241",
-                        "s": [
-                          {
-                            "r": "242",
-                            "value": [
-                              "{",
-                              "3",
-                              ", ",
-                              "1",
-                              ", ",
-                              "4",
-                              ", ",
-                              "1",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ListLast: Last({3, 1, 4, 1, 5})"
                     ]
                   }
                 ]
@@ -367,47 +197,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "249",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "242",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "243",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "244",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "245",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "246",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "241",
               "type": "List"
             },
             "type": "Last"
           },
-          "localId": "240",
           "name": "ListLast"
         },
         {
@@ -415,51 +237,10 @@
           "annotation": [
             {
               "s": {
-                "r": "252",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListCount",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "261",
-                    "s": [
-                      {
-                        "value": [
-                          "Count",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "253",
-                        "s": [
-                          {
-                            "r": "254",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ListCount: Count({1, 2, 3, 4, 5})"
                     ]
                   }
                 ]
@@ -469,47 +250,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "261",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "254",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "255",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "256",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "257",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "258",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "253",
               "type": "List"
             },
             "type": "Count"
           },
-          "localId": "252",
           "name": "ListCount"
         },
         {
@@ -517,47 +290,10 @@
           "annotation": [
             {
               "s": {
-                "r": "264",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListDistinct",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "265",
-                    "s": [
-                      {
-                        "value": [
-                          "distinct "
-                        ]
-                      },
-                      {
-                        "r": "266",
-                        "s": [
-                          {
-                            "r": "267",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "3",
-                              ", ",
-                              "3",
-                              "}"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListDistinct: distinct {1, 2, 2, 3, 3, 3}"
                     ]
                   }
                 ]
@@ -567,53 +303,44 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "265",
             "operand": {
               "element": [
                 {
-                  "localId": "267",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "268",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "269",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "270",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "271",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "272",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "266",
               "type": "List"
             },
             "signature": [],
             "type": "Distinct"
           },
-          "localId": "264",
           "name": "ListDistinct"
         },
         {
@@ -621,92 +348,10 @@
           "annotation": [
             {
               "s": {
-                "r": "275",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListFlatten",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "276",
-                    "s": [
-                      {
-                        "value": [
-                          "flatten "
-                        ]
-                      },
-                      {
-                        "r": "277",
-                        "s": [
-                          {
-                            "value": [
-                              "{"
-                            ]
-                          },
-                          {
-                            "r": "278",
-                            "s": [
-                              {
-                                "r": "279",
-                                "value": [
-                                  "{",
-                                  "1",
-                                  ", ",
-                                  "2",
-                                  "}"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "281",
-                            "s": [
-                              {
-                                "r": "282",
-                                "value": [
-                                  "{",
-                                  "3",
-                                  ", ",
-                                  "4",
-                                  "}"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ", "
-                            ]
-                          },
-                          {
-                            "r": "284",
-                            "s": [
-                              {
-                                "r": "285",
-                                "value": [
-                                  "{",
-                                  "5",
-                                  "}"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              "}"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListFlatten: flatten {{1, 2}, {3, 4}, {5}}"
                     ]
                   }
                 ]
@@ -716,65 +361,54 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "276",
             "operand": {
               "element": [
                 {
                   "element": [
                     {
-                      "localId": "279",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "280",
                       "type": "Literal",
                       "value": "2",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   ],
-                  "localId": "278",
                   "type": "List"
                 },
                 {
                   "element": [
                     {
-                      "localId": "282",
                       "type": "Literal",
                       "value": "3",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "283",
                       "type": "Literal",
                       "value": "4",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   ],
-                  "localId": "281",
                   "type": "List"
                 },
                 {
                   "element": [
                     {
-                      "localId": "285",
                       "type": "Literal",
                       "value": "5",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   ],
-                  "localId": "284",
                   "type": "List"
                 }
               ],
-              "localId": "277",
               "type": "List"
             },
             "signature": [],
             "type": "Flatten"
           },
-          "localId": "275",
           "name": "ListFlatten"
         },
         {
@@ -782,41 +416,10 @@
           "annotation": [
             {
               "s": {
-                "r": "288",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListExists",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "289",
-                    "s": [
-                      {
-                        "value": [
-                          "exists "
-                        ]
-                      },
-                      {
-                        "r": "290",
-                        "s": [
-                          {
-                            "r": "291",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              "}"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListExists: exists {1, 2, 3}"
                     ]
                   }
                 ]
@@ -826,35 +429,29 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "289",
             "operand": {
               "element": [
                 {
-                  "localId": "291",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "292",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "293",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "290",
               "type": "List"
             },
             "signature": [],
             "type": "Exists"
           },
-          "localId": "288",
           "name": "ListExists"
         },
         {
@@ -862,26 +459,10 @@
           "annotation": [
             {
               "s": {
-                "r": "296",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListExistsEmpty",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "297",
-                    "s": [
-                      {
-                        "r": "298",
-                        "value": [
-                          "exists ",
-                          "{}"
-                        ]
-                      }
+                      "define ListExistsEmpty: exists {}"
                     ]
                   }
                 ]
@@ -891,16 +472,13 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "297",
             "operand": {
               "element": [],
-              "localId": "298",
               "type": "List"
             },
             "signature": [],
             "type": "Exists"
           },
-          "localId": "296",
           "name": "ListExistsEmpty"
         },
         {
@@ -908,51 +486,10 @@
           "annotation": [
             {
               "s": {
-                "r": "301",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListNotEmpty",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "302",
-                    "s": [
-                      {
-                        "value": [
-                          "not "
-                        ]
-                      },
-                      {
-                        "r": "303",
-                        "s": [
-                          {
-                            "value": [
-                              "("
-                            ]
-                          },
-                          {
-                            "r": "303",
-                            "s": [
-                              {
-                                "r": "304",
-                                "value": [
-                                  "exists ",
-                                  "{}"
-                                ]
-                              }
-                            ]
-                          },
-                          {
-                            "value": [
-                              ")"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListNotEmpty: not (exists {})"
                     ]
                   }
                 ]
@@ -962,12 +499,9 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "302",
             "operand": {
-              "localId": "303",
               "operand": {
                 "element": [],
-                "localId": "304",
                 "type": "List"
               },
               "signature": [],
@@ -976,7 +510,6 @@
             "signature": [],
             "type": "Not"
           },
-          "localId": "301",
           "name": "ListNotEmpty"
         },
         {
@@ -984,51 +517,10 @@
           "annotation": [
             {
               "s": {
-                "r": "307",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListTail",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "316",
-                    "s": [
-                      {
-                        "value": [
-                          "Tail",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "308",
-                        "s": [
-                          {
-                            "r": "309",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define ListTail: Tail({1, 2, 3, 4, 5})"
                     ]
                   }
                 ]
@@ -1039,56 +531,46 @@
           "context": "Unfiltered",
           "expression": {
             "endIndex": {
-              "localId": "318",
               "type": "Null"
             },
-            "localId": "316",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "309",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "310",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "311",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "312",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "313",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "308",
               "type": "List"
             },
             "startIndex": {
-              "localId": "317",
               "type": "Literal",
               "value": "1",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "type": "Slice"
           },
-          "localId": "307",
           "name": "ListTail"
         },
         {
@@ -1096,54 +578,10 @@
           "annotation": [
             {
               "s": {
-                "r": "321",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListSkip",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "331",
-                    "s": [
-                      {
-                        "value": [
-                          "Skip",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "322",
-                        "s": [
-                          {
-                            "r": "323",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "328",
-                        "value": [
-                          ", ",
-                          "2",
-                          ")"
-                        ]
-                      }
+                      "define ListSkip: Skip({1, 2, 3, 4, 5}, 2)"
                     ]
                   }
                 ]
@@ -1154,56 +592,46 @@
           "context": "Unfiltered",
           "expression": {
             "endIndex": {
-              "localId": "332",
               "type": "Null"
             },
-            "localId": "331",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "323",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "324",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "325",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "326",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "327",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "322",
               "type": "List"
             },
             "startIndex": {
-              "localId": "328",
               "type": "Literal",
               "value": "2",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "type": "Slice"
           },
-          "localId": "321",
           "name": "ListSkip"
         },
         {
@@ -1211,54 +639,10 @@
           "annotation": [
             {
               "s": {
-                "r": "335",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListTake",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "345",
-                    "s": [
-                      {
-                        "value": [
-                          "Take",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "336",
-                        "s": [
-                          {
-                            "r": "337",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "342",
-                        "value": [
-                          ", ",
-                          "3",
-                          ")"
-                        ]
-                      }
+                      "define ListTake: Take({1, 2, 3, 4, 5}, 3)"
                     ]
                   }
                 ]
@@ -1269,16 +653,13 @@
           "context": "Unfiltered",
           "expression": {
             "endIndex": {
-              "localId": "347",
               "operand": [
                 {
-                  "localId": "342",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "348",
                   "type": "Literal",
                   "value": "0",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1287,53 +668,44 @@
               "signature": [],
               "type": "Coalesce"
             },
-            "localId": "345",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "337",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "338",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "339",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "340",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "341",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "336",
               "type": "List"
             },
             "startIndex": {
-              "localId": "346",
               "type": "Literal",
               "value": "0",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "type": "Slice"
           },
-          "localId": "335",
           "name": "ListTake"
         },
         {
@@ -1341,50 +713,10 @@
           "annotation": [
             {
               "s": {
-                "r": "351",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListIndexOf",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "359",
-                    "s": [
-                      {
-                        "value": [
-                          "IndexOf",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "352",
-                        "s": [
-                          {
-                            "r": "353",
-                            "value": [
-                              "{",
-                              "10",
-                              ", ",
-                              "20",
-                              ", ",
-                              "30",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "356",
-                        "value": [
-                          ", ",
-                          "20",
-                          ")"
-                        ]
-                      }
+                      "define ListIndexOf: IndexOf({10, 20, 30}, 20)"
                     ]
                   }
                 ]
@@ -1395,40 +727,33 @@
           "context": "Unfiltered",
           "expression": {
             "element": {
-              "localId": "356",
               "type": "Literal",
               "value": "20",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
-            "localId": "359",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "353",
                   "type": "Literal",
                   "value": "10",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "354",
                   "type": "Literal",
                   "value": "20",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "355",
                   "type": "Literal",
                   "value": "30",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "352",
               "type": "List"
             },
             "type": "IndexOf"
           },
-          "localId": "351",
           "name": "ListIndexOf"
         },
         {
@@ -1436,43 +761,10 @@
           "annotation": [
             {
               "s": {
-                "r": "362",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListContains",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "368",
-                    "s": [
-                      {
-                        "r": "363",
-                        "s": [
-                          {
-                            "r": "364",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "367",
-                        "value": [
-                          " contains ",
-                          "2"
-                        ]
-                      }
+                      "define ListContains: {1, 2, 3} contains 2"
                     ]
                   }
                 ]
@@ -1482,34 +774,28 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "368",
             "operand": [
               {
                 "element": [
                   {
-                    "localId": "364",
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "365",
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "366",
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "363",
                 "type": "List"
               },
               {
-                "localId": "367",
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1518,7 +804,6 @@
             "signature": [],
             "type": "Contains"
           },
-          "localId": "362",
           "name": "ListContains"
         },
         {
@@ -1526,92 +811,10 @@
           "annotation": [
             {
               "s": {
-                "r": "371",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SortedAsc",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "387",
-                    "s": [
-                      {
-                        "s": [
-                          {
-                            "r": "372",
-                            "s": [
-                              {
-                                "r": "374",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "("
-                                    ]
-                                  },
-                                  {
-                                    "r": "374",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "List\u003c"
-                                        ]
-                                      },
-                                      {
-                                        "r": "373",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "Integer"
-                                            ]
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "r": "376",
-                                        "value": [
-                                          "\u003e{",
-                                          "3",
-                                          ", ",
-                                          "1",
-                                          ", ",
-                                          "4",
-                                          ", ",
-                                          "1",
-                                          ", ",
-                                          "5",
-                                          "}"
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "value": [
-                                      ")"
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "value": [
-                                  " ",
-                                  "L"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "382",
-                        "value": [
-                          " ",
-                          "sort asc"
-                        ]
-                      }
+                      "define SortedAsc: (List\u003cInteger\u003e{3, 1, 4, 1, 5}) L sort asc"
                     ]
                   }
                 ]
@@ -1622,17 +825,14 @@
           "context": "Unfiltered",
           "expression": {
             "let": [],
-            "localId": "387",
             "relationship": [],
             "sort": {
               "by": [
                 {
                   "direction": "asc",
-                  "localId": "383",
                   "type": "ByDirection"
                 }
-              ],
-              "localId": "382"
+              ]
             },
             "source": [
               {
@@ -1640,45 +840,37 @@
                 "expression": {
                   "element": [
                     {
-                      "localId": "376",
                       "type": "Literal",
                       "value": "3",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "377",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "378",
                       "type": "Literal",
                       "value": "4",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "379",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "380",
                       "type": "Literal",
                       "value": "5",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   ],
-                  "localId": "374",
                   "type": "List"
-                },
-                "localId": "372"
+                }
               }
             ],
             "type": "Query"
           },
-          "localId": "371",
           "name": "SortedAsc"
         },
         {
@@ -1686,92 +878,10 @@
           "annotation": [
             {
               "s": {
-                "r": "390",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SortedDesc",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "406",
-                    "s": [
-                      {
-                        "s": [
-                          {
-                            "r": "391",
-                            "s": [
-                              {
-                                "r": "393",
-                                "s": [
-                                  {
-                                    "value": [
-                                      "("
-                                    ]
-                                  },
-                                  {
-                                    "r": "393",
-                                    "s": [
-                                      {
-                                        "value": [
-                                          "List\u003c"
-                                        ]
-                                      },
-                                      {
-                                        "r": "392",
-                                        "s": [
-                                          {
-                                            "value": [
-                                              "Integer"
-                                            ]
-                                          }
-                                        ]
-                                      },
-                                      {
-                                        "r": "395",
-                                        "value": [
-                                          "\u003e{",
-                                          "3",
-                                          ", ",
-                                          "1",
-                                          ", ",
-                                          "4",
-                                          ", ",
-                                          "1",
-                                          ", ",
-                                          "5",
-                                          "}"
-                                        ]
-                                      }
-                                    ]
-                                  },
-                                  {
-                                    "value": [
-                                      ")"
-                                    ]
-                                  }
-                                ]
-                              },
-                              {
-                                "value": [
-                                  " ",
-                                  "L"
-                                ]
-                              }
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "r": "401",
-                        "value": [
-                          " ",
-                          "sort desc"
-                        ]
-                      }
+                      "define SortedDesc: (List\u003cInteger\u003e{3, 1, 4, 1, 5}) L sort desc"
                     ]
                   }
                 ]
@@ -1782,17 +892,14 @@
           "context": "Unfiltered",
           "expression": {
             "let": [],
-            "localId": "406",
             "relationship": [],
             "sort": {
               "by": [
                 {
                   "direction": "desc",
-                  "localId": "402",
                   "type": "ByDirection"
                 }
-              ],
-              "localId": "401"
+              ]
             },
             "source": [
               {
@@ -1800,45 +907,37 @@
                 "expression": {
                   "element": [
                     {
-                      "localId": "395",
                       "type": "Literal",
                       "value": "3",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "396",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "397",
                       "type": "Literal",
                       "value": "4",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "398",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
-                      "localId": "399",
                       "type": "Literal",
                       "value": "5",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     }
                   ],
-                  "localId": "393",
                   "type": "List"
-                },
-                "localId": "391"
+                }
               }
             ],
             "type": "Query"
           },
-          "localId": "390",
           "name": "SortedDesc"
         },
         {
@@ -1846,58 +945,10 @@
           "annotation": [
             {
               "s": {
-                "r": "409",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListUnion",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "418",
-                    "s": [
-                      {
-                        "r": "410",
-                        "s": [
-                          {
-                            "r": "411",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " union "
-                        ]
-                      },
-                      {
-                        "r": "414",
-                        "s": [
-                          {
-                            "r": "415",
-                            "value": [
-                              "{",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListUnion: {1, 2, 3} union {3, 4, 5}"
                     ]
                   }
                 ]
@@ -1907,61 +958,51 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "418",
             "operand": [
               {
                 "element": [
                   {
-                    "localId": "411",
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "412",
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "413",
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "410",
                 "type": "List"
               },
               {
                 "element": [
                   {
-                    "localId": "415",
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "416",
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "417",
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "414",
                 "type": "List"
               }
             ],
             "signature": [],
             "type": "Union"
           },
-          "localId": "409",
           "name": "ListUnion"
         },
         {
@@ -1969,60 +1010,10 @@
           "annotation": [
             {
               "s": {
-                "r": "421",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListIntersect",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "431",
-                    "s": [
-                      {
-                        "r": "422",
-                        "s": [
-                          {
-                            "r": "423",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " intersect "
-                        ]
-                      },
-                      {
-                        "r": "427",
-                        "s": [
-                          {
-                            "r": "428",
-                            "value": [
-                              "{",
-                              "2",
-                              ", ",
-                              "4",
-                              ", ",
-                              "6",
-                              "}"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListIntersect: {1, 2, 3, 4} intersect {2, 4, 6}"
                     ]
                   }
                 ]
@@ -2032,67 +1023,56 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "431",
             "operand": [
               {
                 "element": [
                   {
-                    "localId": "423",
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "424",
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "425",
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "426",
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "422",
                 "type": "List"
               },
               {
                 "element": [
                   {
-                    "localId": "428",
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "429",
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "430",
                     "type": "Literal",
                     "value": "6",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "427",
                 "type": "List"
               }
             ],
             "signature": [],
             "type": "Intersect"
           },
-          "localId": "421",
           "name": "ListIntersect"
         },
         {
@@ -2100,58 +1080,10 @@
           "annotation": [
             {
               "s": {
-                "r": "434",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "ListExcept",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "443",
-                    "s": [
-                      {
-                        "r": "435",
-                        "s": [
-                          {
-                            "r": "436",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          " except "
-                        ]
-                      },
-                      {
-                        "r": "440",
-                        "s": [
-                          {
-                            "r": "441",
-                            "value": [
-                              "{",
-                              "2",
-                              ", ",
-                              "4",
-                              "}"
-                            ]
-                          }
-                        ]
-                      }
+                      "define ListExcept: {1, 2, 3, 4} except {2, 4}"
                     ]
                   }
                 ]
@@ -2161,61 +1093,51 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "443",
             "operand": [
               {
                 "element": [
                   {
-                    "localId": "436",
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "437",
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "438",
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "439",
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "435",
                 "type": "List"
               },
               {
                 "element": [
                   {
-                    "localId": "441",
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
-                    "localId": "442",
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   }
                 ],
-                "localId": "440",
                 "type": "List"
               }
             ],
             "signature": [],
             "type": "Except"
           },
-          "localId": "434",
           "name": "ListExcept"
         },
         {
@@ -2223,47 +1145,10 @@
           "annotation": [
             {
               "s": {
-                "r": "446",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AllTrue",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "453",
-                    "s": [
-                      {
-                        "value": [
-                          "AllTrue",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "447",
-                        "s": [
-                          {
-                            "r": "448",
-                            "value": [
-                              "{",
-                              "true",
-                              ", ",
-                              "true",
-                              ", ",
-                              "true",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define AllTrue: AllTrue({true, true, true})"
                     ]
                   }
                 ]
@@ -2273,35 +1158,29 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "453",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "448",
                   "type": "Literal",
                   "value": "true",
                   "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
                 },
                 {
-                  "localId": "449",
                   "type": "Literal",
                   "value": "true",
                   "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
                 },
                 {
-                  "localId": "450",
                   "type": "Literal",
                   "value": "true",
                   "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
                 }
               ],
-              "localId": "447",
               "type": "List"
             },
             "type": "AllTrue"
           },
-          "localId": "446",
           "name": "AllTrue"
         },
         {
@@ -2309,47 +1188,10 @@
           "annotation": [
             {
               "s": {
-                "r": "456",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AnyTrue",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "463",
-                    "s": [
-                      {
-                        "value": [
-                          "AnyTrue",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "457",
-                        "s": [
-                          {
-                            "r": "458",
-                            "value": [
-                              "{",
-                              "false",
-                              ", ",
-                              "true",
-                              ", ",
-                              "false",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define AnyTrue: AnyTrue({false, true, false})"
                     ]
                   }
                 ]
@@ -2359,35 +1201,29 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "463",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "458",
                   "type": "Literal",
                   "value": "false",
                   "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
                 },
                 {
-                  "localId": "459",
                   "type": "Literal",
                   "value": "true",
                   "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
                 },
                 {
-                  "localId": "460",
                   "type": "Literal",
                   "value": "false",
                   "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
                 }
               ],
-              "localId": "457",
               "type": "List"
             },
             "type": "AnyTrue"
           },
-          "localId": "456",
           "name": "AnyTrue"
         },
         {
@@ -2395,51 +1231,10 @@
           "annotation": [
             {
               "s": {
-                "r": "466",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MinList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "475",
-                    "s": [
-                      {
-                        "value": [
-                          "Min",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "467",
-                        "s": [
-                          {
-                            "r": "468",
-                            "value": [
-                              "{",
-                              "5",
-                              ", ",
-                              "2",
-                              ", ",
-                              "8",
-                              ", ",
-                              "1",
-                              ", ",
-                              "9",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define MinList: Min({5, 2, 8, 1, 9})"
                     ]
                   }
                 ]
@@ -2449,47 +1244,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "475",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "468",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "469",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "470",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "471",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "472",
                   "type": "Literal",
                   "value": "9",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "467",
               "type": "List"
             },
             "type": "Min"
           },
-          "localId": "466",
           "name": "MinList"
         },
         {
@@ -2497,51 +1284,10 @@
           "annotation": [
             {
               "s": {
-                "r": "478",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MaxList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "487",
-                    "s": [
-                      {
-                        "value": [
-                          "Max",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "479",
-                        "s": [
-                          {
-                            "r": "480",
-                            "value": [
-                              "{",
-                              "5",
-                              ", ",
-                              "2",
-                              ", ",
-                              "8",
-                              ", ",
-                              "1",
-                              ", ",
-                              "9",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define MaxList: Max({5, 2, 8, 1, 9})"
                     ]
                   }
                 ]
@@ -2551,47 +1297,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "487",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "480",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "481",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "482",
                   "type": "Literal",
                   "value": "8",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "483",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "484",
                   "type": "Literal",
                   "value": "9",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "479",
               "type": "List"
             },
             "type": "Max"
           },
-          "localId": "478",
           "name": "MaxList"
         },
         {
@@ -2599,51 +1337,10 @@
           "annotation": [
             {
               "s": {
-                "r": "490",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "SumList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "499",
-                    "s": [
-                      {
-                        "value": [
-                          "Sum",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "491",
-                        "s": [
-                          {
-                            "r": "492",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define SumList: Sum({1, 2, 3, 4, 5})"
                     ]
                   }
                 ]
@@ -2653,47 +1350,39 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "499",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "492",
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "493",
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "494",
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "495",
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
-                  "localId": "496",
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               ],
-              "localId": "491",
               "type": "List"
             },
             "type": "Sum"
           },
-          "localId": "490",
           "name": "SumList"
         },
         {
@@ -2701,47 +1390,10 @@
           "annotation": [
             {
               "s": {
-                "r": "502",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "AvgList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "509",
-                    "s": [
-                      {
-                        "value": [
-                          "Avg",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "503",
-                        "s": [
-                          {
-                            "r": "504",
-                            "value": [
-                              "{",
-                              "2.0",
-                              ", ",
-                              "4.0",
-                              ", ",
-                              "6.0",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define AvgList: Avg({2.0, 4.0, 6.0})"
                     ]
                   }
                 ]
@@ -2751,35 +1403,29 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "509",
             "signature": [],
             "source": {
               "element": [
                 {
-                  "localId": "504",
                   "type": "Literal",
                   "value": "2.0",
                   "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
                 },
                 {
-                  "localId": "505",
                   "type": "Literal",
                   "value": "4.0",
                   "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
                 },
                 {
-                  "localId": "506",
                   "type": "Literal",
                   "value": "6.0",
                   "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
                 }
               ],
-              "localId": "503",
               "type": "List"
             },
             "type": "Avg"
           },
-          "localId": "502",
           "name": "AvgList"
         },
         {
@@ -2787,51 +1433,10 @@
           "annotation": [
             {
               "s": {
-                "r": "512",
                 "s": [
                   {
                     "value": [
-                      "",
-                      "define ",
-                      "MedianList",
-                      ": "
-                    ]
-                  },
-                  {
-                    "r": "527",
-                    "s": [
-                      {
-                        "value": [
-                          "Median",
-                          "("
-                        ]
-                      },
-                      {
-                        "r": "513",
-                        "s": [
-                          {
-                            "r": "514",
-                            "value": [
-                              "{",
-                              "1",
-                              ", ",
-                              "2",
-                              ", ",
-                              "3",
-                              ", ",
-                              "4",
-                              ", ",
-                              "5",
-                              "}"
-                            ]
-                          }
-                        ]
-                      },
-                      {
-                        "value": [
-                          ")"
-                        ]
-                      }
+                      "define MedianList: Median({1, 2, 3, 4, 5})"
                     ]
                   }
                 ]
@@ -2841,25 +1446,20 @@
           ],
           "context": "Unfiltered",
           "expression": {
-            "localId": "527",
             "signature": [],
             "source": {
               "let": [],
-              "localId": "528",
               "relationship": [],
               "return": {
                 "distinct": false,
                 "expression": {
-                  "localId": "533",
                   "operand": {
-                    "localId": "531",
                     "name": "X",
                     "type": "AliasRef"
                   },
                   "signature": [],
                   "type": "ToDecimal"
-                },
-                "localId": "530"
+                }
               },
               "source": [
                 {
@@ -2867,47 +1467,39 @@
                   "expression": {
                     "element": [
                       {
-                        "localId": "514",
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "515",
                         "type": "Literal",
                         "value": "2",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "516",
                         "type": "Literal",
                         "value": "3",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "517",
                         "type": "Literal",
                         "value": "4",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
-                        "localId": "518",
                         "type": "Literal",
                         "value": "5",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       }
                     ],
-                    "localId": "513",
                     "type": "List"
-                  },
-                  "localId": "529"
+                  }
                 }
               ],
               "type": "Query"
             },
             "type": "Median"
           },
-          "localId": "512",
           "name": "MedianList"
         }
       ]
@@ -2915,7 +1507,6 @@
     "usings": {
       "def": [
         {
-          "localId": "1",
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

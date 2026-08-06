@@ -1,0 +1,971 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Regression fixture for the generated FHIR ModelInfo tables.\n//\n// The property-type table used to be hand-maintained and partial, so a property\n// it did not list silently skipped its implicit FHIRHelpers conversion. These\n// properties span resources the hand-maintained table never covered, plus the\n// binding, nested-complex and Date/DateTime cases that the generated tables made\n// resolvable.\nlibrary ModelInfoCoverage version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ModelInfoCoverage",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "include FHIRHelpers version '4.0.1'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── properties absent from the previous hand-maintained table ─────────────────\n\ndefine \"ImmunizationLot\": exists ([Immunization] I where I.lotNumber = 'LOT123')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "I",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Immunization",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Immunization",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "lotNumber",
+                        "scope": "I",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "LOT123",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "ImmunizationLot"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ClaimUse\": exists ([Claim] C where C.use = 'claim')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "C",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Claim",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Claim",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "use",
+                        "scope": "C",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "claim",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "ClaimUse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"TaskDescription\": exists ([Task] T where T.description = 'follow up')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "T",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Task",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Task",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "description",
+                        "scope": "T",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "follow up",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "TaskDescription"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"GoalDescriptionText\": exists ([Goal] G where G.description.text = 'target')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "G",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Goal",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Goal",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "text",
+                        "source": {
+                          "path": "description",
+                          "scope": "G",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "target",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "GoalDescriptionText"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── binding (enum) types resolve through their System value type ──────────────\n\ndefine \"GenderCompared\": Patient.gender = 'female'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "libraryName": "FHIRHelpers",
+                "name": "ToString",
+                "operand": [
+                  {
+                    "path": "gender",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "type": "Literal",
+                "value": "female",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "GenderCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"EncounterStatusCompared\": exists ([Encounter] E where E.status = 'finished')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "status",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "finished",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "EncounterStatusCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── nested complex-type properties ────────────────────────────────────────────\n\ndefine \"NameFamily\": exists ((Patient.name) N where N.family = 'Smith')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "N",
+                  "expression": {
+                    "path": "name",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "family",
+                        "scope": "N",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "Smith",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "NameFamily"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"AddressCity\": exists ((Patient.address) A where A.city = 'Boston')"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "A",
+                  "expression": {
+                    "path": "address",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToString",
+                    "operand": [
+                      {
+                        "path": "city",
+                        "scope": "A",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "type": "Literal",
+                    "value": "Boston",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "Equal"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "AddressCity"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── Date/DateTime implicit conversion ─────────────────────────────────────────\n\n// Specimen.receivedTime is an instant, so the Date literal is converted.\ndefine \"InstantComparedToDate\":\n  exists ([Specimen] S where S.receivedTime before @2020-01-01)"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "S",
+                  "expression": {
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Specimen",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Specimen",
+                    "type": "Retrieve"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "path": "receivedTime",
+                        "scope": "S",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  {
+                    "operand": {
+                      "day": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "month": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Date",
+                      "year": {
+                        "type": "Literal",
+                        "value": "2020",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    },
+                    "signature": [],
+                    "type": "ToDateTime"
+                  }
+                ],
+                "signature": [],
+                "type": "Before"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "InstantComparedToDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Patient.birthDate is a date, so both sides stay Dates.\ndefine \"DateComparedToDate\": Patient.birthDate before @2020-01-01"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "libraryName": "FHIRHelpers",
+                "name": "ToDate",
+                "operand": [
+                  {
+                    "path": "birthDate",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2020",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "signature": [],
+            "type": "Before"
+          },
+          "name": "DateComparedToDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// ── list-valued primitives are not converted in place ─────────────────────────\n\n// Address.line is a List\u003cFHIR.string\u003e; the conversion belongs on the element, so\n// the list itself must be left alone.\ndefine \"AddressLines\": (Patient.address) A return A.line"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "line",
+                "scope": "A",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "A",
+                "expression": {
+                  "path": "address",
+                  "source": {
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "AddressLines"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "// Consumed as a list, the elements are converted one by one through an implicit\n// query rather than the list being promoted with ToList.\ndefine \"AddressLineIn\":\n  exists ((Patient.address) A where 'Main St' in A.line)"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "A",
+                  "expression": {
+                    "path": "address",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "type": "Literal",
+                    "value": "Main St",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "distinct": false,
+                      "expression": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToString",
+                        "operand": [
+                          {
+                            "name": "X",
+                            "type": "AliasRef"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "X",
+                        "expression": {
+                          "path": "line",
+                          "scope": "A",
+                          "type": "Property"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "AddressLineIn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"GivenNameIn\":\n  exists ((Patient.name) N where 'Ann' in N.given)"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "N",
+                  "expression": {
+                    "path": "name",
+                    "source": {
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": [
+                  {
+                    "type": "Literal",
+                    "value": "Ann",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "distinct": false,
+                      "expression": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToString",
+                        "operand": [
+                          {
+                            "name": "X",
+                            "type": "AliasRef"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "X",
+                        "expression": {
+                          "path": "given",
+                          "scope": "N",
+                          "type": "Property"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              }
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "GivenNameIn"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "using FHIR version '4.0.1'"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}
