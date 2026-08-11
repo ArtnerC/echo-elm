@@ -6,13 +6,28 @@ import (
 )
 
 // AddTypeDiscriminators rewrites ELM JSON into the fully type-discriminated form
-// produced by the JAXB/MOXy `elm-json` writer — the shape that appears inside
-// FHIR Library resources and that the Firely CQL SDK deserializes.
+// produced by the CQF JAXB/MOXy `elm-json` writer — the shape that appears
+// inside FHIR Library resources, and the reason `--target bundle` is named for
+// where the shape is observed rather than for any consumer that wants it.
+//
+// It is emphatically *not* required by the Firely CQL SDK. Firely writes the
+// lean shape, and on read its `CorrectLegacyConstructs` pass treats this one as
+// legacy input: the synthetic `type` property is declared only to be validated
+// and discarded, and the container converter asserts the value starts with
+// "Library$" purely so it can skip it. Firely's own round-trip test fixture
+// carries zero implied discriminators. Producing this shape *for* Firely would
+// be backwards; issues/04 documents that correction in full.
+//
+// What it is genuinely for is parity. `parity --bundle` and `parity --ref-dir`
+// cannot produce a meaningful diff while the two sides are in different
+// serializer shapes — every bundle-sourced fixture otherwise drowns in
+// implied-discriminator noise. On that path prefer StripImpliedTypes, which
+// reduces the reference down rather than inflating echo-elm's output up; this
+// direction exists for writing ELM back into a bundle.
 //
 // The cql-to-elm CLI omits `"type"` on declaration, container and clause nodes
-// because their position already determines what they are; a schema-driven
-// deserializer that dispatches on `"type"` cannot recover them. This pass adds
-// them back from that same positional information, so it needs no help from the
+// because their position already determines what they are. This pass adds them
+// back from that same positional information, so it needs no help from the
 // translator and cannot perturb default (CLI-parity) output.
 //
 // Nodes that already carry a `"type"` are left alone, so expressions, FunctionDef,
@@ -128,4 +143,110 @@ func setType(node map[string]any, name string) {
 func typeOf(node map[string]any) string {
 	t, _ := node["type"].(string)
 	return t
+}
+
+// StripImpliedTypes is the inverse of AddTypeDiscriminators: it removes every
+// `"type"` whose value the node's position already determines, reducing the
+// JAXB/MOXy bundle shape back to the lean shape the cql-to-elm CLI writes.
+//
+// This is the direction the parity harness wants. Inflating echo-elm's output up
+// to the reference makes the comparison depend on impliedTypes staying in sync
+// with a Java class hierarchy; reducing the reference down cannot lose anything,
+// because a discriminator is only removed when it agrees with what position
+// already implies. A `"type"` that disagrees is left in place — that is a real
+// difference (a FunctionDef sitting where an ExpressionDef is implied) and the
+// diff must still show it.
+//
+// Applied to CLI-shaped ELM it is a no-op, so it is safe on every comparison
+// path rather than only the bundle one.
+func StripImpliedTypes(elmJSON []byte) ([]byte, error) {
+	var root map[string]any
+	if err := json.Unmarshal(elmJSON, &root); err != nil {
+		return nil, fmt.Errorf("elm: parse ELM JSON: %w", err)
+	}
+	lib, ok := root["library"].(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("elm: input is not an ELM library envelope")
+	}
+	clearType(lib, "Library")
+	deannotate(lib, "Library")
+
+	out, err := json.MarshalIndent(root, "", "  ")
+	if err != nil {
+		return nil, fmt.Errorf("elm: marshal ELM JSON: %w", err)
+	}
+	return out, nil
+}
+
+// StripImpliedTypesTree is StripImpliedTypes over an already-decoded tree, for
+// callers that are mid-normalization and would otherwise round-trip through JSON
+// twice. It accepts any node, not just a library envelope.
+func StripImpliedTypesTree(v any) {
+	if lib, ok := v.(map[string]any); ok {
+		if inner, ok := lib["library"].(map[string]any); ok {
+			clearType(inner, "Library")
+			deannotate(inner, "Library")
+			return
+		}
+	}
+	deannotate2(v, "")
+}
+
+// deannotate walks a node whose own type is parentType, removing implied
+// discriminators from its children.
+func deannotate(node map[string]any, parentType string) {
+	for key, child := range node {
+		implied := impliedTypes[[2]string{parentType, key}]
+		switch v := child.(type) {
+		case map[string]any:
+			// Read the child's type before clearing it: the walk into the child
+			// is keyed on what the child actually is.
+			actual := typeOf(v)
+			clearType(v, implied)
+			deannotate(v, orImplied(actual, implied))
+		case []any:
+			for _, item := range v {
+				m, ok := item.(map[string]any)
+				if !ok {
+					continue
+				}
+				actual := typeOf(m)
+				clearType(m, implied)
+				deannotate(m, orImplied(actual, implied))
+			}
+		}
+	}
+}
+
+// deannotate2 walks a subtree of unknown parentage, used when a caller hands in
+// something other than a library envelope.
+func deannotate2(v any, parentType string) {
+	switch node := v.(type) {
+	case map[string]any:
+		deannotate(node, parentType)
+	case []any:
+		for _, item := range node {
+			deannotate2(item, parentType)
+		}
+	}
+}
+
+// clearType removes a node's type only when it matches what position implies.
+// A disagreeing discriminator is meaningful and stays.
+func clearType(node map[string]any, implied string) {
+	if implied == "" {
+		return
+	}
+	if t, ok := node["type"].(string); ok && t == implied {
+		delete(node, "type")
+	}
+}
+
+// orImplied returns the node's own type, falling back to the implied one when
+// the node carries none — which is exactly the case after stripping.
+func orImplied(actual, implied string) string {
+	if actual != "" {
+		return actual
+	}
+	return implied
 }

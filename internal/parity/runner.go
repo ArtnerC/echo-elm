@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
@@ -413,6 +414,12 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 // some other way. What is currently reduced, and why:
 //
 //   - translatorVersion — names the producing translator; volatile by definition.
+//   - "type" discriminators whose value the node's position already implies.
+//     Reference ELM read out of a FHIR bundle comes from the JAXB/MOXy writer,
+//     which stamps a type on nearly every node; the cql-to-elm CLI does not.
+//     Comparing the two shapes is otherwise pure noise. Only a discriminator
+//     that AGREES with its position is dropped, so a FunctionDef sitting where
+//     an ExpressionDef is implied still differs. No-op on CLI-shaped input.
 //   - empty "annotation": [] and "t": [] arrays — CQF emits the empty container
 //     on nearly every node; echo-elm omits it. An empty container carries no
 //     information for a consumer of the ELM, so this meets the rule above, but
@@ -443,6 +450,7 @@ func normalizeJSON(s string) string {
 	if m, ok := v.(map[string]interface{}); ok {
 		stripVolatileFields(m)
 	}
+	elm.StripImpliedTypesTree(v)
 	stripEmptyAnnotations(v)
 	canonicalizeAnnotationFields(v)
 	b, _ := json.MarshalIndent(v, "", "  ")

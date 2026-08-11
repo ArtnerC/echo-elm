@@ -208,11 +208,11 @@ func bundleEntry(t *testing.T, name, version, cqlPath, elmPath string) map[strin
 	}
 }
 
-// TestFirelyTargetTypesEveryNode runs the discriminated form over the whole
+// TestBundleTargetTypesEveryNode runs the discriminated form over the whole
 // corpus. The property a schema-driven deserializer needs is that no node with
 // structure is left without a "type"; a single fixture cannot show that holds
 // across every construct the translator emits.
-func TestFirelyTargetTypesEveryNode(t *testing.T) {
+func TestBundleTargetTypesEveryNode(t *testing.T) {
 	corpusDir := filepath.Join("..", "..", "test", "corpus", "cqframework")
 	corpus, err := parity.LoadCorpus(corpusDir)
 	if err != nil {
@@ -247,6 +247,71 @@ func TestFirelyTargetTypesEveryNode(t *testing.T) {
 	}
 	if checked == 0 {
 		t.Fatal("no fixtures checked")
+	}
+}
+
+// TestImpliedTypeRoundTrip pins that AddTypeDiscriminators and StripImpliedTypes
+// are exact inverses over the whole corpus.
+//
+// This is what lets the parity harness normalize the bundle shape away instead
+// of inflating echo-elm's output to meet it: stripping is only lossless if every
+// discriminator it removes is one that position would have put back. Checking
+// the identity on real output proves that for every construct the translator
+// emits, not just the ones a hand-written sample happens to cover.
+func TestImpliedTypeRoundTrip(t *testing.T) {
+	corpusDir := filepath.Join("..", "..", "test", "corpus", "cqframework")
+	corpus, err := parity.LoadCorpus(corpusDir)
+	if err != nil {
+		t.Fatalf("load corpus: %v", err)
+	}
+	translate := parity.ProfileTranslateFunc(corpus.OptionProfiles["default"])
+
+	for _, fix := range corpus.Fixtures {
+		if fix.ExpectedStatus != "success" {
+			continue
+		}
+		fix := fix
+		t.Run(strings.TrimSuffix(fix.Path, ".cql"), func(t *testing.T) {
+			lean, err := translate(filepath.Join(corpusDir, fix.Path))
+			if err != nil {
+				t.Fatalf("translate: %v", err)
+			}
+			// Re-marshal through the same encoder so the comparison is about
+			// content rather than key order or indentation.
+			canonical := func(b []byte) string {
+				var v any
+				if err := json.Unmarshal(b, &v); err != nil {
+					t.Fatalf("unmarshal: %v", err)
+				}
+				out, err := json.MarshalIndent(v, "", "  ")
+				if err != nil {
+					t.Fatalf("marshal: %v", err)
+				}
+				return string(out)
+			}
+
+			fat, err := elm.AddTypeDiscriminators(lean)
+			if err != nil {
+				t.Fatalf("add discriminators: %v", err)
+			}
+			back, err := elm.StripImpliedTypes(fat)
+			if err != nil {
+				t.Fatalf("strip implied types: %v", err)
+			}
+			if canonical(back) != canonical(lean) {
+				t.Errorf("add→strip did not round-trip to the original lean shape")
+			}
+
+			// Stripping CLI-shaped ELM must change nothing at all, since the
+			// harness applies it on every comparison path.
+			noop, err := elm.StripImpliedTypes(lean)
+			if err != nil {
+				t.Fatalf("strip implied types (lean): %v", err)
+			}
+			if canonical(noop) != canonical(lean) {
+				t.Errorf("stripping already-lean ELM was not a no-op")
+			}
+		})
 	}
 }
 
