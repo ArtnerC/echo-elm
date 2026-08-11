@@ -315,26 +315,40 @@ gaps are real and not serializer shape.
 
 Ordered by expected effort-to-value.
 
-### G1 — Empty collections are emitted instead of omitted (~3,300 diffs)
+### G1 — Empty collections ~~are emitted instead of omitted~~ — WITHDRAWN (~3,300 diffs)
 
-Largest single win and almost certainly a one-line-per-field fix.
+**This is Part A's mistake, one level down.** G1 said "CQF omits the key" — but the
+CQF *CLI* emits it. Only the JAXB writer omits it, and the JAXB writer is the
+reference these counts came from. Measured directly:
 
-| Field | Count |
-|---|---|
-| `codeSystem` | 1399 |
-| `signature` | 1240 |
-| `codeFilter` | 117 |
-| `dateFilter` | 117 |
-| `include` | 117 |
-| `otherFilter` | 117 |
-| `let` | 106 |
+```
+version      signature  include  codeFilter  dateFilter  otherFilter  codeSystem   sigLevel
+3.29.0               2        2           2           2            2           1     None
+4.8.0                2        2           2           2            2           1     None
+5.0.0                2        2           2           2            2           1     None
+```
 
-echo emits `"signature": []`; CQF omits the key. Audit every slice field in `internal/elm`
-for `omitempty` (or the equivalent custom-marshaller branch).
+All three CLI releases emit the empty arrays *and* `signatureLevel: "None"`. JAXB/MOXy
+omits them for the same reason it invented `Library$Usings`: an empty collection maps to
+"no XML elements", so it round-trips out of the object model as an absent key.
 
-### G2 — `signatureLevel: "None"` is emitted (382 diffs, one per library)
+echo-elm already has an explicit mechanism for this — `Translator.cqfEmptyArrayField()`,
+gated on `CQFMode` — and emits exactly what the CLI emits. **Acting on G1 would have
+broken CLI parity**, which is precisely what Part A established about adding `type`
+everywhere. The correct fix is on the comparison path, not the emission path: reduce the
+bundle shape to the lean CLI shape, the same inversion §3.4 prescribes for discriminators.
 
-CQF omits `signatureLevel` when it is `None`. Same class of fix as G1.
+### G2 — `signatureLevel: "None"` is emitted — WITHDRAWN (382 diffs, one per library)
+
+Same finding: the CQF CLI emits `"signatureLevel":"None"`. See the table above. Withdrawn
+for the same reason as G1.
+
+### Generalized lesson
+
+Both G1/G2 and the original Part A were produced by diffing echo-elm's CLI-shaped output
+against JAXB-shaped reference ELM and attributing every difference to the translator.
+Before any remaining G-item is acted on, it must be re-measured with **both sides in the
+same serializer shape**. `parity --bundle` now does this automatically.
 
 ### G3 — Result-type inference divergence (~1,700 diffs)
 
@@ -436,13 +450,41 @@ artifacts.
 
 | Issue | Scope | Size |
 |---|---|---|
-| A | G1 + G2 — omit empty collections and default `signatureLevel` | small |
+| ~~A~~ | ~~G1 + G2~~ — **withdrawn**, the CQF CLI emits both; echo-elm already matches | none |
 | B | G7 — definition/element ordering | small, high leverage |
 | C | G6 — `libraryName` on qualified refs | small |
 | D | G5 — context resolution | medium, correctness |
 | E | G4 — tag annotations | medium |
 | F | G3 — result-type inference (split emission-policy vs. wrong-type) | large |
 | G | G8 + G9 — aggregate operand shape, re-measure boolean expansion | medium |
+
+---
+
+## Part 6 — Single CQF pin (5.0.0)
+
+The parity target is now one release, 5.0.0, rather than 3.29.0 and 4.8.0 together.
+
+The two pins shared one committed golden set, which only worked because the harness
+normalized away every field the releases disagreed on. That made those normalizations
+load-bearing for the collapse rather than justified on their own terms, and left the
+harness unable to distinguish "the two upstreams differ here" from "echo-elm is wrong
+here" — the same category error as Part A, in the version dimension.
+
+Measured before changing anything: echo-elm matches CQF 5.0.0 at **291/291 across every
+option profile**, and regenerating the goldens from 5.0.0 produces a byte-identical tree.
+The ModelInfo tables are unchanged too. So the retarget carried no behavioral fallout.
+
+Removed with the second pin: `CompareVersionGoldens`, the `versionDivergent` corpus field,
+and `demo/showdiff`, whose whole purpose was explaining where the two releases disagreed.
+
+One normalization outlived its stated reason and is now documented honestly rather than
+removed: stripping empty `"annotation": []` and `"t": []`. It was attributed to
+3.29.0-vs-4.8.0 asymmetry, but it is an echo-elm emission gap — CQF emits the empty
+container on nearly every node and echo-elm omits it. Disabling the strip drops parity
+from 291/291 to **161/294**. An empty container carries no information for an ELM
+consumer, so it still satisfies the normalization contract, but note the direction: this
+is the mirror image of G1. There, echo-elm emitted empty collections the JAXB reference
+omitted; here, echo-elm omits empty collections the CLI emits.
 
 ---
 
@@ -461,9 +503,9 @@ The first of these is the one worth upstreaming into `parity --bundle`; see 4.3.
 
 ## Actions
 
-- [ ] Amend Part A of `03-cqf-parity-gaps.md` to remove the Firely justification entirely
-- [ ] Rename `--target firely` to `--target bundle` and fix the `AddTypeDiscriminators` doc comment
-- [ ] Add reference-side implied-discriminator stripping to `NormalizeForGolden` (4.4)
-- [ ] Derive and validate the option profile in `parity --bundle` (4.3)
-- [ ] Open issues A–G above and replace the issue 03 gap tables with Part 5
-- [ ] Re-measure G9 under the corrected profile before acting on it
+- [x] Amend Part A of `03-cqf-parity-gaps.md` to remove the Firely justification entirely
+- [x] Rename `--target firely` to `--target bundle` and fix the `AddTypeDiscriminators` doc comment
+- [x] Add reference-side implied-discriminator stripping to `NormalizeForGolden` (4.4) — `elm.StripImpliedTypes`, with a corpus-wide round-trip proof
+- [x] Derive and validate the option profile in `parity --bundle` (4.3)
+- [x] A withdrawn (see G1/G2). B–G stand but need re-measuring in a single serializer shape first
+- [ ] Re-measure G3–G9 under the corrected profile *and* a single serializer shape before acting

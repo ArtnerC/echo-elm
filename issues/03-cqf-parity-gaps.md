@@ -38,11 +38,15 @@ No `"type": "CaseItem"`. Echo-elm matches the CLI here.
 
 **Consequence:** adding `type` everywhere would *break* CQF CLI parity, which is echo-elm's stated compatibility target. The fully-discriminated form belongs in an opt-in output mode, not in default output.
 
-**Implemented** as `--target firely` (default `cqf`), and `TranslateResult.FirelyJSON()` on the Go API. It is a post-serialization pass over the ELM JSON — the same positional knowledge the CLI serializer relies on, spelled back out — so it needs nothing from the translator and cannot perturb default output. Nodes that already carry a `type` keep it, so `FunctionDef`, the `With`/`Without` relationship clauses and the sort-by variants are untouched.
+**Implemented** as `--target bundle` (default `cqf`), and `TranslateResult.BundleJSON()` on the Go API. It is a post-serialization pass over the ELM JSON — the same positional knowledge the CLI serializer relies on, spelled back out — so it needs nothing from the translator and cannot perturb default output. Nodes that already carry a `type` keep it, so `FunctionDef`, the `With`/`Without` relationship clauses and the sort-by variants are untouched.
 
-The property that matters to a deserializer dispatching on `type` is that no node with structure is left bare, and one fixture cannot show that holds for every construct: `TestFirelyTargetTypesEveryNode` asserts it across the whole corpus. It immediately caught a rule a hand-written sample had missed (`Ratio.numerator` / `.denominator`).
+**Correction (issues/04):** this was first shipped as `--target firely`, described as the shape the Firely CQL SDK deserializes. That was wrong, and the name has been retired. Firely *writes* the lean shape and discards these discriminators on read — its `CorrectLegacyConstructs` pass treats the fat shape as legacy input, the synthetic `type` property is validated and thrown away, and Firely's own round-trip fixture carries zero implied discriminators. The shape belongs to CQF's JAXB/MOXy `elm-json` writer, so the target is named for where it is observed: inside FHIR `Library` resources. Firely consumption is precisely the case that does *not* want it.
 
-`--target firely` is rejected with `--format XML`, where every node already carries `xsi:type`.
+The genuine motivation is parity, not compatibility: `parity --ref-dir` and `parity --bundle` cannot produce a meaningful diff while the two sides are in different serializer shapes. On that path the harness now uses the **inverse**, `elm.StripImpliedTypes`, reducing the reference down rather than inflating echo-elm's output up — lossless, and it keeps the comparison from depending on a table that tracks a Java class hierarchy. `--target bundle` remains for writing ELM back into a bundle.
+
+The property that matters to a deserializer dispatching on `type` is that no node with structure is left bare, and one fixture cannot show that holds for every construct: `TestBundleTargetTypesEveryNode` asserts it across the whole corpus. It immediately caught a rule a hand-written sample had missed (`Ratio.numerator` / `.denominator`). `TestImpliedTypeRoundTrip` additionally proves the two directions are exact inverses corpus-wide.
+
+`--target bundle` is rejected with `--format XML`, where every node already carries `xsi:type`.
 
 ### Part B claims that were artifacts of the above
 
