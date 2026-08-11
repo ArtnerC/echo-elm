@@ -388,16 +388,24 @@ different shape (48 ref-only / 46 echo-only). Shape:
 These come from CQL `// @uri:` / `// @domain:` tag comments. The near-equal ref-only /
 echo-only pair suggests ordering or grouping differs where echo does emit them.
 
-### G5 — Context resolution (205 diffs)
+### G5 — Context resolution — DOES NOT REPRODUCE (205 diffs)
 
-| Shape | Count |
-|---|---|
-| `context` `"Patient"` vs `"Unfiltered"` | 159 |
-| `ContextDef.name` `"Measure"` vs `"Patient"` | 46 |
+Re-measured against the CQF 5.0.0 CLI. Both halves of the claim were checked directly:
 
-echo is not honouring a non-`Patient` `context` declaration, and is defaulting retrieves to
-`Unfiltered` where CQF resolves them to the declared context. This is a correctness bug —
-it changes which data a retrieve is scoped to.
+```
+context Unfiltered      CQF contexts=[Unfiltered]    echo contexts=[Unfiltered]     stmt ctx identical
+context Practitioner    CQF contexts=[Practitioner]  echo contexts=[Practitioner]   stmt ctx identical
+```
+
+A non-`Patient` context declaration is honoured, retrieves are scoped to it, and the
+implicit context-accessor statement is generated with the same name, context and
+`SingletonFrom` shape. Nothing here defaults to `Unfiltered`.
+
+This is **not** closed — it is unreproduced. The claim came from the same
+mismatched-profile run as G1/G2, so the likeliest explanation is that the `Measure`
+context came from a construct not exercised here (a measure-specific context defined by an
+included library, most plausibly). Anyone picking this up should produce a failing
+reproducer against the CLI **first**; without one there is nothing to fix.
 
 ### G6 — `libraryName` missing on qualified cross-library references — CONFIRMED and FIXED
 
@@ -478,7 +486,7 @@ artifacts.
 | ~~A~~ | ~~G1 + G2~~ — **withdrawn**, the CQF CLI emits both; echo-elm already matches | none |
 | ~~B~~ | ~~G7~~ — **fixed**, it was G6's ordering consequence | done |
 | ~~C~~ | ~~G6~~ — **fixed**, `FunctionRef` was the gap | done |
-| D | G5 — context resolution | medium, correctness |
+| ~~D~~ | ~~G5~~ — **does not reproduce** against the CLI; needs a reproducer before any work | blocked |
 | E | G4 — tag annotations | medium |
 | F | G3 — result-type inference (split emission-policy vs. wrong-type) | large |
 | G | G8 + G9 — aggregate operand shape, re-measure boolean expansion | medium |
@@ -523,6 +531,31 @@ omitted; here, echo-elm omits empty collections the CLI emits.
   common forms, which is what produced the tables above.
 
 The first of these is the one worth upstreaming into `parity --bundle`; see 4.3.
+
+---
+
+## Status after re-measurement
+
+Everything below was re-run against the **CQF 5.0.0 CLI**, with both sides in the same
+serializer shape. Parity across the whole corpus and every option profile is **299/299**.
+
+| Item | Outcome |
+|---|---|
+| Part 1–2 (Firely claim) | Confirmed and applied; `--target firely` renamed to `--target bundle` |
+| 3.1–3.5 | Done; the exhaustiveness test is joined by a round-trip test |
+| Part 4 (option profiles) | Done; derived from the bundle, mismatch is a hard error |
+| G1, G2 | **Withdrawn** — the CQF CLI emits both; echo-elm already matched |
+| G3 | Not re-measured; result types are profile-sensitive, so measure under the derived profile |
+| G4 | Not re-measured |
+| G5 | **Does not reproduce**; needs a failing reproducer before any work |
+| G6, G7 | **Fixed**, with a regression fixture |
+| G8, G9 | Not re-measured |
+
+The four unmeasured items are left open deliberately rather than guessed at. Every claim in
+the original Part 5 that has now been checked turned out to be either a serializer-shape
+artifact (G1, G2), unreproducible (G5), or real but different in shape from the
+description (G6, G7) — so the remaining counts should be treated as unverified until they
+are re-run the same way.
 
 ---
 
