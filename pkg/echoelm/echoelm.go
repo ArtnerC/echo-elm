@@ -172,9 +172,10 @@ func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult,
 // because their position determines what they are. That is echo-elm's default
 // output, since CLI parity is the compatibility target.
 //
-// Despite the shape's association with .NET tooling, the Firely CQL SDK does not
-// want it: Firely writes the lean shape and discards these discriminators on
-// read. See elm.AddTypeDiscriminators and issues/04 for the evidence.
+// Despite the shape's association with .NET tooling, the SDKs that read ELM from
+// these resources do not want it: they write the lean shape themselves and
+// discard these discriminators on read. See elm.AddTypeDiscriminators and
+// issues/04 for the evidence.
 func (r *TranslateResult) BundleJSON() ([]byte, error) {
 	plain, err := r.MarshalJSON()
 	if err != nil {

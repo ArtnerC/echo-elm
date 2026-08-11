@@ -10,12 +10,11 @@ import (
 // inside FHIR Library resources, and the reason `--target bundle` is named for
 // where the shape is observed rather than for any consumer that wants it.
 //
-// It is emphatically *not* required by the Firely CQL SDK. Firely writes the
-// lean shape, and on read its `CorrectLegacyConstructs` pass treats this one as
-// legacy input: the synthetic `type` property is declared only to be validated
-// and discarded, and the container converter asserts the value starts with
-// "Library$" purely so it can skip it. Firely's own round-trip test fixture
-// carries zero implied discriminators. Producing this shape *for* Firely would
+// It is not required by ELM consumers. The .NET SDK that reads ELM out of these
+// resources writes the lean shape itself, and on read treats this one as legacy
+// input: the synthetic `type` property is declared only to be validated and
+// discarded, and the container converter recognises the "Library$" prefix purely
+// so it can skip it. Producing this shape for a schema-driven deserializer would
 // be backwards; issues/04 documents that correction in full.
 //
 // What it is genuinely for is parity. `parity --bundle` and `parity --ref-dir`

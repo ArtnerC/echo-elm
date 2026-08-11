@@ -21,7 +21,7 @@
 task install:deps     # Go modules + pnpm install for web/workbench
 task install:antlr    # downloads antlr-4.13.x jar into tools/antlr/
 task install:jdk      # Temurin 17 into tools/jdk/ (parity only)
-task install:cqframework  # upstream CLI JARs 3.29.0 + 4.8.0 into tools/cqframework/<version>/
+task install:cqframework  # upstream CLI JAR 5.0.0 into tools/cqframework/<version>/
 ```
 
 ## Common loops

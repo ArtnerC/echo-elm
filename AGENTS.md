@@ -17,8 +17,7 @@ pointers into the versioned reference library under `references\`.
   (R2025), published 2025-03-07) and the ELM R1 schema. The main
   `echo-elm translate` interface is modern XML/JSON output for current SDKs
   and echo-qm; CQFramework `cql-to-elm` compatibility for
-  `info.cqframework:cql-to-elm:3.29.0` and
-  `org.cqframework:cql-to-elm-jvm:4.8.0` lives under
+  `org.cqframework:cql-to-elm-cli:5.0.0` lives under
   `echo-elm cqf translate`.
 - **Companion project (separate repo):** `echo-qm` — the dQM / measure
   evaluation engine. Anything related to ELM execution, terminology
@@ -92,7 +91,7 @@ From `CqlCompilerOptions.defaultOptions()` and *Using CQL with FHIR 2.0.0*:
 - `SignatureLevel`:
   - **Library API + modern `translate` default:** `Overloads`.
   - **CQF compatibility CLI default:** `None` (matches the CQFramework CLI
-    default for `--signatures` in both 3.29.0 and 4.8.0). Preserve this
+    default for `--signatures`). Preserve this
     asymmetry only inside `echo-elm cqf translate`.
 - An artifact's FHIR `cqf-cqlOptions` extension on `Library` overrides
   these defaults.

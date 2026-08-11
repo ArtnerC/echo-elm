@@ -7,10 +7,10 @@ A fully spec-compliant CQL→ELM translator for Go — usable as a CLI tool or i
 **echo-elm** translates [Clinical Quality Language (CQL) 1.5](https://cql.hl7.org/) to
 [Expression Logical Model (ELM)](https://cql.hl7.org/elm.html) in XML or JSON format,
 targeting modern CQL engines such as [echo-qm](https://github.com/echo-health/echo-qm)
-and the [Firely/Microsoft CQL SDK](https://github.com/FirelyTeam/firely-cql-sdk).
+and other ELM consumers.
 
 It also provides a compatibility shim (`echo-elm cqf translate`) for drop-in replacement
-of the CQFramework `cql-to-elm` CLI (versions 3.29.0 and 4.8.0+).
+of the CQFramework `cql-to-elm` CLI, pinned to version 5.0.0.
 
 ## Features
 

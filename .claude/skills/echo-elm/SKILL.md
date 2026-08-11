@@ -1,6 +1,6 @@
 ---
 name: echo-elm
-description: Build, debug, or design the echo-elm Go CQL-to-ELM translator (CLI + importable package) targeting full CQL 1.5.3 compliance and CQFramework cql-to-elm CLI compatibility for both info.cqframework 3.29.0 and org.cqframework 4.8.0+. Use this skill whenever the user mentions echo-elm, CQL parsing, CQL-to-ELM translation, ELM XML/JSON output, ELM suitability, translator options, ModelInfo, FHIRHelpers, ANTLR CQL grammar, jopt-simple flag parity, signature levels, compatibility level, or the cql-to-elm CLI.
+description: Build, debug, or design the echo-elm Go CQL-to-ELM translator (CLI + importable package) targeting full CQL 1.5.3 compliance and CQFramework cql-to-elm CLI compatibility, pinned to org.cqframework 5.0.0. Use this skill whenever the user mentions echo-elm, CQL parsing, CQL-to-ELM translation, ELM XML/JSON output, ELM suitability, translator options, ModelInfo, FHIRHelpers, ANTLR CQL grammar, jopt-simple flag parity, signature levels, compatibility level, or the cql-to-elm CLI.
 ---
 
 # echo-elm skill
