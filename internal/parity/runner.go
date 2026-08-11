@@ -43,9 +43,22 @@ type FixtureResult struct {
 	Duration       time.Duration
 }
 
+// PinnedCQFVersion is the single cqframework release echo-elm targets. It names
+// the launcher directory under tools/cqframework/ that `task parity:jar`
+// installs, and it is the version the committed goldens were generated from.
+//
+// echo-elm previously pinned 3.29.0 and 4.8.0 at once and collapsed their
+// goldens into one set. That only worked because the harness normalized away
+// every field the two disagreed on, and those normalizations were load-bearing
+// for the collapse rather than justified on their own terms. One pin means a
+// difference is a difference.
+const PinnedCQFVersion = "5.0.0"
+
 // Config holds harness configuration.
 type Config struct {
-	// CQFVersion is "3.29.0" or "4.8.0".
+	// CQFVersion selects the launcher under tools/cqframework/<version>/.
+	// Defaults to PinnedCQFVersion; other values are for ad-hoc investigation
+	// of upstream behavior changes, not for the committed baseline.
 	CQFVersion string
 	// ToolsDir is the root of tools/ (default "tools").
 	ToolsDir string
@@ -392,55 +405,6 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 	return written, nil, nil
 }
 
-// CompareVersionGoldens walks two version golden trees and reports any files
-// that differ. Returns a list of differing paths (relative to the golden root).
-// Fixture paths in skip (as listed in corpus.yaml under versionDivergent) are
-// known to differ between upstream versions and are not reported.
-func CompareVersionGoldens(outputDir, versionA, versionB string, skip map[string]bool) ([]string, error) {
-	dirA := filepath.Join(outputDir, versionA)
-	var diffs []string
-
-	err := filepath.Walk(dirA, func(pathA string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
-			return err
-		}
-		rel, _ := filepath.Rel(dirA, pathA)
-		if skip[fixturePathFromGoldenRel(rel)] {
-			return nil
-		}
-		pathB := filepath.Join(outputDir, versionB, rel)
-
-		aBytes, err := os.ReadFile(pathA)
-		if err != nil {
-			return err
-		}
-		bBytes, err := os.ReadFile(pathB)
-		if os.IsNotExist(err) {
-			diffs = append(diffs, rel+" (missing in "+versionB+")")
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		if normalizeJSON(string(aBytes)) != normalizeJSON(string(bBytes)) {
-			diffs = append(diffs, rel)
-		}
-		return nil
-	})
-	return diffs, err
-}
-
-// fixturePathFromGoldenRel converts a golden path relative to a version root
-// ("default/elm-nodes/Foo.json") into the corpus fixture path it came from
-// ("elm-nodes/Foo.cql").
-func fixturePathFromGoldenRel(rel string) string {
-	rel = filepath.ToSlash(rel)
-	if i := strings.Index(rel, "/"); i >= 0 {
-		rel = rel[i+1:]
-	}
-	return strings.TrimSuffix(rel, ".json") + ".cql"
-}
-
 // normalizeJSON re-marshals JSON with sorted keys and consistent spacing, after
 // reducing the few things that cannot be compared across translators.
 //
@@ -449,8 +413,13 @@ func fixturePathFromGoldenRel(rel string) string {
 // some other way. What is currently reduced, and why:
 //
 //   - translatorVersion — names the producing translator; volatile by definition.
-//   - empty "annotation": [] and "t": [] arrays — CQF 4.8.0 emits them where
-//     3.29.0 omits them, so they are pure serializer asymmetry.
+//   - empty "annotation": [] and "t": [] arrays — CQF emits the empty container
+//     on nearly every node; echo-elm omits it. An empty container carries no
+//     information for a consumer of the ELM, so this meets the rule above, but
+//     note what changed: it used to be justified as 3.29.0-vs-4.8.0 serializer
+//     asymmetry, and that reason died with the second pin. It is now squarely an
+//     echo-elm emission gap that this reduction is choosing to tolerate.
+//     Measured against CQF 5.0.0: 130 of 294 fixtures depend on it.
 //   - "t" tag arrays are sorted by name — tag content is compared, ordering is not.
 //   - localId (and the "r" references that point at it) — an internal node index.
 //     CQF numbers from a pre-order ANTLR rule visit; echo-elm uses its own counter.
@@ -543,10 +512,12 @@ func collectAnnotationText(v interface{}) string {
 	return sb.String()
 }
 
-// stripEmptyAnnotations recursively removes version-format-only empty arrays
-// from the JSON tree so 3.29.0 and 4.8.0 goldens can collapse:
-//   - "annotation": []  on any ELM node (4.8.0 emits it, 3.29.0 omits it)
-//   - "t": []           inside Annotation objects (tag array, same asymmetry)
+// stripEmptyAnnotations recursively removes empty annotation containers from the
+// JSON tree:
+//   - "annotation": []  on any ELM node (CQF emits it, echo-elm omits it)
+//   - "t": []           inside Annotation objects (tag array, same)
+//
+// See normalizeJSON for why this is tolerated and what it is hiding.
 func stripEmptyAnnotations(v interface{}) {
 	switch node := v.(type) {
 	case map[string]interface{}:

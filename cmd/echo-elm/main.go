@@ -281,7 +281,8 @@ func runParity(args []string) {
 		profile    string
 		bundlePath string
 	)
-	fs.StringVar(&cqfVersion, "cqf-version", "4.8.0", "CQFramework version to compare against: 3.29.0|4.8.0")
+	fs.StringVar(&cqfVersion, "cqf-version", parity.PinnedCQFVersion,
+		"CQFramework version to compare against (default: the pinned release)")
 	fs.StringVar(&corpus, "corpus", "test/corpus/cqframework", "Corpus directory containing corpus.yaml")
 	fs.StringVar(&toolsDir, "tools-dir", "tools", "Tools directory containing cqframework/ and jdk/")
 	fs.StringVar(&tag, "tag", "", "Run only fixtures with this tag (default: all)")

@@ -260,12 +260,10 @@ fixtures:
     description: RA Disease Activity Monitoring proportion measure (FHIR R4) with DMARD therapy
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators]
-    # CQF 3.29.0 and 4.8.0 lower the Interval<DateTime> parameter default
-    # differently: 3.29.0 emits Property(low/high/lowClosed/highClosed) accessors
-    # over the source Interval plus lowClosedExpression/highClosedExpression,
-    # while 4.8.0 folds the Date bounds directly into the promoted Interval.
-    # The 4.8.0 form is the golden.
-    versionDivergent: true
+    # CQF folds the Date bounds of an Interval<DateTime> parameter default
+    # directly into the promoted Interval. Older releases lowered it through
+    # Property(low/high/lowClosed/highClosed) accessors over the source Interval;
+    # the pinned release does not, and the golden is the folded form.
     tags: [ra-measure]
 
   # ── ELM node emission regressions (issues/03-cqf-parity-gaps.md) ────────────
@@ -342,7 +340,6 @@ fixtures:
     description: Implicit Date→DateTime conversion of interval bounds when compared against a DateTime
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, debug]
-    # Same divergence as ra-measure: 3.29.0 lowers the promotion through Property
-    # accessors over the source interval, 4.8.0 folds the bounds in directly.
-    versionDivergent: true
+    # Same interval-bound promotion as ra-measure: older CQF lowered it through
+    # accessors over the source interval; the pinned release folds them in.
     tags: [elm-nodes, datetime]
