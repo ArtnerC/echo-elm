@@ -399,31 +399,56 @@ echo is not honouring a non-`Patient` `context` declaration, and is defaulting r
 `Unfiltered` where CQF resolves them to the declared context. This is a correctness bug —
 it changes which data a retrieve is scoped to.
 
-### G6 — `libraryName` missing on qualified cross-library references (148 diffs)
+### G6 — `libraryName` missing on qualified cross-library references — CONFIRMED and FIXED
 
-For `Alias.someExpression`, CQF emits:
+Re-measured against the CQF 5.0.0 CLI, so both sides are in the same serializer shape.
+The gap is real but narrower than described: `ExpressionRef` already carried `libraryName`;
+`FunctionRef` did not.
 
-```json
-{ "type": "ExpressionRef", "name": "someExpression", "libraryName": "Alias" }
+```
+CQF   UsesShared  ExpressionRef  name='SharedValue'  libraryName='H'
+CQF   UsesFunc    FunctionRef    name='Doubled'      libraryName='H'
+echo  UsesShared  ExpressionRef  name='SharedValue'  libraryName='H'
+echo  UsesFunc    FunctionRef    name='Doubled'      libraryName=None   ← gap
 ```
 
-echo emits the `ExpressionRef` without `libraryName`. 98 occurrences under one alias, 50
-under another in the sampled corpus. Straightforward fix in the reference resolver, but it
-is a correctness bug — the reference is ambiguous without it.
+**Root cause.** CQL spells a library-qualified call and a method invocation identically —
+`<term>.<name>(...)` — so the parser cannot distinguish them and builds both as
+`FunctionRef{Name: "Doubled", Operands: [H, 21]}`. Only the include aliases separate the
+two cases, and those are not known at parse time. It is a correctness bug: the call emits
+a reference to a function *in the current library*, which may not exist, or may exist and
+be a different function.
 
-### G7 — Ordering, not omission (~190 diffs, three fields)
+**Fixed** by recovering the qualifier from the include aliases in a pre-pass. Regression
+fixture: `elm-nodes/CrossLibraryFunction.cql`, where a local `"Doubled"` deliberately
+shadows the included one so the unqualified form resolves to the wrong function rather
+than failing outright.
 
-| Field | Ref-only | Echo-only |
-|---|---|---|
-| `accessLevel` | 48 | 46 |
-| `element` | 48 | 46 |
-| `operand` | 48 | 46 |
+### G7 — Ordering, not omission — CONFIRMED, and it is a consequence of G6
 
-Equal-and-opposite counts across three unrelated fields is the signature of a **sort-order
-mismatch**, not missing data — the index-wise comparison shifts and every subsequent
-element reports as both missing and extra. Investigate this first among the structural
-items: it is likely one ordering rule (definition emission order in `statements.def[]` or
-`element[]`) and fixing it may collapse all three rows at once.
+The re-measurement reproduced this and explains the equal-and-opposite counts.
+
+The fix for G6 has to happen **before** statement ordering, not at emission. Two consumers
+must agree about what `H."Doubled"(21)` refers to: emission needs `libraryName` on the
+node, and `statementEmissionOrder` needs to *not* see a dependency on a local definition of
+the same name. Recovering the qualifier at emission time alone leaves the ordering pass
+believing the call depends on the local `"Doubled"`, which hoists that definition ahead of
+its referent and shifts every subsequent entry in `statements.def[]` — producing exactly
+the "equal ref-only and echo-only counts across unrelated fields" signature G7 describes.
+
+This was caught only because the fix was verified end-to-end against the CLI: the emitted
+nodes were already correct while the document order was wrong.
+
+### G-adjacent — `"operand": []` on zero-argument functions — FIXED
+
+Found while building the G6 fixture. CQF emits `"operand": []` on a `FunctionDef` that
+takes no parameters; echo-elm omitted the key. The field is what distinguishes a
+`FunctionDef` from an `ExpressionDef`, which never carries one.
+
+Note the direction: this is the mirror image of the withdrawn G1. There, echo-elm emitted
+empty collections the JAXB reference omitted. Here, echo-elm omits an empty collection the
+CLI emits. Which direction is a bug depends entirely on which serializer is the target,
+which is the whole point of this document.
 
 ### G8 — Aggregate / operand shape divergence
 
@@ -451,8 +476,8 @@ artifacts.
 | Issue | Scope | Size |
 |---|---|---|
 | ~~A~~ | ~~G1 + G2~~ — **withdrawn**, the CQF CLI emits both; echo-elm already matches | none |
-| B | G7 — definition/element ordering | small, high leverage |
-| C | G6 — `libraryName` on qualified refs | small |
+| ~~B~~ | ~~G7~~ — **fixed**, it was G6's ordering consequence | done |
+| ~~C~~ | ~~G6~~ — **fixed**, `FunctionRef` was the gap | done |
 | D | G5 — context resolution | medium, correctness |
 | E | G4 — tag annotations | medium |
 | F | G3 — result-type inference (split emission-policy vs. wrong-type) | large |

@@ -318,6 +318,18 @@ fixtures:
     profiles: all
     tags: [elm-nodes, terminology]
 
+  - path: elm-nodes/SharedFunctions.cql
+    description: Helper library providing functions for CrossLibraryFunction
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators]
+    tags: [elm-nodes]
+
+  - path: elm-nodes/CrossLibraryFunction.cql
+    description: Library-qualified function calls carry libraryName (issues/04 G6)
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators]
+    tags: [elm-nodes]
+
   - path: elm-nodes/CrossLibraryTerminology.cql
     description: Library-qualified value set, code, code system and expression references resolved through an include
     expectedStatus: success

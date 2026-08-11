@@ -946,6 +946,9 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	}
 
 	if len(lib.Statements) > 0 || len(stmtDefs) > 0 {
+		// Recover library qualifiers before ordering, so the dependency analysis
+		// and the emitted nodes agree about what each call refers to.
+		t.resolveLibraryQualifiedCalls(lib.Statements)
 		stmts := &elm.StatementDefs{Def: stmtDefs}
 		for _, s := range statementEmissionOrder(lib.Statements) {
 			stmtCtx := s.Context
@@ -1128,6 +1131,49 @@ func includedDefTypes(opts *Options, lib *ast.Library, path string) map[string]t
 	sub.opts.LibrarySource = nil
 	sub.Translate(lib, path+".cql")
 	return sub.defTypeSpecs
+}
+
+// resolveLibraryQualifiedCalls rewrites `Alias.Func(args)` from the shape the
+// grammar produces into a library-qualified call.
+//
+// CQL spells a library-qualified call and a method invocation identically —
+// `<term>.<name>(...)` — so the parser cannot tell them apart and builds both as
+// FunctionRef{Name: "Func", Operands: [Alias, args...]}. Only the include
+// aliases distinguish them, and those are not known until resolution.
+//
+// This runs once, before anything reads the statement bodies, because two
+// separate consumers have to agree about it: emission needs libraryName on the
+// node, and statementEmissionOrder needs to NOT see a dependency on a local
+// definition of the same name. Recovering the qualifier at emission time alone
+// leaves the ordering pass believing `H."Doubled"(21)` depends on a local
+// "Doubled", which hoists that definition ahead of its referent and reorders
+// statements.def[] away from CQF.
+//
+// Only the alias must be known, not the function: a library's functions are not
+// all reachable through libSyms, and an unknown name under a known alias is
+// still library-qualified. This mirrors the PropertyExpr path, which resolves
+// `Alias.Symbol` the same way.
+func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinition) {
+	for _, s := range stmts {
+		if s == nil || s.Expression == nil {
+			continue
+		}
+		ast.Walk(s.Expression, func(n ast.Node) {
+			fr, isCall := n.(*ast.FunctionRef)
+			if !isCall || fr.LibraryName != "" || len(fr.Operands) == 0 {
+				return
+			}
+			ir, isIdent := fr.Operands[0].(*ast.IdentifierRef)
+			if !isIdent {
+				return
+			}
+			if _, isLib := t.libSyms[ir.Name]; !isLib {
+				return
+			}
+			fr.LibraryName = ir.Name
+			fr.Operands = fr.Operands[1:]
+		})
+	}
 }
 
 // statementEmissionOrder returns the statements in the order CQF emits them.
