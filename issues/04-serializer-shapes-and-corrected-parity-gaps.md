@@ -427,12 +427,18 @@ two cases, and those are not known at parse time. It is a correctness bug: the c
 a reference to a function *in the current library*, which may not exist, or may exist and
 be a different function.
 
-**Fixed** by recovering the qualifier from the include aliases in a pre-pass. Regression
-fixture: `elm-nodes/CrossLibraryFunction.cql`, where a local `"Doubled"` deliberately
-shadows the included one so the unqualified form resolves to the wrong function rather
-than failing outright.
+**Partially fixed** by recovering the qualifier from the include aliases in a pre-pass.
+Regression fixture: `elm-nodes/CrossLibraryFunction.cql`, where a local `"Doubled"`
+deliberately shadows the included one so the unqualified form resolves to the wrong
+function rather than failing outright.
 
-### G7 — Ordering, not omission — CONFIRMED, and it is a consequence of G6
+> **Superseded by issues/05 3.6 — this is NOT closed.** The fix bails out unless the
+> receiver is an include alias (`if _, isLib := t.libSyms[ir.Name]; !isLib { return }`).
+> Real content invokes **fluent functions through an expression reference**, which never
+> takes that path, and 364 `FunctionRef` nodes are still missing `libraryName`. Calling
+> this "fixed" was an over-claim from a fixture that only exercised the alias receiver.
+
+### G7 — Ordering — CONFIRMED as a consequence, not an independent defect
 
 The re-measurement reproduced this and explains the equal-and-opposite counts.
 
@@ -446,6 +452,13 @@ the "equal ref-only and echo-only counts across unrelated fields" signature G7 d
 
 This was caught only because the fix was verified end-to-end against the CLI: the emitted
 nodes were already correct while the document order was wrong.
+
+> **Refined by issues/05 3.7 and 3.8.** The ordering *algorithm* is correct and was never
+> the bug — `StatementOrdering.cql` is now a committed negative control proving it. The
+> remaining divergence has two causes: wrong resolution creating phantom dependency edges
+> (G6, still open), and the implicit context accessor being prepended rather than emitted
+> at its declaration's source position. The latter is **fixed**, with
+> `measure-shapes/ContextAccessorPosition.cql` as the regression fixture.
 
 ### G-adjacent — `"operand": []` on zero-argument functions — FIXED
 
@@ -545,17 +558,23 @@ serializer shape. Parity across the whole corpus and every option profile is **2
 | 3.1–3.5 | Done; the exhaustiveness test is joined by a round-trip test |
 | Part 4 (option profiles) | Done; derived from the bundle, mismatch is a hard error |
 | G1, G2 | **Withdrawn** — the CQF CLI emits both; echo-elm already matched |
-| G3 | Not re-measured; result types are profile-sensitive, so measure under the derived profile |
-| G4 | Not re-measured |
-| G5 | **Does not reproduce**; needs a failing reproducer before any work |
-| G6, G7 | **Fixed**, with a regression fixture |
-| G8, G9 | Not re-measured |
+| G3 | Re-measured in issues/05: 7,928 divergences, re-scoped into rendering / attachment policy / inference |
+| G4 | **Structurally unmeasurable** by the current harness — the normalizer collapses annotations before comparison |
+| G5 | **Reopened** by issues/05 — 558 occurrences at measure scale; the lead is context established through an included library |
+| G6 | **Partially fixed** — include-alias receivers only; fluent-through-expression still open (issues/05 3.6) |
+| G7 | Accessor position **fixed**; algorithm confirmed correct; remainder depends on G6 |
+| G8 | Folded into the result-type attachment survey (issues/05 Part 5) |
+| G9 | **Withdrawn** by issues/05 — an artifact of index-aligned diffing |
 
-The four unmeasured items are left open deliberately rather than guessed at. Every claim in
-the original Part 5 that has now been checked turned out to be either a serializer-shape
-artifact (G1, G2), unreproducible (G5), or real but different in shape from the
-description (G6, G7) — so the remaining counts should be treated as unverified until they
-are re-run the same way.
+**All of these were subsequently re-measured at measure scale in
+`05-measure-scale-parity-reproducers.md`, which supersedes this table.** Two of the
+verdicts above did not survive that: G6 was over-claimed as fixed when only the
+include-alias case was covered, and G5 was recorded as not reproducing when the corpus
+simply does not contain the construct that triggers it.
+
+The pattern worth keeping: every claim checked so far has turned out to be a
+serializer-shape artifact, a measurement artifact, or real-but-differently-shaped than
+described. Treat any unverified count as unverified.
 
 ---
 

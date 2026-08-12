@@ -640,14 +640,38 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 
 ---
 
+## Progress against Part 7
+
+| # | Item | State |
+|---|---|---|
+| 1 | Harness: align definitions by name | open |
+| 2 | Harness: reduce empty containers + `signatureLevel` on the bundle path | **done** |
+| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 3 of 9 fixtures |
+| 4 | Single type-name rendering path | open |
+| 5 | Result-type attachment policy survey | open |
+| 6 | Implicit model conversions (`FHIRHelpers.To*`) | open |
+| 7 | Implicit cast wrappers around untyped literals | open |
+| 8 | Fluent function resolution through expression receivers | open — this is the real G6 |
+| 9 | Context accessor source position | **done** |
+| 10 | `same or before` / `same or after` operator selection | **done** |
+| 11 | Context propagation from included libraries (G5) | open |
+| 12 | Residual type inference — `List<Any>` collapse | open |
+
+Corpus parity against CQF 5.0.0 after 9 and 10: **318/318**, including the new
+`measure-bundle` profile. That number covers the corpus, which is CQF's conformance suite
+plus synthetic libraries — it is not evidence about measure-shaped content, which is the
+whole point of Part 1.
+
+---
+
 ## Actions
 
 - [x] Re-measure G3–G9 under the corrected profile and a single serializer shape *(closes the open action in `04-serializer-shapes-and-corrected-parity-gaps.md`)*
 - [ ] Fix definition alignment in the parity harness (name-bucketed, overload-skipping) before any further measurement
 - [ ] Add the wrapper-detection pass so missing `As` nodes are countable
-- [ ] Extend `stripEmptyAnnotations`/`stripVolatileFields` to cover the bundle path (Part 4)
-- [ ] Add the `measure-bundle` option profile to `corpus.yaml`
-- [ ] *(optional follow-up)* Lift the nine samples from Part 3 into `test/corpus/cqframework/measure-shapes/` and wire them into `corpus.yaml`, including the negative controls
-- [ ] Amend `03-cqf-parity-gaps.md` and `04-serializer-shapes-and-corrected-parity-gaps.md` per the Part 6 table — G6/G7 are not fixed, G9 is withdrawn, G5 is reopened
+- [x] Extend `stripEmptyAnnotations`/`stripVolatileFields` to cover the bundle path (Part 4) — `normalizeShape` + `Config.BundleShapedRef`, scoped by test so the CLI path keeps checking those fields
+- [x] Add the `measure-bundle` option profile to `corpus.yaml` — `StringFunctionsTest` excluded from it; CQF itself cannot resolve `IndexOf(String, String)` without demotion
+- [~] Lift the Part 3 samples into `test/corpus/cqframework/measure-shapes/` — 3 of 9 landed (3.5, 3.7, and the 3.8 negative control), i.e. the ones whose gap is now fixed. The rest land with their fixes
+- [x] Amend `04-serializer-shapes-and-corrected-parity-gaps.md` per the Part 6 table — G6 downgraded to partially fixed, G7 reworded as a consequence, G9 withdrawn, G5 reopened
 - [ ] Correct the parity claim in the PR description and README: state the corpus it covers, and that measure-shaped content is not yet covered
 - [ ] Split Part 7 into tracked issues

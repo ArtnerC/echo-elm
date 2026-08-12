@@ -19,6 +19,14 @@ of the CQFramework `cql-to-elm` CLI, pinned to version 5.0.0.
 - Bundled FHIR R4 / FHIRHelpers model info; pluggable QI-Core / US Core / QDM providers
 - Modern CLI: `echo-elm translate`
 - CQFramework-compatible CLI: `echo-elm cqf translate` (byte-exact parity tests)
+
+  Parity is measured against the pinned CQF 5.0.0 CLI over
+  `test/corpus/cqframework/` — CQF's own conformance suite plus synthetic
+  libraries — and currently passes across every option profile. That corpus does
+  **not** yet cover the shapes published measure content uses (implicit
+  FHIRHelpers conversions, alias-qualified type specifiers, fluent functions
+  invoked through an expression receiver); those gaps are tracked in
+  `issues/05-measure-scale-parity-reproducers.md`.
 - Importable Go package: `github.com/artnerc/echo-elm/pkg/echoelm`
 - MCP server: `echo-elm mcp`
 - Lightweight SvelteKit workbench: `echo-elm ui` (loopback-only)
