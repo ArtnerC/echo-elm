@@ -1,0 +1,78 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "StatementOrdering",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "3",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Gamma"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "Gamma",
+                "type": "ExpressionRef"
+              },
+              {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Alpha"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "2",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Beta"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

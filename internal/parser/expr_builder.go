@@ -1168,6 +1168,17 @@ func (b *astBuilder) timingOp(ctx cqlparser.IIntervalOperatorPhraseContext) (op,
 		if dp := c.DateTimePrecision(); dp != nil {
 			prec = b.singularizePrecision(dp.GetText())
 		}
+		// The phrase is `same <precision>? (or before | or after | as)`, so the
+		// relativeQualifier is what separates the three operators. Collapsing
+		// them all to SameAs changes the truth conditions rather than the shape:
+		// `X same or before Y` holds for every X at or before Y, while SameAs
+		// holds only on equality.
+		if rq := c.RelativeQualifier(); rq != nil {
+			if strings.Contains(strings.ToLower(rq.GetText()), "before") {
+				return "SameOrBefore", prec
+			}
+			return "SameOrAfter", prec
+		}
 		return "SameAs", prec
 
 	case *cqlparser.IncludesIntervalOperatorPhraseContext:

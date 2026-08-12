@@ -1,0 +1,326 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TemporalOperatorSelection",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "day": {
+                "type": "Literal",
+                "value": "31",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "12",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "highClosed": true,
+            "low": {
+              "day": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "lowClosed": true,
+            "type": "Interval"
+          },
+          "name": "MP"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "day": {
+              "type": "Literal",
+              "value": "15",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "month": {
+              "type": "Literal",
+              "value": "6",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Date",
+            "year": {
+              "type": "Literal",
+              "value": "2024",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            }
+          },
+          "name": "D"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "high": {
+              "day": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "highClosed": true,
+            "low": {
+              "day": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Date",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "lowClosed": true,
+            "type": "Interval"
+          },
+          "name": "Sub"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ExpressionRef"
+              },
+              {
+                "name": "MP",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "Point In Interval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "Sub",
+                "type": "ExpressionRef"
+              },
+              {
+                "name": "MP",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "IncludedIn"
+          },
+          "name": "Interval In Interval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "MP",
+                "type": "ExpressionRef"
+              },
+              {
+                "name": "D",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "Contains"
+          },
+          "name": "Interval Contains Point"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "MP",
+                "type": "ExpressionRef"
+              },
+              {
+                "name": "Sub",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "Includes"
+          },
+          "name": "Interval Includes Interval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ExpressionRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ExpressionRef"
+                },
+                "signature": [],
+                "type": "End"
+              }
+            ],
+            "signature": [],
+            "type": "SameOrBefore"
+          },
+          "name": "Same Or Before"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ExpressionRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ExpressionRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "signature": [],
+            "type": "SameOrAfter"
+          },
+          "name": "Same Or After"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ExpressionRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ExpressionRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "signature": [],
+            "type": "SameAs"
+          },
+          "name": "Same As"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ExpressionRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ExpressionRef"
+                },
+                "signature": [],
+                "type": "End"
+              }
+            ],
+            "signature": [],
+            "type": "Before"
+          },
+          "name": "Strictly Before"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

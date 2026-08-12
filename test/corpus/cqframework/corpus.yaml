@@ -44,6 +44,28 @@ option_profiles:
       enableResultTypes: true
       signatureLevel: None
 
+  measure-bundle:
+    description: >
+      The option set published measure bundles declare in their CqlToElmInfo
+      annotation. Result types are on, which is what makes the type-rendering and
+      inference surface observable at all; list traversal, demotion and promotion
+      are off. No other profile matches this combination, which is why gaps that
+      only appear in measure-shaped content were invisible (issues/05 Part 1).
+    cliFlags:
+      - --locators
+      - --result-types
+      - --disable-list-traversal
+      - --disable-list-demotion
+      - --disable-list-promotion
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: true
+      enableResultTypes: true
+      disableListTraversal: true
+      disableListDemotion: true
+      disableListPromotion: true
+      signatureLevel: None
+
   sig-overloads:
     description: SignatureLevel=Overloads — record signatures for overloaded calls
     cliFlags: [--signatures, Overloads]
@@ -214,8 +236,11 @@ fixtures:
     description: String functions (Length, Upper, Lower, Substring, etc.)
     expectedStatus: success
     profiles: all
-    # upstream-error: CQF produces no output for strict/disable-list-promotion combinations.
-    excludeProfiles: [strict, disable-list-promotion]
+    # upstream-error: CQF produces no output for strict/disable-list-promotion
+    # combinations. measure-bundle is the same cause — it disables demotion and
+    # promotion, and IndexOf(String, String) / Contains(String, String) only
+    # resolve through them.
+    excludeProfiles: [strict, disable-list-promotion, measure-bundle]
     tags: [cqf-corpus, string]
 
   - path: cqf-tests/ConditionalExpressionsTest.cql
@@ -317,6 +342,28 @@ fixtures:
     expectedStatus: success
     profiles: all
     tags: [elm-nodes, terminology]
+
+  # ── Measure-shaped constructs (issues/05) ──────────────────────────────────
+  # Shapes that only appear in published measure content. Each runs under
+  # measure-bundle, the option set such content declares.
+
+  - path: measure-shapes/TemporalOperatorSelection.cql
+    description: same or before / same or after are their own operators (issues/05 3.5)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ContextAccessorPosition.cql
+    description: Implicit context accessor sits at the context declaration (issues/05 3.7)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/StatementOrdering.cql
+    description: Negative control — dependency ordering already matches (issues/05 3.8)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
 
   - path: elm-nodes/SharedFunctions.cql
     description: Helper library providing functions for CrossLibraryFunction

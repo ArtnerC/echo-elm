@@ -729,3 +729,57 @@ define "Total": "Items" I aggregate Sum starting 0: Sum + I.score`, withRT)
 		}
 	})
 }
+
+// TestConcurrentWithOperatorSelection pins that the three `same ...` forms are
+// three different ELM operators. Collapsing them to SameAs changes what the
+// expression means: `same or before` holds at or before the boundary, SameAs
+// only on equality.
+func TestConcurrentWithOperatorSelection(t *testing.T) {
+	r := translate(t, `library T version '1.0'
+define MP: Interval[@2024-01-01, @2024-12-31]
+define D: @2024-06-15
+define SameOrBeforeEnd: D same or before end of MP
+define SameOrAfterStart: D same or after start of MP
+define SameAsStart: D same as start of MP
+define SameOrBeforeDay: D same day or before end of MP`)
+
+	for _, c := range []struct{ def, want, wantPrecision string }{
+		{"SameOrBeforeEnd", "SameOrBefore", ""},
+		{"SameOrAfterStart", "SameOrAfter", ""},
+		{"SameAsStart", "SameAs", ""},
+		{"SameOrBeforeDay", "SameOrBefore", "Day"},
+	} {
+		e := exprOf(t, r, c.def)
+		if got := nodeType(t, e); got != c.want {
+			t.Errorf("%s: type = %q, want %q", c.def, got, c.want)
+		}
+		if prec, _ := e["precision"].(string); prec != c.wantPrecision {
+			t.Errorf("%s: precision = %q, want %q", c.def, prec, c.wantPrecision)
+		}
+	}
+}
+
+// TestContextAccessorSourcePosition pins that the implicit context accessor is
+// emitted where the `context` declaration appears, not prepended. A define
+// written above the declaration must come out above the accessor.
+func TestContextAccessorSourcePosition(t *testing.T) {
+	r := translate(t, `library T version '1.0'
+using FHIR version '4.0.1'
+define "Before": 1 + 1
+context Patient
+define "After": 2 + 2`)
+
+	var names []string
+	for _, def := range r.Library.Statements.Def {
+		names = append(names, def.Name)
+	}
+	want := []string{"Before", "Patient", "After"}
+	if len(names) != len(want) {
+		t.Fatalf("statements = %v, want %v", names, want)
+	}
+	for i := range want {
+		if names[i] != want[i] {
+			t.Fatalf("statements = %v, want %v", names, want)
+		}
+	}
+}

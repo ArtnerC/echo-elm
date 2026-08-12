@@ -933,24 +933,36 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		explicitNames[s.Name] = true
 	}
 
-	// Statements — prepend implicit context accessor for each unique context that
-	// (a) is not "Unfiltered", and (b) has no explicit definition with the same name.
-	stmtDefs := make([]*elm.StatementDef, 0, len(lib.Contexts))
+	// Implicit context accessor for each unique context that (a) is not
+	// "Unfiltered", and (b) has no explicit definition with the same name.
+	//
+	// Each accessor is keyed by the source position of its `context` declaration,
+	// not prepended: CQF walks declarations in source order and creates the
+	// accessor when it reaches the declaration, so a define written *above*
+	// `context Patient` is emitted above the Patient accessor.
+	accessors := make([]positionedAccessor, 0, len(lib.Contexts))
 	seenAccessor := map[string]bool{}
 	for _, ctx := range lib.Contexts {
 		if ctx.Name == "Unfiltered" || explicitNames[ctx.Name] || seenAccessor[ctx.Name] {
 			continue
 		}
 		seenAccessor[ctx.Name] = true
-		stmtDefs = append(stmtDefs, t.buildContextAccessor(ctx.Name, lib))
+		accessors = append(accessors, positionedAccessor{
+			at:  ctx.Loc().Start,
+			def: t.buildContextAccessor(ctx.Name, lib),
+		})
 	}
 
-	if len(lib.Statements) > 0 || len(stmtDefs) > 0 {
+	if len(lib.Statements) > 0 || len(accessors) > 0 {
 		// Recover library qualifiers before ordering, so the dependency analysis
 		// and the emitted nodes agree about what each call refers to.
 		t.resolveLibraryQualifiedCalls(lib.Statements)
-		stmts := &elm.StatementDefs{Def: stmtDefs}
-		for _, s := range statementEmissionOrder(lib.Statements) {
+		ordered := statementEmissionOrder(lib.Statements)
+		stmts := &elm.StatementDefs{Def: leadingAccessors(&accessors, ordered)}
+		for _, s := range ordered {
+			// Emit any accessor whose context declaration precedes this statement
+			// in the source before the statement itself.
+			stmts.Def = append(stmts.Def, accessorsBefore(&accessors, s.Loc().Start)...)
 			stmtCtx := s.Context
 			if stmtCtx == "" {
 				stmtCtx = "Unfiltered"
@@ -1026,6 +1038,8 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			t.operandTypeSpecs = nil
 			stmts.Def = append(stmts.Def, sd)
 		}
+		// Any accessor whose declaration sits after every statement.
+		stmts.Def = append(stmts.Def, drainAccessors(&accessors)...)
 		out.Statements = stmts
 	}
 
@@ -1131,6 +1145,56 @@ func includedDefTypes(opts *Options, lib *ast.Library, path string) map[string]t
 	sub.opts.LibrarySource = nil
 	sub.Translate(lib, path+".cql")
 	return sub.defTypeSpecs
+}
+
+// positionedAccessor is an implicit context accessor together with the source
+// position of the `context` declaration that produced it.
+type positionedAccessor struct {
+	at  ast.Position
+	def *elm.StatementDef
+}
+
+// leadingAccessors returns the accessors declared before the first statement,
+// or all of them when there are no statements at all.
+func leadingAccessors(pending *[]positionedAccessor, ordered []*ast.ExpressionDefinition) []*elm.StatementDef {
+	if len(ordered) == 0 {
+		return drainAccessors(pending)
+	}
+	return accessorsBefore(pending, ordered[0].Loc().Start)
+}
+
+// accessorsBefore removes and returns every pending accessor declared at or
+// before pos, in declaration order.
+func accessorsBefore(pending *[]positionedAccessor, pos ast.Position) []*elm.StatementDef {
+	var out []*elm.StatementDef
+	kept := (*pending)[:0]
+	for _, a := range *pending {
+		if beforePosition(a.at, pos) {
+			out = append(out, a.def)
+			continue
+		}
+		kept = append(kept, a)
+	}
+	*pending = kept
+	return out
+}
+
+// drainAccessors removes and returns everything still pending.
+func drainAccessors(pending *[]positionedAccessor) []*elm.StatementDef {
+	out := make([]*elm.StatementDef, 0, len(*pending))
+	for _, a := range *pending {
+		out = append(out, a.def)
+	}
+	*pending = (*pending)[:0]
+	return out
+}
+
+// beforePosition reports whether a precedes b in the source.
+func beforePosition(a, b ast.Position) bool {
+	if a.Line != b.Line {
+		return a.Line < b.Line
+	}
+	return a.Column < b.Column
 }
 
 // resolveLibraryQualifiedCalls rewrites `Alias.Func(args)` from the shape the
