@@ -1088,6 +1088,26 @@ func (t *Translator) modelURIVersioned(name, version string) string {
 	return name
 }
 
+// fhirLocalTypeName returns the local FHIR type name of a type spec — the
+// "Encounter" in "{http://hl7.org/fhir}Encounter" — or "" when the spec is not a
+// namespaced model type. System types are excluded: they are already CQL values
+// and need no conversion.
+func fhirLocalTypeName(ts typeSpec) string {
+	named, ok := ts.(namedTS)
+	if !ok || !strings.HasPrefix(named.name, "{") {
+		return ""
+	}
+	close := strings.Index(named.name, "}")
+	if close < 0 {
+		return ""
+	}
+	uri, local := named.name[1:close], named.name[close+1:]
+	if uri == typesystem.SystemURI || local == "" {
+		return ""
+	}
+	return local
+}
+
 // dataNamespaceForModelURI returns the ELM data-type namespace for a model URI.
 // FHIR-profiled models (QICore/QUICK/USCore) use the FHIR base namespace for ELM data types.
 func dataNamespaceForModelURI(modelName, modelURI string) string {
@@ -3937,6 +3957,18 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		translatedSources[i] = srcExpr
 		if lt, ok := t.inferTypeSpec(srcExpr).(listTS); ok {
 			aliasTypeSpecs[src.Alias] = lt.elem
+			// The cases above read the model type out of the source's syntax, so
+			// they only fire when a Retrieve is visible in it. A source that is a
+			// reference to a define — `"Encounters" E` rather than `[Encounter] E`
+			// — has no Retrieve to find, and the alias would carry no FHIR type,
+			// which silently suppresses every implicit FHIRHelpers conversion
+			// inside the query. The inferred element type knows the answer, so
+			// fall back to it. (issues/05 3.2)
+			if t.fhirHelpersLocalName != "" && aliasTypes[src.Alias] == "" {
+				if name := fhirLocalTypeName(lt.elem); name != "" {
+					aliasTypes[src.Alias] = name
+				}
+			}
 		}
 	}
 	t.queryAliasTypes = append(t.queryAliasTypes, aliasTypes)

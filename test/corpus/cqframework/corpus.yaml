@@ -359,6 +359,12 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/FHIRHelperConversions.cql
+    description: Implicit FHIRHelpers conversions when the query source is a define (issues/05 3.2)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/FluentHelpers.cql
     description: Helper providing a fluent function for FluentCrossLibrary
     expectedStatus: success

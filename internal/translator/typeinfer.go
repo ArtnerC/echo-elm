@@ -930,6 +930,13 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			if ts, ok := t.localFuncReturns[v.Name]; ok {
 				return ts
 			}
+			// A function with no declared `returns` clause still has a return
+			// type — the type of its body. localFuncReturns only holds declared
+			// ones, so without this a call to an undeclared-return function
+			// degrades to Any and takes every expression built on it with it.
+			if ts, ok := t.funcReturnSpecs[v.Name]; ok {
+				return ts
+			}
 		} else if ts, ok := t.libFuncReturns[v.LibraryName][v.Name]; ok {
 			// A call into an included library resolves to the return type that
 			// library infers for the function, the same way a qualified

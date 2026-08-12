@@ -218,7 +218,24 @@ This is mechanical and should be done first — it will also stop it masking Par
 
 ### 3.2 Missing FHIRHelpers conversions — `FHIRHelperConversions.cql`
 
-echo-elm inserts **zero** implicit model conversions. CQF inserts six in this fixture.
+> **Fixed.** Root cause was narrower than "inserts zero": echo-elm read the alias' model
+> type out of the query source's *syntax*, so it was only found when a `Retrieve` was
+> visible there. `"Encounters" E` has no Retrieve to find, so the alias carried no FHIR
+> type and every implicit conversion inside the query was suppressed. `[Encounter] E`
+> worked all along, which is why `elm-nodes/FHIRCoercionContext.cql` passed while measure
+> content — where queries are written over defines — did not.
+>
+> The alias' inferred element type already knew the answer, so the type name now falls back
+> to it. All six conversions in this fixture match, and the only residual difference is
+> CQF's `CqlToElmError` overload warnings, which the harness already strips.
+>
+> A second fix was needed for the same fixture under `measure-bundle`: a function with no
+> declared `returns` clause had no recorded return type, so calls to it degraded to `Any`.
+> Inferred return types are now recorded and used for local and cross-library calls alike.
+>
+> Fixture: `measure-shapes/FHIRHelperConversions.cql`.
+
+echo-elm inserted **zero** implicit model conversions here. CQF inserts six.
 
 ```cql
 library FHIRHelperConversions version '1.0'
@@ -307,6 +324,9 @@ At measure scale, ~150 occurrences across `Interval<Date>`, `Date`, `Boolean`,
 `List<Interval<Date>>`, `List<Condition>`, `List<Observation>`, `Tuple` and others.
 
 ### 3.4 Value set membership conversion — `ValueSetMembership.cql`
+
+> **Expected to be fixed by 3.2** — it is the same defect at the terminology boundary.
+> Not separately verified; needs its own fixture before being claimed.
 
 ```cql
 library ValueSetMembership version '1.0'
@@ -658,10 +678,10 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 |---|---|---|
 | 1 | Harness: align definitions by name | open |
 | 2 | Harness: reduce empty containers + `signatureLevel` on the bundle path | **done** |
-| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 5 of 9 fixtures |
+| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 6 of 9 fixtures |
 | 4 | Single type-name rendering path | open |
 | 5 | Result-type attachment policy survey | open |
-| 6 | Implicit model conversions (`FHIRHelpers.To*`) | open |
+| 6 | Implicit model conversions (`FHIRHelpers.To*`) | **done** for query-source aliases (3.2); 3.4 expected to follow, unverified |
 | 7 | Implicit cast wrappers around untyped literals | open |
 | 8 | Fluent function resolution through expression receivers | **done** for the unambiguous case; overloaded fluent names still need receiver-type resolution |
 | 9 | Context accessor source position | **done** |
@@ -669,7 +689,7 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 | 11 | Context propagation from included libraries (G5) | open |
 | 12 | Residual type inference — `List<Any>` collapse | open |
 
-Corpus parity against CQF 5.0.0 after 8, 9 and 10: **322/322**, including the new
+Corpus parity against CQF 5.0.0 after 6, 8, 9 and 10: **324/324**, including the new
 `measure-bundle` profile. That number covers the corpus, which is CQF's conformance suite
 plus synthetic libraries — it is not evidence about measure-shaped content, which is the
 whole point of Part 1.
