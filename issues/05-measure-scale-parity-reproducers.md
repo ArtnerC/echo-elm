@@ -299,6 +299,14 @@ This is a correctness gap, not a cosmetic one — a downstream engine given a ra
 
 ### 3.3 Missing implicit cast wrappers — `ImplicitCastNull.cql`
 
+> **Fixed.** Declared operand types are now recorded per local function, and a bare `null`
+> argument is wrapped in an `As` naming the parameter's type — `asType` for a named type,
+> `asTypeSpecifier` for a structured one. Overloaded names are skipped: which parameter
+> list applies depends on which overload the call resolves to, which is not decided at
+> that point. The synthesized specifier is deliberately left unstamped, since
+> `stampTypeSpecifier` is for specifiers written in the source and CQF leaves synthesized
+> ones bare. Fixture: `measure-shapes/ImplicitCastNull.cql`.
+
 ```cql
 library ImplicitCastNull version '1.0'
 
@@ -325,8 +333,9 @@ At measure scale, ~150 occurrences across `Interval<Date>`, `Date`, `Boolean`,
 
 ### 3.4 Value set membership conversion — `ValueSetMembership.cql`
 
-> **Expected to be fixed by 3.2** — it is the same defect at the terminology boundary.
-> Not separately verified; needs its own fixture before being claimed.
+> **Fixed by 3.2 and verified separately.** `InValueSet.code` is now
+> `FHIRHelpers.ToConcept(Property code)` on both sides. Fixture:
+> `measure-shapes/ValueSetMembership.cql`.
 
 ```cql
 library ValueSetMembership version '1.0'
@@ -678,18 +687,18 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 |---|---|---|
 | 1 | Harness: align definitions by name | open |
 | 2 | Harness: reduce empty containers + `signatureLevel` on the bundle path | **done** |
-| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 6 of 9 fixtures |
+| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 8 of 9 fixtures |
 | 4 | Single type-name rendering path | open |
 | 5 | Result-type attachment policy survey | open |
-| 6 | Implicit model conversions (`FHIRHelpers.To*`) | **done** for query-source aliases (3.2); 3.4 expected to follow, unverified |
-| 7 | Implicit cast wrappers around untyped literals | open |
+| 6 | Implicit model conversions (`FHIRHelpers.To*`) | **done** — 3.2 and 3.4 both verified |
+| 7 | Implicit cast wrappers around untyped literals | **done** for `null` at a declared parameter; other untyped literals unverified |
 | 8 | Fluent function resolution through expression receivers | **done** for the unambiguous case; overloaded fluent names still need receiver-type resolution |
 | 9 | Context accessor source position | **done** |
 | 10 | `same or before` / `same or after` operator selection | **done** |
 | 11 | Context propagation from included libraries (G5) | open |
 | 12 | Residual type inference — `List<Any>` collapse | open |
 
-Corpus parity against CQF 5.0.0 after 6, 8, 9 and 10: **324/324**, including the new
+Corpus parity against CQF 5.0.0 after 6, 7, 8, 9 and 10: **328/328**, including the new
 `measure-bundle` profile. That number covers the corpus, which is CQF's conformance suite
 plus synthetic libraries — it is not evidence about measure-shaped content, which is the
 whole point of Part 1.

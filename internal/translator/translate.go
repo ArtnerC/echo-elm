@@ -144,6 +144,7 @@ type Translator struct {
 	libSyms              map[string]map[string]symKind  // included library alias → name → symKind (for QualifiedRef resolution)
 	libFluentFuncs       map[string][]string            // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
 	funcReturnSpecs      map[string]typeSpec            // local function name → inferred return type (unambiguous names only)
+	localFuncOperands    map[string][]typeSpec          // local function name → declared operand types (unambiguous names only)
 	libFuncReturns       map[string]map[string]typeSpec // included library alias → function name → inferred return type
 	skipLocatorStamp     bool                           // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
 	inSortScope          bool                           // when true, identifiers resolve to IdentifierRef (sort-by expressions are scoped to the query result element)
@@ -602,6 +603,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	t.localFuncCounts = make(map[string]int)
 	t.localFuncReturns = make(map[string]typeSpec)
 	t.funcReturnSpecs = make(map[string]typeSpec)
+	t.localFuncOperands = make(map[string][]typeSpec)
 	t.defContexts = make(map[string]string)
 	for _, s := range lib.Statements {
 		t.defContexts[s.Name] = s.Context
@@ -615,6 +617,20 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if ts := astTypeSpecToTypeSpec(*s.ReturnType); ts != nil {
 				t.localFuncReturns[s.Name] = ts
 			}
+		}
+		// Declared operand types, for casting untyped arguments at call sites.
+		// Only unambiguous names: with overloads the parameter list depends on
+		// which one the call resolves to, which is not decided here.
+		if t.localFuncCounts[s.Name] > 1 {
+			delete(t.localFuncOperands, s.Name)
+		} else {
+			specs := make([]typeSpec, len(s.Operands))
+			for i, op := range s.Operands {
+				if op.Type != nil {
+					specs[i] = astTypeSpecToTypeSpec(*op.Type)
+				}
+			}
+			t.localFuncOperands[s.Name] = specs
 		}
 	}
 
@@ -1086,6 +1102,30 @@ func (t *Translator) modelURIVersioned(name, version string) string {
 		return uri
 	}
 	return name
+}
+
+// castNullTo wraps an untyped Null in the As node CQF emits for it, naming the
+// declared parameter type. A named type goes in asType; a structured one
+// (Interval<Date>, List<Date>) needs asTypeSpecifier.
+func (t *Translator) castNullTo(arg elm.Expression, declared typeSpec) elm.Expression {
+	as := &elm.AsNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.cqfEmptyArrayField(),
+		Operand:    arg,
+	}
+	if named, ok := declared.(namedTS); ok {
+		as.AsType = named.name
+		return as
+	}
+	spec := toELMTypeSpecifier(declared)
+	if spec == nil {
+		return arg
+	}
+	// Deliberately not stamped: stampTypeSpecifier is for specifiers written in
+	// the source. This As is synthesized, so its target is too, and CQF leaves
+	// synthesized specifiers bare.
+	as.AsTypeSpecifier = spec
+	return as
 }
 
 // fhirLocalTypeName returns the local FHIR type name of a type spec — the
@@ -2552,9 +2592,20 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				return expanded
 			}
 		}
-		var operands []elm.Expression
-		for _, o := range v.Operands {
-			operands = append(operands, t.translateExpr(o))
+		declared := t.localFuncOperands[v.Name]
+		if v.LibraryName != "" {
+			declared = nil
+		}
+		operands := make([]elm.Expression, 0, len(v.Operands))
+		for i, o := range v.Operands {
+			arg := t.translateExpr(o)
+			// A bare `null` carries no type, so CQF wraps it in an As naming the
+			// parameter's declared type. Without it the argument is an untyped
+			// Null and the call's overload cannot be recovered from the ELM.
+			if _, isNull := o.(*ast.NullLiteral); isNull && i < len(declared) && declared[i] != nil {
+				arg = t.castNullTo(arg, declared[i])
+			}
+			operands = append(operands, arg)
 		}
 		return &elm.FunctionRefNode{
 			Annotation:  ann,

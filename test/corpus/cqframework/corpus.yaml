@@ -365,6 +365,18 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/ValueSetMembership.cql
+    description: Value set membership converts its code operand (issues/05 3.4)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ImplicitCastNull.cql
+    description: Untyped null at a typed parameter is wrapped in As (issues/05 3.3)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/FluentHelpers.cql
     description: Helper providing a fluent function for FluentCrossLibrary
     expectedStatus: success
