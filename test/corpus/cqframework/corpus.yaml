@@ -359,6 +359,18 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/FluentHelpers.cql
+    description: Helper providing a fluent function for FluentCrossLibrary
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/FluentCrossLibrary.cql
+    description: Fluent call through an expression receiver carries libraryName (issues/05 3.6)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/StatementOrdering.cql
     description: Negative control — dependency ordering already matches (issues/05 3.8)
     expectedStatus: success

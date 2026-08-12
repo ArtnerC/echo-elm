@@ -930,6 +930,12 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			if ts, ok := t.localFuncReturns[v.Name]; ok {
 				return ts
 			}
+		} else if ts, ok := t.libFuncReturns[v.LibraryName][v.Name]; ok {
+			// A call into an included library resolves to the return type that
+			// library infers for the function, the same way a qualified
+			// ExpressionRef resolves through libDefTypes. Fluent calls reach here
+			// too, since their libraryName is recovered rather than written.
+			return ts
 		}
 		// FHIRHelpers.ToString (and other primitive helpers) return primitive types.
 		if v.LibraryName == t.fhirHelpersLocalName {

@@ -395,7 +395,19 @@ Note this contradicts the direction recorded in issue 03/04, which had it as
 
 ### 3.6 Fluent function library resolution — `FluentHelpers.cql` + `FluentCrossLibrary.cql`
 
-Issue 04 recorded G6 as *"confirmed and fixed"*. It is not fixed. The existing fix in
+> **Fixed for the unambiguous case.** A fluent call through an expression receiver now
+> resolves its `libraryName` from the fluent functions the included libraries declare, and
+> the call's result type resolves through a new `libFuncReturns` map — `defTypeSpecs`
+> deliberately excludes functions, so there was nothing to look up before. Fixtures:
+> `measure-shapes/FluentCrossLibrary.cql` + `FluentHelpers.cql`, System-typed on purpose so
+> they fail for one reason or none.
+>
+> **Still open:** an overloaded fluent name declared by more than one include. Choosing
+> between them needs the receiver's element type, which is overload resolution rather than
+> qualification, and depends on 3.1. Rather than guess, `fluentLibraryFor` returns nothing
+> when the name is ambiguous — a confidently wrong `libraryName` is worse than a missing one.
+
+Issue 04 recorded G6 as *"confirmed and fixed"*. It was not. The existing fix in
 `resolveLibraryQualifiedCalls` (`internal/translator/translate.go`) bails out unless the
 receiver is an include alias:
 
@@ -646,18 +658,18 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 |---|---|---|
 | 1 | Harness: align definitions by name | open |
 | 2 | Harness: reduce empty containers + `signatureLevel` on the bundle path | **done** |
-| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 3 of 9 fixtures |
+| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 5 of 9 fixtures |
 | 4 | Single type-name rendering path | open |
 | 5 | Result-type attachment policy survey | open |
 | 6 | Implicit model conversions (`FHIRHelpers.To*`) | open |
 | 7 | Implicit cast wrappers around untyped literals | open |
-| 8 | Fluent function resolution through expression receivers | open — this is the real G6 |
+| 8 | Fluent function resolution through expression receivers | **done** for the unambiguous case; overloaded fluent names still need receiver-type resolution |
 | 9 | Context accessor source position | **done** |
 | 10 | `same or before` / `same or after` operator selection | **done** |
 | 11 | Context propagation from included libraries (G5) | open |
 | 12 | Residual type inference — `List<Any>` collapse | open |
 
-Corpus parity against CQF 5.0.0 after 9 and 10: **318/318**, including the new
+Corpus parity against CQF 5.0.0 after 8, 9 and 10: **322/322**, including the new
 `measure-bundle` profile. That number covers the corpus, which is CQF's conformance suite
 plus synthetic libraries — it is not evidence about measure-shaped content, which is the
 whole point of Part 1.
@@ -671,7 +683,7 @@ whole point of Part 1.
 - [ ] Add the wrapper-detection pass so missing `As` nodes are countable
 - [x] Extend `stripEmptyAnnotations`/`stripVolatileFields` to cover the bundle path (Part 4) — `normalizeShape` + `Config.BundleShapedRef`, scoped by test so the CLI path keeps checking those fields
 - [x] Add the `measure-bundle` option profile to `corpus.yaml` — `StringFunctionsTest` excluded from it; CQF itself cannot resolve `IndexOf(String, String)` without demotion
-- [~] Lift the Part 3 samples into `test/corpus/cqframework/measure-shapes/` — 3 of 9 landed (3.5, 3.7, and the 3.8 negative control), i.e. the ones whose gap is now fixed. The rest land with their fixes
+- [~] Lift the Part 3 samples into `test/corpus/cqframework/measure-shapes/` — 5 of 9 landed (3.5, 3.6, 3.7, and the 3.8 negative control), i.e. the ones whose gap is now fixed. The rest land with their fixes
 - [x] Amend `04-serializer-shapes-and-corrected-parity-gaps.md` per the Part 6 table — G6 downgraded to partially fixed, G7 reworded as a consequence, G9 withdrawn, G5 reopened
 - [ ] Correct the parity claim in the PR description and README: state the corpus it covers, and that measure-shaped content is not yet covered
 - [ ] Split Part 7 into tracked issues

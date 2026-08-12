@@ -1,0 +1,67 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "FluentCrossLibrary",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FluentHelpers",
+          "path": "FluentHelpers",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "21",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "N"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "FluentHelpers",
+            "name": "Doubled",
+            "operand": [
+              {
+                "name": "N",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "Result"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

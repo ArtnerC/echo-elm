@@ -142,6 +142,9 @@ type Translator struct {
 	listNodeTypes        map[*elm.ListNode]typeSpec     // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
 	fhirHelpersLocalName string                         // local identifier of included FHIRHelpers library, or "" if not included
 	libSyms              map[string]map[string]symKind  // included library alias → name → symKind (for QualifiedRef resolution)
+	libFluentFuncs       map[string][]string            // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
+	funcReturnSpecs      map[string]typeSpec            // local function name → inferred return type (unambiguous names only)
+	libFuncReturns       map[string]map[string]typeSpec // included library alias → function name → inferred return type
 	skipLocatorStamp     bool                           // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
 	inSortScope          bool                           // when true, identifiers resolve to IdentifierRef (sort-by expressions are scoped to the query result element)
 	noFHIRCoerce         bool                           // when true, the next expression is in an unconsumed position and skips implicit FHIRHelpers coercion
@@ -598,6 +601,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	// function's declared return type for calls to resolve against.
 	t.localFuncCounts = make(map[string]int)
 	t.localFuncReturns = make(map[string]typeSpec)
+	t.funcReturnSpecs = make(map[string]typeSpec)
 	t.defContexts = make(map[string]string)
 	for _, s := range lib.Statements {
 		t.defContexts[s.Name] = s.Context
@@ -617,6 +621,8 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	// Build cross-library symbol tables for QualifiedRef resolution.
 	t.libSyms = make(map[string]map[string]symKind)
 	t.libDefTypes = make(map[string]map[string]typeSpec)
+	t.libFluentFuncs = make(map[string][]string)
+	t.libFuncReturns = make(map[string]map[string]typeSpec)
 	if t.opts.LibrarySource != nil {
 		for _, inc := range lib.Includes {
 			localName := inc.LocalName
@@ -627,11 +633,21 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if err == nil && found {
 				if pr, parseErr := parser.ParseBytes(src, inc.Path+".cql"); parseErr == nil {
 					t.libSyms[localName] = buildSymMap(pr.Library)
+					// `receiver.Func()` can only resolve to a fluent function, so
+					// record which includes declare one under each name.
+					for _, st := range pr.Library.Statements {
+						if st.IsFunction && st.IsFluent {
+							if !containsString(t.libFluentFuncs[st.Name], localName) {
+								t.libFluentFuncs[st.Name] = append(t.libFluentFuncs[st.Name], localName)
+							}
+						}
+					}
 					// A qualified reference resolves to the type the included
 					// library gives that definition, so translate it once to
 					// learn those types. Only needed for result types.
 					if t.opts.EnableResultTypes {
-						t.libDefTypes[localName] = includedDefTypes(&t.opts, pr.Library, inc.Path)
+						t.libDefTypes[localName], t.libFuncReturns[localName] =
+							includedDefTypes(&t.opts, pr.Library, inc.Path)
 					}
 				}
 			}
@@ -1033,6 +1049,15 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
 					t.defTypeSpecs[s.Name] = ts
 				}
+			} else if t.localFuncCounts[s.Name] == 1 {
+				// Record the inferred return type so callers in *other* libraries
+				// can resolve it. defTypeSpecs deliberately excludes functions, so
+				// this is a separate map. Overloaded names are skipped: picking
+				// between them needs the argument types, and recording whichever
+				// came last would be a guess.
+				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
+					t.funcReturnSpecs[s.Name] = ts
+				}
 			}
 			t.functionParamScope = nil
 			t.operandTypeSpecs = nil
@@ -1138,13 +1163,43 @@ func (t *Translator) declResultType(typeName string) string {
 // includedDefTypes translates an included library far enough to learn the type
 // of each of its definitions. Result types are the only thing that needs this,
 // so it runs only when they are enabled; the translated output is discarded.
-func includedDefTypes(opts *Options, lib *ast.Library, path string) map[string]typeSpec {
+func includedDefTypes(opts *Options, lib *ast.Library, path string) (defs, funcs map[string]typeSpec) {
 	sub := New(*opts)
 	// Do not recurse into the include's own includes: one level is enough for
 	// the reference being resolved, and it keeps a cycle from looping.
 	sub.opts.LibrarySource = nil
 	sub.Translate(lib, path+".cql")
-	return sub.defTypeSpecs
+	return sub.defTypeSpecs, sub.funcReturnSpecs
+}
+
+// fluentLibraryFor returns the include alias declaring a fluent function called
+// name, when exactly one does.
+//
+// A local definition wins: a fluent function defined in this library needs no
+// qualifier, and stamping one would point the reference somewhere else. So does
+// ambiguity — if two includes declare the same fluent name, choosing between
+// them needs the receiver's element type, which is overload resolution rather
+// than qualification. Guessing there would produce a confidently wrong
+// libraryName, which is worse than the missing one; issues/05 3.6 tracks it.
+func (t *Translator) fluentLibraryFor(name string) (string, bool) {
+	if t.localFuncCounts[name] > 0 {
+		return "", false
+	}
+	libs := t.libFluentFuncs[name]
+	if len(libs) != 1 {
+		return "", false
+	}
+	return libs[0], true
+}
+
+// containsString reports whether xs contains s.
+func containsString(xs []string, s string) bool {
+	for _, x := range xs {
+		if x == s {
+			return true
+		}
+	}
+	return false
 }
 
 // positionedAccessor is an implicit context accessor together with the source
@@ -1227,15 +1282,20 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 			if !isCall || fr.LibraryName != "" || len(fr.Operands) == 0 {
 				return
 			}
-			ir, isIdent := fr.Operands[0].(*ast.IdentifierRef)
-			if !isIdent {
-				return
+			if ir, isIdent := fr.Operands[0].(*ast.IdentifierRef); isIdent {
+				if _, isLib := t.libSyms[ir.Name]; isLib {
+					fr.LibraryName = ir.Name
+					fr.Operands = fr.Operands[1:]
+					return
+				}
 			}
-			if _, isLib := t.libSyms[ir.Name]; !isLib {
-				return
+			// Otherwise the receiver is an ordinary expression, which makes this
+			// a fluent invocation: `X.Func()` is `Func(X)` where Func is declared
+			// `fluent`. The receiver stays as the first operand — only the
+			// library qualifier has to be recovered.
+			if lib, ok := t.fluentLibraryFor(fr.Name); ok {
+				fr.LibraryName = lib
 			}
-			fr.LibraryName = ir.Name
-			fr.Operands = fr.Operands[1:]
 		})
 	}
 }
