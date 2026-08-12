@@ -769,7 +769,7 @@ define "Before": 1 + 1
 context Patient
 define "After": 2 + 2`)
 
-	var names []string
+	names := make([]string, 0, len(r.Library.Statements.Def))
 	for _, def := range r.Library.Statements.Def {
 		names = append(names, def.Name)
 	}

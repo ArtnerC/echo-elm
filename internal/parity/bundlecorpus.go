@@ -104,6 +104,9 @@ func MaterializeBundle(b *bundle.Bundle, dir, profileName string) (Config, error
 		RefDir:        filepath.Join(dir, "ref"),
 		LibDir:        corpusDir,
 		ProfileFilter: profileName,
+		// The reference is Library.content[], written by CQF's JAXB/MOXy writer,
+		// not the cql-to-elm CLI. See Config.BundleShapedRef.
+		BundleShapedRef: true,
 	}, nil
 }
 

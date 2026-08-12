@@ -205,3 +205,51 @@ func TestDeclaredOptionsUnmappable(t *testing.T) {
 		t.Errorf("unmapped = %v, want [SomeFutureOption]", unmapped)
 	}
 }
+
+// TestBundleShapeReductionIsPathScoped pins the two halves of the bundle-shape
+// contract: the reduction has to happen on the bundle path, and must NOT happen
+// on the CLI path.
+//
+// The CQF CLI emits "signature": [] and signatureLevel; echo-elm matches it
+// (issues/04 G1/G2). The JAXB writer used inside Library.content[] omits both,
+// because an empty collection maps to no XML elements. Reducing on the CLI path
+// would silently stop checking something echo-elm is required to get right.
+func TestBundleShapeReductionIsPathScoped(t *testing.T) {
+	withEmpties := `{"library":{
+		"annotation":[{"type":"CqlToElmInfo","translatorOptions":"","signatureLevel":"None"}],
+		"identifier":{"id":"Lib"},
+		"statements":{"def":[{"name":"X","signature":[],"let":[],
+			"expression":{"type":"Retrieve","codeFilter":[],"dateFilter":[],
+				"include":[],"otherFilter":[]}}]}}}`
+	lean := `{"library":{
+		"annotation":[{"type":"CqlToElmInfo","translatorOptions":""}],
+		"identifier":{"id":"Lib"},
+		"statements":{"def":[{"name":"X",
+			"expression":{"type":"Retrieve"}}]}}}`
+
+	// CLI path: the two must stay distinguishable.
+	if parity.NormalizeForGolden(withEmpties) == parity.NormalizeForGolden(lean) {
+		t.Error("CLI-path normalization erased the empty collections; " +
+			"echo-elm emitting them is a real requirement and must stay checked")
+	}
+
+	// Bundle path: the two describe the same library and must compare equal.
+	if parity.NormalizeBundleShape(withEmpties) != parity.NormalizeBundleShape(lean) {
+		t.Errorf("bundle-path normalization did not reconcile the two writer shapes:\n%s",
+			parity.SimpleDiff(parity.NormalizeBundleShape(withEmpties),
+				parity.NormalizeBundleShape(lean)))
+	}
+}
+
+// TestBundleShapeKeepsRealDifferences pins that the reduction only removes
+// empties. A collection with content still has to compare.
+func TestBundleShapeKeepsRealDifferences(t *testing.T) {
+	withContent := `{"library":{"identifier":{"id":"L"},"statements":{"def":[
+		{"name":"X","expression":{"type":"Retrieve","codeFilter":[{"path":"code"}]}}]}}}`
+	without := `{"library":{"identifier":{"id":"L"},"statements":{"def":[
+		{"name":"X","expression":{"type":"Retrieve"}}]}}}`
+
+	if parity.NormalizeBundleShape(withContent) == parity.NormalizeBundleShape(without) {
+		t.Error("a non-empty codeFilter was reduced away")
+	}
+}

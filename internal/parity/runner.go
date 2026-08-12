@@ -78,6 +78,16 @@ type Config struct {
 	// to each fixture's own directory. A bundle extracted to one flat directory
 	// needs this, since its libraries do not sit beside the fixture.
 	LibDir string
+	// BundleShapedRef marks the reference ELM as coming from FHIR
+	// Library.content[], which the CQF JAXB/MOXy writer produces rather than the
+	// cql-to-elm CLI. The two shapes disagree about things that carry no meaning
+	// — empty collections, implied type discriminators — so the comparison
+	// reduces both sides to the lean CLI shape first. Set by MaterializeBundle.
+	//
+	// It must stay off for CLI-sourced references: there, echo-elm emitting
+	// "signature": [] is a real requirement that CQF also satisfies, and
+	// reducing it away would stop checking it.
+	BundleShapedRef bool
 }
 
 // DefaultConfig returns a Config pointing at the default corpus.
@@ -229,7 +239,7 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 				return translateWithProfileAndLibDir(cqlPath, opts, libDir)
 			}
 			r := runFixtureWithRef(fix, corpus.Root, launcher, profile.CLIFlags,
-				translateProfileFn, cfg.RefDir, profileName)
+				translateProfileFn, cfg.RefDir, profileName, cfg.BundleShapedRef)
 			r.Profile = profileName
 			results = append(results, r)
 		}
@@ -253,7 +263,7 @@ func referenceELM(refDir, profileName, corpusRoot, launcher string, fix *Fixture
 }
 
 //nolint:gocritic // hugeParam: internal helper with stable interface
-func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error), refDir, profileName string) FixtureResult {
+func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error), refDir, profileName string, cfgShape bool) FixtureResult {
 	start := time.Now()
 	cqlPath := filepath.Join(corpusRoot, fix.Path)
 
@@ -277,7 +287,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.UpstreamJSON = normalizeJSON(upJSON)
+	r.UpstreamJSON = normalizeShape(upJSON, cfgShape)
 
 	// Run echo-elm.
 	echoBytes, err := translateFn(cqlPath)
@@ -287,7 +297,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.EchoJSON = normalizeJSON(string(echoBytes))
+	r.EchoJSON = normalizeShape(string(echoBytes), cfgShape)
 
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
@@ -518,6 +528,79 @@ func collectAnnotationText(v interface{}) string {
 	}
 	walk(v)
 	return sb.String()
+}
+
+// normalizeShape is normalizeJSON plus, when the reference came out of a FHIR
+// bundle, the extra reduction that shape requires.
+func normalizeShape(s string, bundleShaped bool) string {
+	if !bundleShaped {
+		return normalizeJSON(s)
+	}
+	var v interface{}
+	if err := json.Unmarshal([]byte(s), &v); err != nil {
+		return strings.TrimSpace(s)
+	}
+	if m, ok := v.(map[string]interface{}); ok {
+		stripVolatileFields(m)
+		stripSignatureLevel(m)
+	}
+	elm.StripImpliedTypesTree(v)
+	stripEmptyAnnotations(v)
+	stripEmptyBundleCollections(v)
+	canonicalizeAnnotationFields(v)
+	b, _ := json.MarshalIndent(v, "", "  ")
+	return string(b)
+}
+
+// bundleOmittedCollections are the collection fields the JAXB/MOXy writer drops
+// when empty, because an empty collection maps to no XML elements and comes back
+// out of the object model as an absent key. The cql-to-elm CLI emits them, and
+// echo-elm matches the CLI (see issues/04 G1) — so on the bundle path the
+// difference is the writer's, and reducing it is the only way to compare.
+var bundleOmittedCollections = []string{
+	"signature", "let", "include", "codeFilter", "dateFilter", "otherFilter",
+	"element", "operand", "codeSystem", "source", "relationship", "sort", "by",
+	"caseItem", "def", "usings", "parameters", "codes", "concepts", "contexts",
+}
+
+// stripEmptyBundleCollections removes those fields wherever they are empty.
+func stripEmptyBundleCollections(v interface{}) {
+	switch node := v.(type) {
+	case map[string]interface{}:
+		for _, field := range bundleOmittedCollections {
+			if arr, ok := node[field].([]interface{}); ok && len(arr) == 0 {
+				delete(node, field)
+			}
+		}
+		for _, child := range node {
+			stripEmptyBundleCollections(child)
+		}
+	case []interface{}:
+		for _, item := range node {
+			stripEmptyBundleCollections(item)
+		}
+	}
+}
+
+// stripSignatureLevel drops the CqlToElmInfo signatureLevel on the bundle path.
+// The CLI writes it unconditionally; the bundle shape omits it, so it cannot be
+// compared there. It is still compared on every CLI-sourced path.
+func stripSignatureLevel(m map[string]interface{}) {
+	lib, ok := m["library"].(map[string]interface{})
+	if !ok {
+		return
+	}
+	anns, ok := lib["annotation"].([]interface{})
+	if !ok {
+		return
+	}
+	for _, a := range anns {
+		if ann, ok := a.(map[string]interface{}); ok {
+			if t, _ := ann["type"].(string); t == "CqlToElmInfo" {
+				delete(ann, "signatureLevel")
+			}
+		}
+	}
 }
 
 // stripEmptyAnnotations recursively removes empty annotation containers from the
