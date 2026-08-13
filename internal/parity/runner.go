@@ -12,6 +12,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
@@ -43,9 +44,22 @@ type FixtureResult struct {
 	Duration       time.Duration
 }
 
+// PinnedCQFVersion is the single cqframework release echo-elm targets. It names
+// the launcher directory under tools/cqframework/ that `task parity:jar`
+// installs, and it is the version the committed goldens were generated from.
+//
+// echo-elm previously pinned 3.29.0 and 4.8.0 at once and collapsed their
+// goldens into one set. That only worked because the harness normalized away
+// every field the two disagreed on, and those normalizations were load-bearing
+// for the collapse rather than justified on their own terms. One pin means a
+// difference is a difference.
+const PinnedCQFVersion = "5.0.0"
+
 // Config holds harness configuration.
 type Config struct {
-	// CQFVersion is "3.29.0" or "4.8.0".
+	// CQFVersion selects the launcher under tools/cqframework/<version>/.
+	// Defaults to PinnedCQFVersion; other values are for ad-hoc investigation
+	// of upstream behavior changes, not for the committed baseline.
 	CQFVersion string
 	// ToolsDir is the root of tools/ (default "tools").
 	ToolsDir string
@@ -64,6 +78,16 @@ type Config struct {
 	// to each fixture's own directory. A bundle extracted to one flat directory
 	// needs this, since its libraries do not sit beside the fixture.
 	LibDir string
+	// BundleShapedRef marks the reference ELM as coming from FHIR
+	// Library.content[], which the CQF JAXB/MOXy writer produces rather than the
+	// cql-to-elm CLI. The two shapes disagree about things that carry no meaning
+	// — empty collections, implied type discriminators — so the comparison
+	// reduces both sides to the lean CLI shape first. Set by MaterializeBundle.
+	//
+	// It must stay off for CLI-sourced references: there, echo-elm emitting
+	// "signature": [] is a real requirement that CQF also satisfies, and
+	// reducing it away would stop checking it.
+	BundleShapedRef bool
 }
 
 // DefaultConfig returns a Config pointing at the default corpus.
@@ -215,7 +239,7 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 				return translateWithProfileAndLibDir(cqlPath, opts, libDir)
 			}
 			r := runFixtureWithRef(fix, corpus.Root, launcher, profile.CLIFlags,
-				translateProfileFn, cfg.RefDir, profileName)
+				translateProfileFn, cfg.RefDir, profileName, cfg.BundleShapedRef)
 			r.Profile = profileName
 			results = append(results, r)
 		}
@@ -239,7 +263,7 @@ func referenceELM(refDir, profileName, corpusRoot, launcher string, fix *Fixture
 }
 
 //nolint:gocritic // hugeParam: internal helper with stable interface
-func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error), refDir, profileName string) FixtureResult {
+func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []string, translateFn func(string) ([]byte, error), refDir, profileName string, cfgShape bool) FixtureResult {
 	start := time.Now()
 	cqlPath := filepath.Join(corpusRoot, fix.Path)
 
@@ -263,7 +287,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.UpstreamJSON = normalizeJSON(upJSON)
+	r.UpstreamJSON = normalizeShape(upJSON, cfgShape)
 
 	// Run echo-elm.
 	echoBytes, err := translateFn(cqlPath)
@@ -273,14 +297,14 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.EchoJSON = normalizeJSON(string(echoBytes))
+	r.EchoJSON = normalizeShape(string(echoBytes), cfgShape)
 
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
 		r.Status = StatusMatch
 	} else {
 		r.Status = StatusDifferJSON
-		r.Diff = simpleDiff(r.UpstreamJSON, r.EchoJSON)
+		r.Diff = StructuralDiff(r.UpstreamJSON, r.EchoJSON)
 	}
 
 	r.Duration = time.Since(start)
@@ -392,55 +416,6 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 	return written, nil, nil
 }
 
-// CompareVersionGoldens walks two version golden trees and reports any files
-// that differ. Returns a list of differing paths (relative to the golden root).
-// Fixture paths in skip (as listed in corpus.yaml under versionDivergent) are
-// known to differ between upstream versions and are not reported.
-func CompareVersionGoldens(outputDir, versionA, versionB string, skip map[string]bool) ([]string, error) {
-	dirA := filepath.Join(outputDir, versionA)
-	var diffs []string
-
-	err := filepath.Walk(dirA, func(pathA string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
-			return err
-		}
-		rel, _ := filepath.Rel(dirA, pathA)
-		if skip[fixturePathFromGoldenRel(rel)] {
-			return nil
-		}
-		pathB := filepath.Join(outputDir, versionB, rel)
-
-		aBytes, err := os.ReadFile(pathA)
-		if err != nil {
-			return err
-		}
-		bBytes, err := os.ReadFile(pathB)
-		if os.IsNotExist(err) {
-			diffs = append(diffs, rel+" (missing in "+versionB+")")
-			return nil
-		}
-		if err != nil {
-			return err
-		}
-		if normalizeJSON(string(aBytes)) != normalizeJSON(string(bBytes)) {
-			diffs = append(diffs, rel)
-		}
-		return nil
-	})
-	return diffs, err
-}
-
-// fixturePathFromGoldenRel converts a golden path relative to a version root
-// ("default/elm-nodes/Foo.json") into the corpus fixture path it came from
-// ("elm-nodes/Foo.cql").
-func fixturePathFromGoldenRel(rel string) string {
-	rel = filepath.ToSlash(rel)
-	if i := strings.Index(rel, "/"); i >= 0 {
-		rel = rel[i+1:]
-	}
-	return strings.TrimSuffix(rel, ".json") + ".cql"
-}
-
 // normalizeJSON re-marshals JSON with sorted keys and consistent spacing, after
 // reducing the few things that cannot be compared across translators.
 //
@@ -449,8 +424,19 @@ func fixturePathFromGoldenRel(rel string) string {
 // some other way. What is currently reduced, and why:
 //
 //   - translatorVersion — names the producing translator; volatile by definition.
-//   - empty "annotation": [] and "t": [] arrays — CQF 4.8.0 emits them where
-//     3.29.0 omits them, so they are pure serializer asymmetry.
+//   - "type" discriminators whose value the node's position already implies.
+//     Reference ELM read out of a FHIR bundle comes from the JAXB/MOXy writer,
+//     which stamps a type on nearly every node; the cql-to-elm CLI does not.
+//     Comparing the two shapes is otherwise pure noise. Only a discriminator
+//     that AGREES with its position is dropped, so a FunctionDef sitting where
+//     an ExpressionDef is implied still differs. No-op on CLI-shaped input.
+//   - empty "annotation": [] and "t": [] arrays — CQF emits the empty container
+//     on nearly every node; echo-elm omits it. An empty container carries no
+//     information for a consumer of the ELM, so this meets the rule above, but
+//     note what changed: it used to be justified as 3.29.0-vs-4.8.0 serializer
+//     asymmetry, and that reason died with the second pin. It is now squarely an
+//     echo-elm emission gap that this reduction is choosing to tolerate.
+//     Measured against CQF 5.0.0: 130 of 294 fixtures depend on it.
 //   - "t" tag arrays are sorted by name — tag content is compared, ordering is not.
 //   - localId (and the "r" references that point at it) — an internal node index.
 //     CQF numbers from a pre-order ANTLR rule visit; echo-elm uses its own counter.
@@ -474,6 +460,7 @@ func normalizeJSON(s string) string {
 	if m, ok := v.(map[string]interface{}); ok {
 		stripVolatileFields(m)
 	}
+	elm.StripImpliedTypesTree(v)
 	stripEmptyAnnotations(v)
 	canonicalizeAnnotationFields(v)
 	b, _ := json.MarshalIndent(v, "", "  ")
@@ -543,10 +530,85 @@ func collectAnnotationText(v interface{}) string {
 	return sb.String()
 }
 
-// stripEmptyAnnotations recursively removes version-format-only empty arrays
-// from the JSON tree so 3.29.0 and 4.8.0 goldens can collapse:
-//   - "annotation": []  on any ELM node (4.8.0 emits it, 3.29.0 omits it)
-//   - "t": []           inside Annotation objects (tag array, same asymmetry)
+// normalizeShape is normalizeJSON plus, when the reference came out of a FHIR
+// bundle, the extra reduction that shape requires.
+func normalizeShape(s string, bundleShaped bool) string {
+	if !bundleShaped {
+		return normalizeJSON(s)
+	}
+	var v interface{}
+	if err := json.Unmarshal([]byte(s), &v); err != nil {
+		return strings.TrimSpace(s)
+	}
+	if m, ok := v.(map[string]interface{}); ok {
+		stripVolatileFields(m)
+		stripSignatureLevel(m)
+	}
+	elm.StripImpliedTypesTree(v)
+	stripEmptyAnnotations(v)
+	stripEmptyBundleCollections(v)
+	canonicalizeAnnotationFields(v)
+	b, _ := json.MarshalIndent(v, "", "  ")
+	return string(b)
+}
+
+// bundleOmittedCollections are the collection fields the JAXB/MOXy writer drops
+// when empty, because an empty collection maps to no XML elements and comes back
+// out of the object model as an absent key. The cql-to-elm CLI emits them, and
+// echo-elm matches the CLI (see issues/04 G1) — so on the bundle path the
+// difference is the writer's, and reducing it is the only way to compare.
+var bundleOmittedCollections = []string{
+	"signature", "let", "include", "codeFilter", "dateFilter", "otherFilter",
+	"element", "operand", "codeSystem", "source", "relationship", "sort", "by",
+	"caseItem", "def", "usings", "parameters", "codes", "concepts", "contexts",
+}
+
+// stripEmptyBundleCollections removes those fields wherever they are empty.
+func stripEmptyBundleCollections(v interface{}) {
+	switch node := v.(type) {
+	case map[string]interface{}:
+		for _, field := range bundleOmittedCollections {
+			if arr, ok := node[field].([]interface{}); ok && len(arr) == 0 {
+				delete(node, field)
+			}
+		}
+		for _, child := range node {
+			stripEmptyBundleCollections(child)
+		}
+	case []interface{}:
+		for _, item := range node {
+			stripEmptyBundleCollections(item)
+		}
+	}
+}
+
+// stripSignatureLevel drops the CqlToElmInfo signatureLevel on the bundle path.
+// The CLI writes it unconditionally; the bundle shape omits it, so it cannot be
+// compared there. It is still compared on every CLI-sourced path.
+func stripSignatureLevel(m map[string]interface{}) {
+	lib, ok := m["library"].(map[string]interface{})
+	if !ok {
+		return
+	}
+	anns, ok := lib["annotation"].([]interface{})
+	if !ok {
+		return
+	}
+	for _, a := range anns {
+		if ann, ok := a.(map[string]interface{}); ok {
+			if t, _ := ann["type"].(string); t == "CqlToElmInfo" {
+				delete(ann, "signatureLevel")
+			}
+		}
+	}
+}
+
+// stripEmptyAnnotations recursively removes empty annotation containers from the
+// JSON tree:
+//   - "annotation": []  on any ELM node (CQF emits it, echo-elm omits it)
+//   - "t": []           inside Annotation objects (tag array, same)
+//
+// See normalizeJSON for why this is tolerated and what it is hiding.
 func stripEmptyAnnotations(v interface{}) {
 	switch node := v.(type) {
 	case map[string]interface{}:

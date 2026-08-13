@@ -1,0 +1,73 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "DefaultContext"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "5:2-5:21",
+            "operand": {
+              "asTypeSpecifier": {
+                "locator": "5:14-5:20",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              },
+              "locator": "5:6-5:20",
+              "operand": {
+                "locator": "5:6-5:9",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Abs"
+          },
+          "locator": "4:1-5:21",
+          "name": "AbsNull Input",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "7:2-7:5",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "type": "Null"
+          },
+          "locator": "6:1-7:5",
+          "name": "AbsNull Output",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

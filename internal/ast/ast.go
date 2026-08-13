@@ -702,9 +702,14 @@ type QueryExpression struct {
 	Let          []*LetClause
 	Relationship []QueryRelationship
 	Where        Expr
-	Return       *ReturnClause
-	Aggregate    *AggregateClause
-	Sort         *SortClause
+	// WhereLoc is the span of the whole `where <expr>` clause, keyword included.
+	// CQF stamps that span on the clause's outermost ELM node while inner nodes
+	// keep their own. Overwriting Where's own location to achieve the first
+	// silently gave every node built from it the second. Zero when absent.
+	WhereLoc  Interval
+	Return    *ReturnClause
+	Aggregate *AggregateClause
+	Sort      *SortClause
 }
 
 // AliasedQuerySource: Source A

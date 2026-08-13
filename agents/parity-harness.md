@@ -6,7 +6,7 @@
 ## Source of truth
 - `contracts/parity-harness.md` — driver behavior, statuses, tolerated diffs
 - `agents/cqframework-compatibility.md` — CLI flag tables & banner format
-- `references/tools/cqframework-cql/{3.29.0,4.8.0}/README.md`
+- `references/tools/cqframework-cql/` — per-release notes; the pin is 5.0.0
 
 ## Conventions
 - Never modify imported corpus content. Copy verbatim, preserve

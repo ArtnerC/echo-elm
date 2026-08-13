@@ -266,12 +266,27 @@ type StatementDef struct {
 }
 
 func (s *StatementDef) MarshalJSON() ([]byte, error) {
+	type alias StatementDef
 	if s.IsFunction {
-		type alias StatementDef
-		return marshalWithType("FunctionDef", (*alias)(s))
+		// A FunctionDef always carries an operand list, empty included: CQF emits
+		// "operand": [] for a zero-argument function, and the field is what
+		// separates a FunctionDef from an ExpressionDef, which never has one.
+		//
+		// Operand stays omitempty on the struct so ExpressionDef does not grow an
+		// "operand": null, and omitempty drops an empty slice whether or not it is
+		// nil — so the tag has to be shadowed rather than the value replaced. The
+		// outer field wins over the embedded one by depth.
+		type funcDef struct {
+			*alias
+			Operand []*OperandDef `json:"operand"`
+		}
+		operands := s.Operand
+		if operands == nil {
+			operands = []*OperandDef{}
+		}
+		return marshalWithType("FunctionDef", funcDef{alias: (*alias)(s), Operand: operands})
 	}
 	// ExpressionDef: upstream cqframework does NOT emit the "type" discriminator.
-	type alias StatementDef
 	return json.Marshal((*alias)(s))
 }
 
@@ -666,9 +681,27 @@ type FunctionRefNode struct {
 }
 
 func (*FunctionRefNode) isExpression() {}
-func (n *FunctionRefNode) MarshalJSON() ([]byte, error) {
+
+// marshalFunctionRef emits the operand list even when it is empty, matching CQF:
+// a call to a zero-argument function is "operand": [], not an absent key.
+//
+// As with FunctionDef, omitempty drops an empty slice regardless of nil-ness, so
+// the tag is shadowed by an outer field rather than the value replaced.
+func marshalFunctionRef(n *FunctionRefNode) ([]byte, error) {
 	type alias FunctionRefNode
-	return marshalWithType("FunctionRef", (*alias)(n))
+	type funcRef struct {
+		*alias
+		Operand []Expression `json:"operand"`
+	}
+	operands := n.Operand
+	if operands == nil {
+		operands = []Expression{}
+	}
+	return marshalWithType("FunctionRef", funcRef{alias: (*alias)(n), Operand: operands})
+}
+
+func (n *FunctionRefNode) MarshalJSON() ([]byte, error) {
+	return marshalFunctionRef(n)
 }
 
 // OperatorExpressionNode: any operator expression (Add, Equal, Not, etc.).

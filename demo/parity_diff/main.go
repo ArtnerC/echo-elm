@@ -16,7 +16,7 @@ func main() {
 	}
 	target := os.Args[1]
 	translateFn := parity.CQFTranslateFunc()
-	cfg := parity.DefaultConfig("4.8.0")
+	cfg := parity.DefaultConfig(parity.PinnedCQFVersion)
 	cfg.TagFilter = "cqf-corpus"
 	results, err := parity.Run(cfg, translateFn)
 	if err != nil {

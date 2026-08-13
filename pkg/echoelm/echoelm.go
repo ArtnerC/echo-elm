@@ -162,3 +162,24 @@ func Translate(src []byte, sourceName string, opts ...Option) (*TranslateResult,
 
 	return result, nil
 }
+
+// BundleJSON returns the ELM as fully type-discriminated JSON — the shape the
+// CQF JAXB/MOXy `elm-json` writer produces, which is what appears inside FHIR
+// Library resources. Use it when writing ELM back into a bundle that must match
+// its neighbours.
+//
+// The cql-to-elm CLI omits `"type"` on declaration, container and clause nodes
+// because their position determines what they are. That is echo-elm's default
+// output, since CLI parity is the compatibility target.
+//
+// Despite the shape's association with .NET tooling, the SDKs that read ELM from
+// these resources do not want it: they write the lean shape themselves and
+// discard these discriminators on read. See elm.AddTypeDiscriminators and
+// issues/04 for the evidence.
+func (r *TranslateResult) BundleJSON() ([]byte, error) {
+	plain, err := r.MarshalJSON()
+	if err != nil {
+		return nil, err
+	}
+	return elm.AddTypeDiscriminators(plain)
+}

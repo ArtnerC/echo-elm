@@ -44,6 +44,28 @@ option_profiles:
       enableResultTypes: true
       signatureLevel: None
 
+  measure-bundle:
+    description: >
+      The option set published measure bundles declare in their CqlToElmInfo
+      annotation. Result types are on, which is what makes the type-rendering and
+      inference surface observable at all; list traversal, demotion and promotion
+      are off. No other profile matches this combination, which is why gaps that
+      only appear in measure-shaped content were invisible (issues/05 Part 1).
+    cliFlags:
+      - --locators
+      - --result-types
+      - --disable-list-traversal
+      - --disable-list-demotion
+      - --disable-list-promotion
+    translatorOptions:
+      enableAnnotations: false
+      enableLocators: true
+      enableResultTypes: true
+      disableListTraversal: true
+      disableListDemotion: true
+      disableListPromotion: true
+      signatureLevel: None
+
   sig-overloads:
     description: SignatureLevel=Overloads — record signatures for overloaded calls
     cliFlags: [--signatures, Overloads]
@@ -214,8 +236,11 @@ fixtures:
     description: String functions (Length, Upper, Lower, Substring, etc.)
     expectedStatus: success
     profiles: all
-    # upstream-error: CQF produces no output for strict/disable-list-promotion combinations.
-    excludeProfiles: [strict, disable-list-promotion]
+    # upstream-error: CQF produces no output for strict/disable-list-promotion
+    # combinations. measure-bundle is the same cause — it disables demotion and
+    # promotion, and IndexOf(String, String) / Contains(String, String) only
+    # resolve through them.
+    excludeProfiles: [strict, disable-list-promotion, measure-bundle]
     tags: [cqf-corpus, string]
 
   - path: cqf-tests/ConditionalExpressionsTest.cql
@@ -260,12 +285,10 @@ fixtures:
     description: RA Disease Activity Monitoring proportion measure (FHIR R4) with DMARD therapy
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators]
-    # CQF 3.29.0 and 4.8.0 lower the Interval<DateTime> parameter default
-    # differently: 3.29.0 emits Property(low/high/lowClosed/highClosed) accessors
-    # over the source Interval plus lowClosedExpression/highClosedExpression,
-    # while 4.8.0 folds the Date bounds directly into the promoted Interval.
-    # The 4.8.0 form is the golden.
-    versionDivergent: true
+    # CQF folds the Date bounds of an Interval<DateTime> parameter default
+    # directly into the promoted Interval. Older releases lowered it through
+    # Property(low/high/lowClosed/highClosed) accessors over the source Interval;
+    # the pinned release does not, and the golden is the folded form.
     tags: [ra-measure]
 
   # ── ELM node emission regressions (issues/03-cqf-parity-gaps.md) ────────────
@@ -320,6 +343,82 @@ fixtures:
     profiles: all
     tags: [elm-nodes, terminology]
 
+  # ── Measure-shaped constructs (issues/05) ──────────────────────────────────
+  # Shapes that only appear in published measure content. Each runs under
+  # measure-bundle, the option set such content declares.
+
+  - path: measure-shapes/TemporalOperatorSelection.cql
+    description: same or before / same or after are their own operators (issues/05 3.5)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ContextAccessorPosition.cql
+    description: Implicit context accessor sits at the context declaration (issues/05 3.7)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/FHIRHelperConversions.cql
+    description: Implicit FHIRHelpers conversions when the query source is a define (issues/05 3.2)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ValueSetMembership.cql
+    description: Value set membership converts its code operand (issues/05 3.4)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ImplicitCastNull.cql
+    description: Untyped null at a typed parameter is wrapped in As (issues/05 3.3)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/TypeNameQualification.cql
+    description: Model type names render as {modelUri}LocalName everywhere (issues/05 3.1)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ResultTypeInference.cql
+    description: Result types on list operators, alias property navigation, singleton from (issues/05 #12)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/FluentHelpers.cql
+    description: Helper providing a fluent function for FluentCrossLibrary
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/FluentCrossLibrary.cql
+    description: Fluent call through an expression receiver carries libraryName (issues/05 3.6)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/StatementOrdering.cql
+    description: Negative control — dependency ordering already matches (issues/05 3.8)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: elm-nodes/SharedFunctions.cql
+    description: Helper library providing functions for CrossLibraryFunction
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators]
+    tags: [elm-nodes]
+
+  - path: elm-nodes/CrossLibraryFunction.cql
+    description: Library-qualified function calls carry libraryName (issues/04 G6)
+    expectedStatus: success
+    profiles: [default, annotations, locators, annotations-locators]
+    tags: [elm-nodes]
+
   - path: elm-nodes/CrossLibraryTerminology.cql
     description: Library-qualified value set, code, code system and expression references resolved through an include
     expectedStatus: success
@@ -342,7 +441,6 @@ fixtures:
     description: Implicit Date→DateTime conversion of interval bounds when compared against a DateTime
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, debug]
-    # Same divergence as ra-measure: 3.29.0 lowers the promotion through Property
-    # accessors over the source interval, 4.8.0 folds the bounds in directly.
-    versionDivergent: true
+    # Same interval-bound promotion as ra-measure: older CQF lowered it through
+    # accessors over the source interval; the pinned release folds them in.
     tags: [elm-nodes, datetime]

@@ -247,3 +247,23 @@ func runBundleTranslate(args []string) {
 		os.Exit(1)
 	}
 }
+
+// validateBundleProfile checks an explicitly requested profile against the
+// options the bundle's ELM declares it was compiled with.
+//
+// A profile name that the main corpus does not define is left alone: in bundle
+// mode the name is only a label for the generated corpus, so an unknown one is
+// not an error.
+func validateBundleProfile(b *bundle.Bundle, corpusDir, profileName string) error {
+	corpus, err := parity.LoadCorpus(corpusDir)
+	if err != nil {
+		// Without the corpus there is nothing to validate against; the derived
+		// profile still applies, so this is not fatal.
+		return nil //nolint:nilerr // absence of a corpus is not a validation failure
+	}
+	profile, ok := corpus.OptionProfiles[profileName]
+	if !ok {
+		return nil
+	}
+	return parity.ValidateProfileAgainstBundle(b, profileName, profile)
+}

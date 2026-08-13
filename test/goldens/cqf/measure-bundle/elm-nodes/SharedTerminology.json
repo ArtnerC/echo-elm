@@ -1,0 +1,100 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "id": "http://snomed.info/sct",
+          "locator": "5:1-5:45",
+          "name": "SNOMED",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}CodeSystem"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": {
+            "locator": "9:34-9:41",
+            "name": "SNOMED",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}CodeSystem"
+          },
+          "display": "Diabetes mellitus",
+          "id": "73211009",
+          "locator": "9:1-9:69",
+          "name": "Diabetes",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Code"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "SharedTerminology",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "11:28-11:32",
+            "operand": [
+              {
+                "locator": "11:28",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "locator": "11:32",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "11:1-11:32",
+          "name": "SharedExpression",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
+          "locator": "7:1-7:74",
+          "name": "Diabetes VS",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet"
+        }
+      ]
+    }
+  }
+}

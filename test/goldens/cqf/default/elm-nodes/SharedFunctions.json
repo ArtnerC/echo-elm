@@ -1,0 +1,73 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "SharedFunctions",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "name": "n",
+                "type": "OperandRef"
+              },
+              {
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "name": "Doubled",
+          "operand": [
+            {
+              "name": "n",
+              "operandTypeSpecifier": {
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "type": "Literal",
+            "value": "7",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Constant",
+          "operand": [],
+          "type": "FunctionDef"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

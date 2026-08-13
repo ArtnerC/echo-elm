@@ -81,3 +81,36 @@ var FHIRReferenceChoiceCodeProperty = map[string]string{
 	"MedicationDispense":       "Medication",
 	"MedicationStatement":      "Medication",
 }
+
+// FHIRPropertyTypeOf returns the declared FHIR type of typeName.property,
+// walking the base-type chain.
+//
+// FHIR elements are inherited: Condition.id is declared on Resource, and
+// Encounter.meta on Resource too, so indexing FHIRPropertyType directly answers
+// "no such property" for every inherited element. That silently produced no
+// result type at all on those nodes, which then collapsed enclosing queries to
+// List<Any>.
+//
+// The chain is finite and acyclic in the ModelInfo, but the walk is bounded
+// anyway: a malformed table should degrade to "unknown", not hang.
+func FHIRPropertyTypeOf(typeName, property string) (string, bool) {
+	for depth := 0; typeName != "" && depth < 32; depth++ {
+		if t, ok := FHIRPropertyType[typeName+"."+property]; ok {
+			return t, true
+		}
+		typeName = FHIRBaseType[typeName]
+	}
+	return "", false
+}
+
+// IsFHIRListPropertyOf reports whether typeName.property is list-valued,
+// walking the base-type chain the same way FHIRPropertyTypeOf does.
+func IsFHIRListPropertyOf(typeName, property string) bool {
+	for depth := 0; typeName != "" && depth < 32; depth++ {
+		if _, ok := FHIRPropertyType[typeName+"."+property]; ok {
+			return FHIRListProperty[typeName+"."+property]
+		}
+		typeName = FHIRBaseType[typeName]
+	}
+	return false
+}

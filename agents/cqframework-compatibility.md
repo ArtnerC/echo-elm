@@ -3,8 +3,9 @@
 You are working on the **CQFramework compatibility surface** of
 echo-elm. The goal is that, for the same CQL inputs and options, the
 echo-elm CLI produces ELM that diffs cleanly against the CQFramework
-`cql-to-elm` reference CLI at both **3.29.0** (group
-`info.cqframework`) and **4.8.0+** (group `org.cqframework`).
+`cql-to-elm` reference CLI at **5.0.0** (group `org.cqframework`), the
+single pinned parity target. Rows below that name 3.29.0 or 4.8.0 describe
+those releases historically; they are not install targets.
 
 Read `AGENTS.md` and
 `references\implementation\cqframework-compatibility.md` first; this

@@ -37,7 +37,7 @@ func main() {
 	fmt.Println("── Check 3: CQFramework launchers available")
 	toolsDir := fixtureTools()
 	launchersOK := true
-	for _, v := range []string{"3.29.0", "4.8.0"} {
+	for _, v := range []string{parity.PinnedCQFVersion} {
 		ext := ".sh"
 		if runtime.GOOS == "windows" {
 			ext = ".bat"
@@ -52,10 +52,10 @@ func main() {
 	check("all launchers present", launchersOK)
 	fmt.Println()
 
-	// ── Check 4: Parity run (smoke tag vs 4.8.0) ────────────────────────────
-	fmt.Println("── Check 4: Parity run (smoke tag, cqframework 4.8.0)")
+	// ── Check 4: Parity run (smoke tag) ─────────────────────────────────────
+	fmt.Printf("── Check 4: Parity run (smoke tag, cqframework %s)\n", parity.PinnedCQFVersion)
 	cfg := parity.Config{
-		CQFVersion: "4.8.0",
+		CQFVersion: parity.PinnedCQFVersion,
 		ToolsDir:   toolsDir,
 		CorpusDir:  corpusDir,
 		TagFilter:  "smoke",
@@ -84,7 +84,7 @@ func main() {
 	fmt.Println("── Check 5: Report files written")
 	runID := time.Now().UTC().Format("20060102-150405")
 	outDir := filepath.Join(os.TempDir(), "echo-elm-parity-demo-"+runID)
-	err = parity.WriteReport(outDir, runID, "4.8.0", results)
+	err = parity.WriteReport(outDir, runID, parity.PinnedCQFVersion, results)
 	must("write report", err)
 	check("report.json written", fileExists(filepath.Join(outDir, "report.json")))
 	check("report.md written", fileExists(filepath.Join(outDir, "report.md")))
