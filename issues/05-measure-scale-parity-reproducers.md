@@ -154,7 +154,20 @@ go run ./cmd/echo-elm cqf translate -input <file>.cql -format JSON \
 
 ### 3.1 Type-name qualification — `TypeNameQualification.cql`
 
-Largest bucket by count: **3,174** of 7,928 result-type divergences are qualification-only,
+> **Fixed.** Retrieves were always right; the other two spellings came from *declared* type
+> specifiers, which kept the source text. Both conversion paths — `astTypeSpecToTypeSpec`
+> for inference and `translateTypeSpecifier` for emission — now route model names through
+> `qualifyDataType`, the rule retrieves already used, so there is one rendering rule rather
+> than three code paths that have to agree. All three spellings collapse to
+> `{modelUri}LocalName`. Fixture: `measure-shapes/TypeNameQualification.cql`.
+>
+> The fixture deliberately omits property navigation off a query alias. That shape also
+> needs result-type inference through the alias' model element type, which is still open
+> (Part 5) — `C.id` gets no `resultTypeName`, and the enclosing `SingletonFrom` and
+> `FunctionDef` get none either. Including it would make the fixture fail for a reason it
+> is not about.
+
+Largest bucket by count: **3,174** of 7,928 result-type divergences were qualification-only,
 meaning both sides inferred the same type and rendered it differently.
 
 ```cql
@@ -687,8 +700,8 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 |---|---|---|
 | 1 | Harness: align definitions by name | open |
 | 2 | Harness: reduce empty containers + `signatureLevel` on the bundle path | **done** |
-| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 8 of 9 fixtures |
-| 4 | Single type-name rendering path | open |
+| 3 | Corpus: `measure-bundle` profile and `measure-shapes/` fixtures | **profile done**, 9 of 9 fixtures |
+| 4 | Single type-name rendering path | **done** |
 | 5 | Result-type attachment policy survey | open |
 | 6 | Implicit model conversions (`FHIRHelpers.To*`) | **done** — 3.2 and 3.4 both verified |
 | 7 | Implicit cast wrappers around untyped literals | **done** for `null` at a declared parameter; other untyped literals unverified |
@@ -698,7 +711,7 @@ parameter. This is the same approach already taken by `ra-measure/RAMeasure-1.0.
 | 11 | Context propagation from included libraries (G5) | open |
 | 12 | Residual type inference — `List<Any>` collapse | open |
 
-Corpus parity against CQF 5.0.0 after 6, 7, 8, 9 and 10: **328/328**, including the new
+Corpus parity against CQF 5.0.0 after 4, 6, 7, 8, 9 and 10: **330/330**, including the new
 `measure-bundle` profile. That number covers the corpus, which is CQF's conformance suite
 plus synthetic libraries — it is not evidence about measure-shaped content, which is the
 whole point of Part 1.

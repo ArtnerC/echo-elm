@@ -2,6 +2,7 @@ package translator
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
@@ -537,6 +538,52 @@ func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
 // astTypeSpecToTypeSpec converts an AST type specifier to the translator's
 // internal typeSpec used for signature inference. Returns nil for tuple/choice
 // or other unhandled forms.
+// declaredTypeSpec converts a source-declared type specifier and renders every
+// model type name the one way CQF does: {modelUri}LocalName.
+//
+// astTypeSpecToTypeSpec keeps the name as written, which is why the same type
+// could come out three ways in one library — `{http://hl7.org/fhir}Encounter`
+// from a retrieve, `FHIR.Encounter` from an alias-qualified declaration, and
+// bare `Encounter` from an unqualified one. Only the first is right. Routing
+// declared specifiers through qualifyDataType, which retrieves already use,
+// makes that one rule rather than three code paths that must agree.
+func (t *Translator) declaredTypeSpec(ts ast.TypeSpecifier) typeSpec {
+	return t.qualifyTypeSpec(astTypeSpecToTypeSpec(ts))
+}
+
+// qualifyTypeSpec rewrites every model type name in a spec tree to its
+// {uri}LocalName form. System types arrive already qualified and are untouched.
+func (t *Translator) qualifyTypeSpec(ts typeSpec) typeSpec {
+	switch v := ts.(type) {
+	case namedTS:
+		return namedTS{t.qualifyTypeName(v.name)}
+	case listTS:
+		return listTS{t.qualifyTypeSpec(v.elem)}
+	case intervalTS:
+		return intervalTS{t.qualifyTypeSpec(v.point)}
+	case tupleTS:
+		fields := make([]tupleField, len(v.fields))
+		for i, f := range v.fields {
+			fields[i] = tupleField{name: f.name, ts: t.qualifyTypeSpec(f.ts)}
+		}
+		return tupleTS{fields: fields}
+	}
+	return ts
+}
+
+// qualifyTypeName renders one type name in {uri}LocalName form. A name that is
+// already qualified, or that no declared model claims, is left alone rather than
+// guessed at.
+func (t *Translator) qualifyTypeName(name string) string {
+	if name == "" || strings.HasPrefix(name, "{") {
+		return name
+	}
+	if dt, _ := t.qualifyDataType(name); dt != "" {
+		return dt
+	}
+	return name
+}
+
 func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 	if ts == nil {
 		return nil

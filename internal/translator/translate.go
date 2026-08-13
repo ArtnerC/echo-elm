@@ -573,7 +573,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if nts, ok := (*p.ParameterType).(*ast.NamedTypeSpecifier); ok {
 				t.paramTypes[p.Name] = resolveTypeName(nts.Name)
 			}
-			if ts := astTypeSpecToTypeSpec(*p.ParameterType); ts != nil {
+			if ts := t.declaredTypeSpec(*p.ParameterType); ts != nil {
 				t.paramTypeSpecs[p.Name] = ts
 			}
 		}
@@ -614,7 +614,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		}
 		t.localFuncCounts[s.Name]++
 		if s.ReturnType != nil {
-			if ts := astTypeSpecToTypeSpec(*s.ReturnType); ts != nil {
+			if ts := t.declaredTypeSpec(*s.ReturnType); ts != nil {
 				t.localFuncReturns[s.Name] = ts
 			}
 		}
@@ -627,7 +627,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			specs := make([]typeSpec, len(s.Operands))
 			for i, op := range s.Operands {
 				if op.Type != nil {
-					specs[i] = astTypeSpecToTypeSpec(*op.Type)
+					specs[i] = t.declaredTypeSpec(*op.Type)
 				}
 			}
 			t.localFuncOperands[s.Name] = specs
@@ -916,7 +916,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 					stampTypeSpecifier(pd.ParameterTypeSpecifier)
 				}
 				if t.opts.EnableResultTypes {
-					pd.ResultTypeName, pd.ResultTypeSpecifier = resultTypeOf(astTypeSpecToTypeSpec(*p.ParameterType))
+					pd.ResultTypeName, pd.ResultTypeSpecifier = resultTypeOf(t.declaredTypeSpec(*p.ParameterType))
 				}
 			}
 			if p.Default != nil {
@@ -1016,7 +1016,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			// under --result-types. A declared `returns` clause does not by itself
 			// put the type in the ELM.
 			if s.ReturnType != nil && t.opts.EnableResultTypes {
-				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(astTypeSpecToTypeSpec(*s.ReturnType))
+				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(t.declaredTypeSpec(*s.ReturnType))
 			}
 			// Build function parameter scope before translating the body,
 			// so IdentifierRef nodes matching operand names emit OperandRef.
@@ -1026,7 +1026,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				for _, op := range s.Operands {
 					t.functionParamScope[op.Name] = true
 					if op.Type != nil {
-						if ts := astTypeSpecToTypeSpec(*op.Type); ts != nil {
+						if ts := t.declaredTypeSpec(*op.Type); ts != nil {
 							t.operandTypeSpecs[op.Name] = ts
 						}
 					}
@@ -1571,7 +1571,11 @@ func (t *Translator) translateTypeSpecifier(ts ast.TypeSpecifier) elm.TypeSpecif
 		if v.Qualifier != "" {
 			name = v.Qualifier + "." + v.Name
 		}
-		name = resolveTypeName(name)
+		// Model types render as {modelUri}LocalName, the same form retrieves use.
+		// resolveTypeName only maps System names, so an alias-qualified
+		// `FHIR.Encounter` or a bare `Encounter` would otherwise reach the ELM
+		// as written and give one type two more spellings.
+		name = t.qualifyTypeName(resolveTypeName(name))
 		nts := &elm.NamedTypeSpecifier{Annotation: ann, Name: name}
 		if t.opts.EnableLocators {
 			nts.Locator = locatorStr(v.Loc())

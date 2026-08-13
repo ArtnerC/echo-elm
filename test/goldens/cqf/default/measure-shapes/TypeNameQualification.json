@@ -1,0 +1,179 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TypeNameQualification",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "All Encounters"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeComparator": "in",
+            "codeFilter": [],
+            "codeProperty": "type",
+            "codes": {
+              "name": "Office Visit",
+              "preserve": true,
+              "type": "ValueSetRef"
+            },
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encounters In Value Set"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "signature": [],
+            "source": {
+              "name": "encounters",
+              "type": "OperandRef"
+            },
+            "type": "Count"
+          },
+          "name": "CountOf",
+          "operand": [
+            {
+              "name": "encounters",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "name": "{http://hl7.org/fhir}Encounter",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "name": "CountOf",
+            "operand": [
+              {
+                "name": "All Encounters",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "Encounter Count"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "name": "All Encounters",
+              "type": "ExpressionRef"
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "Has Any Encounter"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "name": "Office Visit",
+            "preserve": true,
+            "type": "ValueSetRef"
+          },
+          "name": "Value Set Reference"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://example.org/fhir/ValueSet/office-visit",
+          "name": "Office Visit"
+        }
+      ]
+    }
+  }
+}

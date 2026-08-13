@@ -377,6 +377,12 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/TypeNameQualification.cql
+    description: Model type names render as {modelUri}LocalName everywhere (issues/05 3.1)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/FluentHelpers.cql
     description: Helper providing a fluent function for FluentCrossLibrary
     expectedStatus: success
