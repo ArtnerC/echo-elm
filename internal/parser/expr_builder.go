@@ -881,8 +881,11 @@ func (b *astBuilder) buildQueryInner(ctx cqlparser.IQueryContext) ast.Expr {
 	if wc := qc.WhereClause(); wc != nil {
 		wcc := wc.(*cqlparser.WhereClauseContext)
 		q.Where = b.buildExpr(wcc.Expression())
-		// Override with the full whereClause span (includes 'where' keyword).
-		q.Where = setLoc(q.Where, wcc)
+		// Record the full whereClause span (keyword included) separately. It
+		// belongs on the clause's outermost ELM node, not on the expression —
+		// overwriting the expression's own location propagated the keyword's
+		// start into every node derived from it.
+		q.WhereLoc = intervalFromCtx(wcc)
 	}
 
 	// Return

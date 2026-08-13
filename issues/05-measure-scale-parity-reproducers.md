@@ -613,9 +613,19 @@ Of the 7,928 result-type divergences, once 3.1 (qualification, 3,174) is removed
 | `genuine_type_difference` | 919 | 11.6% |
 | `extra_in_echo` | 594 | 7.5% |
 
-`missing_in_echo` and `extra_in_echo` together are an **attachment policy** difference —
-which node kinds get a result type at all — not an inference difference. That is a survey
-of `elm.SetResultType` call sites, and it should be settled before anyone looks at the 919.
+> **Surveyed, and the framing was wrong.** `missing_in_echo` is not an attachment *policy*
+> difference. `stampResultType` already runs for every expression that comes from source;
+> what it does is stamp nothing when inference returns `Any`, because `Any` doubles as
+> "unresolved". So a node missing a result type is a node whose *type* could not be
+> inferred, and the two buckets are the same defect seen from opposite ends — an untyped
+> node silently degrades every expression built on it, which is exactly how a
+> `List<Reference>` becomes `List<Any>`.
+>
+> Four inference gaps accounted for every case reproduced here; see #12 below. Fixture:
+> `measure-shapes/ResultTypeInference.cql`.
+
+`missing_in_echo` and `extra_in_echo` together were read as an **attachment policy**
+difference — which node kinds get a result type at all.
 
 The 919 are the real residual of issue 04's G3. Representative case, 102 occurrences:
 
@@ -625,8 +635,26 @@ The 919 are the real residual of issue 04's G3. Representative case, 102 occurre
 | echo-elm | `List<{urn:hl7-org:elm-types:r1}Any>` |
 
 An element type collapsing to `Any` is the signature of list element inference giving up.
-Given `disableListPromotion`/`disableListDemotion` are on in the measure profile, check
-those paths first.
+
+> **Fixed — four distinct defects, one symptom.** The list promotion/demotion paths were
+> not involved.
+>
+> 1. `Distinct` and `Flatten` are `UnaryExpression` in ELM — a single operand object, not
+>    an array — so they never reached the n-ary branch that follows the operand and came
+>    out with no result type at all.
+> 2. A property navigated off a query alias had no lookup: the code handled a tuple source
+>    and a context reference, but an alias' element type is a *model* type.
+> 3. Inherited FHIR elements were missing entirely. `Condition.id` is declared on
+>    `Resource`, and the generated property table does not walk `baseType`, so every
+>    inherited element answered "no such property". `FHIRPropertyTypeOf` now walks the
+>    chain, from a new generated `FHIRBaseType` map.
+> 4. `SingletonFrom` has its own ELM node and reached no operator branch.
+>
+> Also corrected: a property's own result type is the **FHIR** type, not the System type it
+> converts to — CQF records `C.id` as `{http://hl7.org/fhir}id` and lets the FHIRHelpers
+> call at the consumption site carry the `String`. `fhirTypeToCQLTypeSpec` answers the
+> other question and was returning `Any` for every complex type, which is what made
+> `E.subject` untyped.
 
 ---
 
@@ -649,21 +677,80 @@ those paths first.
 
 | # | Title | Scope | Depends on |
 |---|---|---|---|
-| 1 | Harness: align definitions by name; add wrapper-detection pass | `internal/parity/runner.go` | — |
+| 1 | Harness: align definitions by name; add wrapper-detection pass | **done** — `internal/parity/structdiff.go` | — |
 | 2 | Harness: reduce empty containers and `signatureLevel` on the bundle path | `stripEmptyAnnotations`, `stripVolatileFields` | — |
 | 3 | Corpus: add `measure-bundle` profile and `measure-shapes/` fixtures | `corpus.yaml`, new fixtures | — |
 | 4 | Single type-name rendering path | `typeinfer.go`, `translate.go` | 3 |
-| 5 | Result-type attachment policy survey | `elm.SetResultType` call sites | 1, 4 |
+| 5 | Result-type attachment policy survey | **done** — it was inference, not policy | 1, 4 |
 | 6 | Implicit model conversions (`FHIRHelpers.To*`) | conversion insertion | 4 |
 | 7 | Implicit cast wrappers around untyped literals | `As` insertion | 4 |
 | 8 | Fluent function resolution through expression receivers | `resolveLibraryQualifiedCalls` | 4 |
 | 9 | Context accessor source position | `translate.go:939-946` | — |
 | 10 | `same or before` / `same or after` operator selection | operator lowering | — |
-| 11 | Context propagation from included libraries (G5) | context resolution | 8 |
-| 12 | Residual type inference — `List<Any>` collapse | list element inference | 5 |
+| 11 | Context propagation from included libraries (G5) | **not reproduced** across four shapes | 8 |
+| 12 | Residual type inference — `List<Any>` collapse | **done** — four defects | 5 |
 
 Recommended order: 1, 2, 3 (measure honestly), then 9 and 10 (small, independent, and 10
 is a correctness bug), then 4, then 6, 7, 8, 11, and finally 5 and 12.
+
+---
+
+## Part 9 — What is still needed from the measure content
+
+Everything in Part 3 has been reproduced synthetically and fixed. What cannot be
+reproduced synthetically is **whether that list is complete**, because the fixtures were
+written from an analysis of the measures rather than from the measures themselves. The
+corpus now passes 330/330 against CQF 5.0.0; the measures did not, and the remaining
+delta is unmeasured.
+
+Re-running the comparison needs nothing new. Everything below is about making the *next*
+measurement trustworthy rather than about getting access to content.
+
+### 9.1 Re-measure with the harness as it now stands
+
+The last measurement predates every fix in this issue **and** both harness corrections. It
+should be re-run before any new work is scoped, because three of the earlier headline
+findings did not survive contact with a correct comparison:
+
+- G1/G2 (issue 04) were CLI-vs-JAXB serializer shape, not translator gaps.
+- The `If`→`Or` findings were index-misalignment artifacts.
+- G5 does not reproduce at all.
+
+Re-run with `parity --bundle`, which now derives the option profile from the bundle's own
+`CqlToElmInfo` annotation and refuses to compare a mismatched one. Report `match/differ`
+plus the `StructuralDiff` output, which aligns definitions by name and collapses wrapper
+insertions to one finding each.
+
+### 9.2 The specific things a re-measurement should answer
+
+| Question | Why it cannot be answered here |
+|---|---|
+| Which of the 919 genuine type differences remain? | The count predates all four inference fixes; the `List<Any>` family should be gone, and the rest is unknown. |
+| Do any `missing_in_echo` result types remain, and on which node kinds? | Part 5 turned out to be inference, not policy. If any survive, *that* would finally be a policy question — and it needs the node kinds, not a count. |
+| Are there conversion sites beyond query-source aliases? | 3.2 was fixed for aliases. A conversion consumed somewhere else — a `with` clause, a sort, an aggregate accumulator — would look identical in the counts. |
+| Do overloaded fluent functions or overloaded parameter lists actually occur? | Both are deliberately skipped rather than guessed. If real measures use them, they need overload resolution, which is a much larger piece of work than either fix. |
+| Does anything still differ in statement ordering? | G7 was G6's consequence. Whether any *independent* ordering rule differs is untested. |
+
+### 9.3 What to send back, in order of usefulness
+
+1. **`StructuralDiff` output for the first 10 differing libraries.** More useful than any
+   aggregate: it names the definition and the path, so a fixture can be written directly
+   from it. This is the single most valuable artifact.
+2. **A `(field, shape)` frequency table over the residual**, as Part 5 did. Aggregates are
+   for prioritising, not for diagnosing — but they prioritise well.
+3. **The `translatorOptions` string** from one library's `CqlToElmInfo`. If it differs from
+   the `measure-bundle` profile, the profile is wrong and every count is suspect.
+4. **CQL shapes, not CQL.** Nothing licensed needs to leave: what a fixture needs is the
+   *construct* — "a fluent function called on the result of another fluent function, both
+   overloaded" — which is describable in a sentence. Every fixture in Part 3 was built this
+   way.
+
+### 9.4 What is explicitly not needed
+
+Measure content in this repository. Part 8's constraint is not a workaround — the
+synthetic fixtures are *better* regression tests, because each one fails for exactly one
+reason and is readable by someone who has never seen the measure it came from. The
+measures are useful as a *discovery* surface, not as a corpus.
 
 ---
 

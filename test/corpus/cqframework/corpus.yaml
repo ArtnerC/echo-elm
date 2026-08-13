@@ -383,6 +383,12 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/ResultTypeInference.cql
+    description: Result types on list operators, alias property navigation, singleton from (issues/05 #12)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/FluentHelpers.cql
     description: Helper providing a fluent function for FluentCrossLibrary
     expectedStatus: success

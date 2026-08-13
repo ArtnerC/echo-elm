@@ -115,6 +115,55 @@
           "accessLevel": "Public",
           "context": "Patient",
           "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "C",
+                  "expression": {
+                    "name": "conditions",
+                    "type": "OperandRef"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": {
+                  "operand": {
+                    "path": "id",
+                    "scope": "C",
+                    "type": "Property"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "First Condition",
+          "operand": [
+            {
+              "name": "conditions",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "name": "{http://hl7.org/fhir}Condition",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
             "name": "CountOf",
             "operand": [
               {

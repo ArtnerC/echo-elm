@@ -714,6 +714,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "Negate", "Abs", "Successor", "Predecessor":
 			// These preserve the operand type.
 			return t.inferTypeSpec(v.Operand)
+		case "Distinct", "Flatten", "Collapse", "Expand", "Slice", "Take", "Skip", "Tail":
+			// List-shape-preserving. The n-ary branch already handles these, but
+			// ELM models them as UnaryExpression — a single operand object, not an
+			// array — so they never reached it and came out with no result type.
+			if v.Operator == "Flatten" {
+				// flatten List<List<T>> → List<T>.
+				if outer, ok := t.inferTypeSpec(v.Operand).(listTS); ok {
+					if inner, ok := outer.elem.(listTS); ok {
+						return inner
+					}
+					return outer
+				}
+				return nil
+			}
+			return t.inferTypeSpec(v.Operand)
 		case "Truncate", "Floor", "Ceiling":
 			// Decimal → Integer: these round to a whole number.
 			return intTS
@@ -1018,6 +1033,15 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			fields = append(fields, tupleField{name: el.Name, ts: t.inferTypeSpec(el.Value)})
 		}
 		return tupleTS{fields: fields}
+	case *elm.SingletonFromNode:
+		// singleton from List<T> → T. Its own ELM node rather than a
+		// UnaryExpression, so it reached neither operator branch and came out
+		// untyped, taking whatever was built on it along.
+		if lt, ok := t.inferTypeSpec(v.Operand).(listTS); ok {
+			return lt.elem
+		}
+		return nil
+
 	case *elm.PropertyNode:
 		// Property on a tuple type: look up the field type.
 		var srcTS typeSpec
@@ -1046,6 +1070,28 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			key := srcContext + "." + v.Path
 			if fhirType, ok := typesystem.FHIRPropertyType[key]; ok {
 				return fhirTypeToCQLTypeSpec(fhirType)
+			}
+		}
+		// Same lookup when the source is model-typed rather than a context
+		// reference — most often a query alias, whose element type is a model
+		// type rather than a tuple. Without this, navigating off an alias
+		// produced no type at all, which then collapsed the enclosing query to
+		// List<Any>. (issues/05 Part 5 / #12)
+		if v.Path != "" {
+			if local := fhirLocalTypeName(srcTS); local != "" {
+				if fhirType, ok := typesystem.FHIRPropertyTypeOf(local, v.Path); ok {
+					// The property's own type is the FHIR type, not the System
+					// type it converts to: CQF records C.id as
+					// {http://hl7.org/fhir}id and lets the FHIRHelpers call at
+					// the consumption site carry the String. This mirrors the
+					// Source-based branch above rather than going through
+					// fhirTypeToCQLTypeSpec, which answers the other question.
+					var ts typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+					if typesystem.IsFHIRListPropertyOf(local, v.Path) {
+						ts = listTS{ts}
+					}
+					return ts
+				}
 			}
 		}
 	case *elm.RetrieveNode:
@@ -1082,7 +1128,15 @@ func fhirTypeToCQLTypeSpec(fhirType string) typeSpec {
 	case "Quantity":
 		return quantityTS
 	default:
-		return anyTS
+		// Not a primitive or binding, so it has no System equivalent — it is a
+		// complex FHIR type and stays one. Returning Any here is what collapsed
+		// `E.subject` to no result type at all: Any is treated as "unresolved"
+		// and left unstamped, so the enclosing query then had nothing to infer
+		// its element type from and became List<Any>. (issues/05 #12)
+		if fhirType == "" {
+			return anyTS
+		}
+		return namedTS{"{http://hl7.org/fhir}" + fhirType}
 	}
 }
 

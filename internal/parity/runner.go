@@ -304,7 +304,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Status = StatusMatch
 	} else {
 		r.Status = StatusDifferJSON
-		r.Diff = simpleDiff(r.UpstreamJSON, r.EchoJSON)
+		r.Diff = StructuralDiff(r.UpstreamJSON, r.EchoJSON)
 	}
 
 	r.Duration = time.Since(start)

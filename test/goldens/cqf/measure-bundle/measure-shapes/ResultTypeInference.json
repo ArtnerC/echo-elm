@@ -1,0 +1,514 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "18:1-18:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ResultTypeInference",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "18:1-18:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "18:1-18:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "locator": "20:16-20:26",
+            "otherFilter": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "locator": "20:1-20:26",
+          "name": "Encs",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "21:19-21:29",
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "21:32-21:42",
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "locator": "21:17-21:44",
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "List"
+          },
+          "locator": "21:1-21:44",
+          "name": "Dates",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "24:26-24:41",
+            "operand": {
+              "locator": "24:35-24:41",
+              "name": "Dates",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "type": "ExpressionRef"
+            },
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "locator": "24:1-24:41",
+          "name": "Distinct Dates",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "25:22-25:65",
+            "operand": {
+              "element": [
+                {
+                  "element": [
+                    {
+                      "day": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "locator": "25:34-25:44",
+                      "month": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                      "signature": [],
+                      "type": "Date",
+                      "year": {
+                        "type": "Literal",
+                        "value": "2024",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    }
+                  ],
+                  "locator": "25:32-25:46",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "List"
+                },
+                {
+                  "element": [
+                    {
+                      "day": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "locator": "25:51-25:61",
+                      "month": {
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                      "signature": [],
+                      "type": "Date",
+                      "year": {
+                        "type": "Literal",
+                        "value": "2024",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    }
+                  ],
+                  "locator": "25:49-25:63",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "List"
+                }
+              ],
+              "locator": "25:30-25:65",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "type": "List"
+            },
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "signature": [],
+            "type": "Flatten"
+          },
+          "locator": "25:1-25:65",
+          "name": "Flat Dates",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "28:20-28:44",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Reference",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "28:36-28:44",
+                "path": "subject",
+                "resultTypeName": "{http://hl7.org/fhir}Reference",
+                "scope": "E",
+                "type": "Property"
+              },
+              "locator": "28:29-28:44",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{http://hl7.org/fhir}Reference",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "28:20-28:25",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "28:20-28:27",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "28:1-28:44",
+          "name": "Subjects",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Reference",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "29:15-29:34",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}id",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "expression": {
+                "locator": "29:31-29:34",
+                "path": "id",
+                "resultTypeName": "{http://hl7.org/fhir}id",
+                "scope": "E",
+                "type": "Property"
+              },
+              "locator": "29:24-29:34",
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{http://hl7.org/fhir}id",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "29:15-29:20",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "29:15-29:22",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "29:1-29:34",
+          "name": "Ids",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}id",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "32:20-32:67",
+            "operand": {
+              "let": [],
+              "locator": "32:35-32:67",
+              "relationship": [],
+              "resultTypeSpecifier": {
+                "elementType": {
+                  "name": "{http://hl7.org/fhir}Encounter",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "locator": "32:36-32:41",
+                    "name": "Encs",
+                    "resultTypeSpecifier": {
+                      "elementType": {
+                        "name": "{http://hl7.org/fhir}Encounter",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    },
+                    "type": "ExpressionRef"
+                  },
+                  "locator": "32:36-32:43",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "locator": "32:45-32:66",
+                "operand": {
+                  "locator": "32:51-32:66",
+                  "operand": {
+                    "locator": "32:51-32:54",
+                    "path": "id",
+                    "resultTypeName": "{http://hl7.org/fhir}id",
+                    "scope": "E",
+                    "type": "Property"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                "signature": [],
+                "type": "Not"
+              }
+            },
+            "resultTypeName": "{http://hl7.org/fhir}Encounter",
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "32:1-32:67",
+          "name": "Only One",
+          "resultTypeName": "{http://hl7.org/fhir}Encounter"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "locator": "16:1-16:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

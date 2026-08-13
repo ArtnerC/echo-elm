@@ -4099,6 +4099,11 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 	}
 	if q.Where != nil {
 		qn.Where = t.translateExpr(q.Where)
+		// The clause's outermost node carries the whole `where <expr>` span,
+		// keyword included; everything inside keeps its own.
+		if t.opts.EnableLocators && q.WhereLoc.Start.Line != 0 {
+			setLocator(qn.Where, locatorStr(q.WhereLoc))
+		}
 	}
 	if q.Return != nil {
 		// Plain 'return' omits the field; explicit 'return all'/'return distinct'
