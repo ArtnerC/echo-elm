@@ -329,6 +329,9 @@ func runParity(args []string) {
 		bundleWorkDir = workDir
 
 		loaded := loadBundle(bundlePath)
+		for _, w := range parity.ReferenceWarnings(loaded, parity.PinnedCQFVersion) {
+			fmt.Fprintf(os.Stderr, "warning: %s\n", w)
+		}
 
 		// An explicitly named profile is checked against what the bundle says it
 		// was compiled with. Comparing a reference built with locators and result
