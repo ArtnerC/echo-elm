@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -141,6 +142,7 @@ type Translator struct {
 	operandTypeSpecs     map[string]typeSpec            // function operand name → declared typeSpec, set during function body translation
 	listNodeTypes        map[*elm.ListNode]typeSpec     // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
 	fhirHelpersLocalName string                         // local identifier of included FHIRHelpers library, or "" if not included
+	includeAliases       map[string]bool                // every include's local name, whether or not its source resolved
 	libSyms              map[string]map[string]symKind  // included library alias → name → symKind (for QualifiedRef resolution)
 	libFluentFuncs       map[string][]string            // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
 	funcReturnSpecs      map[string]typeSpec            // local function name → inferred return type (unambiguous names only)
@@ -636,6 +638,19 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 
 	// Build cross-library symbol tables for QualifiedRef resolution.
 	t.libSyms = make(map[string]map[string]symKind)
+	// Every include's alias is a library qualifier whether or not its source can
+	// be found: `FHIRHelpers.ToString(x)` is a library call either way. Keying
+	// this off libSyms, which only holds includes that resolved, turned such a
+	// call into a method invocation on an identifier named FHIRHelpers — an
+	// ExpressionRef operand and no libraryName. (issues/06)
+	t.includeAliases = make(map[string]bool, len(lib.Includes))
+	for _, inc := range lib.Includes {
+		if inc.LocalName != "" {
+			t.includeAliases[inc.LocalName] = true
+		} else {
+			t.includeAliases[inc.Path] = true
+		}
+	}
 	t.libDefTypes = make(map[string]map[string]typeSpec)
 	t.libFluentFuncs = make(map[string][]string)
 	t.libFuncReturns = make(map[string]map[string]typeSpec)
@@ -1343,7 +1358,7 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 				return
 			}
 			if ir, isIdent := fr.Operands[0].(*ast.IdentifierRef); isIdent {
-				if _, isLib := t.libSyms[ir.Name]; isLib {
+				if _, isLib := t.libSyms[ir.Name]; isLib || t.includeAliases[ir.Name] {
 					fr.LibraryName = ir.Name
 					fr.Operands = fr.Operands[1:]
 					return
@@ -1624,10 +1639,76 @@ func (t *Translator) translateTypeSpecifier(ts ast.TypeSpecifier) elm.TypeSpecif
 		for _, ct := range v.Types {
 			cts.Choice = append(cts.Choice, t.translateTypeSpecifier(ct))
 		}
+		sortChoiceSpecifiers(cts.Choice)
 		return cts
 	default:
 		return &elm.NamedTypeSpecifier{Annotation: ann, Name: typesystem.TypeAny}
 	}
+}
+
+// sortChoiceSpecifiers orders choice alternatives the way CQF does, which is by
+// the Java toString() of each type: named types print as Model.Name and the
+// collection types in lower case, as interval<…> and list<…>. That puts
+// FHIR.Age before FHIR.dateTime before System.Integer before interval<…> before
+// list<…> — which is why a declared Choice<FHIR.dateTime, FHIR.Period, …> came
+// back reordered. Declaration order is not preserved. (issues/06)
+func sortChoiceSpecifiers(specs []elm.TypeSpecifier) {
+	sort.SliceStable(specs, func(i, j int) bool {
+		return choiceSortKey(specs[i]) < choiceSortKey(specs[j])
+	})
+}
+
+// choiceSortKey renders a type specifier the way the CQF type model prints it.
+func choiceSortKey(s elm.TypeSpecifier) string {
+	switch v := s.(type) {
+	case *elm.NamedTypeSpecifier:
+		return modelQualifiedName(v.Name)
+	case *elm.ListTypeSpecifier:
+		return "list<" + choiceSortKey(v.ElementType) + ">"
+	case *elm.IntervalTypeSpecifier:
+		return "interval<" + choiceSortKey(v.PointType) + ">"
+	case *elm.ChoiceTypeSpecifier:
+		parts := make([]string, len(v.Choice))
+		for i, c := range v.Choice {
+			parts[i] = choiceSortKey(c)
+		}
+		return "choice<" + strings.Join(parts, ",") + ">"
+	case *elm.TupleTypeSpecifier:
+		return "tuple{}"
+	}
+	return ""
+}
+
+// modelQualifiedName renders {uri}Name as Model.Name for the two models CQF
+// names; any other namespace keeps its URI, which still sorts consistently.
+func modelQualifiedName(name string) string {
+	if !strings.HasPrefix(name, "{") {
+		return name
+	}
+	end := strings.Index(name, "}")
+	if end < 0 {
+		return name
+	}
+	uri, local := name[1:end], name[end+1:]
+	switch uri {
+	case typesystem.SystemURI:
+		return "System." + local
+	case "http://hl7.org/fhir":
+		return "FHIR." + local
+	}
+	return uri + "." + local
+}
+
+// knownTS returns ts, or nil when it carries no information — unresolved, or
+// Any. A null is only cast to a type something else actually established.
+func knownTS(ts typeSpec) typeSpec {
+	if ts == nil {
+		return nil
+	}
+	if n, ok := ts.(namedTS); ok && (n.name == "" || n.name == anyTS.name) {
+		return nil
+	}
+	return ts
 }
 
 // resolveTypeName maps a bare CQL type name to its ELM-qualified form.
@@ -1673,6 +1754,11 @@ var dateTimeComponentOperators = map[string]string{
 	"Date":           "DateFrom",
 	"Time":           "TimeFrom",
 	"TimezoneOffset": "TimezoneOffsetFrom",
+}
+
+// nullarySystemOps are the CQL built-ins that are ELM operators with no operands.
+var nullarySystemOps = map[string]bool{
+	"Now": true, "Today": true, "TimeOfDay": true,
 }
 
 // unarySystemOps is the set of CQL built-in function names that map to single-operand
@@ -2108,8 +2194,12 @@ func isDefinitelyAny(e elm.Expression) bool {
 		// Coalesce yields the common type of its alternatives, so a single
 		// untyped null makes the whole thing Any.
 		if v.Operator == "Coalesce" {
+			// Only a *bare* null: once a null is cast to the type an earlier
+			// operand established, it no longer makes the whole thing Any.
+			// Counting As(null) here typed Coalesce(Now(), null) as Any where
+			// CQF says DateTime. (issues/06)
 			for _, op := range v.Operand {
-				if isNullLike(op) {
+				if _, bare := op.(*elm.NullNode); bare {
 					return true
 				}
 			}
@@ -2261,7 +2351,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		// query source alias must become AliasRef, not ExpressionRef.
 		for i := len(t.queryAliases) - 1; i >= 0; i-- {
 			if t.queryAliases[i][v.Name] {
-				return &elm.AliasRefNode{Annotation: ann, Name: v.Name}
+				return t.aliasRefNode(ann, v.Name, locatorStr(v.Loc()), noCoerce)
 			}
 		}
 		// Function parameter references inside a function body must emit OperandRef.
@@ -2301,7 +2391,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		return &elm.ExpressionRefNode{Annotation: ann, Name: v.Name, LibraryName: v.LibraryName}
 	case *ast.AliasRef:
-		return &elm.AliasRefNode{Annotation: ann, Name: v.Name}
+		return t.aliasRefNode(ann, v.Name, locatorStr(v.Loc()), noCoerce)
 	case *ast.LetRef:
 		return &elm.LetRefNode{Annotation: ann, Name: v.Name}
 	case *ast.ThisExpr:
@@ -2394,6 +2484,17 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				}
 				node.Signature = t.computeSig("Time", operands)
 				return node
+			}
+			// Now, Today and TimeOfDay are ELM operators in their own right,
+			// taking no operands. Emitted as a FunctionRef they name a library
+			// function that does not exist, which no engine can evaluate. A local
+			// function of the same name still wins. (issues/06)
+			if nullarySystemOps[v.Name] && len(v.Operands) == 0 && v.LibraryName == "" && t.localFuncCounts[v.Name] == 0 {
+				return &elm.NullaryOperatorNode{
+					Annotation: ann,
+					Signature:  t.cqfEmptyArrayField(),
+					Operator:   v.Name,
+				}
 			}
 			// Map unary system operators to UnaryExpressionNode.
 			if unarySystemOps[v.Name] && len(v.Operands) == 1 {
@@ -2567,20 +2668,19 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			// established a concrete type.
 			if v.Name == "Coalesce" {
 				var operands []elm.Expression
-				var inferredType string
+				// The type an earlier operand established is read from the
+				// translated node, so calls and structured types count. The
+				// syntactic probe used before only recognised literals, which
+				// left Coalesce(Now(), null) with a bare Null. (issues/06 4.1)
+				var established typeSpec
 				for _, o := range v.Operands {
 					elem := t.translateExpr(o)
 					if _, isNull := o.(*ast.NullLiteral); isNull {
-						if inferredType != "" {
-							elem = &elm.AsNode{
-								Annotation: t.cqfAnnotation(),
-								Signature:  t.cqfEmptyArrayField(),
-								Operand:    elem,
-								AsType:     inferredType,
-							}
+						if established != nil {
+							elem = t.castNullTo(elem, established)
 						}
-					} else if inferredType == "" {
-						inferredType = t.inferListElementType([]ast.Expr{o})
+					} else if established == nil {
+						established = knownTS(t.inferTypeSpec(elem))
 					}
 					operands = append(operands, elem)
 				}
@@ -2602,12 +2702,34 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		operands := make([]elm.Expression, 0, len(v.Operands))
 		for i, o := range v.Operands {
-			arg := t.translateExpr(o)
+			var arg elm.Expression
+			if v.LibraryName != "" && v.LibraryName == t.fhirHelpersLocalName {
+				// FHIRHelpers functions take FHIR types: their argument is what
+				// gets converted, not a site that needs converting. Treating it as
+				// consumed converted it twice — ToInterval(ToInterval(E.period)).
+				// (issues/06)
+				arg = t.translateExprUnconsumed(o)
+			} else {
+				arg = t.translateExpr(o)
+			}
 			// A bare `null` carries no type, so CQF wraps it in an As naming the
 			// parameter's declared type. Without it the argument is an untyped
 			// Null and the call's overload cannot be recovered from the ELM.
 			if _, isNull := o.(*ast.NullLiteral); isNull && i < len(declared) && declared[i] != nil {
 				arg = t.castNullTo(arg, declared[i])
+			} else if i < len(declared) {
+				// A value passed to a choice-typed parameter is cast to the
+				// choice, as CQF does: As{asTypeSpecifier: Choice<…>}. An
+				// argument that is already a choice, or whose type is unknown, is
+				// left alone. castNullTo builds exactly that node for any operand.
+				// (issues/06)
+				if ch, ok := declared[i].(choiceTS); ok {
+					if at := knownTS(t.inferTypeSpec(arg)); at != nil {
+						if _, isChoice := at.(choiceTS); !isChoice {
+							arg = t.castNullTo(arg, ch)
+						}
+					}
+				}
 			}
 			operands = append(operands, arg)
 		}
@@ -2740,7 +2862,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			Operand:    operand,
 		}
 	case *ast.BinaryExpr:
-		return t.translateBinaryExpr(v)
+		return t.castNullOperand(v, t.translateBinaryExpr(v))
 	case *ast.TernaryExpr:
 		condition := t.translateExpr(v.Condition)
 		// CQF wraps a bare-null condition in As(Boolean, null) since if requires Boolean.
@@ -2754,25 +2876,18 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		thenExpr := t.translateExpr(v.ThenExpr)
 		elseExpr := t.translateExpr(v.ElseExpr)
-		// CQF types a bare-null branch with the inferred type of the other branch.
+		// CQF types a bare-null branch with the type of the other branch. That
+		// type is read from the translated node, so calls — `else Now()` — and
+		// structured types count; the syntactic probe used before only
+		// recognised literals. (issues/06 4.1)
 		if _, elseIsNull := v.ElseExpr.(*ast.NullLiteral); elseIsNull {
-			if typ := t.inferListElementType([]ast.Expr{v.ThenExpr}); typ != "" {
-				elseExpr = &elm.AsNode{
-					Annotation: t.cqfAnnotation(),
-					Signature:  json.RawMessage("[]"),
-					Operand:    elseExpr,
-					AsType:     typ,
-				}
+			if ts := knownTS(t.inferTypeSpec(thenExpr)); ts != nil {
+				elseExpr = t.castNullTo(elseExpr, ts)
 			}
 		}
 		if _, thenIsNull := v.ThenExpr.(*ast.NullLiteral); thenIsNull {
-			if typ := t.inferListElementType([]ast.Expr{v.ElseExpr}); typ != "" {
-				thenExpr = &elm.AsNode{
-					Annotation: t.cqfAnnotation(),
-					Signature:  json.RawMessage("[]"),
-					Operand:    thenExpr,
-					AsType:     typ,
-				}
+			if ts := knownTS(t.inferTypeSpec(elseExpr)); ts != nil {
+				thenExpr = t.castNullTo(thenExpr, ts)
 			}
 		}
 		return &elm.IfNode{
@@ -2782,36 +2897,28 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			Else:       elseExpr,
 		}
 	case *ast.CaseExpr:
-		// Infer the result type by scanning all branches for the first typed literal.
-		var inferred string
-		probe := make([]ast.Expr, 0, len(v.Items)+1)
-		for _, item := range v.Items {
-			probe = append(probe, item.Then)
+		// A null branch takes the type the other branches establish, wrapped in
+		// As. That type is read from the translated branches rather than their
+		// syntax: the syntactic probe used before only recognised literals, so
+		// an Interval<DateTime> branch — or a call — left the null bare.
+		// (issues/06 4.1)
+		thens := make([]elm.Expression, len(v.Items))
+		for i, item := range v.Items {
+			thens[i] = t.translateExpr(item.Then)
 		}
-		probe = append(probe, v.Else)
-		inferred = t.inferListElementType(probe)
 		elseExpr := t.translateExpr(v.Else)
-		if _, isNull := v.Else.(*ast.NullLiteral); isNull && inferred != "" {
-			elseExpr = &elm.AsNode{
-				Annotation: t.cqfAnnotation(),
-				Signature:  json.RawMessage("[]"),
-				Operand:    elseExpr,
-				AsType:     inferred,
-			}
+		branchType := t.caseBranchType(v, thens, elseExpr)
+		if _, isNull := v.Else.(*ast.NullLiteral); isNull && branchType != nil {
+			elseExpr = t.castNullTo(elseExpr, branchType)
 		}
 		cn := &elm.CaseNode{Annotation: ann, Else: elseExpr}
 		if v.Comparand != nil {
 			cn.Comparand = t.translateExpr(v.Comparand)
 		}
-		for _, item := range v.Items {
-			thenExpr := t.translateExpr(item.Then)
-			if _, isNull := item.Then.(*ast.NullLiteral); isNull && inferred != "" {
-				thenExpr = &elm.AsNode{
-					Annotation: t.cqfAnnotation(),
-					Signature:  json.RawMessage("[]"),
-					Operand:    thenExpr,
-					AsType:     inferred,
-				}
+		for i, item := range v.Items {
+			thenExpr := thens[i]
+			if _, isNull := item.Then.(*ast.NullLiteral); isNull && branchType != nil {
+				thenExpr = t.castNullTo(thenExpr, branchType)
 			}
 			ci := &elm.CaseItem{
 				Annotation: t.cqfAnnotation(),
@@ -2833,13 +2940,24 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		if t.opts.EnableResultTypes {
 			stampTypeSpecifier(ts)
 		}
-		return &elm.AsNode{
+		asNode := &elm.AsNode{
 			Annotation:      ann,
 			Signature:       sig,
 			Operand:         t.translateExpr(v.Operand),
 			AsTypeSpecifier: ts,
 			Strict:          &v.Strict,
 		}
+		// `x as FHIR.dateTime` yields a FHIR value, and a consumed FHIR value is
+		// converted through FHIRHelpers exactly as a property is:
+		// `(O.effective as FHIR.dateTime) during P` compares ToDateTime(...).
+		// Unconsumed positions — a define body, an explicit FHIRHelpers argument
+		// — keep the bare cast. (issues/06)
+		if !noCoerce {
+			if wrapped := t.convertFHIRCast(asNode, ts, locatorStr(v.Loc())); wrapped != nil {
+				return wrapped
+			}
+		}
+		return asNode
 	case *ast.ConvertExpr:
 		// CQF normalizes `convert x to Integer` to ToInteger(x) for built-in system
 		// types (Integer, Decimal, String, Boolean, Date, DateTime, Time, Long,
@@ -2912,13 +3030,27 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			Operand:    operands,
 		}
 	case *ast.IntervalExpr:
-		low := t.translateExpr(v.Low)
-		high := t.translateExpr(v.High)
+		// `Interval[E.period.start, E.period.end]` builds an interval of the
+		// FHIR type itself: CQF does not convert selector bounds, and records
+		// Interval<FHIR.dateTime>. Only when both bounds are properties — a
+		// mixed interval needs its bounds unified, which is a conversion.
+		// (issues/06)
+		translateBound := t.translateExpr
+		if _, lowProp := v.Low.(*ast.PropertyExpr); lowProp {
+			if _, highProp := v.High.(*ast.PropertyExpr); highProp {
+				translateBound = t.translateExprUnconsumed
+			}
+		}
+		low := translateBound(v.Low)
+		high := translateBound(v.High)
 		// Null interval bounds: CQF wraps null in an As cast typed from the non-null bound.
+		// The As carries the narrowing; the null inside it keeps its own type,
+		// Any. Stamping the bound type on the Null as well is the mismatch
+		// issues/06 4.1 reported.
 		if _, isNull := low.(*elm.NullNode); isNull {
 			if bndType := t.inferBoundType(v.High); bndType != "" {
 				if t.opts.EnableResultTypes {
-					elm.SetResultType(low, bndType, nil)
+					elm.SetResultType(low, typesystem.TypeAny, nil)
 				}
 				low = &elm.AsNode{
 					Annotation: t.cqfAnnotation(),
@@ -2931,7 +3063,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		if _, isNull := high.(*elm.NullNode); isNull {
 			if bndType := t.inferBoundType(v.Low); bndType != "" {
 				if t.opts.EnableResultTypes {
-					elm.SetResultType(high, bndType, nil)
+					elm.SetResultType(high, typesystem.TypeAny, nil)
 				}
 				high = &elm.AsNode{
 					Annotation: t.cqfAnnotation(),
@@ -3675,6 +3807,18 @@ func (t *Translator) demotePointInclusionOp(op string, leftAST ast.Expr, left el
 			}
 		}
 	}
+	// Start and End yield a point whatever their operand is inferred to be.
+	// Relying on inference alone made `start of E.period during P` depend on
+	// knowing the FHIRHelpers.ToInterval return type, and it fell back to
+	// IncludedIn whenever that was unknown. (issues/06 4.2)
+	if u, ok := left.(*elm.UnaryExpressionNode); ok && (u.Operator == "Start" || u.Operator == "End") {
+		return pointOp
+	}
+	// A FHIR Period or Range converts to an interval, so it is never a point:
+	// `(P.performed as FHIR.Period) during P` stays IncludedIn. (issues/06)
+	if typesystem.FHIRComplexCoercion[fhirLocalTypeName(t.inferTypeSpec(left))] == "ToInterval" {
+		return op
+	}
 	ts := t.inferTypeSpec(left)
 	if isListOrIntervalTS(ts) {
 		return op
@@ -3865,10 +4009,14 @@ func (t *Translator) translateTypeIs(v *ast.TypeIsExpr) elm.Expression {
 }
 
 func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
-	lhs := t.translateExpr(v.Left)
+	lhs := t.boundary(t.translateExpr(v.Left), v.LeftBoundary, locatorStr(v.LeftBoundaryLoc))
+	if v.Offset != nil && v.Offset.Quantity != nil {
+		return t.translateOffsetTiming(v, lhs)
+	}
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
 
-	promotedLHS, promotedRHS := t.promoteDateToDateTime(op, lhs, t.translateExpr(v.Right))
+	rhs := t.boundary(t.translateExpr(v.Right), v.RightBoundary, "")
+	promotedLHS, promotedRHS := t.promoteDateToDateTime(op, lhs, rhs)
 	operands := []elm.Expression{promotedLHS, promotedRHS}
 	sig := t.computeSig(op, operands)
 	if v.Precision != "" {
@@ -4089,6 +4237,16 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		if rel.Source.Alias != "" {
 			if lt, ok := t.inferTypeSpec(r.Expression).(listTS); ok {
 				aliasTypeSpecs[rel.Source.Alias] = lt.elem
+				// The same fallback query sources get (issues/05 3.2). A `with`
+				// alias never had its model type recorded at all, so properties
+				// navigated off it were never converted — in one comparison the
+				// source alias's side was converted and the `with` alias's side
+				// was not. (issues/06)
+				if t.fhirHelpersLocalName != "" && aliasTypes[rel.Source.Alias] == "" {
+					if name := fhirLocalTypeName(lt.elem); name != "" {
+						aliasTypes[rel.Source.Alias] = name
+					}
+				}
 			}
 		}
 		r.SuchThat = t.translateExpr(rel.SuchThat)
@@ -4559,4 +4717,286 @@ func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.
 		return t.cqfAnnotation()
 	}
 	return json.RawMessage(b)
+}
+
+// boundary selects the start or end of an interval operand, as a timing
+// phrase's `starts`/`ends` or trailing `start`/`end` asks for. Built directly
+// rather than through translateExpr: CQF leaves these synthesized boundaries
+// without a result type.
+func (t *Translator) boundary(e elm.Expression, which, loc string) elm.Expression {
+	var op string
+	switch which {
+	case "start":
+		op = "Start"
+	case "end":
+		op = "End"
+	default:
+		return e
+	}
+	node := &elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig(op, []elm.Expression{e}),
+		Operator:   op,
+		Operand:    e,
+	}
+	// CQF attributes the boundary to its `starts` / `ends` keyword.
+	if t.opts.EnableLocators && loc != "" {
+		node.Locator = loc
+	}
+	return node
+}
+
+// translateOffsetTiming lowers a before/after phrase that carries a quantity
+// offset, the way CQF does. With X the left operand, Y the right, q the offset,
+// and Y∓q meaning Y−q for before and Y+q for after:
+//
+//	X q before Y              SameAs(X, Y−q)
+//	X q or more before Y      SameOrBefore(X, Y−q)
+//	X more than q before Y    Before(X, Y−q)
+//	X less than q before Y    In(X, Interval(Y−q, Y))
+//	X q or less before Y      And(In(X, Interval[Y−q, Y)), Not(IsNull(Y)))
+//
+// and symmetrically for after. An `on or` relationship closes the bound at Y.
+// A precision rides on the comparison. Ignoring the offset — the previous
+// behavior — compared X against Y itself, so `ends 1 day or less on or before
+// end of P` became a bare Before. (issues/06)
+func (t *Translator) translateOffsetTiming(v *ast.TimingExpr, x elm.Expression) elm.Expression {
+	before := v.Op == "Before" || v.Op == "SameOrBefore"
+	inclusive := v.Op == "SameOrBefore" || v.Op == "SameOrAfter"
+
+	// Y appears more than once, and CQF emits a separate node each time.
+	y := func() elm.Expression { return t.boundary(t.translateExpr(v.Right), v.RightBoundary, "") }
+	shifted := func() elm.Expression {
+		op := "Add"
+		if before {
+			op = "Subtract"
+		}
+		operands := []elm.Expression{y(), t.translateExpr(v.Offset.Quantity)}
+		node := &elm.OperatorExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Signature:  t.computeSig(op, operands),
+			Operator:   op,
+			Operand:    operands,
+		}
+		// The shifted anchor is attributed to the anchor operand itself.
+		if t.opts.EnableLocators {
+			node.Locator = locatorStr(v.Right.Loc())
+		}
+		return node
+	}
+	compare := func(op string, l, r elm.Expression) elm.Expression {
+		operands := []elm.Expression{l, r}
+		if v.Precision != "" {
+			return &elm.PrecisionOperatorNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.computeSig(op, operands),
+				Operator:   op,
+				Precision:  v.Precision,
+				Operand:    operands,
+			}
+		}
+		return &elm.OperatorExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Signature:  t.computeSig(op, operands),
+			Operator:   op,
+			Operand:    operands,
+		}
+	}
+	pick := func(ifBefore, ifAfter string) string {
+		if before {
+			return ifBefore
+		}
+		return ifAfter
+	}
+
+	switch v.Offset.Kind {
+	case "orMore":
+		return compare(pick("SameOrBefore", "SameOrAfter"), x, shifted())
+	case "moreThan":
+		return compare(pick("Before", "After"), x, shifted())
+	case "orLess", "lessThan":
+		farClosed := v.Offset.Kind == "orLess"
+		anchor := y()
+		// The nodes the offset synthesizes are attributed to the offset phrase
+		// ("3 days or less"), as CQF does.
+		offsetLoc := ""
+		if t.opts.EnableLocators {
+			offsetLoc = locatorStr(v.Offset.Loc)
+		}
+		iv := &elm.IntervalNode{Annotation: t.cqfAnnotation(), Locator: offsetLoc}
+		if before {
+			iv.Low, iv.High = shifted(), anchor
+			iv.LowClosed, iv.HighClosed = farClosed, inclusive
+		} else {
+			iv.Low, iv.High = anchor, shifted()
+			iv.LowClosed, iv.HighClosed = inclusive, farClosed
+		}
+		if t.opts.EnableResultTypes {
+			if pt := knownTS(t.inferTypeSpec(anchor)); pt != nil {
+				_, spec := resultTypeOf(intervalTS{pt})
+				elm.SetResultType(iv, "", spec)
+			}
+		}
+		in := compare("In", x, iv)
+		if v.Offset.Kind == "lessThan" {
+			// Top-level: it carries the whole expression's locator instead.
+			return in
+		}
+		if offsetLoc != "" {
+			setLocator(in, offsetLoc)
+		}
+		// `or less` must not hold vacuously when Y is null, which would leave
+		// the interval unbounded on one side; CQF guards it explicitly.
+		isNull := &elm.UnaryExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Locator:    offsetLoc,
+			Operator:   "IsNull",
+			Operand:    y(),
+		}
+		isNull.Signature = t.computeSig("IsNull", []elm.Expression{isNull.Operand})
+		notNull := &elm.UnaryExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Locator:    offsetLoc,
+			Signature:  t.computeSig("Not", []elm.Expression{isNull}),
+			Operator:   "Not",
+			Operand:    isNull,
+		}
+		operands := []elm.Expression{in, notNull}
+		return &elm.OperatorExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Signature:  t.computeSig("And", operands),
+			Operator:   "And",
+			Operand:    operands,
+		}
+	}
+	return compare("SameAs", x, shifted())
+}
+
+// caseBranchType returns the type a case expression's non-null branches
+// establish — the first one that is known — or nil when none is.
+func (t *Translator) caseBranchType(v *ast.CaseExpr, thens []elm.Expression, elseExpr elm.Expression) typeSpec {
+	for i, item := range v.Items {
+		if _, isNull := item.Then.(*ast.NullLiteral); isNull {
+			continue
+		}
+		if ts := knownTS(t.inferTypeSpec(thens[i])); ts != nil {
+			return ts
+		}
+	}
+	if _, isNull := v.Else.(*ast.NullLiteral); !isNull {
+		return knownTS(t.inferTypeSpec(elseExpr))
+	}
+	return nil
+}
+
+// sameTypeBinaryOps are the binary operators whose operands share one type, so a
+// bare null operand takes the other operand's. `1 = null` resolves Equal(Integer,
+// Integer) and CQF records that by wrapping the null in As(Integer). Operators
+// whose operands differ in kind — In, Contains, the interval inclusions — are
+// deliberately absent: there the null would need a different type than its
+// sibling's, and guessing it would be worse than leaving it bare.
+var sameTypeBinaryOps = map[string]bool{
+	"Equal": true, "Equivalent": true,
+	"Less": true, "LessOrEqual": true, "Greater": true, "GreaterOrEqual": true,
+	"Add": true, "Subtract": true, "Multiply": true, "Divide": true,
+	"Modulo": true, "TruncatedDivide": true, "Power": true,
+	"And": true, "Or": true, "Xor": true, "Implies": true,
+}
+
+// castNullOperand wraps a bare null operand of a same-type binary operator in
+// the As CQF emits for it, typed from the other operand. It looks through the
+// Not that `!=` and `!~` lower to. Anything else is returned unchanged.
+// (issues/06 4.1)
+func (t *Translator) castNullOperand(v *ast.BinaryExpr, e elm.Expression) elm.Expression {
+	target := e
+	if not, ok := e.(*elm.UnaryExpressionNode); ok && not.Operator == "Not" {
+		target = not.Operand
+	}
+	node, ok := target.(*elm.OperatorExpressionNode)
+	if !ok || !sameTypeBinaryOps[node.Operator] || len(node.Operand) != 2 {
+		return e
+	}
+	_, leftNull := v.Left.(*ast.NullLiteral)
+	_, rightNull := v.Right.(*ast.NullLiteral)
+	switch {
+	case leftNull && !rightNull:
+		if ts := knownTS(t.inferTypeSpec(node.Operand[1])); ts != nil {
+			node.Operand[0] = t.castNullTo(node.Operand[0], ts)
+		}
+	case rightNull && !leftNull:
+		if ts := knownTS(t.inferTypeSpec(node.Operand[0])); ts != nil {
+			node.Operand[1] = t.castNullTo(node.Operand[1], ts)
+		}
+	default:
+		return e
+	}
+	node.Signature = t.computeSig(node.Operator, node.Operand)
+	return e
+}
+
+// convertFHIRCast wraps a cast to a convertible FHIR type in its implicit
+// FHIRHelpers conversion, or returns nil when the target is not one.
+func (t *Translator) convertFHIRCast(asNode *elm.AsNode, ts elm.TypeSpecifier, loc string) elm.Expression {
+	if t.fhirHelpersLocalName == "" {
+		return nil
+	}
+	named, ok := ts.(*elm.NamedTypeSpecifier)
+	if !ok || !strings.HasPrefix(named.Name, "{http://hl7.org/fhir}") {
+		return nil
+	}
+	fhirType := strings.TrimPrefix(named.Name, "{http://hl7.org/fhir}")
+	fn := typesystem.FHIRCoercionFor(fhirType)
+	if fn == "" {
+		return nil
+	}
+	return t.fhirConversionWrapper(asNode, fhirType, fn, loc)
+}
+
+// aliasRefNode references a query alias, converting it through FHIRHelpers when
+// the alias ranges over a convertible FHIR type and the reference is consumed.
+// `(E.type) T where T in "VS"` tests ToConcept(T) in CQF; left bare, membership
+// was tested against an unconverted CodeableConcept. An alias over a resource
+// type has no conversion and is returned as is. (issues/06)
+func (t *Translator) aliasRefNode(ann json.RawMessage, name, loc string, noCoerce bool) elm.Expression {
+	ref := &elm.AliasRefNode{Annotation: ann, Name: name}
+	if noCoerce || t.fhirHelpersLocalName == "" {
+		return ref
+	}
+	fhirType := t.aliasFHIRType(name)
+	fn := typesystem.FHIRCoercionFor(fhirType)
+	if fn == "" {
+		return ref
+	}
+	return t.fhirConversionWrapper(ref, fhirType, fn, loc)
+}
+
+// aliasFHIRType returns the FHIR type a query alias ranges over, or "".
+func (t *Translator) aliasFHIRType(name string) string {
+	for i := len(t.queryAliasTypes) - 1; i >= 0; i-- {
+		if typ, ok := t.queryAliasTypes[i][name]; ok {
+			return typ
+		}
+	}
+	return ""
+}
+
+// fhirConversionWrapper wraps a FHIR-typed node in its implicit FHIRHelpers
+// conversion the way the property path does: the source locator and the FHIR
+// result type stay on the inner node, and the synthesized call carries neither.
+func (t *Translator) fhirConversionWrapper(inner elm.Expression, fhirType, fn, loc string) elm.Expression {
+	if t.opts.EnableLocators && loc != "" {
+		setLocator(inner, loc)
+		t.skipLocatorStamp = true
+	}
+	if t.opts.EnableResultTypes {
+		elm.SetResultType(inner, "{http://hl7.org/fhir}"+fhirType, nil)
+	}
+	t.skipResultTypeStamp = true
+	return &elm.FunctionRefNode{
+		Annotation:  t.cqfAnnotation(),
+		Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + fhirType}}),
+		Name:        fn,
+		LibraryName: t.fhirHelpersLocalName,
+		Operand:     []elm.Expression{inner},
+	}
 }

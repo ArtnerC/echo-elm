@@ -2,6 +2,7 @@ package translator
 
 import (
 	"encoding/json"
+	"sort"
 	"strings"
 
 	"github.com/artnerc/echo-elm/internal/ast"
@@ -64,6 +65,18 @@ func (t tupleTS) toJSONValue() interface{} {
 		"type":    "TupleTypeSpecifier",
 		"element": els,
 	}
+}
+
+// choiceTS is a ChoiceTypeSpecifier. Its alternatives are kept in CQF's order;
+// see sortChoiceTS.
+type choiceTS struct{ alts []typeSpec }
+
+func (c choiceTS) toJSONValue() interface{} {
+	alts := make([]interface{}, 0, len(c.alts))
+	for _, a := range c.alts {
+		alts = append(alts, a.toJSONValue())
+	}
+	return map[string]interface{}{"type": "ChoiceTypeSpecifier", "choice": alts}
 }
 
 func (t tupleTS) field(name string) (typeSpec, bool) {
@@ -561,6 +574,14 @@ func (t *Translator) qualifyTypeSpec(ts typeSpec) typeSpec {
 		return listTS{t.qualifyTypeSpec(v.elem)}
 	case intervalTS:
 		return intervalTS{t.qualifyTypeSpec(v.point)}
+	case choiceTS:
+		alts := make([]typeSpec, len(v.alts))
+		for i, a := range v.alts {
+			alts[i] = t.qualifyTypeSpec(a)
+		}
+		// Sorted only once qualified, since the order depends on the model name.
+		sortChoiceTS(alts)
+		return choiceTS{alts}
 	case tupleTS:
 		fields := make([]tupleField, len(v.fields))
 		for i, f := range v.fields {
@@ -603,6 +624,17 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 			inner = anyTS
 		}
 		return intervalTS{inner}
+	case *ast.ChoiceTypeSpecifier:
+		// A choice-typed operand or parameter has a result type like any other.
+		// Returning nothing here is why an OperandRef to one came out untyped.
+		// (issues/06)
+		alts := make([]typeSpec, 0, len(v.Types))
+		for _, ct := range v.Types {
+			if a := astTypeSpecToTypeSpec(ct); a != nil {
+				alts = append(alts, a)
+			}
+		}
+		return choiceTS{alts}
 	case *ast.TupleTypeSpecifier:
 		fields := make([]tupleField, 0, len(v.Elements))
 		for _, el := range v.Elements {
@@ -644,6 +676,14 @@ func elmTypeSpecToTypeSpec(ts elm.TypeSpecifier) typeSpec {
 			inner = anyTS
 		}
 		return listTS{inner}
+	case *elm.ChoiceTypeSpecifier:
+		alts := make([]typeSpec, 0, len(v.Choice))
+		for _, c := range v.Choice {
+			if a := elmTypeSpecToTypeSpec(c); a != nil {
+				alts = append(alts, a)
+			}
+		}
+		return choiceTS{alts}
 	case *elm.TupleTypeSpecifier:
 		fields := make([]tupleField, 0, len(v.Element))
 		for _, el := range v.Element {
@@ -933,11 +973,17 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "Concatenate":
 			return strTS
 		case "Coalesce":
-			// The result is the common type of the alternatives: an untyped null
-			// among them leaves no common type but Any.
+			// The result is the common type of the alternatives. A bare null
+			// among them leaves no common type but Any; a null already cast to
+			// the type an earlier operand established does not. (issues/06)
 			for _, op := range v.Operand {
-				if isNullLike(op) {
+				if _, bare := op.(*elm.NullNode); bare {
 					return anyTS
+				}
+			}
+			for _, op := range v.Operand {
+				if ts := knownTS(t.inferTypeSpec(op)); ts != nil {
+					return ts
 				}
 			}
 			if len(v.Operand) > 0 {
@@ -971,6 +1017,8 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		}
 	case *elm.CalculateAgeNode:
 		return intTS
+	case *elm.NullaryOperatorNode:
+		return fixedResultTypes[v.Operator]
 	case *elm.UnaryPrecisionOperatorNode:
 		// DateTimeComponentFrom extracts a numeric component.
 		if ts, ok := fixedResultTypes[v.Operator]; ok {
@@ -981,8 +1029,16 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		if ts, ok := fixedResultTypes[v.Operator]; ok {
 			return ts
 		}
-		// CalculateAgeAt, DurationBetween and similar return Integer.
-		return intTS
+		// Only the date-arithmetic operators that carry a precision are
+		// integer-valued. Every other precision-bearing operator is a timing
+		// comparison — In, SameOrBefore, IncludedIn, Overlaps and the rest — and
+		// answers Boolean. Falling through to Integer typed `X in day of Y` as a
+		// number. (issues/06)
+		switch v.Operator {
+		case "CalculateAgeAt", "DurationBetween", "DifferenceBetween":
+			return intTS
+		}
+		return boolTS
 	case *elm.InValueSetNode:
 		return boolTS
 	case *elm.FunctionRefNode:
@@ -1009,8 +1065,34 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		// FHIRHelpers.ToString (and other primitive helpers) return primitive types.
 		if v.LibraryName == t.fhirHelpersLocalName {
 			switch v.Name {
-			case "ToString", "ToCode", "ToConcept":
+			case "ToString":
 				return strTS
+			case "ToCode":
+				// These were listed with ToString and typed String; they return
+				// Code and Concept, and anything built on them inherited the
+				// wrong type. (issues/06)
+				return namedTS{typesystem.TypeCode}
+			case "ToConcept":
+				return namedTS{typesystem.TypeConcept}
+			case "ToRatio":
+				return namedTS{typesystem.TypeRatio}
+			case "ToLong":
+				return longTS
+			case "ToInterval":
+				// Overloaded by argument: Period gives Interval<DateTime> and
+				// Range gives Interval<Quantity>. With the argument's type unknown
+				// there is no honest answer, so none is given. Without this case
+				// every ToInterval was untyped, which is what left `start of
+				// E.period` without a point type. (issues/06)
+				if len(v.Operand) == 1 {
+					switch fhirLocalTypeName(t.nodeResultTS(v.Operand[0])) {
+					case "Period":
+						return intervalTS{dateTimeTS}
+					case "Range":
+						return intervalTS{quantityTS}
+					}
+				}
+				return nil
 			case "ToDateTime":
 				return dateTimeTS
 			case "ToDate":
@@ -1079,6 +1161,20 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		// List<Any>. (issues/05 Part 5 / #12)
 		if v.Path != "" {
 			if local := fhirLocalTypeName(srcTS); local != "" {
+				if alts, ok := typesystem.FHIRPropertyChoiceOf(local, v.Path); ok {
+					// A choice element's type is the choice itself, with its
+					// alternatives in CQF's order: Condition.onset is
+					// Choice<Age, Period, Range, dateTime, string>. Without this,
+					// onset, value, effective and performed — the most common
+					// property shapes in measure logic — were all untyped.
+					// (issues/06)
+					choice := make([]typeSpec, len(alts))
+					for i, a := range alts {
+						choice[i] = namedTS{"{http://hl7.org/fhir}" + a}
+					}
+					sortChoiceTS(choice)
+					return choiceTS{choice}
+				}
 				if fhirType, ok := typesystem.FHIRPropertyTypeOf(local, v.Path); ok {
 					// The property's own type is the FHIR type, not the System
 					// type it converts to: CQF records C.id as
@@ -1151,6 +1247,12 @@ func toELMTypeSpecifier(ts typeSpec) elm.TypeSpecifier {
 		return &elm.ListTypeSpecifier{ElementType: toELMTypeSpecifier(v.elem)}
 	case intervalTS:
 		return &elm.IntervalTypeSpecifier{PointType: toELMTypeSpecifier(v.point)}
+	case choiceTS:
+		cts := &elm.ChoiceTypeSpecifier{}
+		for _, a := range v.alts {
+			cts.Choice = append(cts.Choice, toELMTypeSpecifier(a))
+		}
+		return cts
 	case tupleTS:
 		els := make([]*elm.TupleElementDefinition, 0, len(v.fields))
 		for _, f := range v.fields {
@@ -1208,6 +1310,7 @@ func stampTypeSpecifier(spec elm.TypeSpecifier) {
 		for _, c := range v.Choice {
 			stampTypeSpecifier(c)
 		}
+		_, v.ResultTypeSpecifier = resultTypeOf(ts)
 	}
 }
 
@@ -1236,4 +1339,33 @@ func isAnyTS(ts typeSpec) bool {
 // Unfiltered context (the default when none is declared).
 func (t *Translator) inUnfilteredContext() bool {
 	return t.currentContextName == "" || t.currentContextName == "Unfiltered"
+}
+
+// sortChoiceTS orders inferred choice alternatives the way sortChoiceSpecifiers
+// orders emitted ones, so a result type and the specifier it came from agree.
+func sortChoiceTS(alts []typeSpec) {
+	sort.SliceStable(alts, func(i, j int) bool {
+		return choiceTSKey(alts[i]) < choiceTSKey(alts[j])
+	})
+}
+
+// choiceTSKey renders an inferred type the way the CQF type model prints it.
+func choiceTSKey(ts typeSpec) string {
+	switch v := ts.(type) {
+	case namedTS:
+		return modelQualifiedName(v.name)
+	case listTS:
+		return "list<" + choiceTSKey(v.elem) + ">"
+	case intervalTS:
+		return "interval<" + choiceTSKey(v.point) + ">"
+	case choiceTS:
+		parts := make([]string, len(v.alts))
+		for i, a := range v.alts {
+			parts[i] = choiceTSKey(a)
+		}
+		return "choice<" + strings.Join(parts, ",") + ">"
+	case tupleTS:
+		return "tuple{}"
+	}
+	return ""
 }

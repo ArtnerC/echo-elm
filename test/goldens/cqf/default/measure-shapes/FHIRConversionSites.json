@@ -1,0 +1,563 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "FHIRConversionSites",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encs"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "high": {
+                  "path": "end",
+                  "source": {
+                    "path": "period",
+                    "scope": "E",
+                    "type": "Property"
+                  },
+                  "type": "Property"
+                },
+                "highClosed": true,
+                "low": {
+                  "path": "start",
+                  "source": {
+                    "path": "period",
+                    "scope": "E",
+                    "type": "Property"
+                  },
+                  "type": "Property"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "IntervalBounds"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [
+              {
+                "alias": "E2",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                },
+                "suchThat": {
+                  "operand": [
+                    {
+                      "operand": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "path": "period",
+                            "scope": "E2",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToInterval",
+                      "operand": [
+                        {
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                "type": "With"
+              }
+            ],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "WithPeriod"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [
+              {
+                "alias": "C",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                },
+                "suchThat": {
+                  "operand": [
+                    {
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToDateTime",
+                      "operand": [
+                        {
+                          "asTypeSpecifier": {
+                            "name": "{http://hl7.org/fhir}dateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "operand": {
+                            "path": "onset",
+                            "scope": "C",
+                            "type": "Property"
+                          },
+                          "signature": [],
+                          "strict": false,
+                          "type": "As"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    {
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToInterval",
+                      "operand": [
+                        {
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                "type": "With"
+              }
+            ],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "WithCast"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "O",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Observation",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToQuantity",
+                  "operand": [
+                    {
+                      "asTypeSpecifier": {
+                        "name": "{http://hl7.org/fhir}Quantity",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "operand": {
+                        "path": "value",
+                        "scope": "O",
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "strict": false,
+                      "type": "As"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "type": "Quantity",
+                  "unit": "mg",
+                  "value": 5
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            }
+          },
+          "name": "ObsValue"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "O",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Observation",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "asTypeSpecifier": {
+                        "name": "{http://hl7.org/fhir}dateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "operand": {
+                        "path": "effective",
+                        "scope": "O",
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "strict": false,
+                      "type": "As"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "ObsEffective"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "P",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Procedure",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Procedure",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "asTypeSpecifier": {
+                        "name": "{http://hl7.org/fhir}Period",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "operand": {
+                        "path": "performed",
+                        "scope": "P",
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "strict": false,
+                      "type": "As"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "IncludedIn"
+            }
+          },
+          "name": "ProcPerformed"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": {
+                "let": [],
+                "relationship": [],
+                "source": [
+                  {
+                    "alias": "T",
+                    "expression": {
+                      "path": "type",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "code": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToConcept",
+                    "operand": [
+                      {
+                        "name": "T",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "InValueSet",
+                  "valueset": {
+                    "name": "VS",
+                    "preserve": true
+                  }
+                }
+              },
+              "signature": [],
+              "type": "Exists"
+            }
+          },
+          "name": "AliasTypeIn"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "ExplicitToInterval"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://example.org/fhir/ValueSet/vs",
+          "name": "VS"
+        }
+      ]
+    }
+  }
+}

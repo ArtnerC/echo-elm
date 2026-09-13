@@ -1,0 +1,451 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ChoiceTypes",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "name": "c",
+            "type": "OperandRef"
+          },
+          "name": "Mixed",
+          "operand": [
+            {
+              "name": "c",
+              "operandTypeSpecifier": {
+                "choice": [
+                  {
+                    "name": "{http://hl7.org/fhir}Age",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}Date",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  {
+                    "elementType": {
+                      "name": "{urn:hl7-org:elm-types:r1}String",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  }
+                ],
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "name": "c",
+            "type": "OperandRef"
+          },
+          "name": "Sys",
+          "operand": [
+            {
+              "name": "c",
+              "operandTypeSpecifier": {
+                "choice": [
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "name": "Mixed",
+            "operand": [
+              {
+                "asTypeSpecifier": {
+                  "choice": [
+                    {
+                      "name": "{http://hl7.org/fhir}Age",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{http://hl7.org/fhir}dateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}String",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    {
+                      "elementType": {
+                        "name": "{urn:hl7-org:elm-types:r1}String",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    }
+                  ],
+                  "type": "ChoiceTypeSpecifier"
+                },
+                "operand": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "CallMixed"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "name": "Sys",
+            "operand": [
+              {
+                "asTypeSpecifier": {
+                  "choice": [
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}Integer",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "name": "{urn:hl7-org:elm-types:r1}String",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "ChoiceTypeSpecifier"
+                },
+                "operand": {
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "CallSys"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "caseItem": [
+              {
+                "then": {
+                  "high": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "asTypeSpecifier": {
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "operand": {
+                          "name": "choice",
+                          "type": "OperandRef"
+                        },
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "asTypeSpecifier": {
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "operand": {
+                          "name": "choice",
+                          "type": "OperandRef"
+                        },
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "when": {
+                  "isTypeSpecifier": {
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "name": "choice",
+                    "type": "OperandRef"
+                  },
+                  "signature": [],
+                  "type": "Is"
+                }
+              },
+              {
+                "then": {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "asTypeSpecifier": {
+                        "name": "{http://hl7.org/fhir}Period",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "operand": {
+                        "name": "choice",
+                        "type": "OperandRef"
+                      },
+                      "signature": [],
+                      "strict": false,
+                      "type": "As"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                "when": {
+                  "isTypeSpecifier": {
+                    "name": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "name": "choice",
+                    "type": "OperandRef"
+                  },
+                  "signature": [],
+                  "type": "Is"
+                }
+              }
+            ],
+            "else": {
+              "asTypeSpecifier": {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "operand": {
+                "type": "Null"
+              },
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "type": "Case"
+          },
+          "name": "Normalize Interval",
+          "operand": [
+            {
+              "name": "choice",
+              "operandTypeSpecifier": {
+                "choice": [
+                  {
+                    "name": "{http://hl7.org/fhir}Age",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}Range",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}Timing",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}instant",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "name": "{http://hl7.org/fhir}string",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "name": "Normalize Interval",
+                "operand": [
+                  {
+                    "path": "onset",
+                    "scope": "C",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "C",
+                "expression": {
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "Onsets"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

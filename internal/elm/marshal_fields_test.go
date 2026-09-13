@@ -13,6 +13,7 @@ import (
 // added without an entry here is caught by TestAllExpressionTypesCovered.
 func expressionNodeTypes() []Expression {
 	return []Expression{
+		&NullaryOperatorNode{Operator: "Now"},
 		&OperandRefNode{}, &LiteralNode{}, &NullNode{}, &ExpressionRefNode{},
 		&ParameterRefNode{}, &ValueSetRefNode{}, &InValueSetNode{}, &CalculateAgeNode{},
 		&ToConceptNode{}, &SplitNode{}, &LastNode{}, &CodeSystemRefNode{},

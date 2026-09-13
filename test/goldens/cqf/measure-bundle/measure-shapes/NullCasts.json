@@ -1,0 +1,477 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "16:1-16:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "NullCasts",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "locator": "12:1-12:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "locator": "14:1-14:33",
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "locator": "14:16-14:33",
+            "pointType": {
+              "locator": "14:25-14:32",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "16:1-16:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "16:1-16:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "condition": {
+              "locator": "18:25-18:28",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "else": {
+              "locator": "18:45",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "locator": "18:22-18:45",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "then": {
+              "asType": "{urn:hl7-org:elm-types:r1}Integer",
+              "operand": {
+                "locator": "18:35-18:38",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "If"
+          },
+          "locator": "18:1-18:45",
+          "name": "IfThenNull",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "condition": {
+              "locator": "19:29-19:32",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "else": {
+              "locator": "19:49-19:53",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "signature": [],
+              "type": "Now"
+            },
+            "locator": "19:26-19:53",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "then": {
+              "asType": "{urn:hl7-org:elm-types:r1}DateTime",
+              "operand": {
+                "locator": "19:39-19:42",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "If"
+          },
+          "locator": "19:1-19:53",
+          "name": "IfThenNullCall",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "caseItem": [
+              {
+                "locator": "20:29-20:47",
+                "then": {
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "locator": "20:44-20:47",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                "when": {
+                  "locator": "20:34-20:37",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              }
+            ],
+            "else": {
+              "locator": "20:54",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "locator": "20:24-20:58",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Case"
+          },
+          "locator": "20:1-20:58",
+          "name": "CaseThenNull",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "caseItem": [
+              {
+                "locator": "21:37-21:55",
+                "then": {
+                  "locator": "21:52-21:55",
+                  "name": "MP",
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ParameterRef"
+                },
+                "when": {
+                  "locator": "21:42-21:45",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              }
+            ],
+            "else": {
+              "asTypeSpecifier": {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "operand": {
+                "locator": "21:62-21:65",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "locator": "21:32-21:69",
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "Case"
+          },
+          "locator": "21:1-21:69",
+          "name": "CaseElseNullInterval",
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "22:22-22:29",
+            "operand": [
+              {
+                "locator": "22:22",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "locator": "22:26-22:29",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "22:1-22:29",
+          "name": "EqualsNull",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "23:19-23:26",
+            "operand": [
+              {
+                "locator": "23:19",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "locator": "23:23-23:26",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "23:1-23:26",
+          "name": "AddNull",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "24:31-24:47",
+            "operand": [
+              {
+                "locator": "24:40-24:43",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              {
+                "locator": "24:46",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "locator": "24:1-24:47",
+          "name": "CoalesceLeadingNull",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "25:32-25:52",
+            "operand": [
+              {
+                "locator": "25:41-25:45",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "signature": [],
+                "type": "Now"
+              },
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}DateTime",
+                "operand": {
+                  "locator": "25:48-25:51",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "locator": "25:1-25:52",
+          "name": "CoalesceTrailingNull",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "high": {
+              "day": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "26:42-26:61",
+              "minute": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "second": {
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "type": "Literal",
+                "value": "2024",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "highClosed": true,
+            "locator": "26:27-26:62",
+            "low": {
+              "asType": "{urn:hl7-org:elm-types:r1}DateTime",
+              "operand": {
+                "locator": "26:36-26:39",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "lowClosed": true,
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "Interval"
+          },
+          "locator": "26:1-26:62",
+          "name": "IntervalLowNull",
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "locator": "10:1-10:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

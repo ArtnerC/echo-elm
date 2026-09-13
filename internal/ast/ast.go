@@ -498,6 +498,27 @@ type TimingExpr struct {
 	Left      Expr
 	Right     Expr
 	Precision string // optional date-time precision qualifier
+	// LeftBoundary is "start" or "end" when the phrase opens with `starts` or
+	// `ends`: the comparison is about that boundary of Left, not Left itself.
+	LeftBoundary string
+	// LeftBoundaryLoc is the span of the `starts` / `ends` keyword, which is
+	// what CQF attributes the synthesized boundary node to.
+	LeftBoundaryLoc Interval
+	// RightBoundary is "start" or "end" when the phrase closes with `start` or
+	// `end`, selecting that boundary of Right.
+	RightBoundary string
+	// Offset is the quantity offset of a before/after phrase (`3 days or less
+	// before`), or nil when there is none.
+	Offset *TimingOffset
+}
+
+// TimingOffset is the quantity offset of a before/after timing phrase.
+type TimingOffset struct {
+	Quantity *QuantityLiteral
+	// Kind is "exact", "orMore", "orLess", "moreThan" or "lessThan".
+	Kind string
+	// Loc is the span of the whole offset phrase, e.g. `3 days or less`.
+	Loc Interval
 }
 
 // IntervalExpr: Interval ( '[' | '(' ) low ',' high ( ']' | ')' )

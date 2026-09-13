@@ -389,6 +389,36 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/TimingPhrases.cql
+    description: Inclusive relationships, boundary selectors and quantity offsets in timing phrases (issues/06)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/NullCasts.cql
+    description: A null takes the type its context establishes, wrapped in As (issues/06 4.1)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/NullaryDateTime.cql
+    description: Now, Today and TimeOfDay are operators, not function calls (issues/06)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/ChoiceTypes.cql
+    description: Choice alternative order, result types and argument casts (issues/06)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/FHIRConversionSites.cql
+    description: Where implicit FHIRHelpers conversions are and are not inserted (issues/06)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/FluentHelpers.cql
     description: Helper providing a fluent function for FluentCrossLibrary
     expectedStatus: success

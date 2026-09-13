@@ -114,3 +114,16 @@ func IsFHIRListPropertyOf(typeName, property string) bool {
 	}
 	return false
 }
+
+// FHIRPropertyChoiceOf returns the alternatives of a choice-typed property —
+// Condition.onset, Observation.value — walking the base-type chain the same way
+// FHIRPropertyTypeOf does.
+func FHIRPropertyChoiceOf(typeName, property string) ([]string, bool) {
+	for depth := 0; typeName != "" && depth < 32; depth++ {
+		if alts, ok := FHIRPropertyChoice[typeName+"."+property]; ok {
+			return alts, true
+		}
+		typeName = FHIRBaseType[typeName]
+	}
+	return nil, false
+}

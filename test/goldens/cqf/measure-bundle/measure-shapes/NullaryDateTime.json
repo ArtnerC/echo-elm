@@ -1,0 +1,175 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "7:1-7:18",
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "NullaryDateTime",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "9:13-9:17",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "signature": [],
+            "type": "Now"
+          },
+          "locator": "9:1-9:17",
+          "name": "N",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "10:13-10:19",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+            "signature": [],
+            "type": "Today"
+          },
+          "locator": "10:1-10:19",
+          "name": "T",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Date"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "11:15-11:25",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Time",
+            "signature": [],
+            "type": "TimeOfDay"
+          },
+          "locator": "11:1-11:25",
+          "name": "TOD",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Time"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "12:23-12:50",
+            "operand": [
+              {
+                "locator": "12:23-12:27",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "signature": [],
+                "type": "Now"
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "hour": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "locator": "12:31-12:50",
+                "minute": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "second": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "DateTime",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Greater"
+          },
+          "locator": "12:1-12:50",
+          "name": "NowCompared",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "caseItem": [
+              {
+                "locator": "13:28-13:49",
+                "then": {
+                  "locator": "13:43-13:49",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Today"
+                },
+                "when": {
+                  "locator": "13:33-13:36",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              }
+            ],
+            "else": {
+              "asType": "{urn:hl7-org:elm-types:r1}Date",
+              "operand": {
+                "locator": "13:56-13:59",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "locator": "13:23-13:63",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+            "type": "Case"
+          },
+          "locator": "13:1-13:63",
+          "name": "TodayInCase",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Date"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

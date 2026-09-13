@@ -1526,3 +1526,21 @@ func (c *CqlToElmInfo) MarshalJSON() ([]byte, error) {
 	type alias CqlToElmInfo
 	return marshalWithType("CqlToElmInfo", (*alias)(c))
 }
+
+// NullaryOperatorNode is an ELM operator with no operands: Now, Today and
+// TimeOfDay. Its JSON "type" is the operator name, as with UnaryExpressionNode.
+type NullaryOperatorNode struct {
+	LocalID             string          `json:"localId,omitempty"`
+	Locator             string          `json:"locator,omitempty"`
+	Annotation          json.RawMessage `json:"annotation,omitempty"`
+	ResultTypeName      string          `json:"resultTypeName,omitempty"`
+	ResultTypeSpecifier TypeSpecifier   `json:"resultTypeSpecifier,omitempty"`
+	Signature           json.RawMessage `json:"signature,omitempty"`
+	Operator            string          `json:"-"`
+}
+
+func (*NullaryOperatorNode) isExpression() {}
+func (n *NullaryOperatorNode) MarshalJSON() ([]byte, error) {
+	type alias NullaryOperatorNode
+	return marshalWithType(n.Operator, (*alias)(n))
+}

@@ -1,0 +1,143 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "NullaryDateTime",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "type": "Now"
+          },
+          "name": "N"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "type": "Today"
+          },
+          "name": "T"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "signature": [],
+            "type": "TimeOfDay"
+          },
+          "name": "TOD"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "operand": [
+              {
+                "signature": [],
+                "type": "Now"
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "hour": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "minute": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "second": {
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "DateTime",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "signature": [],
+            "type": "Greater"
+          },
+          "name": "NowCompared"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "caseItem": [
+              {
+                "then": {
+                  "signature": [],
+                  "type": "Today"
+                },
+                "when": {
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              }
+            ],
+            "else": {
+              "asType": "{urn:hl7-org:elm-types:r1}Date",
+              "operand": {
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Case"
+          },
+          "name": "TodayInCase"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}
