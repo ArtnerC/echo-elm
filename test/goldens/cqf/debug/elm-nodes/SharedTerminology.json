@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -34,6 +35,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -59,10 +61,12 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "codeSystem": {
+            "annotation": [],
             "locator": "9:34-9:41",
             "name": "SNOMED",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}CodeSystem"
@@ -98,14 +102,17 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "11:28-11:32",
             "operand": [
               {
+                "annotation": [],
                 "locator": "11:28",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -113,6 +120,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "11:32",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -133,6 +141,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -153,6 +162,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],

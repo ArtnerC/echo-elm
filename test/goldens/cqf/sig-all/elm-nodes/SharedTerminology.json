@@ -11,6 +11,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://snomed.info/sct",
           "name": "SNOMED"
         }
@@ -20,7 +21,9 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "name": "SNOMED"
           },
           "display": "Diabetes mellitus",
@@ -41,15 +44,19 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -57,10 +64,12 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -74,6 +83,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -83,6 +93,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
           "name": "Diabetes VS"

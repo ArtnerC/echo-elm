@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -34,6 +35,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -57,10 +59,12 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Blood pressure",
@@ -80,10 +84,12 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Systolic blood pressure",
@@ -103,10 +109,12 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Diastolic blood pressure",
@@ -118,6 +126,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -139,6 +148,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -163,12 +173,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "name": "MeasurementPeriod",
           "parameterTypeSpecifier": {
+            "annotation": [],
             "pointType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}DateTime",
               "type": "NamedTypeSpecifier"
             },
@@ -184,9 +197,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -228,17 +244,24 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "operand": [
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "path": "birthDate.value",
                               "source": {
+                                "annotation": [],
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -248,7 +271,9 @@
                             "type": "ToDateTime"
                           },
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "name": "MeasurementPeriod",
                               "type": "ParameterRef"
                             },
@@ -261,6 +286,7 @@
                         "type": "CalculateAgeAt"
                       },
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "16",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -270,13 +296,18 @@
                     "type": "GreaterOrEqual"
                   },
                   {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "operand": [
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "path": "birthDate.value",
                               "source": {
+                                "annotation": [],
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -286,7 +317,9 @@
                             "type": "ToDateTime"
                           },
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "name": "MeasurementPeriod",
                               "type": "ParameterRef"
                             },
@@ -299,6 +332,7 @@
                         "type": "CalculateAgeAt"
                       },
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "24",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -312,13 +346,17 @@
                 "type": "And"
               },
               {
+                "annotation": [],
                 "code": {
+                  "annotation": [],
                   "libraryName": "FHIRHelpers",
                   "name": "ToString",
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "gender",
                       "source": {
+                        "annotation": [],
                         "name": "Patient",
                         "type": "ExpressionRef"
                       },
@@ -331,6 +369,7 @@
                 "signature": [],
                 "type": "InValueSet",
                 "valueset": {
+                  "annotation": [],
                   "name": "Female Administrative Sex",
                   "preserve": true
                 }
@@ -373,16 +412,22 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [],
             "source": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "name": "X",
                         "type": "AliasRef"
                       },
@@ -390,7 +435,9 @@
                       "type": "Start"
                     },
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "name": "X",
                         "type": "AliasRef"
                       },
@@ -406,13 +453,17 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "name": "Intervals",
                         "type": "OperandRef"
                       },
                       {
+                        "annotation": [],
                         "type": "Null"
                       }
                     ],
@@ -428,10 +479,14 @@
           "name": "CumulativeDuration",
           "operand": [
             {
+              "annotation": [],
               "name": "Intervals",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "pointType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
@@ -456,18 +511,23 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -480,14 +540,18 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "start",
                         "source": {
+                          "annotation": [],
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -499,6 +563,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "name": "MeasurementPeriod",
                     "type": "ParameterRef"
                   }
@@ -525,18 +590,23 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -549,14 +619,18 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "start",
                         "source": {
+                          "annotation": [],
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -568,6 +642,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "name": "MeasurementPeriod",
                     "type": "ParameterRef"
                   }
@@ -586,6 +661,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
@@ -601,6 +677,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -625,6 +702,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -645,6 +723,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -665,6 +744,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -685,6 +765,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],

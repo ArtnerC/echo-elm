@@ -18,8 +18,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "true",
             "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -28,8 +30,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Patient",
             "type": "ExpressionRef"
           },
@@ -40,10 +44,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "QDM",
           "uri": "urn:healthit-gov:qdm:v5_3",
           "version": "5.3"

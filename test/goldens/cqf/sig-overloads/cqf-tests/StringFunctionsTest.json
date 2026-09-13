@@ -18,15 +18,19 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "type": "Literal",
               "value": "Hello World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}String",
                 "type": "NamedTypeSpecifier"
               }
@@ -37,9 +41,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "type": "Literal",
               "value": "hello",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -51,9 +58,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "type": "Literal",
               "value": "HELLO",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -65,15 +75,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "signature": [],
             "startIndex": {
+              "annotation": [],
               "type": "Literal",
               "value": "6",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "stringToSub": {
+              "annotation": [],
               "type": "Literal",
               "value": "Hello World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -84,20 +98,25 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "length": {
+              "annotation": [],
               "type": "Literal",
               "value": "5",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [],
             "startIndex": {
+              "annotation": [],
               "type": "Literal",
               "value": "6",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "stringToSub": {
+              "annotation": [],
               "type": "Literal",
               "value": "Hello World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -108,16 +127,21 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": {
+              "annotation": [],
               "type": "Literal",
               "value": "World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
             "signature": [],
             "source": {
+              "annotation": [],
               "operand": {
+                "annotation": [],
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -131,15 +155,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "Hello",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -152,15 +180,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -173,11 +205,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "operand": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "Hello World",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -186,6 +222,7 @@
                 "type": "ToList"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "lo W",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -198,15 +235,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "Hello123",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "[A-Za-z]+[0-9]+",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -219,17 +260,22 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "Hello",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": " ",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -239,6 +285,7 @@
                 "type": "Concatenate"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -251,22 +298,28 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "signature": [],
             "source": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "a",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "b",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "c",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -280,27 +333,34 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "separator": {
+              "annotation": [],
               "type": "Literal",
               "value": ", ",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
             "signature": [],
             "source": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "a",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "b",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "c",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -314,15 +374,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "separator": {
+              "annotation": [],
               "type": "Literal",
               "value": ",",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
             "signature": [],
             "stringToSplit": {
+              "annotation": [],
               "type": "Literal",
               "value": "a,b,c",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -333,20 +397,25 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "CQL",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -359,15 +428,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "pattern": {
+              "annotation": [],
               "type": "Literal",
               "value": "l",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
             "signature": [],
             "string": {
+              "annotation": [],
               "type": "Literal",
               "value": "Hello World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -378,15 +451,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "pattern": {
+              "annotation": [],
               "type": "Literal",
               "value": "l",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
             },
             "signature": [],
             "string": {
+              "annotation": [],
               "type": "Literal",
               "value": "Hello World",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -400,6 +477,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

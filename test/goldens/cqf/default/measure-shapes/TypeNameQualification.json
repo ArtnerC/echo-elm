@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -21,6 +22,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "path": "FHIRHelpers",
           "version": "4.0.1"
@@ -34,9 +36,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -52,8 +57,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "codeFilter": [],
             "dataType": "{http://hl7.org/fhir}Encounter",
             "dateFilter": [],
@@ -66,12 +73,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "codeComparator": "in",
             "codeFilter": [],
             "codeProperty": "type",
             "codes": {
+              "annotation": [],
               "name": "Office Visit",
               "preserve": true,
               "type": "ValueSetRef"
@@ -87,10 +97,13 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [],
             "source": {
+              "annotation": [],
               "name": "encounters",
               "type": "OperandRef"
             },
@@ -99,9 +112,12 @@
           "name": "CountOf",
           "operand": [
             {
+              "annotation": [],
               "name": "encounters",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{http://hl7.org/fhir}Encounter",
                   "type": "NamedTypeSpecifier"
                 },
@@ -113,15 +129,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "C",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "name": "conditions",
                     "type": "OperandRef"
                   }
@@ -129,8 +150,11 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": {
+                  "annotation": [],
                   "operand": {
+                    "annotation": [],
                     "path": "id",
                     "scope": "C",
                     "type": "Property"
@@ -148,9 +172,12 @@
           "name": "First Condition",
           "operand": [
             {
+              "annotation": [],
               "name": "conditions",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{http://hl7.org/fhir}Condition",
                   "type": "NamedTypeSpecifier"
                 },
@@ -162,11 +189,14 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "name": "CountOf",
             "operand": [
               {
+                "annotation": [],
                 "name": "All Encounters",
                 "type": "ExpressionRef"
               }
@@ -178,9 +208,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "name": "All Encounters",
               "type": "ExpressionRef"
             },
@@ -191,8 +224,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "name": "Office Visit",
             "preserve": true,
             "type": "ValueSetRef"
@@ -204,10 +239,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "uri": "http://hl7.org/fhir",
           "version": "4.0.1"
@@ -218,6 +255,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "http://example.org/fhir/ValueSet/office-visit",
           "name": "Office Visit"

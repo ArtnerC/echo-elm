@@ -634,3 +634,15 @@ func (b *astBuilder) buildNamedTypeSpecifier(ctx cqlparser.INamedTypeSpecifierCo
 	nts.SetLoc(intervalFromCtx(ndc))
 	return nts
 }
+
+// tokenInterval returns the source span of a single token, in the same 1-based
+// convention as intervalFromCtx.
+func tokenInterval(tok antlr.Token) ast.Interval {
+	if tok == nil || tok.GetLine() == 0 {
+		return ast.Interval{}
+	}
+	return ast.Interval{
+		Start: ast.Position{Line: tok.GetLine(), Column: tok.GetColumn() + 1},
+		Stop:  ast.Position{Line: tok.GetLine(), Column: tok.GetColumn() + len(tok.GetText())},
+	}
+}

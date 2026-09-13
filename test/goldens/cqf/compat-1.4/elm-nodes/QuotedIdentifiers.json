@@ -19,20 +19,25 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -44,8 +49,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "42",
             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -54,8 +61,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "My Items",
             "type": "ExpressionRef"
           },
@@ -63,8 +72,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Plain",
             "type": "ExpressionRef"
           },
@@ -72,12 +83,16 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "I",
                 "type": "AliasRef"
               }
@@ -85,7 +100,9 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "My Items",
                   "type": "ExpressionRef"
                 }
@@ -97,12 +114,16 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "I",
                 "type": "AliasRef"
               }
@@ -110,7 +131,9 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "My Items",
                   "type": "ExpressionRef"
                 }
@@ -118,12 +141,15 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "operand": [
                 {
+                  "annotation": [],
                   "name": "I",
                   "type": "AliasRef"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -137,23 +163,30 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [
               {
                 "alias": "J",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "My Items",
                   "type": "ExpressionRef"
                 },
                 "suchThat": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "name": "I",
                       "type": "AliasRef"
                     },
                     {
+                      "annotation": [],
                       "name": "J",
                       "type": "AliasRef"
                     }
@@ -165,7 +198,9 @@
               }
             ],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "I",
                 "type": "AliasRef"
               }
@@ -173,7 +208,9 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "My Items",
                   "type": "ExpressionRef"
                 }
@@ -185,14 +222,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "name": "x",
                 "type": "OperandRef"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -204,8 +245,10 @@
           "name": "My Function",
           "operand": [
             {
+              "annotation": [],
               "name": "x",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -215,11 +258,14 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "My Function",
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -235,6 +281,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -41,13 +42,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "3:19-3:39",
             "operand": {
+              "annotation": [],
               "locator": "3:26-3:38",
               "type": "Literal",
               "value": "Hello World",
@@ -72,13 +76,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "4:21-4:34",
             "operand": {
+              "annotation": [],
               "locator": "4:27-4:33",
               "type": "Literal",
               "value": "hello",
@@ -103,13 +110,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "5:21-5:34",
             "operand": {
+              "annotation": [],
               "locator": "5:27-5:33",
               "type": "Literal",
               "value": "HELLO",
@@ -134,20 +144,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "6:25-6:51",
             "signature": [],
             "startIndex": {
+              "annotation": [],
               "locator": "6:50",
               "type": "Literal",
               "value": "6",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "stringToSub": {
+              "annotation": [],
               "locator": "6:35-6:47",
               "type": "Literal",
               "value": "Hello World",
@@ -171,12 +185,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "length": {
+              "annotation": [],
               "locator": "7:56",
               "type": "Literal",
               "value": "5",
@@ -185,12 +202,14 @@
             "locator": "7:28-7:57",
             "signature": [],
             "startIndex": {
+              "annotation": [],
               "locator": "7:53",
               "type": "Literal",
               "value": "6",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "stringToSub": {
+              "annotation": [],
               "locator": "7:38-7:50",
               "type": "Literal",
               "value": "Hello World",
@@ -214,12 +233,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": {
+              "annotation": [],
               "locator": "8:46-8:52",
               "type": "Literal",
               "value": "World",
@@ -228,7 +250,9 @@
             "locator": "8:23-8:53",
             "signature": [],
             "source": {
+              "annotation": [],
               "operand": {
+                "annotation": [],
                 "locator": "8:31-8:43",
                 "type": "Literal",
                 "value": "Hello World",
@@ -255,20 +279,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "9:26-9:59",
             "operand": [
               {
+                "annotation": [],
                 "locator": "9:37-9:49",
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "locator": "9:52-9:58",
                 "type": "Literal",
                 "value": "Hello",
@@ -294,20 +322,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "10:24-10:55",
             "operand": [
               {
+                "annotation": [],
                 "locator": "10:33-10:45",
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "locator": "10:48-10:54",
                 "type": "Literal",
                 "value": "World",
@@ -333,15 +365,19 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "11:24-11:54",
             "operand": [
               {
+                "annotation": [],
                 "operand": {
+                  "annotation": [],
                   "locator": "11:33-11:45",
                   "type": "Literal",
                   "value": "Hello World",
@@ -351,6 +387,7 @@
                 "type": "ToList"
               },
               {
+                "annotation": [],
                 "locator": "11:48-11:53",
                 "type": "Literal",
                 "value": "lo W",
@@ -376,20 +413,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "12:23-12:60",
             "operand": [
               {
+                "annotation": [],
                 "locator": "12:31-12:40",
                 "type": "Literal",
                 "value": "Hello123",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "locator": "12:43-12:59",
                 "type": "Literal",
                 "value": "[A-Za-z]+[0-9]+",
@@ -415,23 +456,28 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "13:22-13:44",
             "operand": [
               {
+                "annotation": [],
                 "locator": "13:22-13:34",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "13:22-13:28",
                     "type": "Literal",
                     "value": "Hello",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
+                    "annotation": [],
                     "locator": "13:32-13:34",
                     "type": "Literal",
                     "value": " ",
@@ -442,6 +488,7 @@
                 "type": "Concatenate"
               },
               {
+                "annotation": [],
                 "locator": "13:38-13:44",
                 "type": "Literal",
                 "value": "World",
@@ -467,28 +514,34 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "14:21-14:44",
             "signature": [],
             "source": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "locator": "14:30-14:32",
                   "type": "Literal",
                   "value": "a",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "locator": "14:35-14:37",
                   "type": "Literal",
                   "value": "b",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "locator": "14:40-14:42",
                   "type": "Literal",
                   "value": "c",
@@ -516,13 +569,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "15:24-15:53",
             "separator": {
+              "annotation": [],
               "locator": "15:49-15:52",
               "type": "Literal",
               "value": ", ",
@@ -530,20 +586,24 @@
             },
             "signature": [],
             "source": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "locator": "15:33-15:35",
                   "type": "Literal",
                   "value": "a",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "locator": "15:38-15:40",
                   "type": "Literal",
                   "value": "b",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
                 },
                 {
+                  "annotation": [],
                   "locator": "15:43-15:45",
                   "type": "Literal",
                   "value": "c",
@@ -571,13 +631,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "16:18-16:36",
             "separator": {
+              "annotation": [],
               "locator": "16:33-16:35",
               "type": "Literal",
               "value": ",",
@@ -585,6 +648,7 @@
             },
             "signature": [],
             "stringToSplit": {
+              "annotation": [],
               "locator": "16:24-16:30",
               "type": "Literal",
               "value": "a,b,c",
@@ -608,26 +672,31 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "17:20-17:64",
             "operand": [
               {
+                "annotation": [],
                 "locator": "17:35-17:47",
                 "type": "Literal",
                 "value": "Hello World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "locator": "17:50-17:56",
                 "type": "Literal",
                 "value": "World",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "locator": "17:59-17:63",
                 "type": "Literal",
                 "value": "CQL",
@@ -653,13 +722,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "18:20-18:49",
             "pattern": {
+              "annotation": [],
               "locator": "18:31-18:33",
               "type": "Literal",
               "value": "l",
@@ -667,6 +739,7 @@
             },
             "signature": [],
             "string": {
+              "annotation": [],
               "locator": "18:36-18:48",
               "type": "Literal",
               "value": "Hello World",
@@ -690,13 +763,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "19:24-19:57",
             "pattern": {
+              "annotation": [],
               "locator": "19:39-19:41",
               "type": "Literal",
               "value": "l",
@@ -704,6 +780,7 @@
             },
             "signature": [],
             "string": {
+              "annotation": [],
               "locator": "19:44-19:56",
               "type": "Literal",
               "value": "Hello World",
@@ -719,6 +796,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

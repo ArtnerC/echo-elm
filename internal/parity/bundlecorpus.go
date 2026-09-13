@@ -186,3 +186,64 @@ func ValidateProfileAgainstBundle(b *bundle.Bundle, profileName string, profile 
 			"Refusing to compare mismatched profiles; omit --profile to derive it from the bundle",
 		declared, profileName, strings.Join(mismatches, ", "))
 }
+
+// ReferenceWarnings flags bundled reference ELM that is unlikely to have come
+// from the pinned translator, so that a large diff can be read as possibly the
+// reference's doing rather than a translator gap.
+//
+// A cql-to-elm compile always stamps translatorVersion on its CqlToElmInfo
+// annotation, so reference ELM without one was produced by something else — an
+// older writer, or a pipeline that strips it. issues/06 found exactly that:
+// published bundles whose reference ELM disagreed with a fresh CQF 5.0.0 compile
+// of their own source far more often than echo-elm did. A version that is
+// present but differs from the pin is flagged for the same reason.
+//
+// These are warnings, not errors: the comparison is still meaningful, just not
+// against the translator echo-elm targets.
+func ReferenceWarnings(b *bundle.Bundle, pinned string) []string {
+	var missing, other []string
+	libs := b.Libraries()
+	for i := range libs {
+		lib := &libs[i]
+		if len(lib.ReferenceELM) == 0 {
+			continue
+		}
+		declared, ok := ReadDeclaredOptions(lib.ReferenceELM)
+		switch {
+		case !ok || declared.TranslatorVersion == "":
+			missing = append(missing, lib.Name)
+		case declared.TranslatorVersion != pinned:
+			other = append(other, lib.Name+" ("+declared.TranslatorVersion+")")
+		}
+	}
+	var out []string
+	if len(missing) > 0 {
+		out = append(out, fmt.Sprintf(
+			"%d bundled reference librar%s declare no translatorVersion (%s). A cql-to-elm "+
+				"compile always records one, so this ELM was not produced by the pinned "+
+				"cql-to-elm %s and differences may come from the reference rather than "+
+				"echo-elm; recompile the bundle's CQL with the pinned CLI to tell them apart",
+			len(missing), pluralY(len(missing)), summarizeNames(missing), pinned))
+	}
+	if len(other) > 0 {
+		out = append(out, fmt.Sprintf(
+			"%d bundled reference librar%s were compiled by a translator other than the pinned %s: %s",
+			len(other), pluralY(len(other)), pinned, summarizeNames(other)))
+	}
+	return out
+}
+
+func pluralY(n int) string {
+	if n == 1 {
+		return "y"
+	}
+	return "ies"
+}
+
+// summarizeNames lists a few names and counts the rest.
+func summarizeNames(names []string) string {
+	if len(names) <= 3 {
+		return strings.Join(names, ", ")
+	}
+	return strings.Join(names[:3], ", ") + fmt.Sprintf(", and %d more", len(names)-3)
+}

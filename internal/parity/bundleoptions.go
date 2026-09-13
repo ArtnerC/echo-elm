@@ -17,6 +17,9 @@ type DeclaredOptions struct {
 	SignatureLevel string
 	// Flags is Options split and trimmed, in declaration order.
 	Flags []string
+	// TranslatorVersion is the declared translator version, or "" when the
+	// annotation carries none. A CQF compile always records it.
+	TranslatorVersion string
 }
 
 // optionProfileFields maps a CQF translator option name to the corpus
@@ -44,9 +47,10 @@ func ReadDeclaredOptions(elmJSON []byte) (DeclaredOptions, bool) {
 	var doc struct {
 		Library struct {
 			Annotation []struct {
-				Type             string `json:"type"`
-				TranslatorOption string `json:"translatorOptions"`
-				SignatureLevel   string `json:"signatureLevel"`
+				Type              string `json:"type"`
+				TranslatorOption  string `json:"translatorOptions"`
+				SignatureLevel    string `json:"signatureLevel"`
+				TranslatorVersion string `json:"translatorVersion"`
 			} `json:"annotation"`
 		} `json:"library"`
 	}
@@ -58,9 +62,10 @@ func ReadDeclaredOptions(elmJSON []byte) (DeclaredOptions, bool) {
 			continue
 		}
 		return DeclaredOptions{
-			Options:        a.TranslatorOption,
-			SignatureLevel: a.SignatureLevel,
-			Flags:          splitOptions(a.TranslatorOption),
+			Options:           a.TranslatorOption,
+			SignatureLevel:    a.SignatureLevel,
+			TranslatorVersion: a.TranslatorVersion,
+			Flags:             splitOptions(a.TranslatorOption),
 		}, true
 	}
 	return DeclaredOptions{}, false

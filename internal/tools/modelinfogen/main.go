@@ -62,6 +62,10 @@ type typeSpecifier struct {
 	XSIType     string `xml:"http://www.w3.org/2001/XMLSchema-instance type,attr"`
 	ElementType string `xml:"elementType,attr"`
 	Name        string `xml:"name,attr"`
+	// Namespace and Choice describe a ChoiceTypeSpecifier's alternatives:
+	// <choice namespace="FHIR" name="dateTime" xsi:type="NamedTypeSpecifier"/>.
+	Namespace string          `xml:"namespace,attr"`
+	Choice    []typeSpecifier `xml:"choice"`
 }
 
 // resolve returns the element's declared type and whether it is list-valued.
@@ -140,6 +144,7 @@ type tables struct {
 	valueType       map[string]string
 	primaryCodePath map[string]string
 	baseType        map[string]string
+	propertyChoice  map[string][]string
 }
 
 func build(mi modelInfo) tables {
@@ -149,6 +154,7 @@ func build(mi modelInfo) tables {
 		valueType:       map[string]string{},
 		primaryCodePath: map[string]string{},
 		baseType:        map[string]string{},
+		propertyChoice:  map[string][]string{},
 	}
 
 	for _, ti := range mi.TypeInfos {
@@ -174,6 +180,22 @@ func build(mi modelInfo) tables {
 		}
 
 		for _, el := range ti.Elements {
+			// A choice element ([x] in FHIR) has no single type, so it stays out
+			// of propertyType and is never converted — but it still has a type,
+			// the choice itself, and CQF records it as the property's result
+			// type. Only all-FHIR choices are recorded; anything else is left
+			// unknown rather than half-described. (issues/06)
+			if el.Specifier != nil && el.Specifier.XSIType == "ChoiceTypeSpecifier" && el.Name != "" {
+				alts := make([]string, 0, len(el.Specifier.Choice))
+				for _, c := range el.Specifier.Choice {
+					if c.Namespace == "FHIR" && c.Name != "" {
+						alts = append(alts, c.Name)
+					}
+				}
+				if len(alts) > 0 && len(alts) == len(el.Specifier.Choice) {
+					t.propertyChoice[ti.Name+"."+el.Name] = alts
+				}
+			}
 			typeName, isList, ok := el.resolve()
 			if !ok || el.Name == "" {
 				continue
@@ -261,6 +283,27 @@ var FHIRPrimaryCodePath = map[string]string{
 var FHIRBaseType = map[string]string{
 `)
 	writeStringMap(&b, t.baseType)
+	b.WriteString("}\n")
+
+	b.WriteString(`
+// FHIRPropertyChoice maps a choice-typed "TypeName.propertyName" ([x] in FHIR) to
+// its alternatives, as FHIR type names in ModelInfo order. These elements have no
+// single type and so are absent from FHIRPropertyType; their type is the choice.
+// Use FHIRPropertyChoiceOf, which walks the base-type chain.
+var FHIRPropertyChoice = map[string][]string{
+`)
+	choiceKeys := make([]string, 0, len(t.propertyChoice))
+	for k := range t.propertyChoice {
+		choiceKeys = append(choiceKeys, k)
+	}
+	sort.Strings(choiceKeys)
+	for _, k := range choiceKeys {
+		quoted := make([]string, len(t.propertyChoice[k]))
+		for i, a := range t.propertyChoice[k] {
+			quoted[i] = fmt.Sprintf("%q", a)
+		}
+		fmt.Fprintf(&b, "\t%q: {%s},\n", k, strings.Join(quoted, ", "))
+	}
 	b.WriteString("}\n")
 
 	src, err := format.Source([]byte(b.String()))

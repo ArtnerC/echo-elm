@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "locator": "14:1-14:15",
           "name": "Patient"
         }
@@ -22,6 +23,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "locator": "10:1-10:35",
           "path": "FHIRHelpers",
@@ -33,11 +35,14 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "locator": "12:1-12:49",
           "name": "Measurement Period",
           "parameterTypeSpecifier": {
+            "annotation": [],
             "locator": "12:32-12:49",
             "pointType": {
+              "annotation": [],
               "locator": "12:41-12:48",
               "name": "{urn:hl7-org:elm-types:r1}DateTime",
               "type": "NamedTypeSpecifier"
@@ -54,9 +59,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -74,11 +82,14 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "18:22-18:35",
             "path": "gender",
             "source": {
+              "annotation": [],
               "locator": "18:22-18:28",
               "name": "Patient",
               "type": "ExpressionRef"
@@ -90,11 +101,14 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "19:25-19:41",
             "path": "birthDate",
             "source": {
+              "annotation": [],
               "locator": "19:25-19:31",
               "name": "Patient",
               "type": "ExpressionRef"
@@ -106,13 +120,17 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "locator": "20:26-20:39",
                 "path": "gender",
                 "source": {
+                  "annotation": [],
                   "locator": "20:26-20:32",
                   "name": "Patient",
                   "type": "ExpressionRef"
@@ -128,13 +146,17 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "21:36-21:66",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "21:59-21:66",
                 "path": "period",
                 "scope": "E",
@@ -145,7 +167,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "codeFilter": [],
                   "dataType": "{http://hl7.org/fhir}Encounter",
                   "dateFilter": [],
@@ -165,17 +189,22 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "25:3-25:73",
             "operand": {
+              "annotation": [],
               "let": [],
               "locator": "25:10-25:73",
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -190,16 +219,20 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "25:26-25:73",
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "25:32-25:45",
                         "path": "start",
                         "source": {
+                          "annotation": [],
                           "locator": "25:32-25:39",
                           "path": "period",
                           "scope": "E",
@@ -212,6 +245,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "25:54-25:73",
                     "name": "Measurement Period",
                     "type": "ParameterRef"
@@ -229,18 +263,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "29:26-29:50",
             "operand": [
               {
+                "annotation": [],
                 "libraryName": "FHIRHelpers",
                 "name": "ToString",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "29:26-29:39",
                     "path": "gender",
                     "source": {
+                      "annotation": [],
                       "locator": "29:26-29:32",
                       "name": "Patient",
                       "type": "ExpressionRef"
@@ -252,6 +291,7 @@
                 "type": "FunctionRef"
               },
               {
+                "annotation": [],
                 "locator": "29:43-29:50",
                 "type": "Literal",
                 "value": "female",
@@ -266,18 +306,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "30:29-30:64",
             "operand": [
               {
+                "annotation": [],
                 "libraryName": "FHIRHelpers",
                 "name": "ToDate",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "30:29-30:45",
                     "path": "birthDate",
                     "source": {
+                      "annotation": [],
                       "locator": "30:29-30:35",
                       "name": "Patient",
                       "type": "ExpressionRef"
@@ -289,13 +334,16 @@
                 "type": "FunctionRef"
               },
               {
+                "annotation": [],
                 "day": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "locator": "30:54-30:64",
                 "month": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -303,6 +351,7 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2000",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -317,17 +366,22 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "32:3-32:67",
             "operand": {
+              "annotation": [],
               "let": [],
               "locator": "32:10-32:67",
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -342,13 +396,16 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "32:26-32:67",
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToInterval",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "32:32-32:39",
                         "path": "period",
                         "scope": "E",
@@ -359,6 +416,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "32:48-32:67",
                     "name": "Measurement Period",
                     "type": "ParameterRef"
@@ -379,10 +437,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "locator": "9:1-9:26",
           "uri": "http://hl7.org/fhir",

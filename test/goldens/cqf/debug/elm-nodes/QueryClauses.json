@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -42,17 +43,21 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "id",
                     "value": {
+                      "annotation": [],
                       "locator": "11:15",
                       "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "Literal",
@@ -63,6 +68,7 @@
                   {
                     "name": "score",
                     "value": {
+                      "annotation": [],
                       "locator": "11:25-11:26",
                       "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "Literal",
@@ -73,14 +79,18 @@
                   {
                     "name": "p",
                     "value": {
+                      "annotation": [],
                       "high": {
+                        "annotation": [],
                         "day": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "1",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                         },
                         "locator": "11:54-11:64",
                         "month": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "2",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -89,6 +99,7 @@
                         "signature": [],
                         "type": "Date",
                         "year": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "2024",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -97,13 +108,16 @@
                       "highClosed": true,
                       "locator": "11:32-11:65",
                       "low": {
+                        "annotation": [],
                         "day": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "1",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                         },
                         "locator": "11:41-11:51",
                         "month": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "1",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -112,6 +126,7 @@
                         "signature": [],
                         "type": "Date",
                         "year": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "2024",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -119,7 +134,9 @@
                       },
                       "lowClosed": true,
                       "resultTypeSpecifier": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Date",
                           "type": "NamedTypeSpecifier"
                         },
@@ -131,24 +148,32 @@
                 ],
                 "locator": "11:3-11:67",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       },
                       "name": "id"
                     },
                     {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       },
                       "name": "score"
                     },
                     {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Date",
                           "type": "NamedTypeSpecifier"
                         },
@@ -162,10 +187,12 @@
                 "type": "Tuple"
               },
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "id",
                     "value": {
+                      "annotation": [],
                       "locator": "12:15",
                       "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "Literal",
@@ -176,6 +203,7 @@
                   {
                     "name": "score",
                     "value": {
+                      "annotation": [],
                       "locator": "12:25",
                       "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "Literal",
@@ -186,14 +214,18 @@
                   {
                     "name": "p",
                     "value": {
+                      "annotation": [],
                       "high": {
+                        "annotation": [],
                         "day": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "1",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                         },
                         "locator": "12:53-12:63",
                         "month": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "4",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -202,6 +234,7 @@
                         "signature": [],
                         "type": "Date",
                         "year": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "2024",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -210,13 +243,16 @@
                       "highClosed": true,
                       "locator": "12:31-12:64",
                       "low": {
+                        "annotation": [],
                         "day": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "1",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                         },
                         "locator": "12:40-12:50",
                         "month": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "3",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -225,6 +261,7 @@
                         "signature": [],
                         "type": "Date",
                         "year": {
+                          "annotation": [],
                           "type": "Literal",
                           "value": "2024",
                           "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -232,7 +269,9 @@
                       },
                       "lowClosed": true,
                       "resultTypeSpecifier": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Date",
                           "type": "NamedTypeSpecifier"
                         },
@@ -244,24 +283,32 @@
                 ],
                 "locator": "12:3-12:66",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       },
                       "name": "id"
                     },
                     {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       },
                       "name": "score"
                     },
                     {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Date",
                           "type": "NamedTypeSpecifier"
                         },
@@ -277,25 +324,34 @@
             ],
             "locator": "10:17-13:1",
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "id"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "score"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "pointType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Date",
                         "type": "NamedTypeSpecifier"
                       },
@@ -313,25 +369,34 @@
           "locator": "10:1-13:1",
           "name": "Items",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "id"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "score"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Date",
                       "type": "NamedTypeSpecifier"
                     },
@@ -358,34 +423,45 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "18:3-19:17",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "id"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "score"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "pointType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Date",
                         "type": "NamedTypeSpecifier"
                       },
@@ -399,8 +475,10 @@
               "type": "ListTypeSpecifier"
             },
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "asc",
                   "locator": "19:13-19:17",
                   "path": "score",
@@ -413,29 +491,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "18:3-18:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -452,25 +541,34 @@
                 },
                 "locator": "18:3-18:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -490,25 +588,34 @@
           "locator": "17:1-19:17",
           "name": "SortByColumn",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "id"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "score"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Date",
                       "type": "NamedTypeSpecifier"
                     },
@@ -535,34 +642,45 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "22:3-23:22",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "id"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "score"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "pointType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Date",
                         "type": "NamedTypeSpecifier"
                       },
@@ -576,8 +694,10 @@
               "type": "ListTypeSpecifier"
             },
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "desc",
                   "locator": "23:13-23:22",
                   "path": "score",
@@ -590,29 +710,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "22:3-22:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -629,25 +760,34 @@
                 },
                 "locator": "22:3-22:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -667,25 +807,34 @@
           "locator": "21:1-23:22",
           "name": "SortByColumnDesc",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "id"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "score"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Date",
                       "type": "NamedTypeSpecifier"
                     },
@@ -712,23 +861,29 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "26:3-28:12",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "27:12-27:18",
                 "path": "score",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -737,7 +892,9 @@
               },
               "locator": "27:5-27:18",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -745,8 +902,10 @@
               }
             },
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "asc",
                   "type": "ByDirection"
                 }
@@ -756,29 +915,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "26:3-26:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -795,25 +965,34 @@
                 },
                 "locator": "26:3-26:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -833,7 +1012,9 @@
           "locator": "25:1-28:12",
           "name": "SortByDirectionOnly",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -853,34 +1034,45 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "31:3-32:30",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "id"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "score"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "pointType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Date",
                         "type": "NamedTypeSpecifier"
                       },
@@ -894,8 +1086,10 @@
               "type": "ListTypeSpecifier"
             },
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "asc",
                   "locator": "32:13-32:18",
                   "path": "id",
@@ -903,6 +1097,7 @@
                   "type": "ByColumn"
                 },
                 {
+                  "annotation": [],
                   "direction": "desc",
                   "locator": "32:21-32:30",
                   "path": "score",
@@ -915,29 +1110,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "31:3-31:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -954,25 +1160,34 @@
                 },
                 "locator": "31:3-31:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -992,25 +1207,34 @@
           "locator": "30:1-32:30",
           "name": "SortByMultipleKeys",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "id"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "score"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Date",
                       "type": "NamedTypeSpecifier"
                     },
@@ -1037,34 +1261,45 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "37:3-38:22",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "id"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "score"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "pointType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Date",
                         "type": "NamedTypeSpecifier"
                       },
@@ -1078,16 +1313,22 @@
               "type": "ListTypeSpecifier"
             },
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "asc",
                   "expression": {
+                    "annotation": [],
                     "locator": "38:13-38:22",
                     "operand": {
+                      "annotation": [],
                       "locator": "38:22",
                       "name": "p",
                       "resultTypeSpecifier": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Date",
                           "type": "NamedTypeSpecifier"
                         },
@@ -1109,29 +1350,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "37:3-37:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -1148,25 +1400,34 @@
                 },
                 "locator": "37:3-37:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -1186,25 +1447,34 @@
           "locator": "36:1-38:22",
           "name": "SortByExpression",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "id"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "name": "score"
                 },
                 {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Date",
                       "type": "NamedTypeSpecifier"
                     },
@@ -1231,17 +1501,22 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "41:3-43:26",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "pointType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Date",
                   "type": "NamedTypeSpecifier"
                 },
@@ -1250,11 +1525,15 @@
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "42:12-42:14",
                 "path": "p",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "pointType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Date",
                     "type": "NamedTypeSpecifier"
                   },
@@ -1265,8 +1544,11 @@
               },
               "locator": "42:5-42:14",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "pointType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Date",
                     "type": "NamedTypeSpecifier"
                   },
@@ -1276,16 +1558,22 @@
               }
             },
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "asc",
                   "expression": {
+                    "annotation": [],
                     "locator": "43:13-43:26",
                     "operand": {
+                      "annotation": [],
                       "locator": "43:22-43:26",
                       "name": "$this",
                       "resultTypeSpecifier": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Date",
                           "type": "NamedTypeSpecifier"
                         },
@@ -1307,29 +1595,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "41:3-41:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -1346,25 +1645,34 @@
                 },
                 "locator": "41:3-41:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -1384,8 +1692,11 @@
           "locator": "40:1-43:26",
           "name": "SortByThis",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "pointType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Date",
                 "type": "NamedTypeSpecifier"
               },
@@ -1407,22 +1718,27 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
             "aggregate": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "50:33-50:47",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "50:33-50:37",
                     "name": "Total",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "QueryLetRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "50:41-50:47",
                     "path": "score",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -1438,6 +1754,7 @@
               "locator": "50:5-50:47",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "starting": {
+                "annotation": [],
                 "locator": "50:21-50:30",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -1445,6 +1762,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               }
             },
+            "annotation": [],
             "let": [],
             "locator": "49:3-50:47",
             "relationship": [],
@@ -1452,29 +1770,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "49:3-49:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -1491,25 +1820,34 @@
                 },
                 "locator": "49:3-49:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -1543,13 +1881,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
             "aggregate": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "54:33-54:35",
                 "name": "Acc",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
@@ -1559,6 +1900,7 @@
               "locator": "54:5-54:35",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
               "starting": {
+                "annotation": [],
                 "locator": "54:19-54:30",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
                 "type": "Literal",
@@ -1566,6 +1908,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               }
             },
+            "annotation": [],
             "let": [],
             "locator": "53:3-54:35",
             "relationship": [],
@@ -1573,29 +1916,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "53:3-53:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -1612,25 +1966,34 @@
                 },
                 "locator": "53:3-53:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -1664,22 +2027,27 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
             "aggregate": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "58:39-58:53",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "58:39-58:43",
                     "name": "Total",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "QueryLetRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "58:47-58:53",
                     "path": "score",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -1695,9 +2063,11 @@
               "locator": "58:5-58:53",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "starting": {
+                "annotation": [],
                 "locator": "58:21-58:36",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "58:31",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "Literal",
@@ -1705,6 +2075,7 @@
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "locator": "58:35",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "Literal",
@@ -1717,6 +2088,7 @@
                 "type": "Add"
               }
             },
+            "annotation": [],
             "let": [],
             "locator": "57:3-58:53",
             "relationship": [],
@@ -1724,29 +2096,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "57:3-57:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -1763,25 +2146,34 @@
                 },
                 "locator": "57:3-57:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -1815,23 +2207,28 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
             "aggregate": {
+              "annotation": [],
               "distinct": false,
               "expression": {
+                "annotation": [],
                 "locator": "62:35-62:47",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "62:35-62:37",
                     "name": "Acc",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "QueryLetRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "62:41-62:47",
                     "path": "score",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -1847,6 +2244,7 @@
               "locator": "62:5-62:47",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "starting": {
+                "annotation": [],
                 "locator": "62:23-62:32",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -1854,6 +2252,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               }
             },
+            "annotation": [],
             "let": [],
             "locator": "61:3-62:47",
             "relationship": [],
@@ -1861,29 +2260,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "61:3-61:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -1900,25 +2310,34 @@
                 },
                 "locator": "61:3-61:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -1952,23 +2371,28 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
             "aggregate": {
+              "annotation": [],
               "distinct": true,
               "expression": {
+                "annotation": [],
                 "locator": "66:40-66:52",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "66:40-66:42",
                     "name": "Acc",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "QueryLetRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "66:46-66:52",
                     "path": "score",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -1984,6 +2408,7 @@
               "locator": "66:5-66:52",
               "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
               "starting": {
+                "annotation": [],
                 "locator": "66:28-66:37",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -1991,6 +2416,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               }
             },
+            "annotation": [],
             "let": [],
             "locator": "65:3-66:52",
             "relationship": [],
@@ -1998,29 +2424,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "65:3-65:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -2037,25 +2474,34 @@
                 },
                 "locator": "65:3-65:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -2089,14 +2535,18 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [
               {
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "72:12-72:18",
                   "path": "score",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -2111,14 +2561,18 @@
             "locator": "71:3-74:12",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "74:12",
                 "name": "s",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -2126,7 +2580,9 @@
               },
               "locator": "74:5-74:12",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -2136,29 +2592,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "71:3-71:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -2175,25 +2642,34 @@
                 },
                 "locator": "71:3-71:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -2210,15 +2686,18 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "73:5-73:15",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "73:11",
                   "name": "s",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "QueryLetRef"
                 },
                 {
+                  "annotation": [],
                   "locator": "73:15",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "Literal",
@@ -2234,7 +2713,9 @@
           "locator": "70:1-74:12",
           "name": "LetClause",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -2254,24 +2735,30 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "77:3-78:24",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "distinct": true,
               "expression": {
+                "annotation": [],
                 "locator": "78:21-78:24",
                 "path": "id",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -2280,7 +2767,9 @@
               },
               "locator": "78:5-78:24",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -2290,29 +2779,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "77:3-77:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -2329,25 +2829,34 @@
                 },
                 "locator": "77:3-77:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -2367,7 +2876,9 @@
           "locator": "76:1-78:24",
           "name": "ReturnDistinct",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -2387,24 +2898,30 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "81:3-82:19",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "distinct": false,
               "expression": {
+                "annotation": [],
                 "locator": "82:16-82:19",
                 "path": "id",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -2413,7 +2930,9 @@
               },
               "locator": "82:5-82:19",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -2423,29 +2942,40 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "81:3-81:9",
                   "name": "Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "id"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
                           "name": "score"
                         },
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}Date",
                               "type": "NamedTypeSpecifier"
                             },
@@ -2462,25 +2992,34 @@
                 },
                 "locator": "81:3-81:11",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "id"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}Integer",
                           "type": "NamedTypeSpecifier"
                         },
                         "name": "score"
                       },
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Date",
                             "type": "NamedTypeSpecifier"
                           },
@@ -2500,7 +3039,9 @@
           "locator": "80:1-82:19",
           "name": "ReturnAll",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -2512,6 +3053,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

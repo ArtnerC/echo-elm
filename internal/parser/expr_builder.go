@@ -215,7 +215,9 @@ func (b *astBuilder) buildExprInner(ctx cqlparser.IExpressionContext) ast.Expr {
 			right = b.buildExpr(exprs[1])
 		}
 		op, prec := b.timingOp(c.IntervalOperatorPhrase())
-		return &ast.TimingExpr{Op: op, Left: left, Right: right, Precision: prec}
+		te := &ast.TimingExpr{Op: op, Left: left, Right: right, Precision: prec}
+		b.timingQualifiers(c.IntervalOperatorPhrase(), te)
+		return te
 
 	default:
 		return &ast.IdentifierRef{Name: ctx.GetText()}
@@ -1148,6 +1150,104 @@ func (b *astBuilder) additionOp(ctx *cqlparser.AdditionExpressionTermContext) st
 	return "Add"
 }
 
+// timingQualifiers records the parts of a timing phrase that are not the
+// operator: a leading `starts`/`ends`, a trailing `start`/`end`, and a
+// before/after quantity offset. Each changes what is being compared, and all
+// three were dropped — `E.period ends during P` compared the whole period
+// rather than its end, and `1 day or less on or before` lost its offset.
+// (issues/06)
+//
+// Only phrases whose grammar has these slots are consulted: `X starts Y` opens
+// with the same token, but there it is the operator, not a boundary.
+func (b *astBuilder) timingQualifiers(ctx cqlparser.IIntervalOperatorPhraseContext, te *ast.TimingExpr) {
+	if ctx == nil {
+		return
+	}
+	switch ctx.(type) {
+	case *cqlparser.BeforeOrAfterIntervalOperatorPhraseContext,
+		*cqlparser.IncludedInIntervalOperatorPhraseContext,
+		*cqlparser.ConcurrentWithIntervalOperatorPhraseContext,
+		*cqlparser.WithinIntervalOperatorPhraseContext:
+	case *cqlparser.IncludesIntervalOperatorPhraseContext:
+		// `includes` has only the trailing slot: `X includes start Y`.
+		te.RightBoundary = trailingBoundary(ctx)
+		if te.RightBoundary != "" {
+			te.RightBoundaryLoc = tokenInterval(ctx.GetStop())
+		}
+		return
+	default:
+		return
+	}
+	switch strings.ToLower(ctx.GetStart().GetText()) {
+	case "starts":
+		te.LeftBoundary = "start"
+	case "ends":
+		te.LeftBoundary = "end"
+	}
+	if te.LeftBoundary != "" {
+		te.LeftBoundaryLoc = tokenInterval(ctx.GetStart())
+	}
+	te.RightBoundary = trailingBoundary(ctx)
+	if te.RightBoundary != "" {
+		te.RightBoundaryLoc = tokenInterval(ctx.GetStop())
+	}
+
+	// `within q of Y` is carried as an offset too: it is the window
+	// [Y - q, Y + q]. Its quantity was dropped entirely, which compared X
+	// against Y itself. (issues/06 follow-up)
+	if w, ok := ctx.(*cqlparser.WithinIntervalOperatorPhraseContext); ok && w.Quantity() != nil {
+		kind := "within"
+		if strings.Contains(strings.ToLower(ctx.GetText()), "properly") {
+			kind = "properlyWithin"
+		}
+		te.Offset = &ast.TimingOffset{
+			Quantity: b.buildQuantityLiteral(w.Quantity()),
+			Kind:     kind,
+			Loc:      intervalFromCtx(w.Quantity()),
+		}
+		return
+	}
+
+	c, ok := ctx.(*cqlparser.BeforeOrAfterIntervalOperatorPhraseContext)
+	if !ok || c.QuantityOffset() == nil {
+		return
+	}
+	qo, ok := c.QuantityOffset().(*cqlparser.QuantityOffsetContext)
+	if !ok || qo.Quantity() == nil {
+		return
+	}
+	off := &ast.TimingOffset{
+		Quantity: b.buildQuantityLiteral(qo.Quantity()),
+		Kind:     "exact",
+		Loc:      intervalFromCtx(qo),
+	}
+	if r := qo.OffsetRelativeQualifier(); r != nil {
+		off.Kind = "orLess"
+		if strings.Contains(strings.ToLower(r.GetText()), "more") {
+			off.Kind = "orMore"
+		}
+	}
+	if e := qo.ExclusiveRelativeQualifier(); e != nil {
+		off.Kind = "lessThan"
+		if strings.Contains(strings.ToLower(e.GetText()), "more") {
+			off.Kind = "moreThan"
+		}
+	}
+	te.Offset = off
+}
+
+// trailingBoundary returns "start" or "end" when a timing phrase closes with
+// that keyword, selecting a boundary of the right operand.
+func trailingBoundary(ctx cqlparser.IIntervalOperatorPhraseContext) string {
+	switch strings.ToLower(ctx.GetStop().GetText()) {
+	case "start":
+		return "start"
+	case "end":
+		return "end"
+	}
+	return ""
+}
+
 // timingOp maps an intervalOperatorPhrase to an ELM operator name + precision.
 func (b *astBuilder) timingOp(ctx cqlparser.IIntervalOperatorPhraseContext) (op, precision string) {
 	if ctx == nil {
@@ -1161,8 +1261,27 @@ func (b *astBuilder) timingOp(ctx cqlparser.IIntervalOperatorPhraseContext) (op,
 		if dp := c.DateTimePrecisionSpecifier(); dp != nil {
 			prec = b.singularizePrecision(strings.TrimSuffix(dp.GetText(), "of"))
 		}
-		if strings.Contains(text, "before") {
+		// `on or before` and `before or on` include the boundary; plain
+		// `before` does not. Ignoring the qualifier turned an inclusive
+		// comparison into a strict one, which changes which events qualify — an
+		// encounter ending exactly at the end of the period stopped counting.
+		// (issues/06)
+		inclusive := false
+		if tr := c.TemporalRelationship(); tr != nil {
+			// The grammar makes `on or` and `or on` single tokens with a space
+			// inside them, so GetText yields "on orbefore". Compare without
+			// spaces.
+			rel := strings.ReplaceAll(strings.ToLower(tr.GetText()), " ", "")
+			inclusive = strings.HasPrefix(rel, "onor") || strings.HasSuffix(rel, "oron")
+		}
+		before := strings.Contains(text, "before")
+		switch {
+		case before && inclusive:
+			return "SameOrBefore", prec
+		case before:
 			return "Before", prec
+		case inclusive:
+			return "SameOrAfter", prec
 		}
 		return "After", prec
 

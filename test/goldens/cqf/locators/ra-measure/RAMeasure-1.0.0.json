@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "locator": "44:1-44:15",
           "name": "Patient"
         }
@@ -22,12 +23,14 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "locator": "34:1-34:54",
           "path": "FHIRHelpers",
           "version": "4.0.1"
         },
         {
+          "annotation": [],
           "localIdentifier": "Terminology",
           "locator": "35:1-35:63",
           "path": "RAMeasureTerminology",
@@ -39,16 +42,22 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "default": {
+            "annotation": [],
             "high": {
+              "annotation": [],
               "operand": {
+                "annotation": [],
                 "day": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "31",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "locator": "40:33-40:43",
                 "month": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "12",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -56,6 +65,7 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2024",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -66,14 +76,18 @@
             },
             "highClosed": true,
             "low": {
+              "annotation": [],
               "operand": {
+                "annotation": [],
                 "day": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "locator": "40:20-40:30",
                 "month": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -81,6 +95,7 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2024",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -95,8 +110,10 @@
           "locator": "39:1-40:44",
           "name": "Measurement Period",
           "parameterTypeSpecifier": {
+            "annotation": [],
             "locator": "39:32-39:49",
             "pointType": {
+              "annotation": [],
               "locator": "39:41-39:48",
               "name": "{urn:hl7-org:elm-types:r1}DateTime",
               "type": "NamedTypeSpecifier"
@@ -113,9 +130,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -146,20 +166,25 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "54:3-57:46",
             "relationship": [],
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "54:3-55:57",
                   "operand": [
                     {
+                      "annotation": [],
                       "codeComparator": "in",
                       "codeFilter": [],
                       "codeProperty": "type",
                       "codes": {
+                        "annotation": [],
                         "libraryName": "Terminology",
                         "locator": "54:17-54:42",
                         "name": "Office Visit",
@@ -175,10 +200,12 @@
                       "type": "Retrieve"
                     },
                     {
+                      "annotation": [],
                       "codeComparator": "in",
                       "codeFilter": [],
                       "codeProperty": "type",
                       "codes": {
+                        "annotation": [],
                         "libraryName": "Terminology",
                         "locator": "55:23-55:54",
                         "name": "Rheumatology Visit",
@@ -202,16 +229,20 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "56:5-57:46",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "56:11-56:31",
                   "operand": [
                     {
+                      "annotation": [],
                       "libraryName": "FHIRHelpers",
                       "name": "ToString",
                       "operand": [
                         {
+                          "annotation": [],
                           "locator": "56:11-56:18",
                           "path": "status",
                           "scope": "E",
@@ -222,6 +253,7 @@
                       "type": "FunctionRef"
                     },
                     {
+                      "annotation": [],
                       "locator": "56:22-56:31",
                       "type": "Literal",
                       "value": "finished",
@@ -232,13 +264,16 @@
                   "type": "Equal"
                 },
                 {
+                  "annotation": [],
                   "locator": "57:11-57:46",
                   "operand": [
                     {
+                      "annotation": [],
                       "libraryName": "FHIRHelpers",
                       "name": "ToInterval",
                       "operand": [
                         {
+                          "annotation": [],
                           "locator": "57:11-57:18",
                           "path": "period",
                           "scope": "E",
@@ -249,6 +284,7 @@
                       "type": "FunctionRef"
                     },
                     {
+                      "annotation": [],
                       "locator": "57:27-57:46",
                       "name": "Measurement Period",
                       "type": "ParameterRef"
@@ -280,17 +316,21 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "66:3-71:59",
             "relationship": [],
             "source": [
               {
                 "alias": "C",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "codeComparator": "in",
                   "codeFilter": [],
                   "codeProperty": "code",
                   "codes": {
+                    "annotation": [],
                     "libraryName": "Terminology",
                     "locator": "66:15-66:48",
                     "name": "Rheumatoid Arthritis",
@@ -310,25 +350,32 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "67:5-71:59",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "67:11-70:56",
                   "operand": [
                     {
+                      "annotation": [],
                       "locator": "67:11-69:53",
                       "operand": [
                         {
+                          "annotation": [],
                           "locator": "67:13-68:54",
                           "operand": [
                             {
+                              "annotation": [],
                               "locator": "67:13-67:51",
                               "operand": [
                                 {
+                                  "annotation": [],
                                   "libraryName": "FHIRHelpers",
                                   "name": "ToConcept",
                                   "operand": [
                                     {
+                                      "annotation": [],
                                       "locator": "67:13-67:28",
                                       "path": "clinicalStatus",
                                       "scope": "C",
@@ -339,7 +386,9 @@
                                   "type": "FunctionRef"
                                 },
                                 {
+                                  "annotation": [],
                                   "operand": {
+                                    "annotation": [],
                                     "libraryName": "Terminology",
                                     "locator": "67:32-67:51",
                                     "name": "active",
@@ -353,13 +402,16 @@
                               "type": "Equivalent"
                             },
                             {
+                              "annotation": [],
                               "locator": "68:12-68:54",
                               "operand": [
                                 {
+                                  "annotation": [],
                                   "libraryName": "FHIRHelpers",
                                   "name": "ToConcept",
                                   "operand": [
                                     {
+                                      "annotation": [],
                                       "locator": "68:12-68:27",
                                       "path": "clinicalStatus",
                                       "scope": "C",
@@ -370,7 +422,9 @@
                                   "type": "FunctionRef"
                                 },
                                 {
+                                  "annotation": [],
                                   "operand": {
+                                    "annotation": [],
                                     "libraryName": "Terminology",
                                     "locator": "68:31-68:54",
                                     "name": "recurrence",
@@ -388,13 +442,16 @@
                           "type": "Or"
                         },
                         {
+                          "annotation": [],
                           "locator": "69:12-69:51",
                           "operand": [
                             {
+                              "annotation": [],
                               "libraryName": "FHIRHelpers",
                               "name": "ToConcept",
                               "operand": [
                                 {
+                                  "annotation": [],
                                   "locator": "69:12-69:27",
                                   "path": "clinicalStatus",
                                   "scope": "C",
@@ -405,7 +462,9 @@
                               "type": "FunctionRef"
                             },
                             {
+                              "annotation": [],
                               "operand": {
+                                "annotation": [],
                                 "libraryName": "Terminology",
                                 "locator": "69:31-69:51",
                                 "name": "relapse",
@@ -423,13 +482,16 @@
                       "type": "Or"
                     },
                     {
+                      "annotation": [],
                       "locator": "70:11-70:56",
                       "operand": [
                         {
+                          "annotation": [],
                           "libraryName": "FHIRHelpers",
                           "name": "ToConcept",
                           "operand": [
                             {
+                              "annotation": [],
                               "locator": "70:11-70:30",
                               "path": "verificationStatus",
                               "scope": "C",
@@ -440,7 +502,9 @@
                           "type": "FunctionRef"
                         },
                         {
+                          "annotation": [],
                           "operand": {
+                            "annotation": [],
                             "libraryName": "Terminology",
                             "locator": "70:34-70:56",
                             "name": "confirmed",
@@ -458,13 +522,16 @@
                   "type": "And"
                 },
                 {
+                  "annotation": [],
                   "locator": "71:11-71:59",
                   "operand": [
                     {
+                      "annotation": [],
                       "libraryName": "FHIRHelpers",
                       "name": "ToDateTime",
                       "operand": [
                         {
+                          "annotation": [],
                           "locator": "71:11-71:24",
                           "path": "recordedDate",
                           "scope": "C",
@@ -475,8 +542,10 @@
                       "type": "FunctionRef"
                     },
                     {
+                      "annotation": [],
                       "locator": "71:33-71:59",
                       "operand": {
+                        "annotation": [],
                         "locator": "71:40-71:59",
                         "name": "Measurement Period",
                         "type": "ParameterRef"
@@ -498,14 +567,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "92:3-92:37",
             "operand": [
               {
+                "annotation": [],
                 "locator": "92:3-92:32",
                 "signature": [],
                 "source": {
+                  "annotation": [],
                   "locator": "92:9-92:31",
                   "name": "Qualifying Encounters",
                   "type": "ExpressionRef"
@@ -513,6 +586,7 @@
                 "type": "Count"
               },
               {
+                "annotation": [],
                 "locator": "92:37",
                 "type": "Literal",
                 "value": "2",
@@ -540,21 +614,28 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "87:3-89:47",
             "operand": [
               {
+                "annotation": [],
                 "locator": "87:3-88:36",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "87:3-87:51",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "87:3-87:45",
                         "operand": [
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "path": "birthDate.value",
                               "source": {
+                                "annotation": [],
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -564,8 +645,10 @@
                             "type": "ToDateTime"
                           },
                           {
+                            "annotation": [],
                             "locator": "87:16-87:44",
                             "operand": {
+                              "annotation": [],
                               "locator": "87:25-87:44",
                               "name": "Measurement Period",
                               "type": "ParameterRef"
@@ -579,6 +662,7 @@
                         "type": "CalculateAgeAt"
                       },
                       {
+                        "annotation": [],
                         "locator": "87:50-87:51",
                         "type": "Literal",
                         "value": "18",
@@ -589,8 +673,10 @@
                     "type": "GreaterOrEqual"
                   },
                   {
+                    "annotation": [],
                     "locator": "88:9-88:36",
                     "operand": {
+                      "annotation": [],
                       "locator": "88:16-88:36",
                       "name": "Active RA Diagnoses",
                       "type": "ExpressionRef"
@@ -603,6 +689,7 @@
                 "type": "And"
               },
               {
+                "annotation": [],
                 "locator": "89:9-89:47",
                 "name": "Has Two or More Qualifying Encounters",
                 "type": "ExpressionRef"
@@ -629,6 +716,7 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "104:3-104:22",
             "name": "Initial Population",
             "type": "ExpressionRef"
@@ -651,25 +739,32 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "128:3-134:3",
             "operand": {
+              "annotation": [],
               "let": [],
               "locator": "128:10-134:3",
               "relationship": [],
               "source": [
                 {
                   "alias": "C",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "locator": "129:5-131:68",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "129:7-130:60",
                         "operand": [
                           {
+                            "annotation": [],
                             "codeComparator": "in",
                             "codeFilter": [],
                             "codeProperty": "code",
                             "codes": {
+                              "annotation": [],
                               "libraryName": "Terminology",
                               "locator": "129:19-129:41",
                               "name": "Pregnancy",
@@ -685,10 +780,12 @@
                             "type": "Retrieve"
                           },
                           {
+                            "annotation": [],
                             "codeComparator": "in",
                             "codeFilter": [],
                             "codeProperty": "code",
                             "codes": {
+                              "annotation": [],
                               "libraryName": "Terminology",
                               "locator": "130:27-130:59",
                               "name": "Active Tuberculosis",
@@ -708,10 +805,12 @@
                         "type": "Union"
                       },
                       {
+                        "annotation": [],
                         "codeComparator": "in",
                         "codeFilter": [],
                         "codeProperty": "code",
                         "codes": {
+                          "annotation": [],
                           "libraryName": "Terminology",
                           "locator": "131:27-131:65",
                           "name": "Severe Hepatic Impairment",
@@ -735,16 +834,20 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "132:7-133:61",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "132:13-132:51",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToConcept",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "132:13-132:28",
                             "path": "clinicalStatus",
                             "scope": "C",
@@ -755,7 +858,9 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "operand": {
+                          "annotation": [],
                           "libraryName": "Terminology",
                           "locator": "132:32-132:51",
                           "name": "active",
@@ -769,13 +874,16 @@
                     "type": "Equivalent"
                   },
                   {
+                    "annotation": [],
                     "locator": "133:13-133:61",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToDateTime",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "133:13-133:26",
                             "path": "recordedDate",
                             "scope": "C",
@@ -786,8 +894,10 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "locator": "133:35-133:61",
                         "operand": {
+                          "annotation": [],
                           "locator": "133:42-133:61",
                           "name": "Measurement Period",
                           "type": "ParameterRef"
@@ -825,19 +935,24 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "141:3-145:3",
             "operand": {
+              "annotation": [],
               "let": [],
               "locator": "141:10-145:3",
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeComparator": "in",
                     "codeFilter": [],
                     "codeProperty": "type",
                     "codes": {
+                      "annotation": [],
                       "libraryName": "Terminology",
                       "locator": "142:17-142:53",
                       "name": "Hospice Care Ambulatory",
@@ -857,16 +972,20 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "143:7-144:50",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "143:13-143:53",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToString",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "143:13-143:20",
                             "path": "status",
                             "scope": "E",
@@ -877,14 +996,17 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "element": [
                           {
+                            "annotation": [],
                             "locator": "143:27-143:36",
                             "type": "Literal",
                             "value": "finished",
                             "valueType": "{urn:hl7-org:elm-types:r1}String"
                           },
                           {
+                            "annotation": [],
                             "locator": "143:39-143:51",
                             "type": "Literal",
                             "value": "in-progress",
@@ -899,13 +1021,16 @@
                     "type": "In"
                   },
                   {
+                    "annotation": [],
                     "locator": "144:13-144:50",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToInterval",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "144:13-144:20",
                             "path": "period",
                             "scope": "E",
@@ -916,6 +1041,7 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "locator": "144:31-144:50",
                         "name": "Measurement Period",
                         "type": "ParameterRef"
@@ -950,14 +1076,17 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "119:3-120:46",
             "operand": [
               {
+                "annotation": [],
                 "locator": "119:3-119:30",
                 "name": "Has DMARD Contraindication",
                 "type": "ExpressionRef"
               },
               {
+                "annotation": [],
                 "locator": "120:8-120:46",
                 "name": "Has Hospice During Measurement Period",
                 "type": "ExpressionRef"
@@ -984,25 +1113,32 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "174:3-180:3",
             "operand": {
+              "annotation": [],
               "let": [],
               "locator": "174:10-180:3",
               "relationship": [],
               "source": [
                 {
                   "alias": "MR",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "locator": "175:5-176:85",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "175:7-175:54",
                         "operand": [
                           {
+                            "annotation": [],
                             "codeComparator": "in",
                             "codeFilter": [],
                             "codeProperty": "medication",
                             "codes": {
+                              "annotation": [],
                               "libraryName": "Terminology",
                               "locator": "175:27-175:53",
                               "name": "DMARD Therapy",
@@ -1017,12 +1153,15 @@
                             "type": "Retrieve"
                           },
                           {
+                            "annotation": [],
                             "let": [],
                             "locator": "175:7-175:54",
                             "relationship": [
                               {
                                 "alias": "M",
+                                "annotation": [],
                                 "expression": {
+                                  "annotation": [],
                                   "codeFilter": [],
                                   "dataType": "{http://hl7.org/fhir}Medication",
                                   "dateFilter": [],
@@ -1033,14 +1172,18 @@
                                 },
                                 "locator": "175:7-175:54",
                                 "suchThat": {
+                                  "annotation": [],
                                   "operand": [
                                     {
+                                      "annotation": [],
                                       "operand": [
                                         {
+                                          "annotation": [],
                                           "libraryName": "FHIRHelpers",
                                           "name": "ToString",
                                           "operand": [
                                             {
+                                              "annotation": [],
                                               "path": "id",
                                               "scope": "M",
                                               "type": "Property"
@@ -1050,19 +1193,24 @@
                                           "type": "FunctionRef"
                                         },
                                         {
+                                          "annotation": [],
                                           "signature": [],
                                           "source": {
+                                            "annotation": [],
                                             "separator": {
+                                              "annotation": [],
                                               "type": "Literal",
                                               "value": "/",
                                               "valueType": "{urn:hl7-org:elm-types:r1}String"
                                             },
                                             "signature": [],
                                             "stringToSplit": {
+                                              "annotation": [],
                                               "libraryName": "FHIRHelpers",
                                               "name": "ToString",
                                               "operand": [
                                                 {
+                                                  "annotation": [],
                                                   "path": "medication.reference",
                                                   "scope": "MR",
                                                   "type": "Property"
@@ -1080,11 +1228,14 @@
                                       "type": "Equal"
                                     },
                                     {
+                                      "annotation": [],
                                       "code": {
+                                        "annotation": [],
                                         "libraryName": "FHIRHelpers",
                                         "name": "ToConcept",
                                         "operand": [
                                           {
+                                            "annotation": [],
                                             "path": "code",
                                             "scope": "M",
                                             "type": "Property"
@@ -1096,6 +1247,7 @@
                                       "signature": [],
                                       "type": "InValueSet",
                                       "valueset": {
+                                        "annotation": [],
                                         "libraryName": "Terminology",
                                         "locator": "175:27-175:53",
                                         "name": "DMARD Therapy",
@@ -1112,7 +1264,9 @@
                             "source": [
                               {
                                 "alias": "MR",
+                                "annotation": [],
                                 "expression": {
+                                  "annotation": [],
                                   "codeFilter": [],
                                   "dataType": "{http://hl7.org/fhir}MedicationRequest",
                                   "dateFilter": [],
@@ -1131,13 +1285,16 @@
                         "type": "Union"
                       },
                       {
+                        "annotation": [],
                         "locator": "176:15-176:83",
                         "operand": [
                           {
+                            "annotation": [],
                             "codeComparator": "in",
                             "codeFilter": [],
                             "codeProperty": "medication",
                             "codes": {
+                              "annotation": [],
                               "libraryName": "Terminology",
                               "locator": "176:35-176:82",
                               "name": "Biologics for Rheumatoid Arthritis",
@@ -1152,12 +1309,15 @@
                             "type": "Retrieve"
                           },
                           {
+                            "annotation": [],
                             "let": [],
                             "locator": "176:15-176:83",
                             "relationship": [
                               {
                                 "alias": "M",
+                                "annotation": [],
                                 "expression": {
+                                  "annotation": [],
                                   "codeFilter": [],
                                   "dataType": "{http://hl7.org/fhir}Medication",
                                   "dateFilter": [],
@@ -1168,14 +1328,18 @@
                                 },
                                 "locator": "176:15-176:83",
                                 "suchThat": {
+                                  "annotation": [],
                                   "operand": [
                                     {
+                                      "annotation": [],
                                       "operand": [
                                         {
+                                          "annotation": [],
                                           "libraryName": "FHIRHelpers",
                                           "name": "ToString",
                                           "operand": [
                                             {
+                                              "annotation": [],
                                               "path": "id",
                                               "scope": "M",
                                               "type": "Property"
@@ -1185,19 +1349,24 @@
                                           "type": "FunctionRef"
                                         },
                                         {
+                                          "annotation": [],
                                           "signature": [],
                                           "source": {
+                                            "annotation": [],
                                             "separator": {
+                                              "annotation": [],
                                               "type": "Literal",
                                               "value": "/",
                                               "valueType": "{urn:hl7-org:elm-types:r1}String"
                                             },
                                             "signature": [],
                                             "stringToSplit": {
+                                              "annotation": [],
                                               "libraryName": "FHIRHelpers",
                                               "name": "ToString",
                                               "operand": [
                                                 {
+                                                  "annotation": [],
                                                   "path": "medication.reference",
                                                   "scope": "MR",
                                                   "type": "Property"
@@ -1215,11 +1384,14 @@
                                       "type": "Equal"
                                     },
                                     {
+                                      "annotation": [],
                                       "code": {
+                                        "annotation": [],
                                         "libraryName": "FHIRHelpers",
                                         "name": "ToConcept",
                                         "operand": [
                                           {
+                                            "annotation": [],
                                             "path": "code",
                                             "scope": "M",
                                             "type": "Property"
@@ -1231,6 +1403,7 @@
                                       "signature": [],
                                       "type": "InValueSet",
                                       "valueset": {
+                                        "annotation": [],
                                         "libraryName": "Terminology",
                                         "locator": "176:35-176:82",
                                         "name": "Biologics for Rheumatoid Arthritis",
@@ -1247,7 +1420,9 @@
                             "source": [
                               {
                                 "alias": "MR",
+                                "annotation": [],
                                 "expression": {
+                                  "annotation": [],
                                   "codeFilter": [],
                                   "dataType": "{http://hl7.org/fhir}MedicationRequest",
                                   "dateFilter": [],
@@ -1274,19 +1449,24 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "177:7-179:53",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "177:13-178:31",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "177:13-177:50",
                         "operand": [
                           {
+                            "annotation": [],
                             "libraryName": "FHIRHelpers",
                             "name": "ToString",
                             "operand": [
                               {
+                                "annotation": [],
                                 "locator": "177:13-177:21",
                                 "path": "status",
                                 "scope": "MR",
@@ -1297,14 +1477,17 @@
                             "type": "FunctionRef"
                           },
                           {
+                            "annotation": [],
                             "element": [
                               {
+                                "annotation": [],
                                 "locator": "177:28-177:35",
                                 "type": "Literal",
                                 "value": "active",
                                 "valueType": "{urn:hl7-org:elm-types:r1}String"
                               },
                               {
+                                "annotation": [],
                                 "locator": "177:38-177:48",
                                 "type": "Literal",
                                 "value": "completed",
@@ -1319,13 +1502,16 @@
                         "type": "In"
                       },
                       {
+                        "annotation": [],
                         "locator": "178:13-178:31",
                         "operand": [
                           {
+                            "annotation": [],
                             "libraryName": "FHIRHelpers",
                             "name": "ToString",
                             "operand": [
                               {
+                                "annotation": [],
                                 "locator": "178:13-178:21",
                                 "path": "intent",
                                 "scope": "MR",
@@ -1336,6 +1522,7 @@
                             "type": "FunctionRef"
                           },
                           {
+                            "annotation": [],
                             "locator": "178:25-178:31",
                             "type": "Literal",
                             "value": "order",
@@ -1350,13 +1537,16 @@
                     "type": "And"
                   },
                   {
+                    "annotation": [],
                     "locator": "179:13-179:53",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToDateTime",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "179:13-179:25",
                             "path": "authoredOn",
                             "scope": "MR",
@@ -1367,6 +1557,7 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "locator": "179:34-179:53",
                         "name": "Measurement Period",
                         "type": "ParameterRef"
@@ -1401,19 +1592,24 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "189:3-193:3",
             "operand": {
+              "annotation": [],
               "let": [],
               "locator": "189:10-193:3",
               "relationship": [],
               "source": [
                 {
                   "alias": "O",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeComparator": "in",
                     "codeFilter": [],
                     "codeProperty": "code",
                     "codes": {
+                      "annotation": [],
                       "libraryName": "Terminology",
                       "locator": "190:19-190:59",
                       "name": "Disease Activity Assessment",
@@ -1433,16 +1629,20 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "191:7-192:48",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "191:13-191:59",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToString",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "191:13-191:20",
                             "path": "status",
                             "scope": "O",
@@ -1453,20 +1653,24 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "element": [
                           {
+                            "annotation": [],
                             "locator": "191:27-191:33",
                             "type": "Literal",
                             "value": "final",
                             "valueType": "{urn:hl7-org:elm-types:r1}String"
                           },
                           {
+                            "annotation": [],
                             "locator": "191:36-191:44",
                             "type": "Literal",
                             "value": "amended",
                             "valueType": "{urn:hl7-org:elm-types:r1}String"
                           },
                           {
+                            "annotation": [],
                             "locator": "191:47-191:57",
                             "type": "Literal",
                             "value": "corrected",
@@ -1481,13 +1685,16 @@
                     "type": "In"
                   },
                   {
+                    "annotation": [],
                     "locator": "192:13-192:48",
                     "operand": [
                       {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToDateTime",
                         "operand": [
                           {
+                            "annotation": [],
                             "locator": "192:13-192:20",
                             "path": "issued",
                             "scope": "O",
@@ -1498,6 +1705,7 @@
                         "type": "FunctionRef"
                       },
                       {
+                        "annotation": [],
                         "locator": "192:29-192:48",
                         "name": "Measurement Period",
                         "type": "ParameterRef"
@@ -1532,14 +1740,17 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "163:3-164:41",
             "operand": [
               {
+                "annotation": [],
                 "locator": "163:3-163:40",
                 "name": "Has Active DMARD or Biologic Therapy",
                 "type": "ExpressionRef"
               },
               {
+                "annotation": [],
                 "locator": "164:9-164:41",
                 "name": "Has Disease Activity Assessment",
                 "type": "ExpressionRef"
@@ -1566,15 +1777,20 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "207:3-207:65",
             "operand": [
               {
+                "annotation": [],
                 "locator": "207:3-207:45",
                 "operand": [
                   {
+                    "annotation": [],
                     "operand": {
+                      "annotation": [],
                       "path": "birthDate.value",
                       "source": {
+                        "annotation": [],
                         "name": "Patient",
                         "type": "ExpressionRef"
                       },
@@ -1584,8 +1800,10 @@
                     "type": "ToDateTime"
                   },
                   {
+                    "annotation": [],
                     "locator": "207:16-207:44",
                     "operand": {
+                      "annotation": [],
                       "locator": "207:25-207:44",
                       "name": "Measurement Period",
                       "type": "ParameterRef"
@@ -1599,7 +1817,9 @@
                 "type": "CalculateAgeAt"
               },
               {
+                "annotation": [],
                 "high": {
+                  "annotation": [],
                   "locator": "207:63-207:64",
                   "type": "Literal",
                   "value": "44",
@@ -1608,6 +1828,7 @@
                 "highClosed": true,
                 "locator": "207:50-207:65",
                 "low": {
+                  "annotation": [],
                   "locator": "207:59-207:60",
                   "type": "Literal",
                   "value": "18",
@@ -1638,15 +1859,20 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "216:3-216:65",
             "operand": [
               {
+                "annotation": [],
                 "locator": "216:3-216:45",
                 "operand": [
                   {
+                    "annotation": [],
                     "operand": {
+                      "annotation": [],
                       "path": "birthDate.value",
                       "source": {
+                        "annotation": [],
                         "name": "Patient",
                         "type": "ExpressionRef"
                       },
@@ -1656,8 +1882,10 @@
                     "type": "ToDateTime"
                   },
                   {
+                    "annotation": [],
                     "locator": "216:16-216:44",
                     "operand": {
+                      "annotation": [],
                       "locator": "216:25-216:44",
                       "name": "Measurement Period",
                       "type": "ParameterRef"
@@ -1671,7 +1899,9 @@
                 "type": "CalculateAgeAt"
               },
               {
+                "annotation": [],
                 "high": {
+                  "annotation": [],
                   "locator": "216:63-216:64",
                   "type": "Literal",
                   "value": "64",
@@ -1680,6 +1910,7 @@
                 "highClosed": true,
                 "locator": "216:50-216:65",
                 "low": {
+                  "annotation": [],
                   "locator": "216:59-216:60",
                   "type": "Literal",
                   "value": "45",
@@ -1710,15 +1941,20 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "226:3-226:51",
             "operand": [
               {
+                "annotation": [],
                 "locator": "226:3-226:45",
                 "operand": [
                   {
+                    "annotation": [],
                     "operand": {
+                      "annotation": [],
                       "path": "birthDate.value",
                       "source": {
+                        "annotation": [],
                         "name": "Patient",
                         "type": "ExpressionRef"
                       },
@@ -1728,8 +1964,10 @@
                     "type": "ToDateTime"
                   },
                   {
+                    "annotation": [],
                     "locator": "226:16-226:44",
                     "operand": {
+                      "annotation": [],
                       "locator": "226:25-226:44",
                       "name": "Measurement Period",
                       "type": "ParameterRef"
@@ -1743,6 +1981,7 @@
                 "type": "CalculateAgeAt"
               },
               {
+                "annotation": [],
                 "locator": "226:50-226:51",
                 "type": "Literal",
                 "value": "65",
@@ -1770,9 +2009,11 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "240:3-240:16",
             "path": "gender",
             "source": {
+              "annotation": [],
               "locator": "240:3-240:9",
               "name": "Patient",
               "type": "ExpressionRef"
@@ -1797,12 +2038,16 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "249:3-249:45",
             "operand": [
               {
+                "annotation": [],
                 "operand": {
+                  "annotation": [],
                   "path": "birthDate.value",
                   "source": {
+                    "annotation": [],
                     "name": "Patient",
                     "type": "ExpressionRef"
                   },
@@ -1812,8 +2057,10 @@
                 "type": "ToDateTime"
               },
               {
+                "annotation": [],
                 "locator": "249:16-249:44",
                 "operand": {
+                  "annotation": [],
                   "locator": "249:25-249:44",
                   "name": "Measurement Period",
                   "type": "ParameterRef"
@@ -1834,10 +2081,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "locator": "32:1-32:26",
           "uri": "http://hl7.org/fhir",

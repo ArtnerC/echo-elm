@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -105,6 +106,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "24:25-24:28",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
             "type": "Literal",
@@ -139,6 +141,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "32:27-32:30",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
             "type": "Literal",
@@ -177,31 +180,41 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "40:3-40:62",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
             "signature": [],
             "source": {
+              "annotation": [],
               "let": [],
               "locator": "40:7-40:61",
               "relationship": [],
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
                 "type": "ListTypeSpecifier"
               },
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "locator": "40:41-40:61",
                   "operand": [
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "locator": "40:61",
                         "name": "X",
                         "resultTypeSpecifier": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
@@ -213,11 +226,15 @@
                       "type": "Start"
                     },
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "locator": "40:61",
                         "name": "X",
                         "resultTypeSpecifier": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
@@ -236,7 +253,9 @@
                 },
                 "locator": "40:30-40:61",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
@@ -246,15 +265,21 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "locator": "40:7-40:26",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "40:17-40:25",
                         "name": "Intervals",
                         "resultTypeSpecifier": {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "pointType": {
+                              "annotation": [],
                               "name": "{urn:hl7-org:elm-types:r1}DateTime",
                               "type": "NamedTypeSpecifier"
                             },
@@ -265,13 +290,17 @@
                         "type": "OperandRef"
                       },
                       {
+                        "annotation": [],
                         "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
                         "type": "Null"
                       }
                     ],
                     "resultTypeSpecifier": {
+                      "annotation": [],
                       "elementType": {
+                        "annotation": [],
                         "pointType": {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}DateTime",
                           "type": "NamedTypeSpecifier"
                         },
@@ -284,8 +313,11 @@
                   },
                   "locator": "40:7-40:28",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "pointType": {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}DateTime",
                         "type": "NamedTypeSpecifier"
                       },
@@ -303,18 +335,24 @@
           "name": "CumulativeDuration",
           "operand": [
             {
+              "annotation": [],
               "name": "Intervals",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "locator": "39:53-39:70",
                   "pointType": {
+                    "annotation": [],
                     "locator": "39:62-39:69",
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}DateTime",
                       "type": "NamedTypeSpecifier"
                     },
@@ -324,8 +362,11 @@
                 },
                 "locator": "39:48-39:71",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}DateTime",
                       "type": "NamedTypeSpecifier"
                     },
@@ -345,6 +386,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

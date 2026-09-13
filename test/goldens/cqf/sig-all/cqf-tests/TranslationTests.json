@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -24,9 +25,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -42,8 +46,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "This string's escaped",
             "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -52,8 +58,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "This identifier's escaped",
             "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -62,16 +70,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "operand": {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "path": "birthDate",
                         "source": {
+                          "annotation": [],
                           "name": "Patient",
                           "type": "ExpressionRef"
                         },
@@ -79,6 +94,7 @@
                       },
                       "signature": [
                         {
+                          "annotation": [],
                           "name": "{urn:hl7-org:elm-types:r1}DateTime",
                           "type": "NamedTypeSpecifier"
                         }
@@ -88,6 +104,7 @@
                     "precision": "Year",
                     "signature": [
                       {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Date",
                         "type": "NamedTypeSpecifier"
                       }
@@ -95,6 +112,7 @@
                     "type": "CalculateAge"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "18",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -102,10 +120,12 @@
                 ],
                 "signature": [
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   }
@@ -113,9 +133,12 @@
                 "type": "GreaterOrEqual"
               },
               {
+                "annotation": [],
                 "code": {
+                  "annotation": [],
                   "path": "gender",
                   "source": {
+                    "annotation": [],
                     "name": "Patient",
                     "type": "ExpressionRef"
                   },
@@ -123,12 +146,14 @@
                 },
                 "signature": [
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}String",
                     "type": "NamedTypeSpecifier"
                   }
                 ],
                 "type": "InValueSet",
                 "valueset": {
+                  "annotation": [],
                   "name": "Female Administrative Sex",
                   "preserve": true
                 }
@@ -136,10 +161,12 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               }
@@ -150,11 +177,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Decimal",
                   "type": "NamedTypeSpecifier"
                 },
@@ -162,17 +193,22 @@
               }
             ],
             "source": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "operand": {
+                    "annotation": [],
                     "name": "X",
                     "type": "AliasRef"
                   },
                   "signature": [
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     }
@@ -183,27 +219,35 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "asType": "{urn:hl7-org:elm-types:r1}Integer",
                         "operand": {
+                          "annotation": [],
                           "type": "Null"
                         },
                         "signature": [],
                         "type": "As"
                       },
                       {
+                        "annotation": [],
                         "asType": "{urn:hl7-org:elm-types:r1}Integer",
                         "operand": {
+                          "annotation": [],
                           "type": "Null"
                         },
                         "signature": [],
                         "type": "As"
                       },
                       {
+                        "annotation": [],
                         "asType": "{urn:hl7-org:elm-types:r1}Integer",
                         "operand": {
+                          "annotation": [],
                           "type": "Null"
                         },
                         "signature": [],
@@ -222,11 +266,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Decimal",
                   "type": "NamedTypeSpecifier"
                 },
@@ -234,17 +282,22 @@
               }
             ],
             "source": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "operand": {
+                    "annotation": [],
                     "name": "X",
                     "type": "AliasRef"
                   },
                   "signature": [
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     }
@@ -255,19 +308,24 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "element": [
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "2",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "3",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -285,22 +343,28 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "a",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "b",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "c",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -309,18 +373,22 @@
                 "type": "List"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -335,101 +403,123 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "5",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "4",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -439,7 +529,9 @@
             },
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -452,22 +544,28 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -476,28 +574,34 @@
                 "type": "List"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -508,14 +612,18 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
                 "type": "ListTypeSpecifier"
               },
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -528,32 +636,40 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -562,23 +678,28 @@
                 "type": "List"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -589,14 +710,18 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
                 "type": "ListTypeSpecifier"
               },
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -609,22 +734,28 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -633,28 +764,34 @@
                 "type": "List"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "4",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "5",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -665,14 +802,18 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
                 "type": "ListTypeSpecifier"
               },
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -685,15 +826,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -701,10 +846,12 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -715,17 +862,22 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "high": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
                 "low": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -734,13 +886,16 @@
                 "type": "Interval"
               },
               {
+                "annotation": [],
                 "high": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "highClosed": true,
                 "low": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -751,14 +906,18 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "pointType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
                 "type": "IntervalTypeSpecifier"
               },
               {
+                "annotation": [],
                 "pointType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -771,14 +930,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -787,10 +950,12 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "element": [
                         {
                           "name": "c",
                           "value": {
+                            "annotation": [],
                             "type": "Literal",
                             "value": "1",
                             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -804,10 +969,12 @@
                 "type": "Tuple"
               },
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -816,10 +983,12 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "element": [
                         {
                           "name": "c",
                           "value": {
+                            "annotation": [],
                             "type": "Literal",
                             "value": "1",
                             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -835,19 +1004,26 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "a"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
@@ -862,19 +1038,26 @@
                 "type": "TupleTypeSpecifier"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     "name": "a"
                   },
                   {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "element": [
                         {
+                          "annotation": [],
                           "elementType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}Integer",
                             "type": "NamedTypeSpecifier"
                           },
@@ -895,22 +1078,28 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -919,18 +1108,22 @@
                 "type": "List"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "3",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -941,14 +1134,18 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
                 "type": "ListTypeSpecifier"
               },
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -961,15 +1158,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "type": "Literal",
               "value": "5",
               "valueType": "{urn:hl7-org:elm-types:r1}Integer"
             },
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Any",
                 "type": "NamedTypeSpecifier"
               }
@@ -980,15 +1181,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "a",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "b",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -1001,30 +1206,37 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "3",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1032,22 +1244,27 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -1058,36 +1275,45 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "asType": "{urn:hl7-org:elm-types:r1}Integer",
                 "operand": {
+                  "annotation": [],
                   "type": "Null"
                 },
                 "signature": [],
                 "type": "As"
               },
               {
+                "annotation": [],
                 "asType": "{urn:hl7-org:elm-types:r1}Integer",
                 "operand": {
+                  "annotation": [],
                   "type": "Null"
                 },
                 "signature": [],
                 "type": "As"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "4",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "5",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1095,22 +1321,27 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -1121,11 +1352,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -1133,37 +1368,46 @@
               }
             ],
             "source": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "asType": "{urn:hl7-org:elm-types:r1}Integer",
                   "operand": {
+                    "annotation": [],
                     "type": "Null"
                   },
                   "signature": [],
                   "type": "As"
                 },
                 {
+                  "annotation": [],
                   "asType": "{urn:hl7-org:elm-types:r1}Integer",
                   "operand": {
+                    "annotation": [],
                     "type": "Null"
                   },
                   "signature": [],
                   "type": "As"
                 },
                 {
+                  "annotation": [],
                   "asType": "{urn:hl7-org:elm-types:r1}Integer",
                   "operand": {
+                    "annotation": [],
                     "type": "Null"
                   },
                   "signature": [],
                   "type": "As"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1177,11 +1421,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Any",
                   "type": "NamedTypeSpecifier"
                 },
@@ -1189,6 +1437,7 @@
               }
             ],
             "source": {
+              "annotation": [],
               "element": [],
               "type": "List"
             },
@@ -1198,11 +1447,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -1210,37 +1463,46 @@
               }
             ],
             "source": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 {
+                  "annotation": [],
                   "asType": "{urn:hl7-org:elm-types:r1}Integer",
                   "operand": {
+                    "annotation": [],
                     "type": "Null"
                   },
                   "signature": [],
                   "type": "As"
                 },
                 {
+                  "annotation": [],
                   "asType": "{urn:hl7-org:elm-types:r1}Integer",
                   "operand": {
+                    "annotation": [],
                     "type": "Null"
                   },
                   "signature": [],
                   "type": "As"
                 },
                 {
+                  "annotation": [],
                   "asType": "{urn:hl7-org:elm-types:r1}Integer",
                   "operand": {
+                    "annotation": [],
                     "type": "Null"
                   },
                   "signature": [],
                   "type": "As"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1254,11 +1516,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -1266,6 +1532,7 @@
               }
             ],
             "source": {
+              "annotation": [],
               "element": [],
               "type": "List"
             },
@@ -1275,18 +1542,24 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [
               {
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "value",
                       "scope": "X",
                       "type": "Property"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "10",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1294,10 +1567,12 @@
                   ],
                   "signature": [
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     }
@@ -1307,13 +1582,17 @@
                 "identifier": "A"
               },
               {
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "name": "A",
                       "type": "QueryLetRef"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "10",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1321,10 +1600,12 @@
                   ],
                   "signature": [
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     }
@@ -1336,11 +1617,14 @@
             ],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "element": [
                   {
                     "name": "id",
                     "value": {
+                      "annotation": [],
                       "path": "id",
                       "scope": "X",
                       "type": "Property"
@@ -1349,6 +1633,7 @@
                   {
                     "name": "value",
                     "value": {
+                      "annotation": [],
                       "path": "value",
                       "scope": "X",
                       "type": "Property"
@@ -1357,6 +1642,7 @@
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "name": "A",
                       "type": "QueryLetRef"
                     }
@@ -1364,6 +1650,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "name": "B",
                       "type": "QueryLetRef"
                     }
@@ -1375,13 +1662,17 @@
             "source": [
               {
                 "alias": "X",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "element": [
                         {
                           "name": "id",
                           "value": {
+                            "annotation": [],
                             "type": "Literal",
                             "value": "1",
                             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1390,6 +1681,7 @@
                         {
                           "name": "value",
                           "value": {
+                            "annotation": [],
                             "type": "Literal",
                             "value": "10",
                             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1399,10 +1691,12 @@
                       "type": "Tuple"
                     },
                     {
+                      "annotation": [],
                       "element": [
                         {
                           "name": "id",
                           "value": {
+                            "annotation": [],
                             "type": "Literal",
                             "value": "2",
                             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1411,6 +1705,7 @@
                         {
                           "name": "value",
                           "value": {
+                            "annotation": [],
                             "type": "Literal",
                             "value": "20",
                             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -1433,10 +1728,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "QUICK",
           "uri": "http://hl7.org/fhir"
         }
@@ -1446,6 +1743,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "2.16.840.1.113883.3.560.100.2",
           "name": "Female Administrative Sex"

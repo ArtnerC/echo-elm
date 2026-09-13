@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -37,6 +38,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -65,11 +67,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "SNOMED",
             "type": "CodeSystemRef"
@@ -89,11 +93,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "Diabetes",
             "type": "CodeRef"
@@ -113,11 +119,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "Diabetes VS",
             "preserve": true,
@@ -138,11 +146,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "SharedExpression",
             "type": "ExpressionRef"
@@ -162,12 +172,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "libraryName": "T",
               "name": "Diabetes",
               "type": "CodeRef"
@@ -175,6 +188,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "libraryName": "T",
               "name": "Diabetes VS",
               "preserve": true
@@ -195,12 +209,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "type": "Literal",
               "value": "some-code",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -208,6 +225,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "libraryName": "T",
               "name": "Diabetes VS",
               "preserve": true
@@ -220,6 +238,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

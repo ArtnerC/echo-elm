@@ -1,0 +1,1249 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TimingPhrases",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "D",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "D2",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encs"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "path": "start",
+                      "source": {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "MP",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                }
+              ],
+              "signature": [],
+              "type": "SameOrBefore"
+            }
+          },
+          "name": "OnOrBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "path": "start",
+                      "source": {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "MP",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                }
+              ],
+              "signature": [],
+              "type": "SameOrBefore"
+            }
+          },
+          "name": "BeforeOrOn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "path": "start",
+                      "source": {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "MP",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                }
+              ],
+              "precision": "Day",
+              "signature": [],
+              "type": "SameOrBefore"
+            }
+          },
+          "name": "OnOrBeforeDay"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "MP",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                }
+              ],
+              "precision": "Day",
+              "signature": [],
+              "type": "SameOrAfter"
+            }
+          },
+          "name": "StartsOnOrAfterDay"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "MP",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                }
+              ],
+              "signature": [],
+              "type": "SameOrBefore"
+            }
+          },
+          "name": "EndsOnOrBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "StartsDuring"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                },
+                {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "precision": "Day",
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "EndsDuringDay"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "StartOfDuring"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "precision": "Day",
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "StartOfDuringDay"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Quantity",
+                    "unit": "days",
+                    "value": 3
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              }
+            ],
+            "signature": [],
+            "type": "SameAs"
+          },
+          "name": "ExactBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Quantity",
+                    "unit": "days",
+                    "value": 3
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              }
+            ],
+            "signature": [],
+            "type": "SameOrBefore"
+          },
+          "name": "OrMoreBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Quantity",
+                    "unit": "days",
+                    "value": 3
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              }
+            ],
+            "signature": [],
+            "type": "After"
+          },
+          "name": "MoreThanAfter"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "high": {
+                  "annotation": [],
+                  "name": "D2",
+                  "type": "ParameterRef"
+                },
+                "highClosed": false,
+                "low": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "D2",
+                      "type": "ParameterRef"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Quantity",
+                      "unit": "days",
+                      "value": 3
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Subtract"
+                },
+                "lowClosed": false,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "LessThanBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "high": {
+                      "annotation": [],
+                      "name": "D2",
+                      "type": "ParameterRef"
+                    },
+                    "highClosed": false,
+                    "low": {
+                      "annotation": [],
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "annotation": [],
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "OrLessBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "high": {
+                      "annotation": [],
+                      "name": "D2",
+                      "type": "ParameterRef"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "annotation": [],
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "annotation": [],
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "OrLessOnOrBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "high": {
+                      "annotation": [],
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "annotation": [],
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "annotation": [],
+                      "name": "D2",
+                      "type": "ParameterRef"
+                    },
+                    "lowClosed": false,
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "OrLessAfter"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "annotation": [],
+                            "path": "period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    {
+                      "annotation": [],
+                      "high": {
+                        "annotation": [],
+                        "operand": {
+                          "annotation": [],
+                          "name": "MP",
+                          "type": "ParameterRef"
+                        },
+                        "signature": [],
+                        "type": "End"
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "annotation": [],
+                        "operand": [
+                          {
+                            "annotation": [],
+                            "operand": {
+                              "annotation": [],
+                              "name": "MP",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "End"
+                          },
+                          {
+                            "annotation": [],
+                            "type": "Quantity",
+                            "unit": "day",
+                            "value": 1
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Subtract"
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              ],
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "name": "EndsOrLessOnOrBeforeEnd"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "annotation": [],
+                            "path": "period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "annotation": [],
+                      "high": {
+                        "annotation": [],
+                        "operand": [
+                          {
+                            "annotation": [],
+                            "operand": {
+                              "annotation": [],
+                              "name": "MP",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "Start"
+                          },
+                          {
+                            "annotation": [],
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 30
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Add"
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "annotation": [],
+                        "operand": {
+                          "annotation": [],
+                          "name": "MP",
+                          "type": "ParameterRef"
+                        },
+                        "signature": [],
+                        "type": "Start"
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  ],
+                  "precision": "Day",
+                  "signature": [],
+                  "type": "In"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              ],
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "name": "StartsOrLessOnOrAfterDay"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

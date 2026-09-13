@@ -19,14 +19,18 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "name": "n",
                 "type": "OperandRef"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -38,8 +42,10 @@
           "name": "Doubled",
           "operand": [
             {
+              "annotation": [],
               "name": "n",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -49,8 +55,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "7",
             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -64,6 +72,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

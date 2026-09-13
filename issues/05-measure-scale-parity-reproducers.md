@@ -697,6 +697,9 @@ is a correctness bug), then 4, then 6, 7, 8, 11, and finally 5 and 12.
 
 ## Part 9 — What is still needed from the measure content
 
+> **Tracked as [#6](https://github.com/ArtnerC/echo-elm/issues/6).** Re-measurement needs
+> licensed bundle access, so it is tracked there rather than here.
+
 Everything in Part 3 has been reproduced synthetically and fixed. What cannot be
 reproduced synthetically is **whether that list is complete**, because the fixtures were
 written from an analysis of the measures rather than from the measures themselves. The

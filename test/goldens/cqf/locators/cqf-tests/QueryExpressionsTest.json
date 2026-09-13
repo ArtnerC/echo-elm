@@ -18,14 +18,18 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "locator": "3:27",
                       "type": "Literal",
                       "value": "1",
@@ -35,6 +39,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "locator": "3:33",
                       "type": "Literal",
                       "value": "2",
@@ -46,10 +51,12 @@
                 "type": "Tuple"
               },
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "locator": "3:46",
                       "type": "Literal",
                       "value": "3",
@@ -59,6 +66,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "locator": "3:52",
                       "type": "Literal",
                       "value": "4",
@@ -70,10 +78,12 @@
                 "type": "Tuple"
               },
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "locator": "3:65",
                       "type": "Literal",
                       "value": "5",
@@ -83,6 +93,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "locator": "3:71",
                       "type": "Literal",
                       "value": "6",
@@ -102,15 +113,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "6:3-7:17",
             "relationship": [],
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "6:3-6:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -120,15 +135,18 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "7:5-7:17",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "7:11-7:13",
                   "path": "a",
                   "scope": "T",
                   "type": "Property"
                 },
                 {
+                  "annotation": [],
                   "locator": "7:17",
                   "type": "Literal",
                   "value": "2",
@@ -144,13 +162,17 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "10:3-11:14",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "11:12-11:14",
                 "path": "a",
                 "scope": "T",
@@ -161,7 +183,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "10:3-10:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -176,17 +200,22 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "14:3-15:35",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "element": [
                   {
                     "name": "x",
                     "value": {
+                      "annotation": [],
                       "locator": "15:23-15:25",
                       "path": "a",
                       "scope": "T",
@@ -196,6 +225,7 @@
                   {
                     "name": "y",
                     "value": {
+                      "annotation": [],
                       "locator": "15:31-15:33",
                       "path": "b",
                       "scope": "T",
@@ -211,7 +241,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "14:3-14:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -226,13 +258,17 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "18:3-20:14",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "20:12-20:14",
                 "path": "b",
                 "scope": "T",
@@ -243,7 +279,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "18:3-18:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -253,15 +291,18 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "19:5-19:18",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "19:11-19:13",
                   "path": "a",
                   "scope": "T",
                   "type": "Property"
                 },
                 {
+                  "annotation": [],
                   "locator": "19:18",
                   "type": "Literal",
                   "value": "3",
@@ -277,14 +318,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "23:3-24:23",
             "relationship": [],
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "ascending",
                   "locator": "24:13-24:23",
                   "path": "a",
@@ -296,7 +341,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "23:3-23:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -311,14 +358,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "27:3-28:24",
             "relationship": [],
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "descending",
                   "locator": "28:13-28:24",
                   "path": "a",
@@ -330,7 +381,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "27:3-27:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -345,29 +398,36 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "31:3-32:39",
             "relationship": [
               {
                 "alias": "S",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "32:10-32:17",
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 },
                 "locator": "32:5-32:39",
                 "suchThat": {
+                  "annotation": [],
                   "locator": "32:31-32:39",
                   "operand": [
                     {
+                      "annotation": [],
                       "locator": "32:31-32:33",
                       "path": "a",
                       "scope": "S",
                       "type": "Property"
                     },
                     {
+                      "annotation": [],
                       "locator": "32:37-32:39",
                       "path": "b",
                       "scope": "T",
@@ -383,7 +443,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "31:3-31:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -398,29 +460,36 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "35:3-36:42",
             "relationship": [
               {
                 "alias": "S",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "36:13-36:20",
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 },
                 "locator": "36:5-36:42",
                 "suchThat": {
+                  "annotation": [],
                   "locator": "36:34-36:42",
                   "operand": [
                     {
+                      "annotation": [],
                       "locator": "36:34-36:36",
                       "path": "a",
                       "scope": "S",
                       "type": "Property"
                     },
                     {
+                      "annotation": [],
                       "locator": "36:40-36:42",
                       "path": "b",
                       "scope": "T",
@@ -436,7 +505,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "35:3-35:10",
                   "name": "Tuples",
                   "type": "ExpressionRef"
@@ -451,18 +522,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "39:3-39:33",
             "signature": [],
             "source": {
+              "annotation": [],
               "let": [],
               "locator": "39:9-39:32",
               "relationship": [],
               "source": [
                 {
                   "alias": "T",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "locator": "39:9-39:16",
                     "name": "Tuples",
                     "type": "ExpressionRef"
@@ -472,15 +548,18 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "locator": "39:20-39:32",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "39:26-39:28",
                     "path": "a",
                     "scope": "T",
                     "type": "Property"
                   },
                   {
+                    "annotation": [],
                     "locator": "39:32",
                     "type": "Literal",
                     "value": "2",
@@ -498,19 +577,25 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [
               {
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "43:18-43:22",
                   "operand": [
                     {
+                      "annotation": [],
                       "locator": "43:18",
                       "name": "N",
                       "type": "AliasRef"
                     },
                     {
+                      "annotation": [],
                       "locator": "43:22",
                       "type": "Literal",
                       "value": "2",
@@ -527,7 +612,9 @@
             "locator": "42:3-44:18",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "44:12-44:18",
                 "name": "doubled",
                 "type": "QueryLetRef"
@@ -537,21 +624,26 @@
             "source": [
               {
                 "alias": "N",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "locator": "42:6",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "locator": "42:9",
                       "type": "Literal",
                       "value": "2",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "locator": "42:12",
                       "type": "Literal",
                       "value": "3",
@@ -571,21 +663,27 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "47:3-50:14",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "50:10-50:14",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "50:10",
                     "name": "A",
                     "type": "AliasRef"
                   },
                   {
+                    "annotation": [],
                     "locator": "50:14",
                     "name": "B",
                     "type": "AliasRef"
@@ -599,15 +697,19 @@
             "source": [
               {
                 "alias": "A",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "locator": "48:7",
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "locator": "48:10",
                       "type": "Literal",
                       "value": "2",
@@ -621,15 +723,19 @@
               },
               {
                 "alias": "B",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "locator": "49:7-49:8",
                       "type": "Literal",
                       "value": "10",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "locator": "49:11-49:12",
                       "type": "Literal",
                       "value": "20",
@@ -652,6 +758,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

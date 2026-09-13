@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -21,6 +22,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "path": "FHIRHelpers",
           "version": "4.0.1"
@@ -31,9 +33,12 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "name": "Measurement Period",
           "parameterTypeSpecifier": {
+            "annotation": [],
             "pointType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}DateTime",
               "type": "NamedTypeSpecifier"
             },
@@ -49,9 +54,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -67,8 +75,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "codeFilter": [],
             "dataType": "{http://hl7.org/fhir}Encounter",
             "dateFilter": [],
@@ -81,16 +91,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "name": "s",
             "type": "OperandRef"
           },
           "name": "Label",
           "operand": [
             {
+              "annotation": [],
               "name": "s",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}String",
                 "type": "NamedTypeSpecifier"
               }
@@ -100,16 +114,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "name": "c",
             "type": "OperandRef"
           },
           "name": "Coded",
           "operand": [
             {
+              "annotation": [],
               "name": "c",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Code",
                 "type": "NamedTypeSpecifier"
               }
@@ -119,17 +137,22 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "name": "p",
             "type": "OperandRef"
           },
           "name": "Within",
           "operand": [
             {
+              "annotation": [],
               "name": "p",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "pointType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}DateTime",
                   "type": "NamedTypeSpecifier"
                 },
@@ -141,16 +164,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "name": "d",
             "type": "OperandRef"
           },
           "name": "AtTime",
           "operand": [
             {
+              "annotation": [],
               "name": "d",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}DateTime",
                 "type": "NamedTypeSpecifier"
               }
@@ -160,19 +187,25 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "Label",
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "status",
                         "scope": "E",
                         "type": "Property"
@@ -189,7 +222,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encounters",
                   "type": "ExpressionRef"
                 }
@@ -201,19 +236,25 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "Coded",
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToCode",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "class",
                         "scope": "E",
                         "type": "Property"
@@ -230,7 +271,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encounters",
                   "type": "ExpressionRef"
                 }
@@ -242,19 +285,25 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "Within",
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToInterval",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "period",
                         "scope": "E",
                         "type": "Property"
@@ -271,7 +320,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encounters",
                   "type": "ExpressionRef"
                 }
@@ -283,21 +334,28 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "AtTime",
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "start",
                         "source": {
+                          "annotation": [],
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -316,7 +374,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encounters",
                   "type": "ExpressionRef"
                 }
@@ -328,14 +388,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encounters",
                   "type": "ExpressionRef"
                 }
@@ -343,12 +407,15 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "operand": [
                 {
+                  "annotation": [],
                   "libraryName": "FHIRHelpers",
                   "name": "ToString",
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "status",
                       "scope": "E",
                       "type": "Property"
@@ -358,6 +425,7 @@
                   "type": "FunctionRef"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "finished",
                   "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -371,14 +439,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encounters",
                   "type": "ExpressionRef"
                 }
@@ -386,12 +458,15 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "operand": [
                 {
+                  "annotation": [],
                   "libraryName": "FHIRHelpers",
                   "name": "ToInterval",
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "period",
                       "scope": "E",
                       "type": "Property"
@@ -401,6 +476,7 @@
                   "type": "FunctionRef"
                 },
                 {
+                  "annotation": [],
                   "name": "Measurement Period",
                   "type": "ParameterRef"
                 }
@@ -416,10 +492,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "uri": "http://hl7.org/fhir",
           "version": "4.0.1"

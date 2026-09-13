@@ -14,6 +14,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FluentHelpers",
           "path": "FluentHelpers",
           "version": "1.0"
@@ -28,8 +29,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "21",
             "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -38,12 +41,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "FluentHelpers",
             "name": "Doubled",
             "operand": [
               {
+                "annotation": [],
                 "name": "N",
                 "type": "ExpressionRef"
               }
@@ -58,6 +64,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

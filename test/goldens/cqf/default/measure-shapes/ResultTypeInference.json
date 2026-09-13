@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -25,9 +26,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -43,8 +47,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "codeFilter": [],
             "dataType": "{http://hl7.org/fhir}Encounter",
             "dateFilter": [],
@@ -57,16 +63,21 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "day": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "month": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -74,18 +85,22 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2024",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 }
               },
               {
+                "annotation": [],
                 "day": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "month": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "6",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -93,6 +108,7 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2024",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -105,9 +121,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "name": "Dates",
               "type": "ExpressionRef"
             },
@@ -118,19 +137,26 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "element": [
                 {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "day": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       "month": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -138,6 +164,7 @@
                       "signature": [],
                       "type": "Date",
                       "year": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "2024",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -147,14 +174,18 @@
                   "type": "List"
                 },
                 {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "day": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       "month": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "2",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -162,6 +193,7 @@
                       "signature": [],
                       "type": "Date",
                       "year": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "2024",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -180,12 +212,16 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "path": "subject",
                 "scope": "E",
                 "type": "Property"
@@ -194,7 +230,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encs",
                   "type": "ExpressionRef"
                 }
@@ -206,12 +244,16 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "path": "id",
                 "scope": "E",
                 "type": "Property"
@@ -220,7 +262,9 @@
             "source": [
               {
                 "alias": "E",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Encs",
                   "type": "ExpressionRef"
                 }
@@ -232,15 +276,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "name": "Encs",
                     "type": "ExpressionRef"
                   }
@@ -248,8 +297,11 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": {
+                  "annotation": [],
                   "operand": {
+                    "annotation": [],
                     "path": "id",
                     "scope": "E",
                     "type": "Property"
@@ -271,10 +323,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "uri": "http://hl7.org/fhir",
           "version": "4.0.1"

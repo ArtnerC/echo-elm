@@ -1,0 +1,658 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "AggregateConversions",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Observation",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+            "type": "Retrieve"
+          },
+          "name": "Obs"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encs"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "X",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "annotation": [],
+                      "expression": {
+                        "annotation": [],
+                        "path": "start",
+                        "source": {
+                          "annotation": [],
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "E",
+                        "annotation": [],
+                        "expression": {
+                          "annotation": [],
+                          "name": "Encs",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Min"
+          },
+          "name": "MinStart"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "X",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "annotation": [],
+                      "expression": {
+                        "annotation": [],
+                        "path": "end",
+                        "source": {
+                          "annotation": [],
+                          "path": "period",
+                          "scope": "E",
+                          "type": "Property"
+                        },
+                        "type": "Property"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "E",
+                        "annotation": [],
+                        "expression": {
+                          "annotation": [],
+                          "name": "Encs",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Max"
+          },
+          "name": "MaxEnd"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToDateTime",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "X",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "annotation": [],
+                      "expression": {
+                        "annotation": [],
+                        "path": "issued",
+                        "scope": "O",
+                        "type": "Property"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "O",
+                        "annotation": [],
+                        "expression": {
+                          "annotation": [],
+                          "name": "Obs",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Max"
+          },
+          "name": "MaxIssued"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToString",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "X",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "annotation": [],
+                      "expression": {
+                        "annotation": [],
+                        "path": "status",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "E",
+                        "annotation": [],
+                        "expression": {
+                          "annotation": [],
+                          "name": "Encs",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Min"
+          },
+          "name": "MinStatus"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToQuantity",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "X",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "annotation": [],
+                      "expression": {
+                        "annotation": [],
+                        "asTypeSpecifier": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Quantity",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "operand": {
+                          "annotation": [],
+                          "path": "value",
+                          "scope": "O",
+                          "type": "Property"
+                        },
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "O",
+                        "annotation": [],
+                        "expression": {
+                          "annotation": [],
+                          "name": "Obs",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Sum"
+          },
+          "name": "SumValues"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToQuantity",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "X",
+                      "type": "AliasRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "let": [],
+                    "relationship": [],
+                    "return": {
+                      "annotation": [],
+                      "expression": {
+                        "annotation": [],
+                        "asTypeSpecifier": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Quantity",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "operand": {
+                          "annotation": [],
+                          "path": "value",
+                          "scope": "O",
+                          "type": "Property"
+                        },
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    },
+                    "source": [
+                      {
+                        "alias": "O",
+                        "annotation": [],
+                        "expression": {
+                          "annotation": [],
+                          "name": "Obs",
+                          "type": "ExpressionRef"
+                        }
+                      }
+                    ],
+                    "type": "Query"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Avg"
+          },
+          "name": "AvgValues"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "path": "status",
+                  "scope": "E",
+                  "type": "Property"
+                }
+              },
+              "source": [
+                {
+                  "alias": "E",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "name": "Encs",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Count"
+          },
+          "name": "CountStatus"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "path": "status",
+                  "scope": "E",
+                  "type": "Property"
+                }
+              },
+              "source": [
+                {
+                  "alias": "E",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "name": "Encs",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "name": "DistinctStatus"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "path": "start",
+                  "source": {
+                    "annotation": [],
+                    "path": "period",
+                    "scope": "E",
+                    "type": "Property"
+                  },
+                  "type": "Property"
+                }
+              },
+              "source": [
+                {
+                  "alias": "E",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "name": "Encs",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "First"
+          },
+          "name": "FirstStart"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}
