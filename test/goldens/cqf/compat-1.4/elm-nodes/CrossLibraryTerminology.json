@@ -14,6 +14,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "T",
           "path": "SharedTerminology",
           "version": "1.0"
@@ -28,8 +29,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "SNOMED",
             "type": "CodeSystemRef"
@@ -38,8 +41,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "Diabetes",
             "type": "CodeRef"
@@ -48,8 +53,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "Diabetes VS",
             "type": "ValueSetRef"
@@ -58,8 +65,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "name": "SharedExpression",
             "type": "ExpressionRef"
@@ -68,9 +77,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "libraryName": "T",
               "name": "Diabetes",
               "type": "CodeRef"
@@ -78,6 +90,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "libraryName": "T",
               "name": "Diabetes VS"
             }
@@ -86,9 +99,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "type": "Literal",
               "value": "some-code",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -96,6 +112,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "libraryName": "T",
               "name": "Diabetes VS"
             }
@@ -107,6 +124,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

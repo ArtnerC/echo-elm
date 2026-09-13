@@ -524,8 +524,7 @@ func (t *Translator) buildInferredSig(operands []elm.Expression) json.RawMessage
 	for _, op := range operands {
 		specs = append(specs, t.inferTypeSpec(op).toJSONValue())
 	}
-	b, _ := json.Marshal(specs)
-	return json.RawMessage(b)
+	return t.marshalSig(specs)
 }
 
 // buildFixedSig builds a signature array from pre-determined formal types.
@@ -534,8 +533,7 @@ func (t *Translator) buildFixedSig(specs []typeSpec) json.RawMessage {
 	for _, s := range specs {
 		vals = append(vals, s.toJSONValue())
 	}
-	b, _ := json.Marshal(vals)
-	return json.RawMessage(b)
+	return t.marshalSig(vals)
 }
 
 // buildVariadicSig builds a signature array with n copies of the same type.
@@ -544,8 +542,7 @@ func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
 	for i := range vals {
 		vals[i] = ts.toJSONValue()
 	}
-	b, _ := json.Marshal(vals)
-	return json.RawMessage(b)
+	return t.marshalSig(vals)
 }
 
 // astTypeSpecToTypeSpec converts an AST type specifier to the translator's
@@ -1378,4 +1375,54 @@ func choiceTSKey(ts typeSpec) string {
 		return "tuple{}"
 	}
 	return ""
+}
+
+// marshalSig serializes a signature's type specifiers. In CQF mode each one —
+// and each tuple element definition inside one — carries the empty annotation
+// container every ELM Element does.
+func (t *Translator) marshalSig(vals []interface{}) json.RawMessage {
+	if t.opts.CQFMode {
+		for i, v := range vals {
+			vals[i] = withEmptyAnnotation(v)
+		}
+	}
+	b, _ := json.Marshal(vals)
+	return json.RawMessage(b)
+}
+
+// withEmptyAnnotation adds "annotation": [] to a type specifier's JSON value and
+// to the specifiers and element definitions nested in it.
+func withEmptyAnnotation(v interface{}) interface{} {
+	switch m := v.(type) {
+	case map[string]string:
+		out := make(map[string]interface{}, len(m)+1)
+		for k, s := range m {
+			out[k] = s
+		}
+		out["annotation"] = []interface{}{}
+		return out
+	case map[string]interface{}:
+		out := make(map[string]interface{}, len(m)+1)
+		for k, x := range m {
+			switch k {
+			case "elementType", "pointType":
+				out[k] = withEmptyAnnotation(x)
+			case "choice", "element":
+				if xs, ok := x.([]interface{}); ok {
+					ys := make([]interface{}, len(xs))
+					for i, y := range xs {
+						ys[i] = withEmptyAnnotation(y)
+					}
+					out[k] = ys
+				} else {
+					out[k] = x
+				}
+			default:
+				out[k] = x
+			}
+		}
+		out["annotation"] = []interface{}{}
+		return out
+	}
+	return v
 }

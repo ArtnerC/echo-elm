@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -42,19 +43,23 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "4:39-4:43",
             "operand": [
               {
+                "annotation": [],
                 "locator": "4:39",
                 "name": "n",
                 "type": "OperandRef"
               },
               {
+                "annotation": [],
                 "locator": "4:43",
                 "type": "Literal",
                 "value": "2",
@@ -68,8 +73,10 @@
           "name": "Doubled",
           "operand": [
             {
+              "annotation": [],
               "name": "n",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "locator": "4:29-4:35",
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
@@ -91,11 +98,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "5:31",
             "type": "Literal",
             "value": "7",
@@ -111,6 +120,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

@@ -11,12 +11,14 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://snomed.info/sct",
           "locator": "10:1-10:45",
           "name": "SNOMED"
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://loinc.org",
           "locator": "11:1-11:53",
           "name": "LOINC",
@@ -28,7 +30,9 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "locator": "16:34-16:41",
             "name": "SNOMED"
           },
@@ -39,7 +43,9 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "locator": "17:31-17:37",
             "name": "LOINC"
           },
@@ -54,8 +60,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "code": [
             {
+              "annotation": [],
               "locator": "19:31-19:40",
               "name": "Diabetes"
             }
@@ -66,12 +74,15 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "code": [
             {
+              "annotation": [],
               "locator": "20:33-20:42",
               "name": "Diabetes"
             },
             {
+              "annotation": [],
               "locator": "20:45-20:53",
               "name": "Glucose"
             }
@@ -94,8 +105,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "22:31-22:38",
             "name": "SNOMED",
             "type": "CodeSystemRef"
@@ -105,8 +118,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "23:25-23:34",
             "name": "Diabetes",
             "type": "CodeRef"
@@ -116,8 +131,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "24:28-24:45",
             "name": "Diabetes Concept",
             "type": "ConceptRef"
@@ -127,8 +144,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "25:29-25:41",
             "name": "Diabetes VS",
             "preserve": true,
@@ -139,9 +158,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "locator": "27:26-27:35",
               "name": "Diabetes",
               "type": "CodeRef"
@@ -150,6 +172,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "locator": "27:40-27:52",
               "name": "Diabetes VS",
               "preserve": true
@@ -160,9 +183,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "locator": "28:28-28:38",
               "type": "Literal",
               "value": "some-code",
@@ -172,6 +198,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "locator": "28:43-28:56",
               "name": "Versioned VS",
               "preserve": true
@@ -185,6 +212,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -194,6 +222,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
           "locator": "13:1-13:74",
@@ -201,6 +230,7 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:1.2.3",
           "locator": "14:1-14:59",

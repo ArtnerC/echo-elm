@@ -500,10 +500,11 @@ func (t *Translator) srcAnnotationJSON(loc ast.Interval) json.RawMessage {
 		S []sNode `json:"s,omitempty"`
 	}
 	type annJSON struct {
-		S    *sBlock `json:"s,omitempty"`
-		Type string  `json:"type"`
+		T    json.RawMessage `json:"t,omitempty"`
+		S    *sBlock         `json:"s,omitempty"`
+		Type string          `json:"type"`
 	}
-	ann := []annJSON{{Type: "Annotation", S: &sBlock{S: []sNode{{Value: []string{text}}}}}}
+	ann := []annJSON{{Type: "Annotation", T: t.cqfEmptyArrayField(), S: &sBlock{S: []sNode{{Value: []string{text}}}}}}
 	b, err := json.Marshal(ann)
 	if err != nil {
 		return nil
@@ -747,10 +748,11 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			S []sNode `json:"s,omitempty"`
 		}
 		type annJSON struct {
-			S    *sBlock `json:"s,omitempty"`
-			Type string  `json:"type"`
+			T    json.RawMessage `json:"t,omitempty"`
+			S    *sBlock         `json:"s,omitempty"`
+			Type string          `json:"type"`
 		}
-		ann := annJSON{Type: "Annotation", S: &sBlock{S: []sNode{{Value: []string{text}}}}}
+		ann := annJSON{Type: "Annotation", T: t.cqfEmptyArrayField(), S: &sBlock{S: []sNode{{Value: []string{text}}}}}
 		if b, mErr := json.Marshal(ann); mErr == nil {
 			out.Annotation = append(out.Annotation, json.RawMessage(b))
 		}
@@ -1101,6 +1103,11 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		out.Statements = stmts
 	}
 
+	if t.opts.CQFMode {
+		// Every Element carries an annotation container in CQF's output, empty
+		// or not. Filling it here reaches the synthesized nodes too.
+		elm.FillEmptyAnnotations(out)
+	}
 	result.Library = out
 	if len(t.diags) > 0 {
 		result.Diagnostics = append(result.Diagnostics, t.diags...)
@@ -4737,6 +4744,19 @@ func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.
 
 	if combined.T == nil && combined.S == nil {
 		return t.cqfAnnotation()
+	}
+	if t.opts.CQFMode && len(combined.T) == 0 {
+		// CQF writes the tag container on every Annotation, even when empty.
+		type annWithTagContainer struct {
+			T    []tagJSON `json:"t"`
+			S    *sBlock   `json:"s,omitempty"`
+			Type string    `json:"type"`
+		}
+		b, err := json.Marshal([]annWithTagContainer{{T: []tagJSON{}, S: combined.S, Type: combined.Type}})
+		if err != nil {
+			return t.cqfAnnotation()
+		}
+		return json.RawMessage(b)
 	}
 	b, err := json.Marshal([]annJSON{combined})
 	if err != nil {

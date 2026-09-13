@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -42,25 +43,30 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "locator": "9:22",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "9:25",
                 "type": "Literal",
                 "value": "2",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "9:28",
                 "type": "Literal",
                 "value": "3",
@@ -86,11 +92,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "10:17-10:18",
             "type": "Literal",
             "value": "42",
@@ -112,11 +120,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "12:27-12:36",
             "name": "My Items",
             "type": "ExpressionRef"
@@ -137,11 +147,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "13:29-13:33",
             "name": "Plain",
             "type": "ExpressionRef"
@@ -162,16 +174,20 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "16:3-17:12",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "17:12",
                 "name": "I",
                 "type": "AliasRef"
@@ -181,7 +197,9 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "16:3-16:12",
                   "name": "My Items",
                   "type": "ExpressionRef"
@@ -207,16 +225,20 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "20:3-22:12",
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "22:12",
                 "name": "I",
                 "type": "AliasRef"
@@ -226,7 +248,9 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "20:3-20:12",
                   "name": "My Items",
                   "type": "ExpressionRef"
@@ -236,14 +260,17 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "21:5-21:15",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "21:11",
                   "name": "I",
                   "type": "AliasRef"
                 },
                 {
+                  "annotation": [],
                   "locator": "21:15",
                   "type": "Literal",
                   "value": "1",
@@ -270,31 +297,38 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "25:3-27:12",
             "relationship": [
               {
                 "alias": "J",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "26:10-26:19",
                   "name": "My Items",
                   "type": "ExpressionRef"
                 },
                 "locator": "26:5-26:37",
                 "suchThat": {
+                  "annotation": [],
                   "locator": "26:33-26:37",
                   "operand": [
                     {
+                      "annotation": [],
                       "locator": "26:33",
                       "name": "I",
                       "type": "AliasRef"
                     },
                     {
+                      "annotation": [],
                       "locator": "26:37",
                       "name": "J",
                       "type": "AliasRef"
@@ -307,7 +341,9 @@
               }
             ],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "27:12",
                 "name": "I",
                 "type": "AliasRef"
@@ -317,7 +353,9 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "25:3-25:12",
                   "name": "My Items",
                   "type": "ExpressionRef"
@@ -343,19 +381,23 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "29:59-29:63",
             "operand": [
               {
+                "annotation": [],
                 "locator": "29:59",
                 "name": "x",
                 "type": "OperandRef"
               },
               {
+                "annotation": [],
                 "locator": "29:63",
                 "type": "Literal",
                 "value": "1",
@@ -369,8 +411,10 @@
           "name": "My Function",
           "operand": [
             {
+              "annotation": [],
               "name": "x",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "locator": "29:33-29:39",
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
@@ -392,15 +436,18 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "30:30-30:45",
             "name": "My Function",
             "operand": [
               {
+                "annotation": [],
                 "locator": "30:44",
                 "type": "Literal",
                 "value": "1",
@@ -418,6 +465,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

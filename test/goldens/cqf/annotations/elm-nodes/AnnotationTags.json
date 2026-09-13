@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -105,6 +106,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "true",
             "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -135,6 +137,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "type": "Literal",
             "value": "true",
             "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
@@ -169,16 +172,22 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "signature": [],
             "source": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "name": "X",
                         "type": "AliasRef"
                       },
@@ -186,7 +195,9 @@
                       "type": "Start"
                     },
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "name": "X",
                         "type": "AliasRef"
                       },
@@ -202,13 +213,17 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "name": "Intervals",
                         "type": "OperandRef"
                       },
                       {
+                        "annotation": [],
                         "type": "Null"
                       }
                     ],
@@ -224,10 +239,14 @@
           "name": "CumulativeDuration",
           "operand": [
             {
+              "annotation": [],
               "name": "Intervals",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "pointType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
@@ -244,6 +263,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

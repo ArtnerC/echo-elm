@@ -367,6 +367,7 @@ that probing them turned up. Each is pinned by
 | An interval compared with a point | No promotion | `if X is null then null else Interval[X, X]`, on whichever side the point is (`SameAs` and `Meets` have no promotion; CQF rejects them) |
 | `includes start Y` | `Includes` against a point | `Contains`, the mirror of `included in` becoming `In` |
 | Trailing `start` / `end` keyword | No locator on the synthesized boundary | Attributed to the keyword |
+| Empty `annotation: []` / `t: []` containers | Omitted on eight node kinds; the harness stripped them from both sides to compensate, and 152 of 345 runs depended on it | Emitted on every Element in CQF mode by one fill pass; the harness now compares them, and only the bundle path (whose JAXB writer omits them) reduces them |
 
 `Property → ExpressionRef` (22 in Part 4) did not reproduce synthetically: tracked as
 [#7](https://github.com/ArtnerC/echo-elm/issues/7). Emitting `CqlToElmError` diagnostics is

@@ -430,13 +430,11 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 //     Comparing the two shapes is otherwise pure noise. Only a discriminator
 //     that AGREES with its position is dropped, so a FunctionDef sitting where
 //     an ExpressionDef is implied still differs. No-op on CLI-shaped input.
-//   - empty "annotation": [] and "t": [] arrays — CQF emits the empty container
-//     on nearly every node; echo-elm omits it. An empty container carries no
-//     information for a consumer of the ELM, so this meets the rule above, but
-//     note what changed: it used to be justified as 3.29.0-vs-4.8.0 serializer
-//     asymmetry, and that reason died with the second pin. It is now squarely an
-//     echo-elm emission gap that this reduction is choosing to tolerate.
-//     Measured against CQF 5.0.0: 130 of 294 fixtures depend on it.
+//   - empty "annotation": [] and "t": [] containers are NOT reduced here. CQF
+//     writes them on every Element and every Annotation, and echo-elm now does
+//     too; this reduction used to tolerate their absence, and 152 of 345 runs
+//     depended on it (issues/06 follow-up). They are reduced only on the bundle
+//     path, whose JAXB/MOXy writer genuinely omits them.
 //   - "t" tag arrays are sorted by name — tag content is compared, ordering is not.
 //   - localId (and the "r" references that point at it) — an internal node index.
 //     CQF numbers from a pre-order ANTLR rule visit; echo-elm uses its own counter.
@@ -461,7 +459,7 @@ func normalizeJSON(s string) string {
 		stripVolatileFields(m)
 	}
 	elm.StripImpliedTypesTree(v)
-	stripEmptyAnnotations(v)
+	sortAnnotationTags(v)
 	canonicalizeAnnotationFields(v)
 	b, _ := json.MarshalIndent(v, "", "  ")
 	return string(b)
@@ -604,11 +602,10 @@ func stripSignatureLevel(m map[string]interface{}) {
 }
 
 // stripEmptyAnnotations recursively removes empty annotation containers from the
-// JSON tree:
-//   - "annotation": []  on any ELM node (CQF emits it, echo-elm omits it)
-//   - "t": []           inside Annotation objects (tag array, same)
-//
-// See normalizeJSON for why this is tolerated and what it is hiding.
+// JSON tree — "annotation": [] on any ELM node and "t": [] inside Annotation
+// objects — and sorts non-empty tag arrays. Used on the bundle path only: the
+// JAXB/MOXy writer behind Library.content[] omits the containers the cql-to-elm
+// CLI writes, so there they carry no signal.
 func stripEmptyAnnotations(v interface{}) {
 	switch node := v.(type) {
 	case map[string]interface{}:
@@ -733,4 +730,30 @@ func resolveProfileNames(fixProfiles, allProfiles []string) []string {
 		}
 	}
 	return out
+}
+
+// sortAnnotationTags orders every non-empty "t" tag array by tag name. Tag
+// content is compared; the order CQF happens to emit tags in is not.
+func sortAnnotationTags(v interface{}) {
+	switch node := v.(type) {
+	case map[string]interface{}:
+		if typ, _ := node["type"].(string); typ == "Annotation" {
+			if arr, ok := node["t"].([]interface{}); ok && len(arr) > 1 {
+				sort.SliceStable(arr, func(i, j int) bool {
+					mi, _ := arr[i].(map[string]interface{})
+					mj, _ := arr[j].(map[string]interface{})
+					ni, _ := mi["name"].(string)
+					nj, _ := mj["name"].(string)
+					return ni < nj
+				})
+			}
+		}
+		for _, child := range node {
+			sortAnnotationTags(child)
+		}
+	case []interface{}:
+		for _, item := range node {
+			sortAnnotationTags(item)
+		}
+	}
 }

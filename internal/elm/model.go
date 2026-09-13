@@ -228,11 +228,15 @@ type ConceptDef struct {
 // declaration position already implies the node type, so — matching CQF —
 // no "type" discriminator is emitted here (unlike the CodeRefNode expression).
 type CodeRef struct {
-	LocalID        string `json:"localId,omitempty"`
-	Locator        string `json:"locator,omitempty"`
-	ResultTypeName string `json:"resultTypeName,omitempty"`
-	Name           string `json:"name"`
-	LibraryName    string `json:"libraryName,omitempty"`
+	// A concept's code references are Elements, and CQF writes an annotation
+	// container on them like on any other; without the field the fill pass
+	// could not reach them. (issues/06 follow-up)
+	Annotation     json.RawMessage `json:"annotation,omitempty"`
+	LocalID        string          `json:"localId,omitempty"`
+	Locator        string          `json:"locator,omitempty"`
+	ResultTypeName string          `json:"resultTypeName,omitempty"`
+	Name           string          `json:"name"`
+	LibraryName    string          `json:"libraryName,omitempty"`
 }
 
 // ParameterDef corresponds to a `parameter` declaration.
@@ -1429,14 +1433,15 @@ type ReturnClauseELM struct {
 // Distinct is a *bool so that an explicit `aggregate all` emits distinct:false
 // rather than being swallowed by omitempty.
 type AggregateClauseELM struct {
-	LocalID             string        `json:"localId,omitempty"`
-	Locator             string        `json:"locator,omitempty"`
-	ResultTypeName      string        `json:"resultTypeName,omitempty"`
-	ResultTypeSpecifier TypeSpecifier `json:"resultTypeSpecifier,omitempty"`
-	Distinct            *bool         `json:"distinct,omitempty"`
-	Identifier          string        `json:"identifier"`
-	Expression          Expression    `json:"expression"`
-	Starting            Expression    `json:"starting,omitempty"`
+	LocalID             string          `json:"localId,omitempty"`
+	Locator             string          `json:"locator,omitempty"`
+	Annotation          json.RawMessage `json:"annotation,omitempty"`
+	ResultTypeName      string          `json:"resultTypeName,omitempty"`
+	ResultTypeSpecifier TypeSpecifier   `json:"resultTypeSpecifier,omitempty"`
+	Distinct            *bool           `json:"distinct,omitempty"`
+	Identifier          string          `json:"identifier"`
+	Expression          Expression      `json:"expression"`
+	Starting            Expression      `json:"starting,omitempty"`
 }
 
 // SortByItemELM is one item in a sort clause.

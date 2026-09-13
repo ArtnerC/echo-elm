@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -34,6 +35,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -58,10 +60,12 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "codeSystem": {
+            "annotation": [],
             "locator": "9:34-9:41",
             "name": "SNOMED"
           },
@@ -95,20 +99,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "11:28-11:32",
             "operand": [
               {
+                "annotation": [],
                 "locator": "11:28",
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "11:32",
                 "type": "Literal",
                 "value": "1",
@@ -126,6 +134,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -146,6 +155,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],

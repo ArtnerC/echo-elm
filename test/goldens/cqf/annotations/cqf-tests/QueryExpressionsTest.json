@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -41,17 +42,21 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -60,6 +65,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "2",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -69,10 +75,12 @@
                 "type": "Tuple"
               },
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "3",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -81,6 +89,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "4",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -90,10 +99,12 @@
                 "type": "Tuple"
               },
               {
+                "annotation": [],
                 "element": [
                   {
                     "name": "a",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "5",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -102,6 +113,7 @@
                   {
                     "name": "b",
                     "value": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "6",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -128,17 +140,21 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -146,13 +162,16 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "operand": [
                 {
+                  "annotation": [],
                   "path": "a",
                   "scope": "T",
                   "type": "Property"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -177,15 +196,19 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "path": "a",
                 "scope": "T",
                 "type": "Property"
@@ -194,7 +217,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -217,19 +242,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "element": [
                   {
                     "name": "x",
                     "value": {
+                      "annotation": [],
                       "path": "a",
                       "scope": "T",
                       "type": "Property"
@@ -238,6 +268,7 @@
                   {
                     "name": "y",
                     "value": {
+                      "annotation": [],
                       "path": "b",
                       "scope": "T",
                       "type": "Property"
@@ -250,7 +281,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -273,15 +306,19 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "path": "b",
                 "scope": "T",
                 "type": "Property"
@@ -290,7 +327,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -298,13 +337,16 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "operand": [
                 {
+                  "annotation": [],
                   "path": "a",
                   "scope": "T",
                   "type": "Property"
                 },
                 {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "3",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -329,16 +371,20 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "ascending",
                   "path": "a",
                   "type": "ByColumn"
@@ -348,7 +394,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -371,16 +419,20 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "sort": {
+              "annotation": [],
               "by": [
                 {
+                  "annotation": [],
                   "direction": "descending",
                   "path": "a",
                   "type": "ByColumn"
@@ -390,7 +442,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -413,27 +467,34 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [
               {
                 "alias": "S",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 },
                 "suchThat": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "a",
                       "scope": "S",
                       "type": "Property"
                     },
                     {
+                      "annotation": [],
                       "path": "b",
                       "scope": "T",
                       "type": "Property"
@@ -448,7 +509,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -471,27 +534,34 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [
               {
                 "alias": "S",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 },
                 "suchThat": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "a",
                       "scope": "S",
                       "type": "Property"
                     },
                     {
+                      "annotation": [],
                       "path": "b",
                       "scope": "T",
                       "type": "Property"
@@ -506,7 +576,9 @@
             "source": [
               {
                 "alias": "T",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "name": "Tuples",
                   "type": "ExpressionRef"
                 }
@@ -529,19 +601,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "signature": [],
             "source": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "T",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "name": "Tuples",
                     "type": "ExpressionRef"
                   }
@@ -549,13 +626,16 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "path": "a",
                     "scope": "T",
                     "type": "Property"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -582,20 +662,26 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [
               {
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "name": "N",
                       "type": "AliasRef"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "2",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -609,7 +695,9 @@
             ],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "name": "doubled",
                 "type": "QueryLetRef"
               }
@@ -617,19 +705,24 @@
             "source": [
               {
                 "alias": "N",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "2",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "3",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -656,21 +749,27 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "name": "A",
                     "type": "AliasRef"
                   },
                   {
+                    "annotation": [],
                     "name": "B",
                     "type": "AliasRef"
                   }
@@ -682,14 +781,18 @@
             "source": [
               {
                 "alias": "A",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "2",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -700,14 +803,18 @@
               },
               {
                 "alias": "B",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "element": [
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "10",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "20",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -726,6 +833,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

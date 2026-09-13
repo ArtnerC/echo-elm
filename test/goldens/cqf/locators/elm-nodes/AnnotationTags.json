@@ -84,6 +84,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "24:25-24:28",
             "type": "Literal",
             "value": "true",
@@ -107,6 +108,7 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "32:27-32:30",
             "type": "Literal",
             "value": "true",
@@ -134,19 +136,25 @@
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "40:3-40:62",
             "signature": [],
             "source": {
+              "annotation": [],
               "let": [],
               "locator": "40:7-40:61",
               "relationship": [],
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "locator": "40:41-40:61",
                   "operand": [
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "locator": "40:61",
                         "name": "X",
                         "type": "AliasRef"
@@ -155,7 +163,9 @@
                       "type": "Start"
                     },
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "locator": "40:61",
                         "name": "X",
                         "type": "AliasRef"
@@ -173,15 +183,19 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "locator": "40:7-40:26",
                     "operand": [
                       {
+                        "annotation": [],
                         "locator": "40:17-40:25",
                         "name": "Intervals",
                         "type": "OperandRef"
                       },
                       {
+                        "annotation": [],
                         "type": "Null"
                       }
                     ],
@@ -199,11 +213,15 @@
           "name": "CumulativeDuration",
           "operand": [
             {
+              "annotation": [],
               "name": "Intervals",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "locator": "39:53-39:70",
                   "pointType": {
+                    "annotation": [],
                     "locator": "39:62-39:69",
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
@@ -222,6 +240,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

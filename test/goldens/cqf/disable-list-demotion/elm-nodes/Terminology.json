@@ -11,11 +11,13 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://snomed.info/sct",
           "name": "SNOMED"
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://loinc.org",
           "name": "LOINC",
           "version": "2.74"
@@ -26,7 +28,9 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "name": "SNOMED"
           },
           "display": "Diabetes mellitus",
@@ -35,7 +39,9 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Glucose",
@@ -48,8 +54,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "code": [
             {
+              "annotation": [],
               "name": "Diabetes"
             }
           ],
@@ -58,11 +66,14 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "code": [
             {
+              "annotation": [],
               "name": "Diabetes"
             },
             {
+              "annotation": [],
               "name": "Glucose"
             }
           ],
@@ -83,8 +94,10 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "SNOMED",
             "type": "CodeSystemRef"
           },
@@ -92,8 +105,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Diabetes",
             "type": "CodeRef"
           },
@@ -101,8 +116,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Diabetes Concept",
             "type": "ConceptRef"
           },
@@ -110,8 +127,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Diabetes VS",
             "preserve": true,
             "type": "ValueSetRef"
@@ -120,15 +139,19 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "name": "Diabetes",
               "type": "CodeRef"
             },
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "name": "Diabetes VS",
               "preserve": true
             }
@@ -137,9 +160,12 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "type": "Literal",
               "value": "some-code",
               "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -147,6 +173,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "name": "Versioned VS",
               "preserve": true
             }
@@ -158,6 +185,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -167,12 +195,14 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
           "name": "Diabetes VS"
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:1.2.3",
           "name": "Versioned VS",

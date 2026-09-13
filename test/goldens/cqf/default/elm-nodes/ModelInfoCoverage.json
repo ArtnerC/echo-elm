@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -21,6 +22,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "path": "FHIRHelpers",
           "version": "4.0.1"
@@ -34,9 +36,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -52,15 +57,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "I",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Immunization",
                     "dateFilter": [],
@@ -73,12 +83,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "lotNumber",
                         "scope": "I",
                         "type": "Property"
@@ -88,6 +101,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "LOT123",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -104,15 +118,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "C",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Claim",
                     "dateFilter": [],
@@ -125,12 +144,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "use",
                         "scope": "C",
                         "type": "Property"
@@ -140,6 +162,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "claim",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -156,15 +179,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "T",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Task",
                     "dateFilter": [],
@@ -177,12 +205,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "description",
                         "scope": "T",
                         "type": "Property"
@@ -192,6 +223,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "follow up",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -208,15 +240,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "G",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Goal",
                     "dateFilter": [],
@@ -229,14 +266,18 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "text",
                         "source": {
+                          "annotation": [],
                           "path": "description",
                           "scope": "G",
                           "type": "Property"
@@ -248,6 +289,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "target",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -264,16 +306,21 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "libraryName": "FHIRHelpers",
                 "name": "ToString",
                 "operand": [
                   {
+                    "annotation": [],
                     "path": "gender",
                     "source": {
+                      "annotation": [],
                       "name": "Patient",
                       "type": "ExpressionRef"
                     },
@@ -284,6 +331,7 @@
                 "type": "FunctionRef"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "female",
                 "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -296,15 +344,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -317,12 +370,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "status",
                         "scope": "E",
                         "type": "Property"
@@ -332,6 +388,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "finished",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -348,17 +405,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "N",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "path": "name",
                     "source": {
+                      "annotation": [],
                       "name": "Patient",
                       "type": "ExpressionRef"
                     },
@@ -368,12 +431,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "family",
                         "scope": "N",
                         "type": "Property"
@@ -383,6 +449,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "Smith",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -399,17 +466,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "A",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "path": "address",
                     "source": {
+                      "annotation": [],
                       "name": "Patient",
                       "type": "ExpressionRef"
                     },
@@ -419,12 +492,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToString",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "city",
                         "scope": "A",
                         "type": "Property"
@@ -434,6 +510,7 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "Boston",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
@@ -450,15 +527,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "S",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Specimen",
                     "dateFilter": [],
@@ -471,12 +553,15 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "receivedTime",
                         "scope": "S",
                         "type": "Property"
@@ -486,13 +571,17 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "operand": {
+                      "annotation": [],
                       "day": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                       },
                       "month": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "1",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -500,6 +589,7 @@
                       "signature": [],
                       "type": "Date",
                       "year": {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "2020",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -520,16 +610,21 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "libraryName": "FHIRHelpers",
                 "name": "ToDate",
                 "operand": [
                   {
+                    "annotation": [],
                     "path": "birthDate",
                     "source": {
+                      "annotation": [],
                       "name": "Patient",
                       "type": "ExpressionRef"
                     },
@@ -540,12 +635,15 @@
                 "type": "FunctionRef"
               },
               {
+                "annotation": [],
                 "day": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                 },
                 "month": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "1",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -553,6 +651,7 @@
                 "signature": [],
                 "type": "Date",
                 "year": {
+                  "annotation": [],
                   "type": "Literal",
                   "value": "2020",
                   "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -566,12 +665,16 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "relationship": [],
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "path": "line",
                 "scope": "A",
                 "type": "Property"
@@ -580,9 +683,12 @@
             "source": [
               {
                 "alias": "A",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "path": "address",
                   "source": {
+                    "annotation": [],
                     "name": "Patient",
                     "type": "ExpressionRef"
                   },
@@ -596,17 +702,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "A",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "path": "address",
                     "source": {
+                      "annotation": [],
                       "name": "Patient",
                       "type": "ExpressionRef"
                     },
@@ -616,22 +728,28 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "Main St",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
+                    "annotation": [],
                     "let": [],
                     "relationship": [],
                     "return": {
+                      "annotation": [],
                       "distinct": false,
                       "expression": {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToString",
                         "operand": [
                           {
+                            "annotation": [],
                             "name": "X",
                             "type": "AliasRef"
                           }
@@ -643,7 +761,9 @@
                     "source": [
                       {
                         "alias": "X",
+                        "annotation": [],
                         "expression": {
+                          "annotation": [],
                           "path": "line",
                           "scope": "A",
                           "type": "Property"
@@ -664,17 +784,23 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "N",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "path": "name",
                     "source": {
+                      "annotation": [],
                       "name": "Patient",
                       "type": "ExpressionRef"
                     },
@@ -684,22 +810,28 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "Ann",
                     "valueType": "{urn:hl7-org:elm-types:r1}String"
                   },
                   {
+                    "annotation": [],
                     "let": [],
                     "relationship": [],
                     "return": {
+                      "annotation": [],
                       "distinct": false,
                       "expression": {
+                        "annotation": [],
                         "libraryName": "FHIRHelpers",
                         "name": "ToString",
                         "operand": [
                           {
+                            "annotation": [],
                             "name": "X",
                             "type": "AliasRef"
                           }
@@ -711,7 +843,9 @@
                     "source": [
                       {
                         "alias": "X",
+                        "annotation": [],
                         "expression": {
+                          "annotation": [],
                           "path": "given",
                           "scope": "N",
                           "type": "Property"
@@ -735,10 +869,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "uri": "http://hl7.org/fhir",
           "version": "4.0.1"

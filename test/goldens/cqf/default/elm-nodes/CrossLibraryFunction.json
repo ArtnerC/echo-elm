@@ -14,6 +14,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "H",
           "path": "SharedFunctions",
           "version": "1.0"
@@ -28,12 +29,15 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "H",
             "name": "Doubled",
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "21",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -46,8 +50,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "H",
             "name": "Constant",
             "operand": [],
@@ -58,14 +64,18 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "name": "n",
                 "type": "OperandRef"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "100",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -77,8 +87,10 @@
           "name": "Doubled",
           "operand": [
             {
+              "annotation": [],
               "name": "n",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               }
@@ -88,11 +100,14 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Doubled",
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "21",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -108,6 +123,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -42,13 +43,16 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "element": [
               {
+                "annotation": [],
                 "locator": "9:22",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -56,6 +60,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "9:25",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -63,6 +68,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "9:28",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -72,7 +78,9 @@
             ],
             "locator": "9:20-9:30",
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
@@ -83,7 +91,9 @@
           "locator": "9:1-9:30",
           "name": "My Items",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -103,11 +113,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "10:17-10:18",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
             "type": "Literal",
@@ -131,15 +143,19 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "12:27-12:36",
             "name": "My Items",
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
@@ -150,7 +166,9 @@
           "locator": "12:1-12:36",
           "name": "QuotedDirectRef",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -170,11 +188,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "13:29-13:33",
             "name": "Plain",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -197,23 +217,29 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "16:3-17:12",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "17:12",
                 "name": "I",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -221,7 +247,9 @@
               },
               "locator": "17:5-17:12",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -231,11 +259,15 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "16:3-16:12",
                   "name": "My Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
@@ -245,7 +277,9 @@
                 },
                 "locator": "16:3-16:14",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
@@ -258,7 +292,9 @@
           "locator": "15:1-17:12",
           "name": "QuotedQuerySource",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -278,23 +314,29 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "20:3-22:12",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "22:12",
                 "name": "I",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -302,7 +344,9 @@
               },
               "locator": "22:5-22:12",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -312,11 +356,15 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "20:3-20:12",
                   "name": "My Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
@@ -326,7 +374,9 @@
                 },
                 "locator": "20:3-20:14",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
@@ -336,15 +386,18 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "locator": "21:5-21:15",
               "operand": [
                 {
+                  "annotation": [],
                   "locator": "21:11",
                   "name": "I",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "AliasRef"
                 },
                 {
+                  "annotation": [],
                   "locator": "21:15",
                   "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "Literal",
@@ -360,7 +413,9 @@
           "locator": "19:1-22:12",
           "name": "QuotedQuerySourceWhere",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -380,21 +435,27 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "25:3-27:12",
             "relationship": [
               {
                 "alias": "J",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "26:10-26:19",
                   "name": "My Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
@@ -404,22 +465,27 @@
                 },
                 "locator": "26:5-26:37",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
                   "type": "ListTypeSpecifier"
                 },
                 "suchThat": {
+                  "annotation": [],
                   "locator": "26:33-26:37",
                   "operand": [
                     {
+                      "annotation": [],
                       "locator": "26:33",
                       "name": "I",
                       "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "AliasRef"
                     },
                     {
+                      "annotation": [],
                       "locator": "26:37",
                       "name": "J",
                       "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -434,14 +500,18 @@
               }
             ],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "NamedTypeSpecifier"
               },
               "type": "ListTypeSpecifier"
             },
             "return": {
+              "annotation": [],
               "expression": {
+                "annotation": [],
                 "locator": "27:12",
                 "name": "I",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -449,7 +519,9 @@
               },
               "locator": "27:5-27:12",
               "resultTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -459,11 +531,15 @@
             "source": [
               {
                 "alias": "I",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "25:3-25:12",
                   "name": "My Items",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}Integer",
                       "type": "NamedTypeSpecifier"
                     },
@@ -473,7 +549,9 @@
                 },
                 "locator": "25:3-25:14",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Integer",
                     "type": "NamedTypeSpecifier"
                   },
@@ -486,7 +564,9 @@
           "locator": "24:1-27:12",
           "name": "QuotedRelationshipSource",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}Integer",
               "type": "NamedTypeSpecifier"
             },
@@ -506,20 +586,24 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "29:59-29:63",
             "operand": [
               {
+                "annotation": [],
                 "locator": "29:59",
                 "name": "x",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "OperandRef"
               },
               {
+                "annotation": [],
                 "locator": "29:63",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -535,8 +619,10 @@
           "name": "My Function",
           "operand": [
             {
+              "annotation": [],
               "name": "x",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "locator": "29:33-29:39",
                 "name": "{urn:hl7-org:elm-types:r1}Integer",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
@@ -560,15 +646,18 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "30:30-30:45",
             "name": "My Function",
             "operand": [
               {
+                "annotation": [],
                 "locator": "30:44",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -589,6 +678,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

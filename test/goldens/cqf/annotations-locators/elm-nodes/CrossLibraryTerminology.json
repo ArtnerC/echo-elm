@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -37,6 +38,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -66,11 +68,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "locator": "13:31-13:40",
             "name": "SNOMED",
@@ -92,11 +96,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "locator": "14:25-14:36",
             "name": "Diabetes",
@@ -118,11 +124,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "locator": "15:29-15:43",
             "name": "Diabetes VS",
@@ -145,11 +153,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "libraryName": "T",
             "locator": "16:31-16:50",
             "name": "SharedExpression",
@@ -171,12 +181,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "libraryName": "T",
               "locator": "18:44-18:55",
               "name": "Diabetes",
@@ -186,6 +199,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "libraryName": "T",
               "locator": "18:60-18:74",
               "name": "Diabetes VS",
@@ -208,12 +222,15 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "code": {
+              "annotation": [],
               "locator": "19:37-19:47",
               "type": "Literal",
               "value": "some-code",
@@ -223,6 +240,7 @@
             "signature": [],
             "type": "InValueSet",
             "valueset": {
+              "annotation": [],
               "libraryName": "T",
               "locator": "19:52-19:66",
               "name": "Diabetes VS",
@@ -237,6 +255,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

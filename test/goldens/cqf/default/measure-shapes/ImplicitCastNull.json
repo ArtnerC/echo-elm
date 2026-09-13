@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Unfiltered"
         }
       ]
@@ -26,17 +27,22 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "period",
             "type": "OperandRef"
           },
           "name": "Window",
           "operand": [
             {
+              "annotation": [],
               "name": "period",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "pointType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Date",
                   "type": "NamedTypeSpecifier"
                 },
@@ -44,9 +50,12 @@
               }
             },
             {
+              "annotation": [],
               "name": "dates",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Date",
                   "type": "NamedTypeSpecifier"
                 },
@@ -58,16 +67,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "s",
             "type": "OperandRef"
           },
           "name": "Named",
           "operand": [
             {
+              "annotation": [],
               "name": "s",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}String",
                 "type": "NamedTypeSpecifier"
               }
@@ -77,33 +90,43 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Window",
             "operand": [
               {
+                "annotation": [],
                 "asTypeSpecifier": {
+                  "annotation": [],
                   "pointType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Date",
                     "type": "NamedTypeSpecifier"
                   },
                   "type": "IntervalTypeSpecifier"
                 },
                 "operand": {
+                  "annotation": [],
                   "type": "Null"
                 },
                 "signature": [],
                 "type": "As"
               },
               {
+                "annotation": [],
                 "element": [
                   {
+                    "annotation": [],
                     "day": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                     },
                     "month": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "1",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -111,6 +134,7 @@
                     "signature": [],
                     "type": "Date",
                     "year": {
+                      "annotation": [],
                       "type": "Literal",
                       "value": "2024",
                       "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -127,18 +151,24 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Window",
             "operand": [
               {
+                "annotation": [],
                 "high": {
+                  "annotation": [],
                   "day": {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "31",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   "month": {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "12",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -146,6 +176,7 @@
                   "signature": [],
                   "type": "Date",
                   "year": {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2024",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -153,12 +184,15 @@
                 },
                 "highClosed": true,
                 "low": {
+                  "annotation": [],
                   "day": {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
                   },
                   "month": {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "1",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -166,6 +200,7 @@
                   "signature": [],
                   "type": "Date",
                   "year": {
+                    "annotation": [],
                     "type": "Literal",
                     "value": "2024",
                     "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -175,14 +210,18 @@
                 "type": "Interval"
               },
               {
+                "annotation": [],
                 "asTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Date",
                     "type": "NamedTypeSpecifier"
                   },
                   "type": "ListTypeSpecifier"
                 },
                 "operand": {
+                  "annotation": [],
                   "type": "Null"
                 },
                 "signature": [],
@@ -196,13 +235,17 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "name": "Named",
             "operand": [
               {
+                "annotation": [],
                 "asType": "{urn:hl7-org:elm-types:r1}String",
                 "operand": {
+                  "annotation": [],
                   "type": "Null"
                 },
                 "signature": [],
@@ -219,6 +262,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }

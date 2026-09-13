@@ -10,6 +10,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "locator": "15:1-15:15",
           "name": "Patient"
         }
@@ -22,6 +23,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "locator": "11:1-11:54",
           "path": "FHIRHelpers",
@@ -36,9 +38,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -56,8 +61,10 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "codeFilter": [],
             "dataType": "{http://hl7.org/fhir}Condition",
             "dateFilter": [],
@@ -65,7 +72,9 @@
             "locator": "17:22-17:32",
             "otherFilter": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{http://hl7.org/fhir}Condition",
                 "type": "NamedTypeSpecifier"
               },
@@ -77,7 +86,9 @@
           "locator": "17:1-17:32",
           "name": "Conditions",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{http://hl7.org/fhir}Condition",
               "type": "NamedTypeSpecifier"
             },
@@ -86,13 +97,17 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "let": [],
             "locator": "19:31-19:71",
             "relationship": [],
             "resultTypeSpecifier": {
+              "annotation": [],
               "elementType": {
+                "annotation": [],
                 "name": "{http://hl7.org/fhir}Condition",
                 "type": "NamedTypeSpecifier"
               },
@@ -101,11 +116,15 @@
             "source": [
               {
                 "alias": "C",
+                "annotation": [],
                 "expression": {
+                  "annotation": [],
                   "locator": "19:31-19:42",
                   "name": "Conditions",
                   "resultTypeSpecifier": {
+                    "annotation": [],
                     "elementType": {
+                      "annotation": [],
                       "name": "{http://hl7.org/fhir}Condition",
                       "type": "NamedTypeSpecifier"
                     },
@@ -115,7 +134,9 @@
                 },
                 "locator": "19:31-19:44",
                 "resultTypeSpecifier": {
+                  "annotation": [],
                   "elementType": {
+                    "annotation": [],
                     "name": "{http://hl7.org/fhir}Condition",
                     "type": "NamedTypeSpecifier"
                   },
@@ -125,11 +146,14 @@
             ],
             "type": "Query",
             "where": {
+              "annotation": [],
               "code": {
+                "annotation": [],
                 "libraryName": "FHIRHelpers",
                 "name": "ToConcept",
                 "operand": [
                   {
+                    "annotation": [],
                     "locator": "19:52-19:57",
                     "path": "code",
                     "resultTypeName": "{http://hl7.org/fhir}CodeableConcept",
@@ -145,6 +169,7 @@
               "signature": [],
               "type": "InValueSet",
               "valueset": {
+                "annotation": [],
                 "locator": "19:62-19:71",
                 "name": "Diabetes",
                 "preserve": true,
@@ -155,7 +180,9 @@
           "locator": "19:1-19:71",
           "name": "Diabetic Conditions",
           "resultTypeSpecifier": {
+            "annotation": [],
             "elementType": {
+              "annotation": [],
               "name": "{http://hl7.org/fhir}Condition",
               "type": "NamedTypeSpecifier"
             },
@@ -167,10 +194,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "locator": "9:1-9:26",
           "uri": "http://hl7.org/fhir",
@@ -182,6 +211,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "http://example.org/fhir/ValueSet/diabetes",
           "locator": "13:1-13:64",

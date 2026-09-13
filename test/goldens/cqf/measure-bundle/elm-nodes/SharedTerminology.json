@@ -11,6 +11,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://snomed.info/sct",
           "locator": "5:1-5:45",
           "name": "SNOMED",
@@ -22,7 +23,9 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "locator": "9:34-9:41",
             "name": "SNOMED",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}CodeSystem"
@@ -47,11 +50,14 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "locator": "11:28-11:32",
             "operand": [
               {
+                "annotation": [],
                 "locator": "11:28",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -59,6 +65,7 @@
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "locator": "11:32",
                 "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
                 "type": "Literal",
@@ -79,6 +86,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -88,6 +96,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.103.12.1001",
           "locator": "7:1-7:74",

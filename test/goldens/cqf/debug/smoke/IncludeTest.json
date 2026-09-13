@@ -16,12 +16,14 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "locator": "7:1-7:15",
           "name": "Patient"
         }
@@ -45,6 +47,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -62,9 +65,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -93,11 +99,13 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "locator": "10:3-10:6",
             "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
             "type": "Literal",
@@ -113,6 +121,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
@@ -128,6 +137,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],

@@ -16,6 +16,7 @@
             }
           ]
         },
+        "t": [],
         "type": "Annotation"
       }
     ],
@@ -34,6 +35,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
@@ -57,10 +59,12 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "codeSystem": {
+            "annotation": [],
             "name": "SNOMED"
           },
           "display": "Diabetes mellitus",
@@ -92,18 +96,22 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],
           "context": "Unfiltered",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
               },
               {
+                "annotation": [],
                 "type": "Literal",
                 "value": "1",
                 "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -119,6 +127,7 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         }
@@ -139,6 +148,7 @@
                   }
                 ]
               },
+              "t": [],
               "type": "Annotation"
             }
           ],

@@ -11,6 +11,7 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "id": "http://loinc.org",
           "name": "LOINC"
         }
@@ -20,7 +21,9 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Blood pressure",
@@ -29,7 +32,9 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Systolic blood pressure",
@@ -38,7 +43,9 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": {
+            "annotation": [],
             "name": "LOINC"
           },
           "display": "Diastolic blood pressure",
@@ -50,6 +57,7 @@
     "contexts": {
       "def": [
         {
+          "annotation": [],
           "name": "Patient"
         }
       ]
@@ -60,6 +68,7 @@
     "includes": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "FHIRHelpers",
           "path": "FHIRHelpers",
           "version": "4.0.1"
@@ -70,9 +79,12 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "name": "MeasurementPeriod",
           "parameterTypeSpecifier": {
+            "annotation": [],
             "pointType": {
+              "annotation": [],
               "name": "{urn:hl7-org:elm-types:r1}DateTime",
               "type": "NamedTypeSpecifier"
             },
@@ -88,9 +100,12 @@
     "statements": {
       "def": [
         {
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "codeFilter": [],
               "dataType": "{http://hl7.org/fhir}Patient",
               "dateFilter": [],
@@ -123,17 +138,24 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": [
               {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "operand": [
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "path": "birthDate.value",
                               "source": {
+                                "annotation": [],
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -141,6 +163,7 @@
                             },
                             "signature": [
                               {
+                                "annotation": [],
                                 "name": "{urn:hl7-org:elm-types:r1}Date",
                                 "type": "NamedTypeSpecifier"
                               }
@@ -148,13 +171,17 @@
                             "type": "ToDateTime"
                           },
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "name": "MeasurementPeriod",
                               "type": "ParameterRef"
                             },
                             "signature": [
                               {
+                                "annotation": [],
                                 "pointType": {
+                                  "annotation": [],
                                   "name": "{urn:hl7-org:elm-types:r1}DateTime",
                                   "type": "NamedTypeSpecifier"
                                 },
@@ -167,10 +194,12 @@
                         "precision": "Year",
                         "signature": [
                           {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
                           {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           }
@@ -178,6 +207,7 @@
                         "type": "CalculateAgeAt"
                       },
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "16",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -185,10 +215,12 @@
                     ],
                     "signature": [
                       {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       },
                       {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       }
@@ -196,13 +228,18 @@
                     "type": "GreaterOrEqual"
                   },
                   {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "operand": [
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "path": "birthDate.value",
                               "source": {
+                                "annotation": [],
                                 "name": "Patient",
                                 "type": "ExpressionRef"
                               },
@@ -210,6 +247,7 @@
                             },
                             "signature": [
                               {
+                                "annotation": [],
                                 "name": "{urn:hl7-org:elm-types:r1}Date",
                                 "type": "NamedTypeSpecifier"
                               }
@@ -217,13 +255,17 @@
                             "type": "ToDateTime"
                           },
                           {
+                            "annotation": [],
                             "operand": {
+                              "annotation": [],
                               "name": "MeasurementPeriod",
                               "type": "ParameterRef"
                             },
                             "signature": [
                               {
+                                "annotation": [],
                                 "pointType": {
+                                  "annotation": [],
                                   "name": "{urn:hl7-org:elm-types:r1}DateTime",
                                   "type": "NamedTypeSpecifier"
                                 },
@@ -236,10 +278,12 @@
                         "precision": "Year",
                         "signature": [
                           {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
                           {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           }
@@ -247,6 +291,7 @@
                         "type": "CalculateAgeAt"
                       },
                       {
+                        "annotation": [],
                         "type": "Literal",
                         "value": "24",
                         "valueType": "{urn:hl7-org:elm-types:r1}Integer"
@@ -254,10 +299,12 @@
                     ],
                     "signature": [
                       {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       },
                       {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Integer",
                         "type": "NamedTypeSpecifier"
                       }
@@ -267,10 +314,12 @@
                 ],
                 "signature": [
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Boolean",
                     "type": "NamedTypeSpecifier"
                   },
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}Boolean",
                     "type": "NamedTypeSpecifier"
                   }
@@ -278,13 +327,17 @@
                 "type": "And"
               },
               {
+                "annotation": [],
                 "code": {
+                  "annotation": [],
                   "libraryName": "FHIRHelpers",
                   "name": "ToString",
                   "operand": [
                     {
+                      "annotation": [],
                       "path": "gender",
                       "source": {
+                        "annotation": [],
                         "name": "Patient",
                         "type": "ExpressionRef"
                       },
@@ -293,6 +346,7 @@
                   ],
                   "signature": [
                     {
+                      "annotation": [],
                       "name": "{http://hl7.org/fhir}AdministrativeGender",
                       "type": "NamedTypeSpecifier"
                     }
@@ -301,12 +355,14 @@
                 },
                 "signature": [
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}String",
                     "type": "NamedTypeSpecifier"
                   }
                 ],
                 "type": "InValueSet",
                 "valueset": {
+                  "annotation": [],
                   "name": "Female Administrative Sex",
                   "preserve": true
                 }
@@ -314,10 +370,12 @@
             ],
             "signature": [
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               },
               {
+                "annotation": [],
                 "name": "{urn:hl7-org:elm-types:r1}Boolean",
                 "type": "NamedTypeSpecifier"
               }
@@ -349,9 +407,12 @@
           ],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{urn:hl7-org:elm-types:r1}Integer",
                   "type": "NamedTypeSpecifier"
                 },
@@ -359,20 +420,27 @@
               }
             ],
             "source": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "return": {
+                "annotation": [],
                 "distinct": false,
                 "expression": {
+                  "annotation": [],
                   "operand": [
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "name": "X",
                         "type": "AliasRef"
                       },
                       "signature": [
                         {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
@@ -382,13 +450,17 @@
                       "type": "Start"
                     },
                     {
+                      "annotation": [],
                       "operand": {
+                        "annotation": [],
                         "name": "X",
                         "type": "AliasRef"
                       },
                       "signature": [
                         {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
@@ -401,10 +473,12 @@
                   "precision": "Day",
                   "signature": [
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}DateTime",
                       "type": "NamedTypeSpecifier"
                     },
                     {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}DateTime",
                       "type": "NamedTypeSpecifier"
                     }
@@ -415,20 +489,27 @@
               "source": [
                 {
                   "alias": "X",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "operand": [
                       {
+                        "annotation": [],
                         "name": "Intervals",
                         "type": "OperandRef"
                       },
                       {
+                        "annotation": [],
                         "type": "Null"
                       }
                     ],
                     "signature": [
                       {
+                        "annotation": [],
                         "elementType": {
+                          "annotation": [],
                           "pointType": {
+                            "annotation": [],
                             "name": "{urn:hl7-org:elm-types:r1}DateTime",
                             "type": "NamedTypeSpecifier"
                           },
@@ -437,6 +518,7 @@
                         "type": "ListTypeSpecifier"
                       },
                       {
+                        "annotation": [],
                         "name": "{urn:hl7-org:elm-types:r1}Quantity",
                         "type": "NamedTypeSpecifier"
                       }
@@ -452,10 +534,14 @@
           "name": "CumulativeDuration",
           "operand": [
             {
+              "annotation": [],
               "name": "Intervals",
               "operandTypeSpecifier": {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "pointType": {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
@@ -469,15 +555,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -490,14 +581,18 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "start",
                         "source": {
+                          "annotation": [],
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -507,6 +602,7 @@
                     ],
                     "signature": [
                       {
+                        "annotation": [],
                         "name": "{http://hl7.org/fhir}dateTime",
                         "type": "NamedTypeSpecifier"
                       }
@@ -514,17 +610,21 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "name": "MeasurementPeriod",
                     "type": "ParameterRef"
                   }
                 ],
                 "signature": [
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
                   {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}DateTime",
                       "type": "NamedTypeSpecifier"
                     },
@@ -536,7 +636,9 @@
             },
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{http://hl7.org/fhir}Encounter",
                   "type": "NamedTypeSpecifier"
                 },
@@ -549,15 +651,20 @@
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "context": "Patient",
           "expression": {
+            "annotation": [],
             "operand": {
+              "annotation": [],
               "let": [],
               "relationship": [],
               "source": [
                 {
                   "alias": "E",
+                  "annotation": [],
                   "expression": {
+                    "annotation": [],
                     "codeFilter": [],
                     "dataType": "{http://hl7.org/fhir}Encounter",
                     "dateFilter": [],
@@ -570,14 +677,18 @@
               ],
               "type": "Query",
               "where": {
+                "annotation": [],
                 "operand": [
                   {
+                    "annotation": [],
                     "libraryName": "FHIRHelpers",
                     "name": "ToDateTime",
                     "operand": [
                       {
+                        "annotation": [],
                         "path": "start",
                         "source": {
+                          "annotation": [],
                           "path": "period",
                           "scope": "E",
                           "type": "Property"
@@ -587,6 +698,7 @@
                     ],
                     "signature": [
                       {
+                        "annotation": [],
                         "name": "{http://hl7.org/fhir}dateTime",
                         "type": "NamedTypeSpecifier"
                       }
@@ -594,17 +706,21 @@
                     "type": "FunctionRef"
                   },
                   {
+                    "annotation": [],
                     "name": "MeasurementPeriod",
                     "type": "ParameterRef"
                   }
                 ],
                 "signature": [
                   {
+                    "annotation": [],
                     "name": "{urn:hl7-org:elm-types:r1}DateTime",
                     "type": "NamedTypeSpecifier"
                   },
                   {
+                    "annotation": [],
                     "pointType": {
+                      "annotation": [],
                       "name": "{urn:hl7-org:elm-types:r1}DateTime",
                       "type": "NamedTypeSpecifier"
                     },
@@ -616,7 +732,9 @@
             },
             "signature": [
               {
+                "annotation": [],
                 "elementType": {
+                  "annotation": [],
                   "name": "{http://hl7.org/fhir}Encounter",
                   "type": "NamedTypeSpecifier"
                 },
@@ -632,10 +750,12 @@
     "usings": {
       "def": [
         {
+          "annotation": [],
           "localIdentifier": "System",
           "uri": "urn:hl7-org:elm-types:r1"
         },
         {
+          "annotation": [],
           "localIdentifier": "FHIR",
           "uri": "http://hl7.org/fhir",
           "version": "4.0.1"
@@ -646,24 +766,28 @@
       "def": [
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.102.12.1011",
           "name": "Acute Pharyngitis"
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.102.12.1012",
           "name": "Acute Tonsillitis"
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.464.1003.101.12.1061",
           "name": "Ambulatory/ED Visit"
         },
         {
           "accessLevel": "Public",
+          "annotation": [],
           "codeSystem": [],
           "id": "urn:oid:2.16.840.1.113883.3.560.100.2",
           "name": "Female Administrative Sex"
