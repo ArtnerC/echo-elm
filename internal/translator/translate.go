@@ -142,6 +142,7 @@ type Translator struct {
 	operandTypeSpecs     map[string]typeSpec            // function operand name → declared typeSpec, set during function body translation
 	listNodeTypes        map[*elm.ListNode]typeSpec     // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
 	fhirHelpersLocalName string                         // local identifier of included FHIRHelpers library, or "" if not included
+	queryTypes           map[*elm.QueryNode]typeSpec    // each query's type, recorded while its aliases were in scope
 	includeAliases       map[string]bool                // every include's local name, whether or not its source resolved
 	libSyms              map[string]map[string]symKind  // included library alias → name → symKind (for QualifiedRef resolution)
 	libFluentFuncs       map[string][]string            // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
@@ -605,6 +606,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	t.localFuncCounts = make(map[string]int)
 	t.localFuncReturns = make(map[string]typeSpec)
 	t.funcReturnSpecs = make(map[string]typeSpec)
+	t.queryTypes = make(map[*elm.QueryNode]typeSpec)
 	t.localFuncOperands = make(map[string][]typeSpec)
 	t.defContexts = make(map[string]string)
 	for _, s := range lib.Statements {
@@ -2560,7 +2562,14 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			// Map aggregate system operators to AggregateExpressionNode (uses "source" field).
 			if aggregateSystemOps[v.Name] && len(v.Operands) == 1 {
 				src := t.translateExpr(v.Operands[0])
-				if decimalAggregateOps[v.Name] && !t.isDecimalListExpr(v.Operands[0]) {
+				// A list of FHIR values is converted element-wise first — that
+				// is the conversion the typed overload needs. Only a list that is
+				// already System-typed falls through to the decimal widening,
+				// which otherwise turned Avg over FHIR Quantity into Avg over
+				// Decimal. (issues/06 follow-up)
+				if lifted, ok := t.liftFHIRListOperand(v.Name, src); ok {
+					src = lifted
+				} else if decimalAggregateOps[v.Name] && !t.isDecimalListExpr(v.Operands[0]) {
 					src = t.wrapInDecimalQuery(src)
 				}
 				return &elm.AggregateExpressionNode{
@@ -3720,6 +3729,14 @@ func (t *Translator) convertFHIRPrimitiveList(expr ast.Expr, translated elm.Expr
 		return nil, false
 	}
 
+	return t.fhirListConversionQuery(translated, fhirFunc), true
+}
+
+// fhirListConversionQuery is the element-wise conversion CQF lifts a list of
+// FHIR values into: Query{ source: [X: list], return: { distinct: false,
+// expression: FHIRHelpers.To<T>(X) } }. None of its nodes carry a locator or a
+// result type.
+func (t *Translator) fhirListConversionQuery(translated elm.Expression, fhirFunc string) elm.Expression {
 	alias := &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: fhirConversionAlias}
 	distinct := false
 	return &elm.QueryNode{
@@ -3742,7 +3759,7 @@ func (t *Translator) convertFHIRPrimitiveList(expr ast.Expr, translated elm.Expr
 				Operand:     []elm.Expression{alias},
 			},
 		},
-	}, true
+	}
 }
 
 // fhirConversionAlias is the query alias CQF generates for an implicit
@@ -4015,8 +4032,10 @@ func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
 	}
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
 
-	rhs := t.boundary(t.translateExpr(v.Right), v.RightBoundary, "")
+	rhs := t.boundary(t.translateExpr(v.Right), v.RightBoundary, locatorStr(v.RightBoundaryLoc))
+	op = t.demotePointContainsOp(op, rhs)
 	promotedLHS, promotedRHS := t.promoteDateToDateTime(op, lhs, rhs)
+	promotedLHS, promotedRHS = t.promotePointToInterval(op, v, promotedLHS, promotedRHS)
 	operands := []elm.Expression{promotedLHS, promotedRHS}
 	sig := t.computeSig(op, operands)
 	if v.Precision != "" {
@@ -4389,6 +4408,13 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		}
 		t.stampResultType(qn)
 	}
+	// Record the query's type while its aliases are still in scope. Anything
+	// that infers it later — an enclosing aggregate deciding whether its list
+	// needs converting, say — would otherwise re-infer once the scope is gone
+	// and, with result types off, get nothing. That is why Min over a query of
+	// FHIR dateTimes was converted under one option profile and not another.
+	// (issues/06 follow-up)
+	t.queryTypes[qn] = t.inferTypeSpec(qn)
 	return qn
 }
 
@@ -4765,7 +4791,9 @@ func (t *Translator) translateOffsetTiming(v *ast.TimingExpr, x elm.Expression) 
 	inclusive := v.Op == "SameOrBefore" || v.Op == "SameOrAfter"
 
 	// Y appears more than once, and CQF emits a separate node each time.
-	y := func() elm.Expression { return t.boundary(t.translateExpr(v.Right), v.RightBoundary, "") }
+	y := func() elm.Expression {
+		return t.boundary(t.translateExpr(v.Right), v.RightBoundary, locatorStr(v.RightBoundaryLoc))
+	}
 	shifted := func() elm.Expression {
 		op := "Add"
 		if before {
@@ -4810,6 +4838,66 @@ func (t *Translator) translateOffsetTiming(v *ast.TimingExpr, x elm.Expression) 
 	}
 
 	switch v.Offset.Kind {
+	case "within", "properlyWithin":
+		// `within q of Y` is the window [Y - q, Y + q]; `properly within`
+		// opens it and needs no null guard. Unlike before/after offsets, CQF
+		// attributes every synthesized node here — both bounds' arithmetic
+		// included — to the quantity, and leaves the nested In unattributed.
+		withinLoc := ""
+		if t.opts.EnableLocators {
+			withinLoc = locatorStr(v.Offset.Loc)
+		}
+		anchor := y()
+		bound := func(op string, a elm.Expression) elm.Expression {
+			operands := []elm.Expression{a, t.translateExpr(v.Offset.Quantity)}
+			return &elm.OperatorExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Locator:    withinLoc,
+				Signature:  t.computeSig(op, operands),
+				Operator:   op,
+				Operand:    operands,
+			}
+		}
+		properly := v.Offset.Kind == "properlyWithin"
+		iv := &elm.IntervalNode{
+			Annotation: t.cqfAnnotation(),
+			Locator:    withinLoc,
+			Low:        bound("Subtract", anchor),
+			High:       bound("Add", y()),
+			LowClosed:  !properly,
+			HighClosed: !properly,
+		}
+		if t.opts.EnableResultTypes {
+			if pt := knownTS(t.inferTypeSpec(anchor)); pt != nil {
+				_, spec := resultTypeOf(intervalTS{pt})
+				elm.SetResultType(iv, "", spec)
+			}
+		}
+		in := compare("In", x, iv)
+		if properly {
+			return in
+		}
+		isNull := &elm.UnaryExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Locator:    withinLoc,
+			Operator:   "IsNull",
+			Operand:    y(),
+		}
+		isNull.Signature = t.computeSig("IsNull", []elm.Expression{isNull.Operand})
+		notNull := &elm.UnaryExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Locator:    withinLoc,
+			Signature:  t.computeSig("Not", []elm.Expression{isNull}),
+			Operator:   "Not",
+			Operand:    isNull,
+		}
+		operands := []elm.Expression{in, notNull}
+		return &elm.OperatorExpressionNode{
+			Annotation: t.cqfAnnotation(),
+			Signature:  t.computeSig("And", operands),
+			Operator:   "And",
+			Operand:    operands,
+		}
 	case "orMore":
 		return compare(pick("SameOrBefore", "SameOrAfter"), x, shifted())
 	case "moreThan":
@@ -4998,5 +5086,128 @@ func (t *Translator) fhirConversionWrapper(inner elm.Expression, fhirType, fn, l
 		Name:        fn,
 		LibraryName: t.fhirHelpersLocalName,
 		Operand:     []elm.Expression{inner},
+	}
+}
+
+// typedAggregateOps are the aggregates whose overloads are per System type —
+// Sum(List<Integer>), Min(List<DateTime>), AllTrue(List<Boolean>). Handed a list
+// of FHIR values they need every element converted, and CQF lifts that
+// conversion into a query over the list. Count, First, Last and Mode are
+// generic in the element type and take the list as it is.
+var typedAggregateOps = map[string]bool{
+	"Sum": true, "Product": true, "Min": true, "Max": true,
+	"Avg": true, "Median": true, "StdDev": true, "PopulationStdDev": true,
+	"Variance": true, "PopulationVariance": true, "AllTrue": true, "AnyTrue": true,
+}
+
+// liftFHIRListOperand wraps an aggregate's list operand in the element-wise
+// FHIRHelpers conversion when the list holds convertible FHIR values.
+// `Min("Encs" E return E.period.start)` aggregates ToDateTime of each start;
+// left alone, it asked for the minimum of FHIR.dateTime values. (issues/06)
+func (t *Translator) liftFHIRListOperand(op string, src elm.Expression) (elm.Expression, bool) {
+	if !typedAggregateOps[op] || t.fhirHelpersLocalName == "" {
+		return nil, false
+	}
+	lt, ok := t.inferTypeSpec(src).(listTS)
+	if !ok {
+		return nil, false
+	}
+	fhirFunc := typesystem.FHIRCoercionFor(fhirLocalTypeName(lt.elem))
+	if fhirFunc == "" {
+		return nil, false
+	}
+	return t.fhirListConversionQuery(src, fhirFunc), true
+}
+
+// pointContainsOps map interval inclusion to point membership, used when the
+// right operand of `includes` is a point: `P includes start Q` is
+// Contains(P, Start(Q)), the mirror of `included in` becoming In.
+var pointContainsOps = map[string]string{
+	"Includes":       "Contains",
+	"ProperIncludes": "ProperContains",
+}
+
+func (t *Translator) demotePointContainsOp(op string, right elm.Expression) string {
+	pointOp, ok := pointContainsOps[op]
+	if !ok {
+		return op
+	}
+	if u, ok := right.(*elm.UnaryExpressionNode); ok && (u.Operator == "Start" || u.Operator == "End") {
+		return pointOp
+	}
+	if isPointTS(t.inferTypeSpec(right)) {
+		return pointOp
+	}
+	return op
+}
+
+// isPointTS reports whether a type is known and is a single value rather than a
+// collection, interval, choice or tuple.
+func isPointTS(ts typeSpec) bool {
+	switch knownTS(ts).(type) {
+	case nil, listTS, intervalTS, choiceTS, tupleTS:
+		return false
+	}
+	return true
+}
+
+// pointPromotingOps compare two intervals or two points. Given one of each, CQF
+// promotes the point to a unit interval rather than rejecting the comparison —
+// on whichever side the point is. SameAs and Meets have no such promotion; CQF
+// rejects them outright.
+var pointPromotingOps = map[string]bool{
+	"Before": true, "After": true, "SameOrBefore": true, "SameOrAfter": true,
+}
+
+// promotePointToInterval applies that promotion. The point side is translated
+// again for each copy, as CQF emits separate nodes. (issues/06 follow-up)
+func (t *Translator) promotePointToInterval(op string, v *ast.TimingExpr, lhs, rhs elm.Expression) (elm.Expression, elm.Expression) {
+	if !pointPromotingOps[op] {
+		return lhs, rhs
+	}
+	lt, rt := t.inferTypeSpec(lhs), t.inferTypeSpec(rhs)
+	_, leftInterval := lt.(intervalTS)
+	_, rightInterval := rt.(intervalTS)
+	switch {
+	case leftInterval && isPointTS(rt):
+		again := func() elm.Expression {
+			return t.boundary(t.translateExpr(v.Right), v.RightBoundary, locatorStr(v.RightBoundaryLoc))
+		}
+		return lhs, t.unitInterval(rhs, again, rt)
+	case rightInterval && isPointTS(lt):
+		again := func() elm.Expression {
+			return t.boundary(t.translateExpr(v.Left), v.LeftBoundary, locatorStr(v.LeftBoundaryLoc))
+		}
+		return t.unitInterval(lhs, again, lt), rhs
+	}
+	return lhs, rhs
+}
+
+// unitInterval is the promotion CQF builds for a point X:
+// if X is null then null else Interval[X, X]. Only the null branch carries a
+// type — the interval type — and none of the synthesized nodes a locator.
+func (t *Translator) unitInterval(first elm.Expression, again func() elm.Expression, pt typeSpec) elm.Expression {
+	isNull := &elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig("IsNull", []elm.Expression{first}),
+		Operator:   "IsNull",
+		Operand:    first,
+	}
+	null := &elm.NullNode{Annotation: t.cqfAnnotation()}
+	if t.opts.EnableResultTypes {
+		_, spec := resultTypeOf(intervalTS{pt})
+		elm.SetResultType(null, "", spec)
+	}
+	return &elm.IfNode{
+		Annotation: t.cqfAnnotation(),
+		Condition:  isNull,
+		Then:       null,
+		Else: &elm.IntervalNode{
+			Annotation: t.cqfAnnotation(),
+			Low:        again(),
+			High:       again(),
+			LowClosed:  true,
+			HighClosed: true,
+		},
 	}
 }

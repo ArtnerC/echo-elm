@@ -353,18 +353,24 @@ of this issue's diagnoses changed on contact with a reproducer.
 | Argument to a choice-typed parameter not cast | Overload not recoverable | `As{asTypeSpecifier: Choice<…>}` |
 | `--bundle` compared silently against a stale reference | Harness | Warns when a reference library's `translatorVersion` is missing or is not the pin |
 
-### 6.3 Reproduced but not fixed, and bounded
+### 6.3 Follow-up fixes
 
-- **List-lift under aggregates.** `Min("Encs" E return E.period.start)`: CQF wraps the
-  list in `X return FHIRHelpers.ToDateTime(X)` before `Min`; echo-elm aggregates the list
-  of `FHIR.dateTime` directly. The existing `convertFHIRPrimitiveList` covers list-valued
-  *properties* only; this needs the same lift for an aggregate's list operand.
-- **An interval compared `on or before` a point.** `E.period on or before end of P`: CQF
-  promotes the point with `If(IsNull(x), null, Interval[x, x])`. The operator itself now
-  matches (`SameOrBefore`); only the promotion is missing. The `ends on or before` form
-  measure logic normally uses already matches completely.
-- **`Property` → `ExpressionRef` (22 in Part 4)** did not reproduce synthetically and
-  needs a construct shape from the bundle before it can be worked.
+The two shapes this section originally left bounded are fixed, along with three more
+that probing them turned up. Each is pinned by
+`measure-shapes/TimingWithinAndPromotion.cql` or `measure-shapes/AggregateConversions.cql`.
+
+| Gap | Effect | Fix |
+|---|---|---|
+| `within q of Y` | **Wrong results** — the quantity was dropped, comparing X against Y itself | The window `[Y - q, Y + q]`, open for `properly within`, with `starts`/`ends` and a trailing keyword |
+| Aggregates over FHIR values | `Min`/`Max`/`Sum`/`Avg` over unconverted FHIR values | CQF's element-wise lift, `X return FHIRHelpers.To<T>(X)`, for the aggregates overloaded per System type; `Count`, `distinct`, `First` are generic and untouched |
+| `Avg` over FHIR `Quantity` | Widened to `Decimal` | The FHIR lift takes precedence over decimal widening |
+| An interval compared with a point | No promotion | `if X is null then null else Interval[X, X]`, on whichever side the point is (`SameAs` and `Meets` have no promotion; CQF rejects them) |
+| `includes start Y` | `Includes` against a point | `Contains`, the mirror of `included in` becoming `In` |
+| Trailing `start` / `end` keyword | No locator on the synthesized boundary | Attributed to the keyword |
+
+`Property → ExpressionRef` (22 in Part 4) did not reproduce synthetically: tracked as
+[#7](https://github.com/ArtnerC/echo-elm/issues/7). Emitting `CqlToElmError` diagnostics is
+tracked as [#8](https://github.com/ArtnerC/echo-elm/issues/8).
 
 ### 6.4 On the bundle's reference ELM
 
@@ -374,10 +380,13 @@ records it, so its absence is the fastest signal that the reference was not prod
 the translator this repository targets.
 
 The supplier-side action is outside this repository: the bundles' embedded ELM does not
-match a CQF 5.0.0 compile of their own CQL, independent of echo-elm. It is recorded here
-so it can be raised with the bundle's publisher.
+match a CQF 5.0.0 compile of their own CQL, independent of echo-elm. Tracked as
+[#5](https://github.com/ArtnerC/echo-elm/issues/5) so it can be raised with the bundle's publisher.
 
 ### 6.5 What to send back
+
+Tracked as [#6](https://github.com/ArtnerC/echo-elm/issues/6).
+
 
 Re-run the three-way comparison (fresh-CQF vs echo-elm) on this branch and send the
 node-substitution table plus `StructuralDiff` output for the first ten differing
@@ -399,7 +408,7 @@ anything else is new and should come with a construct description, not measure t
 | `In`/`IncludedIn` (4.2) | **Reproduced and fixed** — see 6.1 |
 | Timing phrases (`on or`, `starts`/`ends`, offsets) | **Fixed** — new, correctness-affecting; see 6.2 |
 | Qualification family (`TypeSpecifier` substitutions) | **Fixed** — choice types, FHIRHelpers return types; see 6.2 |
-| Conversion-site family | **Fixed** except the aggregate list-lift; see 6.3 |
+| Conversion-site family | **Fixed**, including the aggregate list-lift; see 6.3 |
 | Corpus claim | 332/335, 0 differ, before and after — see 6.1 |
 
 ## Actions
@@ -414,6 +423,7 @@ anything else is new and should come with a construct description, not measure t
       reproduced with `during` and a `Start`/`End` left operand, and fixed
 - [x] Fix the `As`/`Null` gap (4.1) — fixed, and its diagnosis corrected
 - [x] Make `--bundle` warn when a reference ELM's `CqlToElmInfo` lacks `translatorVersion`
-- [ ] Communicate to whoever supplies these bundles that their embedded reference ELM does
-      not match a 5.0.0 compile of their own source — outside this repository; see 6.4
-- [ ] Aggregate list-lift and interval-vs-point promotion — reproduced and bounded; see 6.3
+- [x] Communicate to whoever supplies these bundles that their embedded reference ELM does
+      not match a 5.0.0 compile of their own source — filed as #5 (needs the publisher)
+- [x] Aggregate list-lift and interval-vs-point promotion — fixed, with `within`,
+      trailing keywords and `includes` against a point; see 6.3

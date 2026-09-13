@@ -824,6 +824,13 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return intTS
 		case "Avg", "Median", "StdDev", "PopulationStdDev", "Variance",
 			"PopulationVariance", "GeometricMean":
+			// Decimal-valued, except over quantities, where the unit is kept:
+			// Avg(List<Quantity>) is a Quantity. (issues/06 follow-up)
+			if lt, ok := t.inferTypeSpec(v.Source).(listTS); ok {
+				if n, ok := lt.elem.(namedTS); ok && n.name == typesystem.TypeQuantity {
+					return quantityTS
+				}
+			}
 			return decTS
 		case "AllTrue", "AnyTrue":
 			return boolTS
@@ -937,6 +944,9 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			}
 		}
 	case *elm.QueryNode:
+		if ts, ok := t.queryTypes[v]; ok {
+			return ts
+		}
 		// An aggregate clause reduces the query to a single value.
 		if v.Aggregate != nil && v.Aggregate.Expression != nil {
 			return t.inferTypeSpec(v.Aggregate.Expression)

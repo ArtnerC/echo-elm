@@ -1,0 +1,1839 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "22:1-22:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TimingWithinAndPromotion",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "locator": "16:1-16:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "locator": "18:1-18:33",
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "locator": "18:16-18:33",
+            "pointType": {
+              "locator": "18:25-18:32",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "locator": "19:1-19:22",
+          "name": "D",
+          "parameterTypeSpecifier": {
+            "locator": "19:15-19:22",
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          },
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "locator": "20:1-20:23",
+          "name": "D2",
+          "parameterTypeSpecifier": {
+            "locator": "20:16-20:23",
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          },
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "22:1-22:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "22:1-22:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "locator": "24:16-24:26",
+            "otherFilter": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "locator": "24:1-24:26",
+          "name": "Encs",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "26:18-26:42",
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "locator": "26:18-26:20",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "high": {
+                      "locator": "26:29-26:34",
+                      "operand": [
+                        {
+                          "locator": "26:39-26:42",
+                          "name": "D2",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "locator": "26:29-26:34",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "locator": "26:29-26:34",
+                    "low": {
+                      "locator": "26:29-26:34",
+                      "operand": [
+                        {
+                          "locator": "26:39-26:42",
+                          "name": "D2",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "locator": "26:29-26:34",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "resultTypeSpecifier": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "locator": "26:29-26:34",
+                "operand": {
+                  "locator": "26:29-26:34",
+                  "operand": {
+                    "locator": "26:39-26:42",
+                    "name": "D2",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "And"
+          },
+          "locator": "26:1-26:42",
+          "name": "Within",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "27:26-27:59",
+            "operand": [
+              {
+                "locator": "27:26-27:28",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "ParameterRef"
+              },
+              {
+                "high": {
+                  "locator": "27:46-27:51",
+                  "operand": [
+                    {
+                      "locator": "27:56-27:59",
+                      "name": "D2",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "ParameterRef"
+                    },
+                    {
+                      "locator": "27:46-27:51",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                      "type": "Quantity",
+                      "unit": "days",
+                      "value": 3
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "highClosed": false,
+                "locator": "27:46-27:51",
+                "low": {
+                  "locator": "27:46-27:51",
+                  "operand": [
+                    {
+                      "locator": "27:56-27:59",
+                      "name": "D2",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "ParameterRef"
+                    },
+                    {
+                      "locator": "27:46-27:51",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                      "type": "Quantity",
+                      "unit": "days",
+                      "value": 3
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Subtract"
+                },
+                "lowClosed": false,
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "Interval"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "27:1-27:59",
+          "name": "ProperlyWithin",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "28:23-28:47",
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "locator": "28:23-28:25",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "high": {
+                      "locator": "28:34-28:39",
+                      "operand": [
+                        {
+                          "locator": "28:44-28:47",
+                          "name": "D2",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "locator": "28:34-28:39",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                          "type": "Quantity",
+                          "unit": "year",
+                          "value": 1
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "locator": "28:34-28:39",
+                    "low": {
+                      "locator": "28:34-28:39",
+                      "operand": [
+                        {
+                          "locator": "28:44-28:47",
+                          "name": "D2",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "locator": "28:34-28:39",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                          "type": "Quantity",
+                          "unit": "year",
+                          "value": 1
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "resultTypeSpecifier": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "locator": "28:34-28:39",
+                "operand": {
+                  "locator": "28:34-28:39",
+                  "operand": {
+                    "locator": "28:44-28:47",
+                    "name": "D2",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "And"
+          },
+          "locator": "28:1-28:47",
+          "name": "WithinYears",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "29:24-29:84",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "29:24-29:29",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "29:24-29:31",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "29:33-29:84",
+              "operand": [
+                {
+                  "operand": [
+                    {
+                      "locator": "29:48-29:53",
+                      "operand": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "locator": "29:39-29:46",
+                            "path": "period",
+                            "resultTypeName": "{http://hl7.org/fhir}Period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "high": {
+                        "locator": "29:62-29:67",
+                        "operand": [
+                          {
+                            "locator": "29:72-29:84",
+                            "operand": {
+                              "locator": "29:81-29:84",
+                              "name": "MP",
+                              "resultTypeSpecifier": {
+                                "pointType": {
+                                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                                  "type": "NamedTypeSpecifier"
+                                },
+                                "type": "IntervalTypeSpecifier"
+                              },
+                              "type": "ParameterRef"
+                            },
+                            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "signature": [],
+                            "type": "Start"
+                          },
+                          {
+                            "locator": "29:62-29:67",
+                            "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Add"
+                      },
+                      "highClosed": true,
+                      "locator": "29:62-29:67",
+                      "low": {
+                        "locator": "29:62-29:67",
+                        "operand": [
+                          {
+                            "locator": "29:72-29:84",
+                            "operand": {
+                              "locator": "29:81-29:84",
+                              "name": "MP",
+                              "resultTypeSpecifier": {
+                                "pointType": {
+                                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                                  "type": "NamedTypeSpecifier"
+                                },
+                                "type": "IntervalTypeSpecifier"
+                              },
+                              "type": "ParameterRef"
+                            },
+                            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "signature": [],
+                            "type": "Start"
+                          },
+                          {
+                            "locator": "29:62-29:67",
+                            "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Subtract"
+                      },
+                      "lowClosed": true,
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "Interval"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                {
+                  "locator": "29:62-29:67",
+                  "operand": {
+                    "locator": "29:62-29:67",
+                    "operand": {
+                      "locator": "29:72-29:84",
+                      "operand": {
+                        "locator": "29:81-29:84",
+                        "name": "MP",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "ParameterRef"
+                      },
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "locator": "29:1-29:84",
+          "name": "StartsWithin",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "30:27-30:80",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "30:27-30:32",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "30:27-30:34",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "30:36-30:80",
+              "operand": [
+                {
+                  "operand": [
+                    {
+                      "locator": "30:51-30:54",
+                      "operand": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "locator": "30:42-30:49",
+                            "path": "period",
+                            "resultTypeName": "{http://hl7.org/fhir}Period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    {
+                      "high": {
+                        "locator": "30:63-30:68",
+                        "operand": [
+                          {
+                            "locator": "30:73-30:75",
+                            "operand": {
+                              "locator": "30:77-30:80",
+                              "name": "MP",
+                              "resultTypeSpecifier": {
+                                "pointType": {
+                                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                                  "type": "NamedTypeSpecifier"
+                                },
+                                "type": "IntervalTypeSpecifier"
+                              },
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "End"
+                          },
+                          {
+                            "locator": "30:63-30:68",
+                            "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Add"
+                      },
+                      "highClosed": true,
+                      "locator": "30:63-30:68",
+                      "low": {
+                        "locator": "30:63-30:68",
+                        "operand": [
+                          {
+                            "locator": "30:73-30:75",
+                            "operand": {
+                              "locator": "30:77-30:80",
+                              "name": "MP",
+                              "resultTypeSpecifier": {
+                                "pointType": {
+                                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                                  "type": "NamedTypeSpecifier"
+                                },
+                                "type": "IntervalTypeSpecifier"
+                              },
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "End"
+                          },
+                          {
+                            "locator": "30:63-30:68",
+                            "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Subtract"
+                      },
+                      "lowClosed": true,
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "Interval"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                {
+                  "locator": "30:63-30:68",
+                  "operand": {
+                    "locator": "30:63-30:68",
+                    "operand": {
+                      "locator": "30:73-30:75",
+                      "operand": {
+                        "locator": "30:77-30:80",
+                        "name": "MP",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "locator": "30:1-30:80",
+          "name": "EndsWithinOfEnd",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "31:32-31:101",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "31:32-31:37",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "31:32-31:39",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "31:41-31:101",
+              "operand": [
+                {
+                  "locator": "31:56-31:61",
+                  "operand": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "locator": "31:47-31:54",
+                        "path": "period",
+                        "resultTypeName": "{http://hl7.org/fhir}Period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "high": {
+                    "locator": "31:79-31:84",
+                    "operand": [
+                      {
+                        "locator": "31:89-31:101",
+                        "operand": {
+                          "locator": "31:98-31:101",
+                          "name": "MP",
+                          "resultTypeSpecifier": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "type": "ParameterRef"
+                        },
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "signature": [],
+                        "type": "Start"
+                      },
+                      {
+                        "locator": "31:79-31:84",
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                        "type": "Quantity",
+                        "unit": "days",
+                        "value": 3
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Add"
+                  },
+                  "highClosed": false,
+                  "locator": "31:79-31:84",
+                  "low": {
+                    "locator": "31:79-31:84",
+                    "operand": [
+                      {
+                        "locator": "31:89-31:101",
+                        "operand": {
+                          "locator": "31:98-31:101",
+                          "name": "MP",
+                          "resultTypeSpecifier": {
+                            "pointType": {
+                              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            "type": "IntervalTypeSpecifier"
+                          },
+                          "type": "ParameterRef"
+                        },
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "signature": [],
+                        "type": "Start"
+                      },
+                      {
+                        "locator": "31:79-31:84",
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                        "type": "Quantity",
+                        "unit": "days",
+                        "value": 3
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Subtract"
+                  },
+                  "lowClosed": false,
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "Interval"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "locator": "31:1-31:101",
+          "name": "ProperlyStartsWithin",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "32:30-32:60",
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "locator": "32:30-32:32",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "high": {
+                      "locator": "32:41-32:46",
+                      "operand": [
+                        {
+                          "locator": "32:51-32:55",
+                          "operand": {
+                            "locator": "32:57-32:60",
+                            "name": "MP",
+                            "resultTypeSpecifier": {
+                              "pointType": {
+                                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                                "type": "NamedTypeSpecifier"
+                              },
+                              "type": "IntervalTypeSpecifier"
+                            },
+                            "type": "ParameterRef"
+                          },
+                          "signature": [],
+                          "type": "Start"
+                        },
+                        {
+                          "locator": "32:41-32:46",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "locator": "32:41-32:46",
+                    "low": {
+                      "locator": "32:41-32:46",
+                      "operand": [
+                        {
+                          "locator": "32:51-32:55",
+                          "operand": {
+                            "locator": "32:57-32:60",
+                            "name": "MP",
+                            "resultTypeSpecifier": {
+                              "pointType": {
+                                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                                "type": "NamedTypeSpecifier"
+                              },
+                              "type": "IntervalTypeSpecifier"
+                            },
+                            "type": "ParameterRef"
+                          },
+                          "signature": [],
+                          "type": "Start"
+                        },
+                        {
+                          "locator": "32:41-32:46",
+                          "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "resultTypeSpecifier": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "locator": "32:41-32:46",
+                "operand": {
+                  "locator": "32:41-32:46",
+                  "operand": {
+                    "locator": "32:51-32:55",
+                    "operand": {
+                      "locator": "32:57-32:60",
+                      "name": "MP",
+                      "resultTypeSpecifier": {
+                        "pointType": {
+                          "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "And"
+          },
+          "locator": "32:1-32:60",
+          "name": "WithinStartKeyword",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "34:30-34:50",
+            "operand": [
+              {
+                "locator": "34:30-34:32",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "ParameterRef"
+              },
+              {
+                "locator": "34:41-34:45",
+                "operand": {
+                  "locator": "34:47-34:50",
+                  "name": "MP",
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Before"
+          },
+          "locator": "34:1-34:50",
+          "name": "BeforeStartKeyword",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "35:34-35:79",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "35:34-35:39",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "35:34-35:41",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "35:43-35:79",
+              "operand": [
+                {
+                  "locator": "35:58-35:61",
+                  "operand": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "locator": "35:49-35:56",
+                        "path": "period",
+                        "resultTypeName": "{http://hl7.org/fhir}Period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                },
+                {
+                  "locator": "35:70-35:74",
+                  "operand": {
+                    "locator": "35:76-35:79",
+                    "name": "MP",
+                    "resultTypeSpecifier": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Before"
+            }
+          },
+          "locator": "35:1-35:79",
+          "name": "EndsBeforeStartKeyword",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "36:33-36:58",
+            "operand": [
+              {
+                "locator": "36:33-36:35",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "ParameterRef"
+              },
+              {
+                "locator": "36:49-36:53",
+                "operand": {
+                  "locator": "36:55-36:58",
+                  "name": "MP",
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "precision": "Day",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "SameAs"
+          },
+          "locator": "36:1-36:58",
+          "name": "SameDayAsStartKeyword",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "37:32-37:55",
+            "operand": [
+              {
+                "locator": "37:32-37:35",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              },
+              {
+                "locator": "37:46-37:50",
+                "operand": {
+                  "locator": "37:52-37:55",
+                  "name": "MP",
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Contains"
+          },
+          "locator": "37:1-37:55",
+          "name": "IncludesStartKeyword",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "39:31-39:64",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "39:31-39:36",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "39:31-39:38",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "39:40-39:64",
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "locator": "39:46-39:53",
+                      "path": "period",
+                      "resultTypeName": "{http://hl7.org/fhir}Period",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "condition": {
+                    "operand": {
+                      "locator": "39:62-39:64",
+                      "name": "D",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "else": {
+                    "high": {
+                      "locator": "39:62-39:64",
+                      "name": "D",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "ParameterRef"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "locator": "39:62-39:64",
+                      "name": "D",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "ParameterRef"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  },
+                  "then": {
+                    "resultTypeSpecifier": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "Null"
+                  },
+                  "type": "If"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Before"
+            }
+          },
+          "locator": "39:1-39:64",
+          "name": "IntervalBeforePoint",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "40:30-40:77",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "locator": "40:30-40:35",
+                  "name": "Encs",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Encounter",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "40:30-40:37",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Encounter",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "locator": "40:39-40:77",
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "locator": "40:45-40:52",
+                      "path": "period",
+                      "resultTypeName": "{http://hl7.org/fhir}Period",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "condition": {
+                    "operand": {
+                      "locator": "40:67-40:77",
+                      "operand": {
+                        "locator": "40:74-40:77",
+                        "name": "MP",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "ParameterRef"
+                      },
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "else": {
+                    "high": {
+                      "locator": "40:67-40:77",
+                      "operand": {
+                        "locator": "40:74-40:77",
+                        "name": "MP",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "ParameterRef"
+                      },
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "locator": "40:67-40:77",
+                      "operand": {
+                        "locator": "40:74-40:77",
+                        "name": "MP",
+                        "resultTypeSpecifier": {
+                          "pointType": {
+                            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          "type": "IntervalTypeSpecifier"
+                        },
+                        "type": "ParameterRef"
+                      },
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  },
+                  "then": {
+                    "resultTypeSpecifier": {
+                      "pointType": {
+                        "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "IntervalTypeSpecifier"
+                    },
+                    "type": "Null"
+                  },
+                  "type": "If"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "SameOrBefore"
+            }
+          },
+          "locator": "40:1-40:77",
+          "name": "IntervalOnOrBefore",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "41:31-41:45",
+            "operand": [
+              {
+                "condition": {
+                  "operand": {
+                    "locator": "41:31-41:33",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "locator": "41:31-41:33",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "locator": "41:31-41:33",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "Null"
+                },
+                "type": "If"
+              },
+              {
+                "locator": "41:42-41:45",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Before"
+          },
+          "locator": "41:1-41:45",
+          "name": "PointBeforeInterval",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "42:35-42:55",
+            "operand": [
+              {
+                "condition": {
+                  "operand": {
+                    "locator": "42:35-42:37",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "locator": "42:35-42:37",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "locator": "42:35-42:37",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "Null"
+                },
+                "type": "If"
+              },
+              {
+                "locator": "42:52-42:55",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "SameOrBefore"
+          },
+          "locator": "42:1-42:55",
+          "name": "PointOnOrBeforeInterval",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "43:34-43:53",
+            "operand": [
+              {
+                "locator": "43:34-43:37",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              },
+              {
+                "condition": {
+                  "operand": {
+                    "locator": "43:51-43:53",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "locator": "43:51-43:53",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "locator": "43:51-43:53",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "Null"
+                },
+                "type": "If"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "SameOrAfter"
+          },
+          "locator": "43:1-43:53",
+          "name": "IntervalOnOrAfterPoint",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "44:36-44:57",
+            "operand": [
+              {
+                "locator": "44:36-44:39",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              },
+              {
+                "condition": {
+                  "operand": {
+                    "locator": "44:55-44:57",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "locator": "44:55-44:57",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "locator": "44:55-44:57",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "resultTypeSpecifier": {
+                    "pointType": {
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "Null"
+                },
+                "type": "If"
+              }
+            ],
+            "precision": "Day",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Before"
+          },
+          "locator": "44:1-44:57",
+          "name": "IntervalBeforeDayOfPoint",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "locator": "14:1-14:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

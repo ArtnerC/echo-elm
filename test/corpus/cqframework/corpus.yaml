@@ -419,6 +419,18 @@ fixtures:
     profiles: [default, measure-bundle]
     tags: [measure-shapes]
 
+  - path: measure-shapes/TimingWithinAndPromotion.cql
+    description: within, trailing boundary keywords, includes against a point, point promotion (issues/06 follow-up)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
+  - path: measure-shapes/AggregateConversions.cql
+    description: Aggregates over FHIR values convert each element first (issues/06 follow-up)
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [measure-shapes]
+
   - path: measure-shapes/FluentHelpers.cql
     description: Helper providing a fluent function for FluentCrossLibrary
     expectedStatus: success

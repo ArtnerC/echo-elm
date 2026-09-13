@@ -1,0 +1,1110 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TimingWithinAndPromotion",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "name": "D",
+          "parameterTypeSpecifier": {
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "name": "D2",
+          "parameterTypeSpecifier": {
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encs"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "high": {
+                      "operand": [
+                        {
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "operand": [
+                        {
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "operand": {
+                  "operand": {
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "Within"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "high": {
+                  "operand": [
+                    {
+                      "name": "D2",
+                      "type": "ParameterRef"
+                    },
+                    {
+                      "type": "Quantity",
+                      "unit": "days",
+                      "value": 3
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "highClosed": false,
+                "low": {
+                  "operand": [
+                    {
+                      "name": "D2",
+                      "type": "ParameterRef"
+                    },
+                    {
+                      "type": "Quantity",
+                      "unit": "days",
+                      "value": 3
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Subtract"
+                },
+                "lowClosed": false,
+                "type": "Interval"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "ProperlyWithin"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "high": {
+                      "operand": [
+                        {
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "type": "Quantity",
+                          "unit": "year",
+                          "value": 1
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "operand": [
+                        {
+                          "name": "D2",
+                          "type": "ParameterRef"
+                        },
+                        {
+                          "type": "Quantity",
+                          "unit": "year",
+                          "value": 1
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "operand": {
+                  "operand": {
+                    "name": "D2",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "WithinYears"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": [
+                    {
+                      "operand": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "path": "period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    {
+                      "high": {
+                        "operand": [
+                          {
+                            "operand": {
+                              "name": "MP",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "Start"
+                          },
+                          {
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Add"
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "operand": [
+                          {
+                            "operand": {
+                              "name": "MP",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "Start"
+                          },
+                          {
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Subtract"
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                {
+                  "operand": {
+                    "operand": {
+                      "operand": {
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "Start"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              ],
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "name": "StartsWithin"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": [
+                    {
+                      "operand": {
+                        "libraryName": "FHIRHelpers",
+                        "name": "ToInterval",
+                        "operand": [
+                          {
+                            "path": "period",
+                            "scope": "E",
+                            "type": "Property"
+                          }
+                        ],
+                        "signature": [],
+                        "type": "FunctionRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    {
+                      "high": {
+                        "operand": [
+                          {
+                            "operand": {
+                              "name": "MP",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "End"
+                          },
+                          {
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Add"
+                      },
+                      "highClosed": true,
+                      "low": {
+                        "operand": [
+                          {
+                            "operand": {
+                              "name": "MP",
+                              "type": "ParameterRef"
+                            },
+                            "signature": [],
+                            "type": "End"
+                          },
+                          {
+                            "type": "Quantity",
+                            "unit": "days",
+                            "value": 3
+                          }
+                        ],
+                        "signature": [],
+                        "type": "Subtract"
+                      },
+                      "lowClosed": true,
+                      "type": "Interval"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "In"
+                },
+                {
+                  "operand": {
+                    "operand": {
+                      "operand": {
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              ],
+              "signature": [],
+              "type": "And"
+            }
+          },
+          "name": "EndsWithinOfEnd"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                },
+                {
+                  "high": {
+                    "operand": [
+                      {
+                        "operand": {
+                          "name": "MP",
+                          "type": "ParameterRef"
+                        },
+                        "signature": [],
+                        "type": "Start"
+                      },
+                      {
+                        "type": "Quantity",
+                        "unit": "days",
+                        "value": 3
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Add"
+                  },
+                  "highClosed": false,
+                  "low": {
+                    "operand": [
+                      {
+                        "operand": {
+                          "name": "MP",
+                          "type": "ParameterRef"
+                        },
+                        "signature": [],
+                        "type": "Start"
+                      },
+                      {
+                        "type": "Quantity",
+                        "unit": "days",
+                        "value": 3
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Subtract"
+                  },
+                  "lowClosed": false,
+                  "type": "Interval"
+                }
+              ],
+              "signature": [],
+              "type": "In"
+            }
+          },
+          "name": "ProperlyStartsWithin"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "operand": [
+                  {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "high": {
+                      "operand": [
+                        {
+                          "operand": {
+                            "name": "MP",
+                            "type": "ParameterRef"
+                          },
+                          "signature": [],
+                          "type": "Start"
+                        },
+                        {
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Add"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "operand": [
+                        {
+                          "operand": {
+                            "name": "MP",
+                            "type": "ParameterRef"
+                          },
+                          "signature": [],
+                          "type": "Start"
+                        },
+                        {
+                          "type": "Quantity",
+                          "unit": "days",
+                          "value": 3
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Subtract"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  }
+                ],
+                "signature": [],
+                "type": "In"
+              },
+              {
+                "operand": {
+                  "operand": {
+                    "operand": {
+                      "name": "MP",
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "WithinStartKeyword"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "signature": [],
+            "type": "Before"
+          },
+          "name": "BeforeStartKeyword"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "operand": {
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToInterval",
+                    "operand": [
+                      {
+                        "path": "period",
+                        "scope": "E",
+                        "type": "Property"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "End"
+                },
+                {
+                  "operand": {
+                    "name": "MP",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "Start"
+                }
+              ],
+              "signature": [],
+              "type": "Before"
+            }
+          },
+          "name": "EndsBeforeStartKeyword"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "precision": "Day",
+            "signature": [],
+            "type": "SameAs"
+          },
+          "name": "SameDayAsStartKeyword"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "MP",
+                "type": "ParameterRef"
+              },
+              {
+                "operand": {
+                  "name": "MP",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "signature": [],
+            "type": "Contains"
+          },
+          "name": "IncludesStartKeyword"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "path": "period",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "condition": {
+                    "operand": {
+                      "name": "D",
+                      "type": "ParameterRef"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "else": {
+                    "high": {
+                      "name": "D",
+                      "type": "ParameterRef"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "name": "D",
+                      "type": "ParameterRef"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  },
+                  "then": {
+                    "type": "Null"
+                  },
+                  "type": "If"
+                }
+              ],
+              "signature": [],
+              "type": "Before"
+            }
+          },
+          "name": "IntervalBeforePoint"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "operand": [
+                {
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "path": "period",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "condition": {
+                    "operand": {
+                      "operand": {
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "else": {
+                    "high": {
+                      "operand": {
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "highClosed": true,
+                    "low": {
+                      "operand": {
+                        "name": "MP",
+                        "type": "ParameterRef"
+                      },
+                      "signature": [],
+                      "type": "End"
+                    },
+                    "lowClosed": true,
+                    "type": "Interval"
+                  },
+                  "then": {
+                    "type": "Null"
+                  },
+                  "type": "If"
+                }
+              ],
+              "signature": [],
+              "type": "SameOrBefore"
+            }
+          },
+          "name": "IntervalOnOrBefore"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "condition": {
+                  "operand": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "type": "Null"
+                },
+                "type": "If"
+              },
+              {
+                "name": "MP",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "Before"
+          },
+          "name": "PointBeforeInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "condition": {
+                  "operand": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "type": "Null"
+                },
+                "type": "If"
+              },
+              {
+                "name": "MP",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "SameOrBefore"
+          },
+          "name": "PointOnOrBeforeInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "MP",
+                "type": "ParameterRef"
+              },
+              {
+                "condition": {
+                  "operand": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "type": "Null"
+                },
+                "type": "If"
+              }
+            ],
+            "signature": [],
+            "type": "SameOrAfter"
+          },
+          "name": "IntervalOnOrAfterPoint"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": [
+              {
+                "name": "MP",
+                "type": "ParameterRef"
+              },
+              {
+                "condition": {
+                  "operand": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "else": {
+                  "high": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "then": {
+                  "type": "Null"
+                },
+                "type": "If"
+              }
+            ],
+            "precision": "Day",
+            "signature": [],
+            "type": "Before"
+          },
+          "name": "IntervalBeforeDayOfPoint"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

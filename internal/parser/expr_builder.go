@@ -1166,10 +1166,14 @@ func (b *astBuilder) timingQualifiers(ctx cqlparser.IIntervalOperatorPhraseConte
 	switch ctx.(type) {
 	case *cqlparser.BeforeOrAfterIntervalOperatorPhraseContext,
 		*cqlparser.IncludedInIntervalOperatorPhraseContext,
-		*cqlparser.ConcurrentWithIntervalOperatorPhraseContext:
+		*cqlparser.ConcurrentWithIntervalOperatorPhraseContext,
+		*cqlparser.WithinIntervalOperatorPhraseContext:
 	case *cqlparser.IncludesIntervalOperatorPhraseContext:
 		// `includes` has only the trailing slot: `X includes start Y`.
 		te.RightBoundary = trailingBoundary(ctx)
+		if te.RightBoundary != "" {
+			te.RightBoundaryLoc = tokenInterval(ctx.GetStop())
+		}
 		return
 	default:
 		return
@@ -1184,6 +1188,25 @@ func (b *astBuilder) timingQualifiers(ctx cqlparser.IIntervalOperatorPhraseConte
 		te.LeftBoundaryLoc = tokenInterval(ctx.GetStart())
 	}
 	te.RightBoundary = trailingBoundary(ctx)
+	if te.RightBoundary != "" {
+		te.RightBoundaryLoc = tokenInterval(ctx.GetStop())
+	}
+
+	// `within q of Y` is carried as an offset too: it is the window
+	// [Y - q, Y + q]. Its quantity was dropped entirely, which compared X
+	// against Y itself. (issues/06 follow-up)
+	if w, ok := ctx.(*cqlparser.WithinIntervalOperatorPhraseContext); ok && w.Quantity() != nil {
+		kind := "within"
+		if strings.Contains(strings.ToLower(ctx.GetText()), "properly") {
+			kind = "properlyWithin"
+		}
+		te.Offset = &ast.TimingOffset{
+			Quantity: b.buildQuantityLiteral(w.Quantity()),
+			Kind:     kind,
+			Loc:      intervalFromCtx(w.Quantity()),
+		}
+		return
+	}
 
 	c, ok := ctx.(*cqlparser.BeforeOrAfterIntervalOperatorPhraseContext)
 	if !ok || c.QuantityOffset() == nil {

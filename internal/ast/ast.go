@@ -507,6 +507,8 @@ type TimingExpr struct {
 	// RightBoundary is "start" or "end" when the phrase closes with `start` or
 	// `end`, selecting that boundary of Right.
 	RightBoundary string
+	// RightBoundaryLoc is the span of the trailing `start` / `end` keyword.
+	RightBoundaryLoc Interval
 	// Offset is the quantity offset of a before/after phrase (`3 days or less
 	// before`), or nil when there is none.
 	Offset *TimingOffset
