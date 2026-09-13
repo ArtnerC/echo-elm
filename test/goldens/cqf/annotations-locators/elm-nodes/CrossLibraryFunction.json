@@ -1,0 +1,213 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Library-qualified function calls must carry libraryName.\n//\n// `H.\"Doubled\"(21)` parses identically to a method invocation — the grammar\n// cannot tell a library qualifier from a receiver — so the qualifier has to be\n// recovered from the include aliases. Without it the call emits a FunctionRef\n// naming a function in the current library, which is a different reference:\n// here \"Doubled\" exists locally too, so the unqualified form silently resolves\n// to the wrong function rather than failing.\nlibrary CrossLibraryFunction version '1.0'"
+              ]
+            }
+          ]
+        },
+        "type": "Annotation"
+      }
+    ],
+    "identifier": {
+      "id": "CrossLibraryFunction",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "include SharedFunctions version '1.0' called H"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "H",
+          "locator": "11:1-11:46",
+          "path": "SharedFunctions",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedCall\": H.\"Doubled\"(21)"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "H",
+            "locator": "13:25-13:39",
+            "name": "Doubled",
+            "operand": [
+              {
+                "locator": "13:37-13:38",
+                "type": "Literal",
+                "value": "21",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "13:1-13:39",
+          "name": "QualifiedCall"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"QualifiedNoArgs\": H.\"Constant\"()"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "H",
+            "locator": "14:27-14:40",
+            "name": "Constant",
+            "operand": [],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "14:1-14:40",
+          "name": "QualifiedNoArgs"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define function \"Doubled\"(n Integer): n * 100"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "16:39-16:45",
+            "operand": [
+              {
+                "locator": "16:39",
+                "name": "n",
+                "type": "OperandRef"
+              },
+              {
+                "locator": "16:43-16:45",
+                "type": "Literal",
+                "value": "100",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "locator": "16:1-16:45",
+          "name": "Doubled",
+          "operand": [
+            {
+              "name": "n",
+              "operandTypeSpecifier": {
+                "locator": "16:29-16:35",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"LocalCall\": \"Doubled\"(21)"
+                    ]
+                  }
+                ]
+              },
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "15:21-15:33",
+            "name": "Doubled",
+            "operand": [
+              {
+                "locator": "15:31-15:32",
+                "type": "Literal",
+                "value": "21",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "15:1-15:33",
+          "name": "LocalCall"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -30,12 +30,7 @@ type Fixture struct {
 	// Use this when the upstream CQF CLI itself produces no output for a given
 	// fixture+profile combination (upstream-error), so no golden can exist.
 	ExcludeProfiles []string `yaml:"excludeProfiles"`
-	// VersionDivergent marks a fixture whose CQF output legitimately differs
-	// between the pinned upstream versions. Golden generation skips it during
-	// the cross-version equality check and takes the newest version's output,
-	// instead of failing the whole run. Document the divergence in the fixture.
-	VersionDivergent bool     `yaml:"versionDivergent"`
-	Tags             []string `yaml:"tags"`
+	Tags            []string `yaml:"tags"`
 
 	// Options is retained for backward compatibility but superseded by Profiles.
 	Options map[string]string `yaml:"options"`

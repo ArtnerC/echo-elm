@@ -23,8 +23,7 @@ echo-elm [global-flags] <subcommand> [flags] [args]
 
 ## `translate` — modern echo-elm surface
 
-This is the primary interface for Firely-style SDK workflows and downstream
-CQL/ELM consumers:
+This is the primary interface for downstream CQL/ELM consumers:
 generate ELM XML/JSON with current CQL 1.5 defaults. It intentionally excludes
 legacy output formats and old compatibility-level switches that modern ELM consumers
 do not consume.
@@ -58,11 +57,11 @@ do not consume.
 ## `cqf translate` — CQFramework compatibility surface
 
 Use this only for pinned workflows expecting CQFramework `cql-to-elm` behavior.
-It accepts the upstream flag names/defaults from 3.29.0 and 4.8.0:
+It accepts the upstream flag names/defaults from the pinned 5.0.0 release:
 
 - `--format XML|JSON|COFFEE` where `COFFEE` emits a CommonJS/CoffeeScript-era
   wrapper: `module.exports = <ELM JSON>;`. This is legacy JavaScript tooling
-  compatibility, not a Firely SDK or modern ELM-consumer output target.
+  compatibility, not a modern ELM-consumer output target.
 - `--target-format` as the 4.x alias for `--format`.
 - `--signatures None|Differing|Overloads|All` (canonical upstream name);
   `--signature-level` may be accepted as an echo-elm alias.

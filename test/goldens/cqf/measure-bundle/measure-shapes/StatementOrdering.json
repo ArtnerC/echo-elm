@@ -1,0 +1,95 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "9:1-9:18",
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "StatementOrdering",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "13:17",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Literal",
+            "value": "3",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "locator": "13:1-13:17",
+          "name": "Gamma",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "11:17-11:27",
+            "operand": [
+              {
+                "locator": "11:17-11:23",
+                "name": "Gamma",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "ExpressionRef"
+              },
+              {
+                "locator": "11:27",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "11:1-11:27",
+          "name": "Alpha",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "12:16",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Literal",
+            "value": "2",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "locator": "12:1-12:16",
+          "name": "Beta",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

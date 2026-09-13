@@ -1,0 +1,87 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "5:1-5:15",
+          "name": "Patient"
+        },
+        {
+          "locator": "9:1-9:18",
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "TestPatientContext"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "locator": "7:17-7:20",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "locator": "7:1-7:20",
+          "name": "Patient",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "11:18-11:24",
+            "name": "Patient",
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "ExpressionRef"
+          },
+          "locator": "11:1-11:24",
+          "name": "Patients",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "QDM",
+          "locator": "3:1-3:23",
+          "uri": "urn:healthit-gov:qdm:v5_3",
+          "version": "5.3"
+        }
+      ]
+    }
+  }
+}

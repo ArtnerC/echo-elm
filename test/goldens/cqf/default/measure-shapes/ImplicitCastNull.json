@@ -1,0 +1,228 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ImplicitCastNull",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "period",
+            "type": "OperandRef"
+          },
+          "name": "Window",
+          "operand": [
+            {
+              "name": "period",
+              "operandTypeSpecifier": {
+                "pointType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            },
+            {
+              "name": "dates",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "s",
+            "type": "OperandRef"
+          },
+          "name": "Named",
+          "operand": [
+            {
+              "name": "s",
+              "operandTypeSpecifier": {
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Window",
+            "operand": [
+              {
+                "asTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "operand": {
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "element": [
+                  {
+                    "day": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "month": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2024",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "Null Interval Argument"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Window",
+            "operand": [
+              {
+                "high": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "31",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "type": "Literal",
+                    "value": "12",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": true,
+                "low": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "asTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "operand": {
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "Null List Argument"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "name": "Named",
+            "operand": [
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "Null Named Argument"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

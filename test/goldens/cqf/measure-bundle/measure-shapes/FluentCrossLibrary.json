@@ -1,0 +1,78 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "FluentCrossLibrary",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FluentHelpers",
+          "locator": "10:1-10:35",
+          "path": "FluentHelpers",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "12:13-12:14",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Literal",
+            "value": "21",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "locator": "12:1-12:14",
+          "name": "N",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "FluentHelpers",
+            "locator": "14:18-14:32",
+            "name": "Doubled",
+            "operand": [
+              {
+                "locator": "14:18-14:20",
+                "name": "N",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "14:1-14:32",
+          "name": "Result",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

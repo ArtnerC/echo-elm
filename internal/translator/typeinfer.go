@@ -2,6 +2,7 @@ package translator
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
@@ -537,6 +538,52 @@ func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
 // astTypeSpecToTypeSpec converts an AST type specifier to the translator's
 // internal typeSpec used for signature inference. Returns nil for tuple/choice
 // or other unhandled forms.
+// declaredTypeSpec converts a source-declared type specifier and renders every
+// model type name the one way CQF does: {modelUri}LocalName.
+//
+// astTypeSpecToTypeSpec keeps the name as written, which is why the same type
+// could come out three ways in one library — `{http://hl7.org/fhir}Encounter`
+// from a retrieve, `FHIR.Encounter` from an alias-qualified declaration, and
+// bare `Encounter` from an unqualified one. Only the first is right. Routing
+// declared specifiers through qualifyDataType, which retrieves already use,
+// makes that one rule rather than three code paths that must agree.
+func (t *Translator) declaredTypeSpec(ts ast.TypeSpecifier) typeSpec {
+	return t.qualifyTypeSpec(astTypeSpecToTypeSpec(ts))
+}
+
+// qualifyTypeSpec rewrites every model type name in a spec tree to its
+// {uri}LocalName form. System types arrive already qualified and are untouched.
+func (t *Translator) qualifyTypeSpec(ts typeSpec) typeSpec {
+	switch v := ts.(type) {
+	case namedTS:
+		return namedTS{t.qualifyTypeName(v.name)}
+	case listTS:
+		return listTS{t.qualifyTypeSpec(v.elem)}
+	case intervalTS:
+		return intervalTS{t.qualifyTypeSpec(v.point)}
+	case tupleTS:
+		fields := make([]tupleField, len(v.fields))
+		for i, f := range v.fields {
+			fields[i] = tupleField{name: f.name, ts: t.qualifyTypeSpec(f.ts)}
+		}
+		return tupleTS{fields: fields}
+	}
+	return ts
+}
+
+// qualifyTypeName renders one type name in {uri}LocalName form. A name that is
+// already qualified, or that no declared model claims, is left alone rather than
+// guessed at.
+func (t *Translator) qualifyTypeName(name string) string {
+	if name == "" || strings.HasPrefix(name, "{") {
+		return name
+	}
+	if dt, _ := t.qualifyDataType(name); dt != "" {
+		return dt
+	}
+	return name
+}
+
 func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 	if ts == nil {
 		return nil
@@ -666,6 +713,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return listTS{t.inferTypeSpec(v.Operand)}
 		case "Negate", "Abs", "Successor", "Predecessor":
 			// These preserve the operand type.
+			return t.inferTypeSpec(v.Operand)
+		case "Distinct", "Flatten", "Collapse", "Expand", "Slice", "Take", "Skip", "Tail":
+			// List-shape-preserving. The n-ary branch already handles these, but
+			// ELM models them as UnaryExpression — a single operand object, not an
+			// array — so they never reached it and came out with no result type.
+			if v.Operator == "Flatten" {
+				// flatten List<List<T>> → List<T>.
+				if outer, ok := t.inferTypeSpec(v.Operand).(listTS); ok {
+					if inner, ok := outer.elem.(listTS); ok {
+						return inner
+					}
+					return outer
+				}
+				return nil
+			}
 			return t.inferTypeSpec(v.Operand)
 		case "Truncate", "Floor", "Ceiling":
 			// Decimal → Integer: these round to a whole number.
@@ -930,6 +992,19 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			if ts, ok := t.localFuncReturns[v.Name]; ok {
 				return ts
 			}
+			// A function with no declared `returns` clause still has a return
+			// type — the type of its body. localFuncReturns only holds declared
+			// ones, so without this a call to an undeclared-return function
+			// degrades to Any and takes every expression built on it with it.
+			if ts, ok := t.funcReturnSpecs[v.Name]; ok {
+				return ts
+			}
+		} else if ts, ok := t.libFuncReturns[v.LibraryName][v.Name]; ok {
+			// A call into an included library resolves to the return type that
+			// library infers for the function, the same way a qualified
+			// ExpressionRef resolves through libDefTypes. Fluent calls reach here
+			// too, since their libraryName is recovered rather than written.
+			return ts
 		}
 		// FHIRHelpers.ToString (and other primitive helpers) return primitive types.
 		if v.LibraryName == t.fhirHelpersLocalName {
@@ -958,6 +1033,15 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			fields = append(fields, tupleField{name: el.Name, ts: t.inferTypeSpec(el.Value)})
 		}
 		return tupleTS{fields: fields}
+	case *elm.SingletonFromNode:
+		// singleton from List<T> → T. Its own ELM node rather than a
+		// UnaryExpression, so it reached neither operator branch and came out
+		// untyped, taking whatever was built on it along.
+		if lt, ok := t.inferTypeSpec(v.Operand).(listTS); ok {
+			return lt.elem
+		}
+		return nil
+
 	case *elm.PropertyNode:
 		// Property on a tuple type: look up the field type.
 		var srcTS typeSpec
@@ -986,6 +1070,28 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			key := srcContext + "." + v.Path
 			if fhirType, ok := typesystem.FHIRPropertyType[key]; ok {
 				return fhirTypeToCQLTypeSpec(fhirType)
+			}
+		}
+		// Same lookup when the source is model-typed rather than a context
+		// reference — most often a query alias, whose element type is a model
+		// type rather than a tuple. Without this, navigating off an alias
+		// produced no type at all, which then collapsed the enclosing query to
+		// List<Any>. (issues/05 Part 5 / #12)
+		if v.Path != "" {
+			if local := fhirLocalTypeName(srcTS); local != "" {
+				if fhirType, ok := typesystem.FHIRPropertyTypeOf(local, v.Path); ok {
+					// The property's own type is the FHIR type, not the System
+					// type it converts to: CQF records C.id as
+					// {http://hl7.org/fhir}id and lets the FHIRHelpers call at
+					// the consumption site carry the String. This mirrors the
+					// Source-based branch above rather than going through
+					// fhirTypeToCQLTypeSpec, which answers the other question.
+					var ts typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+					if typesystem.IsFHIRListPropertyOf(local, v.Path) {
+						ts = listTS{ts}
+					}
+					return ts
+				}
 			}
 		}
 	case *elm.RetrieveNode:
@@ -1022,7 +1128,15 @@ func fhirTypeToCQLTypeSpec(fhirType string) typeSpec {
 	case "Quantity":
 		return quantityTS
 	default:
-		return anyTS
+		// Not a primitive or binding, so it has no System equivalent — it is a
+		// complex FHIR type and stays one. Returning Any here is what collapsed
+		// `E.subject` to no result type at all: Any is treated as "unresolved"
+		// and left unstamped, so the enclosing query then had nothing to infer
+		// its element type from and became List<Any>. (issues/05 #12)
+		if fhirType == "" {
+			return anyTS
+		}
+		return namedTS{"{http://hl7.org/fhir}" + fhirType}
 	}
 }
 

@@ -142,6 +142,10 @@ type Translator struct {
 	listNodeTypes        map[*elm.ListNode]typeSpec     // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
 	fhirHelpersLocalName string                         // local identifier of included FHIRHelpers library, or "" if not included
 	libSyms              map[string]map[string]symKind  // included library alias → name → symKind (for QualifiedRef resolution)
+	libFluentFuncs       map[string][]string            // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
+	funcReturnSpecs      map[string]typeSpec            // local function name → inferred return type (unambiguous names only)
+	localFuncOperands    map[string][]typeSpec          // local function name → declared operand types (unambiguous names only)
+	libFuncReturns       map[string]map[string]typeSpec // included library alias → function name → inferred return type
 	skipLocatorStamp     bool                           // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
 	inSortScope          bool                           // when true, identifiers resolve to IdentifierRef (sort-by expressions are scoped to the query result element)
 	noFHIRCoerce         bool                           // when true, the next expression is in an unconsumed position and skips implicit FHIRHelpers coercion
@@ -569,7 +573,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if nts, ok := (*p.ParameterType).(*ast.NamedTypeSpecifier); ok {
 				t.paramTypes[p.Name] = resolveTypeName(nts.Name)
 			}
-			if ts := astTypeSpecToTypeSpec(*p.ParameterType); ts != nil {
+			if ts := t.declaredTypeSpec(*p.ParameterType); ts != nil {
 				t.paramTypeSpecs[p.Name] = ts
 			}
 		}
@@ -598,6 +602,8 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	// function's declared return type for calls to resolve against.
 	t.localFuncCounts = make(map[string]int)
 	t.localFuncReturns = make(map[string]typeSpec)
+	t.funcReturnSpecs = make(map[string]typeSpec)
+	t.localFuncOperands = make(map[string][]typeSpec)
 	t.defContexts = make(map[string]string)
 	for _, s := range lib.Statements {
 		t.defContexts[s.Name] = s.Context
@@ -608,15 +614,31 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		}
 		t.localFuncCounts[s.Name]++
 		if s.ReturnType != nil {
-			if ts := astTypeSpecToTypeSpec(*s.ReturnType); ts != nil {
+			if ts := t.declaredTypeSpec(*s.ReturnType); ts != nil {
 				t.localFuncReturns[s.Name] = ts
 			}
+		}
+		// Declared operand types, for casting untyped arguments at call sites.
+		// Only unambiguous names: with overloads the parameter list depends on
+		// which one the call resolves to, which is not decided here.
+		if t.localFuncCounts[s.Name] > 1 {
+			delete(t.localFuncOperands, s.Name)
+		} else {
+			specs := make([]typeSpec, len(s.Operands))
+			for i, op := range s.Operands {
+				if op.Type != nil {
+					specs[i] = t.declaredTypeSpec(*op.Type)
+				}
+			}
+			t.localFuncOperands[s.Name] = specs
 		}
 	}
 
 	// Build cross-library symbol tables for QualifiedRef resolution.
 	t.libSyms = make(map[string]map[string]symKind)
 	t.libDefTypes = make(map[string]map[string]typeSpec)
+	t.libFluentFuncs = make(map[string][]string)
+	t.libFuncReturns = make(map[string]map[string]typeSpec)
 	if t.opts.LibrarySource != nil {
 		for _, inc := range lib.Includes {
 			localName := inc.LocalName
@@ -627,11 +649,21 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if err == nil && found {
 				if pr, parseErr := parser.ParseBytes(src, inc.Path+".cql"); parseErr == nil {
 					t.libSyms[localName] = buildSymMap(pr.Library)
+					// `receiver.Func()` can only resolve to a fluent function, so
+					// record which includes declare one under each name.
+					for _, st := range pr.Library.Statements {
+						if st.IsFunction && st.IsFluent {
+							if !containsString(t.libFluentFuncs[st.Name], localName) {
+								t.libFluentFuncs[st.Name] = append(t.libFluentFuncs[st.Name], localName)
+							}
+						}
+					}
 					// A qualified reference resolves to the type the included
 					// library gives that definition, so translate it once to
 					// learn those types. Only needed for result types.
 					if t.opts.EnableResultTypes {
-						t.libDefTypes[localName] = includedDefTypes(&t.opts, pr.Library, inc.Path)
+						t.libDefTypes[localName], t.libFuncReturns[localName] =
+							includedDefTypes(&t.opts, pr.Library, inc.Path)
 					}
 				}
 			}
@@ -884,7 +916,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 					stampTypeSpecifier(pd.ParameterTypeSpecifier)
 				}
 				if t.opts.EnableResultTypes {
-					pd.ResultTypeName, pd.ResultTypeSpecifier = resultTypeOf(astTypeSpecToTypeSpec(*p.ParameterType))
+					pd.ResultTypeName, pd.ResultTypeSpecifier = resultTypeOf(t.declaredTypeSpec(*p.ParameterType))
 				}
 			}
 			if p.Default != nil {
@@ -933,21 +965,36 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		explicitNames[s.Name] = true
 	}
 
-	// Statements — prepend implicit context accessor for each unique context that
-	// (a) is not "Unfiltered", and (b) has no explicit definition with the same name.
-	stmtDefs := make([]*elm.StatementDef, 0, len(lib.Contexts))
+	// Implicit context accessor for each unique context that (a) is not
+	// "Unfiltered", and (b) has no explicit definition with the same name.
+	//
+	// Each accessor is keyed by the source position of its `context` declaration,
+	// not prepended: CQF walks declarations in source order and creates the
+	// accessor when it reaches the declaration, so a define written *above*
+	// `context Patient` is emitted above the Patient accessor.
+	accessors := make([]positionedAccessor, 0, len(lib.Contexts))
 	seenAccessor := map[string]bool{}
 	for _, ctx := range lib.Contexts {
 		if ctx.Name == "Unfiltered" || explicitNames[ctx.Name] || seenAccessor[ctx.Name] {
 			continue
 		}
 		seenAccessor[ctx.Name] = true
-		stmtDefs = append(stmtDefs, t.buildContextAccessor(ctx.Name, lib))
+		accessors = append(accessors, positionedAccessor{
+			at:  ctx.Loc().Start,
+			def: t.buildContextAccessor(ctx.Name, lib),
+		})
 	}
 
-	if len(lib.Statements) > 0 || len(stmtDefs) > 0 {
-		stmts := &elm.StatementDefs{Def: stmtDefs}
-		for _, s := range statementEmissionOrder(lib.Statements) {
+	if len(lib.Statements) > 0 || len(accessors) > 0 {
+		// Recover library qualifiers before ordering, so the dependency analysis
+		// and the emitted nodes agree about what each call refers to.
+		t.resolveLibraryQualifiedCalls(lib.Statements)
+		ordered := statementEmissionOrder(lib.Statements)
+		stmts := &elm.StatementDefs{Def: leadingAccessors(&accessors, ordered)}
+		for _, s := range ordered {
+			// Emit any accessor whose context declaration precedes this statement
+			// in the source before the statement itself.
+			stmts.Def = append(stmts.Def, accessorsBefore(&accessors, s.Loc().Start)...)
 			stmtCtx := s.Context
 			if stmtCtx == "" {
 				stmtCtx = "Unfiltered"
@@ -969,7 +1016,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			// under --result-types. A declared `returns` clause does not by itself
 			// put the type in the ELM.
 			if s.ReturnType != nil && t.opts.EnableResultTypes {
-				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(astTypeSpecToTypeSpec(*s.ReturnType))
+				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(t.declaredTypeSpec(*s.ReturnType))
 			}
 			// Build function parameter scope before translating the body,
 			// so IdentifierRef nodes matching operand names emit OperandRef.
@@ -979,7 +1026,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				for _, op := range s.Operands {
 					t.functionParamScope[op.Name] = true
 					if op.Type != nil {
-						if ts := astTypeSpecToTypeSpec(*op.Type); ts != nil {
+						if ts := t.declaredTypeSpec(*op.Type); ts != nil {
 							t.operandTypeSpecs[op.Name] = ts
 						}
 					}
@@ -1018,11 +1065,22 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
 					t.defTypeSpecs[s.Name] = ts
 				}
+			} else if t.localFuncCounts[s.Name] == 1 {
+				// Record the inferred return type so callers in *other* libraries
+				// can resolve it. defTypeSpecs deliberately excludes functions, so
+				// this is a separate map. Overloaded names are skipped: picking
+				// between them needs the argument types, and recording whichever
+				// came last would be a guess.
+				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
+					t.funcReturnSpecs[s.Name] = ts
+				}
 			}
 			t.functionParamScope = nil
 			t.operandTypeSpecs = nil
 			stmts.Def = append(stmts.Def, sd)
 		}
+		// Any accessor whose declaration sits after every statement.
+		stmts.Def = append(stmts.Def, drainAccessors(&accessors)...)
 		out.Statements = stmts
 	}
 
@@ -1044,6 +1102,50 @@ func (t *Translator) modelURIVersioned(name, version string) string {
 		return uri
 	}
 	return name
+}
+
+// castNullTo wraps an untyped Null in the As node CQF emits for it, naming the
+// declared parameter type. A named type goes in asType; a structured one
+// (Interval<Date>, List<Date>) needs asTypeSpecifier.
+func (t *Translator) castNullTo(arg elm.Expression, declared typeSpec) elm.Expression {
+	as := &elm.AsNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.cqfEmptyArrayField(),
+		Operand:    arg,
+	}
+	if named, ok := declared.(namedTS); ok {
+		as.AsType = named.name
+		return as
+	}
+	spec := toELMTypeSpecifier(declared)
+	if spec == nil {
+		return arg
+	}
+	// Deliberately not stamped: stampTypeSpecifier is for specifiers written in
+	// the source. This As is synthesized, so its target is too, and CQF leaves
+	// synthesized specifiers bare.
+	as.AsTypeSpecifier = spec
+	return as
+}
+
+// fhirLocalTypeName returns the local FHIR type name of a type spec — the
+// "Encounter" in "{http://hl7.org/fhir}Encounter" — or "" when the spec is not a
+// namespaced model type. System types are excluded: they are already CQL values
+// and need no conversion.
+func fhirLocalTypeName(ts typeSpec) string {
+	named, ok := ts.(namedTS)
+	if !ok || !strings.HasPrefix(named.name, "{") {
+		return ""
+	}
+	close := strings.Index(named.name, "}")
+	if close < 0 {
+		return ""
+	}
+	uri, local := named.name[1:close], named.name[close+1:]
+	if uri == typesystem.SystemURI || local == "" {
+		return ""
+	}
+	return local
 }
 
 // dataNamespaceForModelURI returns the ELM data-type namespace for a model URI.
@@ -1121,13 +1223,141 @@ func (t *Translator) declResultType(typeName string) string {
 // includedDefTypes translates an included library far enough to learn the type
 // of each of its definitions. Result types are the only thing that needs this,
 // so it runs only when they are enabled; the translated output is discarded.
-func includedDefTypes(opts *Options, lib *ast.Library, path string) map[string]typeSpec {
+func includedDefTypes(opts *Options, lib *ast.Library, path string) (defs, funcs map[string]typeSpec) {
 	sub := New(*opts)
 	// Do not recurse into the include's own includes: one level is enough for
 	// the reference being resolved, and it keeps a cycle from looping.
 	sub.opts.LibrarySource = nil
 	sub.Translate(lib, path+".cql")
-	return sub.defTypeSpecs
+	return sub.defTypeSpecs, sub.funcReturnSpecs
+}
+
+// fluentLibraryFor returns the include alias declaring a fluent function called
+// name, when exactly one does.
+//
+// A local definition wins: a fluent function defined in this library needs no
+// qualifier, and stamping one would point the reference somewhere else. So does
+// ambiguity — if two includes declare the same fluent name, choosing between
+// them needs the receiver's element type, which is overload resolution rather
+// than qualification. Guessing there would produce a confidently wrong
+// libraryName, which is worse than the missing one; issues/05 3.6 tracks it.
+func (t *Translator) fluentLibraryFor(name string) (string, bool) {
+	if t.localFuncCounts[name] > 0 {
+		return "", false
+	}
+	libs := t.libFluentFuncs[name]
+	if len(libs) != 1 {
+		return "", false
+	}
+	return libs[0], true
+}
+
+// containsString reports whether xs contains s.
+func containsString(xs []string, s string) bool {
+	for _, x := range xs {
+		if x == s {
+			return true
+		}
+	}
+	return false
+}
+
+// positionedAccessor is an implicit context accessor together with the source
+// position of the `context` declaration that produced it.
+type positionedAccessor struct {
+	at  ast.Position
+	def *elm.StatementDef
+}
+
+// leadingAccessors returns the accessors declared before the first statement,
+// or all of them when there are no statements at all.
+func leadingAccessors(pending *[]positionedAccessor, ordered []*ast.ExpressionDefinition) []*elm.StatementDef {
+	if len(ordered) == 0 {
+		return drainAccessors(pending)
+	}
+	return accessorsBefore(pending, ordered[0].Loc().Start)
+}
+
+// accessorsBefore removes and returns every pending accessor declared at or
+// before pos, in declaration order.
+func accessorsBefore(pending *[]positionedAccessor, pos ast.Position) []*elm.StatementDef {
+	var out []*elm.StatementDef
+	kept := (*pending)[:0]
+	for _, a := range *pending {
+		if beforePosition(a.at, pos) {
+			out = append(out, a.def)
+			continue
+		}
+		kept = append(kept, a)
+	}
+	*pending = kept
+	return out
+}
+
+// drainAccessors removes and returns everything still pending.
+func drainAccessors(pending *[]positionedAccessor) []*elm.StatementDef {
+	out := make([]*elm.StatementDef, 0, len(*pending))
+	for _, a := range *pending {
+		out = append(out, a.def)
+	}
+	*pending = (*pending)[:0]
+	return out
+}
+
+// beforePosition reports whether a precedes b in the source.
+func beforePosition(a, b ast.Position) bool {
+	if a.Line != b.Line {
+		return a.Line < b.Line
+	}
+	return a.Column < b.Column
+}
+
+// resolveLibraryQualifiedCalls rewrites `Alias.Func(args)` from the shape the
+// grammar produces into a library-qualified call.
+//
+// CQL spells a library-qualified call and a method invocation identically —
+// `<term>.<name>(...)` — so the parser cannot tell them apart and builds both as
+// FunctionRef{Name: "Func", Operands: [Alias, args...]}. Only the include
+// aliases distinguish them, and those are not known until resolution.
+//
+// This runs once, before anything reads the statement bodies, because two
+// separate consumers have to agree about it: emission needs libraryName on the
+// node, and statementEmissionOrder needs to NOT see a dependency on a local
+// definition of the same name. Recovering the qualifier at emission time alone
+// leaves the ordering pass believing `H."Doubled"(21)` depends on a local
+// "Doubled", which hoists that definition ahead of its referent and reorders
+// statements.def[] away from CQF.
+//
+// Only the alias must be known, not the function: a library's functions are not
+// all reachable through libSyms, and an unknown name under a known alias is
+// still library-qualified. This mirrors the PropertyExpr path, which resolves
+// `Alias.Symbol` the same way.
+func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinition) {
+	for _, s := range stmts {
+		if s == nil || s.Expression == nil {
+			continue
+		}
+		ast.Walk(s.Expression, func(n ast.Node) {
+			fr, isCall := n.(*ast.FunctionRef)
+			if !isCall || fr.LibraryName != "" || len(fr.Operands) == 0 {
+				return
+			}
+			if ir, isIdent := fr.Operands[0].(*ast.IdentifierRef); isIdent {
+				if _, isLib := t.libSyms[ir.Name]; isLib {
+					fr.LibraryName = ir.Name
+					fr.Operands = fr.Operands[1:]
+					return
+				}
+			}
+			// Otherwise the receiver is an ordinary expression, which makes this
+			// a fluent invocation: `X.Func()` is `Func(X)` where Func is declared
+			// `fluent`. The receiver stays as the first operand — only the
+			// library qualifier has to be recovered.
+			if lib, ok := t.fluentLibraryFor(fr.Name); ok {
+				fr.LibraryName = lib
+			}
+		})
+	}
 }
 
 // statementEmissionOrder returns the statements in the order CQF emits them.
@@ -1341,7 +1571,11 @@ func (t *Translator) translateTypeSpecifier(ts ast.TypeSpecifier) elm.TypeSpecif
 		if v.Qualifier != "" {
 			name = v.Qualifier + "." + v.Name
 		}
-		name = resolveTypeName(name)
+		// Model types render as {modelUri}LocalName, the same form retrieves use.
+		// resolveTypeName only maps System names, so an alias-qualified
+		// `FHIR.Encounter` or a bare `Encounter` would otherwise reach the ELM
+		// as written and give one type two more spellings.
+		name = t.qualifyTypeName(resolveTypeName(name))
 		nts := &elm.NamedTypeSpecifier{Annotation: ann, Name: name}
 		if t.opts.EnableLocators {
 			nts.Locator = locatorStr(v.Loc())
@@ -2362,9 +2596,20 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				return expanded
 			}
 		}
-		var operands []elm.Expression
-		for _, o := range v.Operands {
-			operands = append(operands, t.translateExpr(o))
+		declared := t.localFuncOperands[v.Name]
+		if v.LibraryName != "" {
+			declared = nil
+		}
+		operands := make([]elm.Expression, 0, len(v.Operands))
+		for i, o := range v.Operands {
+			arg := t.translateExpr(o)
+			// A bare `null` carries no type, so CQF wraps it in an As naming the
+			// parameter's declared type. Without it the argument is an untyped
+			// Null and the call's overload cannot be recovered from the ELM.
+			if _, isNull := o.(*ast.NullLiteral); isNull && i < len(declared) && declared[i] != nil {
+				arg = t.castNullTo(arg, declared[i])
+			}
+			operands = append(operands, arg)
 		}
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
@@ -3767,6 +4012,18 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		translatedSources[i] = srcExpr
 		if lt, ok := t.inferTypeSpec(srcExpr).(listTS); ok {
 			aliasTypeSpecs[src.Alias] = lt.elem
+			// The cases above read the model type out of the source's syntax, so
+			// they only fire when a Retrieve is visible in it. A source that is a
+			// reference to a define — `"Encounters" E` rather than `[Encounter] E`
+			// — has no Retrieve to find, and the alias would carry no FHIR type,
+			// which silently suppresses every implicit FHIRHelpers conversion
+			// inside the query. The inferred element type knows the answer, so
+			// fall back to it. (issues/05 3.2)
+			if t.fhirHelpersLocalName != "" && aliasTypes[src.Alias] == "" {
+				if name := fhirLocalTypeName(lt.elem); name != "" {
+					aliasTypes[src.Alias] = name
+				}
+			}
 		}
 	}
 	t.queryAliasTypes = append(t.queryAliasTypes, aliasTypes)
@@ -3842,6 +4099,11 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 	}
 	if q.Where != nil {
 		qn.Where = t.translateExpr(q.Where)
+		// The clause's outermost node carries the whole `where <expr>` span,
+		// keyword included; everything inside keeps its own.
+		if t.opts.EnableLocators && q.WhereLoc.Start.Line != 0 {
+			setLocator(qn.Where, locatorStr(q.WhereLoc))
+		}
 	}
 	if q.Return != nil {
 		// Plain 'return' omits the field; explicit 'return all'/'return distinct'

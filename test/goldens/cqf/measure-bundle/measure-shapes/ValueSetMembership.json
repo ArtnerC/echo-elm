@@ -1,0 +1,194 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "15:1-15:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ValueSetMembership",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "FHIRHelpers",
+          "locator": "11:1-11:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "15:1-15:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "15:1-15:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Condition",
+            "dateFilter": [],
+            "include": [],
+            "locator": "17:22-17:32",
+            "otherFilter": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Condition",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+            "type": "Retrieve"
+          },
+          "locator": "17:1-17:32",
+          "name": "Conditions",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Condition",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "locator": "19:31-19:71",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "elementType": {
+                "name": "{http://hl7.org/fhir}Condition",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "C",
+                "expression": {
+                  "locator": "19:31-19:42",
+                  "name": "Conditions",
+                  "resultTypeSpecifier": {
+                    "elementType": {
+                      "name": "{http://hl7.org/fhir}Condition",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "type": "ExpressionRef"
+                },
+                "locator": "19:31-19:44",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{http://hl7.org/fhir}Condition",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "code": {
+                "libraryName": "FHIRHelpers",
+                "name": "ToConcept",
+                "operand": [
+                  {
+                    "locator": "19:52-19:57",
+                    "path": "code",
+                    "resultTypeName": "{http://hl7.org/fhir}CodeableConcept",
+                    "scope": "C",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "locator": "19:46-19:71",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "InValueSet",
+              "valueset": {
+                "locator": "19:62-19:71",
+                "name": "Diabetes",
+                "preserve": true,
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet"
+              }
+            }
+          },
+          "locator": "19:1-19:71",
+          "name": "Diabetic Conditions",
+          "resultTypeSpecifier": {
+            "elementType": {
+              "name": "{http://hl7.org/fhir}Condition",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "locator": "9:1-9:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "codeSystem": [],
+          "id": "http://example.org/fhir/ValueSet/diabetes",
+          "locator": "13:1-13:64",
+          "name": "Diabetes",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet"
+        }
+      ]
+    }
+  }
+}

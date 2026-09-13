@@ -1,0 +1,285 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ResultTypeInference",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encs"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "element": [
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "day": {
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "type": "Literal",
+                  "value": "2024",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "type": "List"
+          },
+          "name": "Dates"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "name": "Dates",
+              "type": "ExpressionRef"
+            },
+            "signature": [],
+            "type": "Distinct"
+          },
+          "name": "Distinct Dates"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "element": [
+                {
+                  "element": [
+                    {
+                      "day": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "month": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Date",
+                      "year": {
+                        "type": "Literal",
+                        "value": "2024",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    }
+                  ],
+                  "type": "List"
+                },
+                {
+                  "element": [
+                    {
+                      "day": {
+                        "type": "Literal",
+                        "value": "1",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "month": {
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Date",
+                      "year": {
+                        "type": "Literal",
+                        "value": "2024",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    }
+                  ],
+                  "type": "List"
+                }
+              ],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "Flatten"
+          },
+          "name": "Flat Dates"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "subject",
+                "scope": "E",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "Subjects"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "let": [],
+            "relationship": [],
+            "return": {
+              "expression": {
+                "path": "id",
+                "scope": "E",
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "expression": {
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "Ids"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Patient",
+          "expression": {
+            "operand": {
+              "let": [],
+              "relationship": [],
+              "source": [
+                {
+                  "alias": "E",
+                  "expression": {
+                    "name": "Encs",
+                    "type": "ExpressionRef"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "operand": {
+                  "operand": {
+                    "path": "id",
+                    "scope": "E",
+                    "type": "Property"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Only One"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

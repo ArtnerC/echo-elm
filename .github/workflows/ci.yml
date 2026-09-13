@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        cqf: ['3.29.0', '4.8.0']
+        cqf: ['5.0.0']
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-go@v6

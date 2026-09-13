@@ -1,0 +1,131 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "CrossLibraryFunction",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "localIdentifier": "H",
+          "locator": "11:1-11:46",
+          "path": "SharedFunctions",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "H",
+            "locator": "13:25-13:39",
+            "name": "Doubled",
+            "operand": [
+              {
+                "locator": "13:37-13:38",
+                "type": "Literal",
+                "value": "21",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "13:1-13:39",
+          "name": "QualifiedCall"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "libraryName": "H",
+            "locator": "14:27-14:40",
+            "name": "Constant",
+            "operand": [],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "14:1-14:40",
+          "name": "QualifiedNoArgs"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "16:39-16:45",
+            "operand": [
+              {
+                "locator": "16:39",
+                "name": "n",
+                "type": "OperandRef"
+              },
+              {
+                "locator": "16:43-16:45",
+                "type": "Literal",
+                "value": "100",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "locator": "16:1-16:45",
+          "name": "Doubled",
+          "operand": [
+            {
+              "name": "n",
+              "operandTypeSpecifier": {
+                "locator": "16:29-16:35",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "15:21-15:33",
+            "name": "Doubled",
+            "operand": [
+              {
+                "locator": "15:31-15:32",
+                "type": "Literal",
+                "value": "21",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "15:1-15:33",
+          "name": "LocalCall"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

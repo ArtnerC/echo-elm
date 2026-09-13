@@ -1,0 +1,72 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {},
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "denominator": {
+              "unit": "1",
+              "value": 5
+            },
+            "locator": "1:21-1:25",
+            "numerator": {
+              "unit": "1",
+              "value": 5
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Ratio",
+            "type": "Ratio"
+          },
+          "locator": "1:1-1:25",
+          "name": "SimpleRatio",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Ratio"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "denominator": {
+              "locator": "2:32-2:39",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+              "unit": "mL",
+              "value": 100
+            },
+            "locator": "2:23-2:39",
+            "numerator": {
+              "locator": "2:23-2:28",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+              "unit": "mg",
+              "value": 5
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Ratio",
+            "type": "Ratio"
+          },
+          "locator": "2:1-2:39",
+          "name": "QuantityRatio",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Ratio"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,335 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "locator": "8:1-8:18",
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ImplicitCastNull",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "10:68-10:73",
+            "name": "period",
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "OperandRef"
+          },
+          "locator": "10:1-10:73",
+          "name": "Window",
+          "operand": [
+            {
+              "name": "period",
+              "operandTypeSpecifier": {
+                "locator": "10:33-10:46",
+                "pointType": {
+                  "locator": "10:42-10:45",
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            },
+            {
+              "name": "dates",
+              "operandTypeSpecifier": {
+                "elementType": {
+                  "locator": "10:60-10:63",
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "locator": "10:55-10:64",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "11:36",
+            "name": "s",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+            "type": "OperandRef"
+          },
+          "locator": "11:1-11:36",
+          "name": "Named",
+          "operand": [
+            {
+              "name": "s",
+              "operandTypeSpecifier": {
+                "locator": "11:27-11:32",
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "13:34-13:64",
+            "name": "Window",
+            "operand": [
+              {
+                "asTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "operand": {
+                  "locator": "13:43-13:46",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "element": [
+                  {
+                    "day": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "locator": "13:51-13:61",
+                    "month": {
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                    "signature": [],
+                    "type": "Date",
+                    "year": {
+                      "type": "Literal",
+                      "value": "2024",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "locator": "13:49-13:63",
+                "resultTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "List"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "13:1-13:64",
+          "name": "Null Interval Argument",
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "14:30-14:79",
+            "name": "Window",
+            "operand": [
+              {
+                "high": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "31",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "14:61-14:71",
+                  "month": {
+                    "type": "Literal",
+                    "value": "12",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "highClosed": true,
+                "locator": "14:39-14:72",
+                "low": {
+                  "day": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "locator": "14:48-14:58",
+                  "month": {
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "signature": [],
+                  "type": "Date",
+                  "year": {
+                    "type": "Literal",
+                    "value": "2024",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                "lowClosed": true,
+                "resultTypeSpecifier": {
+                  "pointType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "Interval"
+              },
+              {
+                "asTypeSpecifier": {
+                  "elementType": {
+                    "name": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "operand": {
+                  "locator": "14:75-14:78",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "pointType": {
+                "name": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "14:1-14:79",
+          "name": "Null List Argument",
+          "resultTypeSpecifier": {
+            "pointType": {
+              "name": "{urn:hl7-org:elm-types:r1}Date",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "context": "Unfiltered",
+          "expression": {
+            "locator": "15:31-15:43",
+            "name": "Named",
+            "operand": [
+              {
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "locator": "15:39-15:42",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "15:1-15:43",
+          "name": "Null Named Argument",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

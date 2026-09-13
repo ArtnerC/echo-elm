@@ -12,7 +12,7 @@ import (
 func main() {
 	translateFn := parity.CQFTranslateFunc()
 
-	for _, version := range []string{"3.29.0", "4.8.0"} {
+	for _, version := range []string{parity.PinnedCQFVersion} {
 		fmt.Printf("══ cqframework %s ══\n", version)
 		cfg := parity.DefaultConfig(version)
 		cfg.TagFilter = "cqf-corpus"

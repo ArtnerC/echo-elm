@@ -139,6 +139,7 @@ type tables struct {
 	listProperty    map[string]bool
 	valueType       map[string]string
 	primaryCodePath map[string]string
+	baseType        map[string]string
 }
 
 func build(mi modelInfo) tables {
@@ -147,6 +148,7 @@ func build(mi modelInfo) tables {
 		listProperty:    map[string]bool{},
 		valueType:       map[string]string{},
 		primaryCodePath: map[string]string{},
+		baseType:        map[string]string{},
 	}
 
 	for _, ti := range mi.TypeInfos {
@@ -155,6 +157,11 @@ func build(mi modelInfo) tables {
 		}
 		if ti.PrimaryCodePath != "" && ti.Retrievable == "true" {
 			t.primaryCodePath[ti.Name] = ti.PrimaryCodePath
+		}
+		// FHIR types inherit elements: Condition.id is declared on Resource, not
+		// on Condition. Record the chain so a lookup can walk it.
+		if bt := strings.TrimPrefix(ti.BaseType, "FHIR."); bt != "" && bt != ti.Name && strings.HasPrefix(ti.BaseType, "FHIR.") {
+			t.baseType[ti.Name] = bt
 		}
 
 		// A type whose sole element is `value` of a System type is a FHIR
@@ -244,6 +251,16 @@ var FHIRPrimitiveValueType = map[string]string{
 var FHIRPrimaryCodePath = map[string]string{
 `)
 	writeStringMap(&b, t.primaryCodePath)
+
+	b.WriteString(`}
+
+// FHIRBaseType maps a FHIR type to the type it derives from. FHIR elements are
+// inherited — Condition.id is declared on Resource, not on Condition — so a
+// property lookup that does not walk this chain silently misses every inherited
+// element. Use FHIRPropertyTypeOf rather than indexing FHIRPropertyType directly.
+var FHIRBaseType = map[string]string{
+`)
+	writeStringMap(&b, t.baseType)
 	b.WriteString("}\n")
 
 	src, err := format.Source([]byte(b.String()))

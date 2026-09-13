@@ -83,6 +83,7 @@ func runTranslate(args []string, cqfMode bool) {
 		input    string
 		output   string
 		format   string
+		target   string
 		validate bool
 	)
 	var libDirs multiFlag
@@ -90,6 +91,7 @@ func runTranslate(args []string, cqfMode bool) {
 	fs.StringVar(&input, "input", "", "Input CQL file (required)")
 	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
+	fs.StringVar(&target, "target", "cqf", "ELM shape: cqf (cql-to-elm CLI parity) or bundle (fully type-discriminated, as embedded in FHIR Library resources)")
 	fs.BoolVar(&validate, "validate", false, "Run structural validation on the serialized ELM before writing it")
 	fs.Var(&libDirs, "lib-dir", "Additional directory to search for included CQL libraries (repeatable; the input file's own directory is always searched)")
 	tf := registerTranslatorFlags(fs, cqfMode)
@@ -158,10 +160,23 @@ func runTranslate(args []string, cqfMode bool) {
 	outPath := resolveOutput(input, output, format)
 
 	// Serialize.
+	bundleShape := strings.EqualFold(target, "bundle")
+	if !bundleShape && !strings.EqualFold(target, "cqf") {
+		fmt.Fprintf(os.Stderr, "error: --target must be cqf or bundle (got %q)\n", target)
+		os.Exit(2)
+	}
 	var outBytes []byte
-	switch strings.ToUpper(format) {
-	case "XML":
+	switch {
+	case strings.EqualFold(format, "XML"):
+		if bundleShape {
+			// The discriminated shape is a property of the elm-json writer; XML
+			// already carries xsi:type on every node.
+			fmt.Fprintln(os.Stderr, "error: --target bundle applies to JSON output only")
+			os.Exit(2)
+		}
 		outBytes, err = result.XMLBytes()
+	case bundleShape:
+		outBytes, err = result.BundleJSON()
 	default: // JSON
 		outBytes, err = json.MarshalIndent(result, "", "   ")
 	}
@@ -266,7 +281,8 @@ func runParity(args []string) {
 		profile    string
 		bundlePath string
 	)
-	fs.StringVar(&cqfVersion, "cqf-version", "4.8.0", "CQFramework version to compare against: 3.29.0|4.8.0")
+	fs.StringVar(&cqfVersion, "cqf-version", parity.PinnedCQFVersion,
+		"CQFramework version to compare against (default: the pinned release)")
 	fs.StringVar(&corpus, "corpus", "test/corpus/cqframework", "Corpus directory containing corpus.yaml")
 	fs.StringVar(&toolsDir, "tools-dir", "tools", "Tools directory containing cqframework/ and jdk/")
 	fs.StringVar(&tag, "tag", "", "Run only fixtures with this tag (default: all)")
@@ -312,7 +328,22 @@ func runParity(args []string) {
 		}
 		bundleWorkDir = workDir
 
-		bundleCfg, err := parity.MaterializeBundle(loadBundle(bundlePath), workDir, profile)
+		loaded := loadBundle(bundlePath)
+
+		// An explicitly named profile is checked against what the bundle says it
+		// was compiled with. Comparing a reference built with locators and result
+		// types against a profile that emits neither produces thousands of
+		// differences that are entirely the harness's doing, so it fails here
+		// rather than being reported as translator gaps.
+		if profile != "" {
+			if err := validateBundleProfile(loaded, cfg.CorpusDir, profile); err != nil {
+				_ = os.RemoveAll(workDir)
+				fmt.Fprintf(os.Stderr, "error: %v\n", err)
+				os.Exit(1)
+			}
+		}
+
+		bundleCfg, err := parity.MaterializeBundle(loaded, workDir, profile)
 		if err != nil {
 			_ = os.RemoveAll(workDir)
 			fmt.Fprintf(os.Stderr, "error: %v\n", err)

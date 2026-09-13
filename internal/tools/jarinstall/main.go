@@ -16,15 +16,15 @@ import (
 )
 
 // cqfVersions lists the cqframework cql-to-elm-cli coordinates to install.
+//
+// echo-elm targets a single pinned CQF release. It previously tracked 3.29.0 and
+// 4.8.0 together, which forced the parity harness to normalize away every place
+// the two disagreed — and those normalizations turned out to be hiding real gaps
+// (see issues/04, G1). One target means a difference is a difference.
 var cqfVersions = []cqfVersion{
 	{
-		Slug:       "3.29.0",
-		Coordinate: "info.cqframework:cql-to-elm-cli:3.29.0",
-		MainClass:  "org.cqframework.cql.cql2elm.cli.Main",
-	},
-	{
-		Slug:       "4.8.0",
-		Coordinate: "org.cqframework:cql-to-elm-cli:4.8.0",
+		Slug:       "5.0.0",
+		Coordinate: "org.cqframework:cql-to-elm-cli:5.0.0",
 		MainClass:  "org.cqframework.cql.cql2elm.cli.Main",
 	},
 }

@@ -1,7 +1,7 @@
 # Parity Harness Contract
 
 > Validates echo-elm against upstream `cql-to-elm` CLI for
-> **3.29.0** (`info.cqframework`) and **4.8.0+** (`org.cqframework`).
+> **5.0.0** (`org.cqframework`), the single pinned parity target.
 > Driven by `echo-elm parity` and CI.
 
 ## Inputs

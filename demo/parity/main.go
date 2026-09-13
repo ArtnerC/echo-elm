@@ -1,4 +1,4 @@
-// Parity demo — shows echo-elm results alongside cqframework 3.29.0 and 4.8.0 outputs.
+// Parity demo — shows echo-elm results alongside the pinned cqframework output.
 package main
 
 import (
@@ -14,7 +14,7 @@ func main() {
 	box("echo-elm  Parity Demo  —  CQFramework comparison")
 
 	// Verify tooling is in place.
-	for _, v := range []string{"3.29.0", "4.8.0"} {
+	for _, v := range []string{parity.PinnedCQFVersion} {
 		launcher := launcherPath(v)
 		if _, err := os.Stat(launcher); err != nil {
 			fmt.Printf("  ✗ cqframework %s launcher not found: %s\n", v, launcher)
@@ -27,7 +27,7 @@ func main() {
 
 	translateFn := parity.CQFTranslateFunc()
 
-	for _, version := range []string{"3.29.0", "4.8.0"} {
+	for _, version := range []string{parity.PinnedCQFVersion} {
 		fmt.Printf("── Parity vs cqframework %s ──\n\n", version)
 
 		cfg := parity.DefaultConfig(version)
