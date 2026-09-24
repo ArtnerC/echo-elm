@@ -545,6 +545,33 @@ func (n *InValueSetNode) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// AnyInValueSetNode: `codes in "VS"` where codes is a list — true when any
+// element is in the value set.
+type AnyInValueSetNode struct {
+	LocalID             string           `json:"localId,omitempty"`
+	Locator             string           `json:"locator,omitempty"`
+	Annotation          json.RawMessage  `json:"annotation,omitempty"`
+	ResultTypeName      string           `json:"resultTypeName,omitempty"`
+	ResultTypeSpecifier TypeSpecifier    `json:"resultTypeSpecifier,omitempty"`
+	Signature           json.RawMessage  `json:"signature,omitempty"`
+	Codes               Expression       `json:"codes"`
+	ValueSet            *ValueSetRefNode `json:"valueset"`
+}
+
+func (*AnyInValueSetNode) isExpression() {}
+func (n *AnyInValueSetNode) MarshalJSON() ([]byte, error) {
+	// As in InValueSet, the valueset field carries no "type" discriminator.
+	type vsAlias ValueSetRefNode
+	type alias AnyInValueSetNode
+	return marshalWithType("AnyInValueSet", struct {
+		*alias
+		ValueSet *vsAlias `json:"valueset"`
+	}{
+		alias:    (*alias)(n),
+		ValueSet: (*vsAlias)(n.ValueSet),
+	})
+}
+
 // CalculateAgeNode: expands AgeInYears/AgeInMonths/etc. in a Patient context.
 // Extends UnaryExpression — operand is a single object (not array).
 type CalculateAgeNode struct {

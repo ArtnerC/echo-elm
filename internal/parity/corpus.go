@@ -16,6 +16,10 @@ type OptionProfile struct {
 	// PendingImplementation marks profiles whose corresponding echo-elm feature is
 	// not yet implemented. TestGoldenCorpus skips these profiles rather than failing.
 	PendingImplementation bool `yaml:"pendingImplementation"`
+	// OptIn profiles are not part of a fixture's "all": they run only for
+	// fixtures that name them. For option combinations whose behavior is
+	// verified on purpose-built fixtures rather than across the whole corpus.
+	OptIn bool `yaml:"optIn"`
 }
 
 // Fixture is a single test entry from corpus.yaml.
@@ -69,8 +73,10 @@ func (fix *Fixture) ProfileNames(allProfiles map[string]OptionProfile) []string 
 			// gopkg.in/yaml.v3 preserves insertion order for maps decoded into
 			// map[string]T, but map iteration order in Go is random — so we
 			// collect from the profiles map and sort.
-			for k := range allProfiles {
-				names = append(names, k)
+			for k, prof := range allProfiles {
+				if !prof.OptIn {
+					names = append(names, k)
+				}
 			}
 			return filter(names)
 		}

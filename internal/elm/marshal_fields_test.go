@@ -15,7 +15,7 @@ func expressionNodeTypes() []Expression {
 	return []Expression{
 		&NullaryOperatorNode{Operator: "Now"},
 		&OperandRefNode{}, &LiteralNode{}, &NullNode{}, &ExpressionRefNode{},
-		&ParameterRefNode{}, &ValueSetRefNode{}, &InValueSetNode{}, &CalculateAgeNode{},
+		&ParameterRefNode{}, &ValueSetRefNode{}, &InValueSetNode{}, &AnyInValueSetNode{}, &CalculateAgeNode{},
 		&ToConceptNode{}, &SplitNode{}, &LastNode{}, &CodeSystemRefNode{},
 		&CodeRefNode{}, &ConceptRefNode{}, &FunctionRefNode{}, &OperatorExpressionNode{},
 		&PropertyNode{}, &RetrieveNode{}, &SingletonFromNode{}, &QuantityNode{},

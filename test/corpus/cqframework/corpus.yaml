@@ -74,6 +74,13 @@ option_profiles:
       enableLocators: false
       signatureLevel: Overloads
 
+  sig-differing:
+    description: Signature recorded only where resolution converted or cast an operand, or an argument differs from a fixed formal type (opt-in)
+    cliFlags: [--signatures, Differing]
+    translatorOptions:
+      signatureLevel: Differing
+    optIn: true
+
   sig-all:
     description: SignatureLevel=All — record signatures on every call
     cliFlags: [--signatures, All]
@@ -626,4 +633,20 @@ fixtures:
     description: "Date meets DateTime: membership, lists, branches, interval bounds, AgeInYearsAt (issues/07)"
     expectedStatus: success
     profiles: [default, measure-bundle]
+    tags: [layered]
+  - path: layered/ListTraversal.cql
+    description: "Implicit list traversal over FHIR list elements"
+    expectedStatus: success
+    profiles: [default, debug]
+    tags: [layered]
+
+  - path: layered/AnyInValueSet.cql
+    description: "A list of codes tested with AnyInValueSet"
+    expectedStatus: success
+    profiles: [default, debug, measure-bundle]
+    tags: [layered]
+  - path: layered/SignatureLevels.cql
+    description: "Signature levels on membership and conversion shapes; Differing records one exactly where an operand was converted"
+    expectedStatus: success
+    profiles: [default, sig-differing, sig-all]
     tags: [layered]

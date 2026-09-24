@@ -254,6 +254,18 @@ func (t *Translator) computeSig(op string, operands []elm.Expression) json.RawMe
 		return t.cqfEmptyArrayField()
 	}
 
+	// Differing records a signature exactly when the resolved signature differs
+	// from the argument types — that is, when resolution converted or cast an
+	// operand. A FHIRHelpers call whose argument already has the parameter's
+	// type gets none; `E.period.start during MP` does, because E.period.start
+	// was converted. (Probed rechecking the early sig-overloads gap.)
+	if level == "Differing" {
+		if t.anyConverted(operands) || t.formalDiffers(op, operands) {
+			return t.buildInferredSig(operands)
+		}
+		return t.cqfEmptyArrayField()
+	}
+
 	// FunctionRef (user-defined function call) always gets an inferred signature
 	// in Overloads mode and above.
 	if op == "FunctionRef" {
@@ -261,7 +273,7 @@ func (t *Translator) computeSig(op string, operands []elm.Expression) json.RawMe
 	}
 
 	switch level {
-	case "Overloads", "Differing":
+	case "Overloads":
 		if overloadedOps[op] {
 			return t.buildInferredSig(operands)
 		}
@@ -374,6 +386,12 @@ func (t *Translator) computeInSig(lhs, rhs elm.Expression, listPromoted bool) js
 	if level == "All" {
 		return t.buildInferredSig([]elm.Expression{lhs, rhs})
 	}
+	if level == "Differing" {
+		if listPromoted || t.anyConverted([]elm.Expression{lhs, rhs}) {
+			return t.buildInferredSig([]elm.Expression{lhs, rhs})
+		}
+		return t.cqfEmptyArrayField()
+	}
 	if listPromoted || hasNullIntervalBound(rhs) {
 		return t.buildInferredSig([]elm.Expression{lhs, rhs})
 	}
@@ -416,7 +434,9 @@ func (t *Translator) buildSigFromTypes(op string, specs []typeSpec) json.RawMess
 		return t.cqfEmptyArrayField()
 	}
 	level := t.opts.SignatureLevel
-	if level == "" || level == "None" {
+	// The formal types given here are the argument types by construction, so
+	// there is nothing differing to record.
+	if level == "" || level == "None" || level == "Differing" {
 		return t.cqfEmptyArrayField()
 	}
 	if level == "Overloads" || level == "Differing" {
@@ -1071,7 +1091,7 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return intTS
 		}
 		return boolTS
-	case *elm.InValueSetNode:
+	case *elm.InValueSetNode, *elm.AnyInValueSetNode:
 		return boolTS
 	case *elm.FunctionRefNode:
 		// A call to a function declared in this library resolves to its
@@ -1185,9 +1205,15 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		// FHIR/QICore property-type lookup: when source is a context expression
 		// (e.g. "Patient"), consult FHIRPropertyType for the CQL type.
 		if srcContext != "" && v.Path != "" {
-			key := srcContext + "." + v.Path
-			if fhirType, ok := typesystem.FHIRPropertyType[key]; ok {
-				return fhirTypeToCQLTypeSpec(fhirType)
+			if fhirType, ok := typesystem.FHIRPropertyTypeOf(srcContext, v.Path); ok {
+				ts := fhirTypeToCQLTypeSpec(fhirType)
+				// A list-valued element is a list: Patient.name is
+				// List<HumanName>. Dropping that made list traversal and
+				// indexing unable to see the list at all.
+				if typesystem.IsFHIRListPropertyOf(srcContext, v.Path) {
+					ts = listTS{namedTS{"{http://hl7.org/fhir}" + fhirType}}
+				}
+				return ts
 			}
 		}
 		// Same lookup when the source is model-typed rather than a context
@@ -1454,4 +1480,48 @@ func withEmptyAnnotation(v interface{}) interface{} {
 		return out
 	}
 	return v
+}
+
+// anyConverted reports an operand that resolution had to convert or cast — a
+// node the translator synthesized for that purpose (see markConverted).
+func (t *Translator) anyConverted(operands []elm.Expression) bool {
+	for _, o := range operands {
+		if t.converted[o] {
+			return true
+		}
+	}
+	return false
+}
+
+// markConverted records a synthesized conversion or cast, so that signature
+// levels which depend on whether one occurred can ask. Whether a node was
+// synthesized cannot be read off the node itself: with locators off, a
+// source-written FHIRHelpers.ToInterval(x) looks exactly like an inserted one.
+func (t *Translator) markConverted(e elm.Expression) elm.Expression {
+	if t.converted == nil {
+		t.converted = map[elm.Expression]bool{}
+	}
+	t.converted[e] = true
+	return e
+}
+
+// formalDiffers reports an operator with fixed formal types — IsNull(Any),
+// Not(Boolean) — called with an argument of another type. That is a differing
+// signature even though nothing was converted: IsNull(”) passes a String
+// where the formal is Any.
+func (t *Translator) formalDiffers(op string, operands []elm.Expression) bool {
+	formals, ok := fixedFormalTypes[op]
+	if !ok || len(formals) != len(operands) {
+		return false
+	}
+	for i, o := range operands {
+		actual := knownTS(t.inferTypeSpec(o))
+		if actual == nil {
+			continue
+		}
+		if !typeSpecEqual(actual, formals[i]) {
+			return true
+		}
+	}
+	return false
 }

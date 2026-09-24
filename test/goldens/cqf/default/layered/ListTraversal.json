@@ -1,0 +1,709 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ListTraversal",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "path": "address",
+            "source": {
+              "annotation": [],
+              "name": "Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "name": "Addr"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "line",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "address",
+                      "source": {
+                        "annotation": [],
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "line",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "signature": [],
+              "type": "Flatten"
+            },
+            "type": "First"
+          },
+          "name": "FirstLine"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "path": "line",
+              "source": {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "path": "address",
+                    "source": {
+                      "annotation": [],
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Indexer"
+              },
+              "type": "Property"
+            },
+            "type": "First"
+          },
+          "name": "FirstLineDirect"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "path": "given",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                }
+              },
+              "source": [
+                {
+                  "alias": "$this",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "path": "name",
+                    "source": {
+                      "annotation": [],
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "path": "given",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            },
+            "signature": [],
+            "type": "Flatten"
+          },
+          "name": "Given"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "distinct": false,
+              "expression": {
+                "annotation": [],
+                "path": "family",
+                "source": {
+                  "annotation": [],
+                  "name": "$this",
+                  "type": "AliasRef"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "$this",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "path": "name",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "family",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "name": "Family"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "given",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "name",
+                      "source": {
+                        "annotation": [],
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "given",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "signature": [],
+              "type": "Flatten"
+            },
+            "type": "First"
+          },
+          "name": "GivenFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "distinct": false,
+              "expression": {
+                "annotation": [],
+                "path": "value",
+                "source": {
+                  "annotation": [],
+                  "name": "$this",
+                  "type": "AliasRef"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "$this",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "path": "telecom",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "value",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "name": "TelecomValues"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "distinct": false,
+              "expression": {
+                "annotation": [],
+                "path": "system",
+                "source": {
+                  "annotation": [],
+                  "name": "$this",
+                  "type": "AliasRef"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "$this",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "path": "identifier",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "system",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "name": "IdentSystems"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "expression": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "code",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "coding",
+                      "source": {
+                        "annotation": [],
+                        "path": "code",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "code",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              }
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "CodingCodes"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "line",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "address",
+                      "source": {
+                        "annotation": [],
+                        "name": "Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "line",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "signature": [],
+              "type": "Flatten"
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "ExistsLine"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "path": "name",
+              "source": {
+                "annotation": [],
+                "name": "Patient",
+                "type": "ExpressionRef"
+              },
+              "type": "Property"
+            },
+            "type": "Count"
+          },
+          "name": "CountNames"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

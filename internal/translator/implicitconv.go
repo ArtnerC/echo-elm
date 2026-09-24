@@ -109,12 +109,18 @@ func (t *Translator) applyImplicitConversions(e elm.Expression) elm.Expression {
 			n.Signature = t.computeSig(n.Operator, []elm.Expression{n.Source})
 		}
 	case *elm.DateTimeNode:
+		before := presentOperands(n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second, n.Millisecond, n.TimezoneOffset)
 		for _, f := range []*elm.Expression{&n.Year, &n.Month, &n.Day, &n.Hour, &n.Minute, &n.Second, &n.Millisecond} {
 			t.castNullField(f, intTS)
 		}
 		t.castNullField(&n.TimezoneOffset, decTS)
 		if r := numericRank[namedName(t.typeOf(n.TimezoneOffset))]; r == 1 || r == 2 {
 			n.TimezoneOffset = t.convertTo(n.TimezoneOffset, typesystem.TypeDecimal)
+		}
+		// Recompute the constructor's signature only when a component changed:
+		// a DateTime literal carries none, and must keep carrying none.
+		if after := presentOperands(n.Year, n.Month, n.Day, n.Hour, n.Minute, n.Second, n.Millisecond, n.TimezoneOffset); !sameExprs(before, after) {
+			n.Signature = t.computeSig("DateTime", after)
 		}
 	case *elm.DateNode:
 		for _, f := range []*elm.Expression{&n.Year, &n.Month, &n.Day} {
@@ -452,12 +458,12 @@ func (t *Translator) convertOperatorOperands(n *elm.OperatorExpressionNode) {
 		b, bok := t.typeOf(ops[1]).(tupleTS)
 		if aok && bok && !sameTupleShape(a, b) {
 			for i := range ops {
-				set(i, &elm.UnaryExpressionNode{
+				set(i, t.markConverted(&elm.UnaryExpressionNode{
 					Annotation: t.cqfAnnotation(),
 					Signature:  t.computeSig("ToList", []elm.Expression{ops[i]}),
 					Operator:   "ToList",
 					Operand:    ops[i],
-				})
+				}))
 			}
 		}
 	}
@@ -606,12 +612,12 @@ func (t *Translator) castNull(e elm.Expression, ts typeSpec) elm.Expression {
 // convertTo wraps a numeric operand in the conversion up to a wider type.
 func (t *Translator) convertTo(e elm.Expression, to string) elm.Expression {
 	op := conversionOperator[to]
-	return &elm.UnaryExpressionNode{
+	return t.markConverted(&elm.UnaryExpressionNode{
 		Annotation: t.cqfAnnotation(),
 		Signature:  t.computeSig(op, []elm.Expression{e}),
 		Operator:   op,
 		Operand:    e,
-	}
+	})
 }
 
 // typeOf is an operand's known type, or nil when it is unknown or Any.
@@ -716,7 +722,7 @@ func isUntypedList(e elm.Expression) bool {
 // required: it casts each element, `X return X as T`, rather than the list.
 func (t *Translator) liftListCast(list elm.Expression, elem typeSpec) elm.Expression {
 	distinct := false
-	return &elm.QueryNode{
+	return t.markConverted(&elm.QueryNode{
 		Annotation: t.cqfAnnotation(),
 		Source: []*elm.AliasedQuerySourceELM{{
 			Annotation: t.cqfAnnotation(),
@@ -730,7 +736,7 @@ func (t *Translator) liftListCast(list elm.Expression, elem typeSpec) elm.Expres
 			Distinct:   &distinct,
 			Expression: t.castNullTo(&elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: fhirConversionAlias}, elem),
 		},
-	}
+	})
 }
 
 // isQuantityList reports List<Quantity>, which the statistical aggregates take
@@ -867,12 +873,12 @@ func (t *Translator) castChoiceArgument(arg elm.Expression, declared typeSpec) e
 	if spec == nil {
 		return arg
 	}
-	return &elm.AsNode{
+	return t.markConverted(&elm.AsNode{
 		Annotation:      t.cqfAnnotation(),
 		Signature:       t.cqfEmptyArrayField(),
 		Operand:         arg,
 		AsTypeSpecifier: spec,
-	}
+	})
 }
 
 // promoteDateIntervalOperands converts a Date interval selector's bounds to
@@ -916,6 +922,34 @@ func choiceSubset(a, b choiceTS) bool {
 			}
 		}
 		if !found {
+			return false
+		}
+	}
+	return true
+}
+
+func isListTS(ts typeSpec) bool {
+	_, ok := ts.(listTS)
+	return ok
+}
+
+// presentOperands lists a constructor's supplied components, in order.
+func presentOperands(es ...elm.Expression) []elm.Expression {
+	out := make([]elm.Expression, 0, len(es))
+	for _, e := range es {
+		if e != nil {
+			out = append(out, e)
+		}
+	}
+	return out
+}
+
+func sameExprs(a, b []elm.Expression) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i := range a {
+		if a[i] != b[i] {
 			return false
 		}
 	}

@@ -1,0 +1,566 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "id": "http://example.org/cs",
+          "name": "SYS"
+        }
+      ]
+    },
+    "codes": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": {
+            "annotation": [],
+            "name": "SYS"
+          },
+          "id": "c1",
+          "name": "C1"
+        }
+      ]
+    },
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "AnyInValueSet",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "codes": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToConcept",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "X",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "category",
+                      "scope": "C",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query"
+              },
+              "signature": [],
+              "type": "AnyInValueSet",
+              "valueset": {
+                "annotation": [],
+                "name": "VS",
+                "preserve": true
+              }
+            }
+          },
+          "name": "CatIn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "code": {
+                "annotation": [],
+                "libraryName": "FHIRHelpers",
+                "name": "ToConcept",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "path": "code",
+                    "scope": "C",
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "signature": [],
+              "type": "InValueSet",
+              "valueset": {
+                "annotation": [],
+                "name": "VS",
+                "preserve": true
+              }
+            }
+          },
+          "name": "CodeIn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "codes": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToCode",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "X",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "coding",
+                      "source": {
+                        "annotation": [],
+                        "path": "code",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query"
+              },
+              "signature": [],
+              "type": "AnyInValueSet",
+              "valueset": {
+                "annotation": [],
+                "name": "VS",
+                "preserve": true
+              }
+            }
+          },
+          "name": "CodingIn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "codes": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToConcept",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "X",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "type",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query"
+              },
+              "signature": [],
+              "type": "AnyInValueSet",
+              "valueset": {
+                "annotation": [],
+                "name": "VS",
+                "preserve": true
+              }
+            }
+          },
+          "name": "EncTypeIn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "O",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Observation",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "codes": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToConcept",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "X",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "category",
+                      "scope": "O",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query"
+              },
+              "signature": [],
+              "type": "AnyInValueSet",
+              "valueset": {
+                "annotation": [],
+                "name": "VS",
+                "preserve": true
+              }
+            }
+          },
+          "name": "ObsCatIn"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "codes": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "name": "C1",
+                  "type": "CodeRef"
+                }
+              ],
+              "type": "List"
+            },
+            "signature": [],
+            "type": "AnyInValueSet",
+            "valueset": {
+              "annotation": [],
+              "name": "VS",
+              "preserve": true
+            }
+          },
+          "name": "CodesList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Encounter",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "codes": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToConcept",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "X",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "path": "reasonCode",
+                      "scope": "E",
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query"
+              },
+              "signature": [],
+              "type": "AnyInValueSet",
+              "valueset": {
+                "annotation": [],
+                "name": "VS",
+                "preserve": true
+              }
+            }
+          },
+          "name": "Reasons"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": [],
+          "id": "http://example.org/vs",
+          "name": "VS"
+        }
+      ]
+    }
+  }
+}

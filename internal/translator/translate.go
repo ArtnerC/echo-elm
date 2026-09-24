@@ -161,6 +161,7 @@ type Translator struct {
 	libFuncOperands      map[string]map[string][]typeSpec // included library alias → function name → declared operand types
 	includeCache         map[string]*includeTypes         // include path|version → the types it exposes, shared across nesting
 	includeVisiting      map[string]bool                  // include path|version currently being typed, to stop cycles
+	converted            map[elm.Expression]bool          // conversions and casts the translator synthesized
 	skipResultTypeStamp  bool                             // when true, translateExpr skips stamping a result type on its outer result (set by callees that stamped an inner node instead)
 }
 
@@ -1151,7 +1152,7 @@ func (t *Translator) castNullTo(arg elm.Expression, declared typeSpec) elm.Expre
 	}
 	if named, ok := declared.(namedTS); ok {
 		as.AsType = named.name
-		return as
+		return t.markConverted(as)
 	}
 	spec := toELMTypeSpecifier(declared)
 	if spec == nil {
@@ -1161,7 +1162,7 @@ func (t *Translator) castNullTo(arg elm.Expression, declared typeSpec) elm.Expre
 	// the source. This As is synthesized, so its target is too, and CQF leaves
 	// synthesized specifiers bare.
 	as.AsTypeSpecifier = spec
-	return as
+	return t.markConverted(as)
 }
 
 // fhirLocalTypeName returns the local FHIR type name of a type spec — the
@@ -2427,13 +2428,13 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				if t.opts.EnableResultTypes {
 					elm.SetResultType(ref, "{http://hl7.org/fhir}"+fhirType, nil)
 				}
-				return &elm.FunctionRefNode{
+				return t.markConverted(&elm.FunctionRefNode{
 					Annotation:  ann,
 					Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + fhirType}}),
 					Name:        fhirFunc,
 					LibraryName: t.fhirHelpersLocalName,
 					Operand:     []elm.Expression{ref},
-				}
+				})
 			}
 			return ref
 		}
@@ -2693,24 +2694,24 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 					// Log requires Decimal operands; CQF promotes integer literals.
 					if v.Name == "Log" {
 						if _, isInt := o.(*ast.IntegerLiteral); isInt {
-							val = &elm.UnaryExpressionNode{
+							val = t.markConverted(&elm.UnaryExpressionNode{
 								Annotation: t.cqfAnnotation(),
 								Signature:  t.computeSig("ToDecimal", []elm.Expression{val}),
 								Operator:   "ToDecimal",
 								Operand:    val,
-							}
+							})
 						}
 					}
 					// IndexOf has only List<T> overload in ELM; for String args
 					// CQF wraps the source in ToList (String → List<String>).
 					if v.Name == "IndexOf" && i == 0 {
 						if _, isStr := o.(*ast.StringLiteral); isStr {
-							val = &elm.UnaryExpressionNode{
+							val = t.markConverted(&elm.UnaryExpressionNode{
 								Annotation: t.cqfAnnotation(),
 								Signature:  t.cqfEmptyArrayField(),
 								Operator:   "ToList",
 								Operand:    val,
-							}
+							})
 						}
 					}
 					vals = append(vals, val)
@@ -2736,12 +2737,12 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				if v.Name == "Log" {
 					for i, o := range v.Operands {
 						if _, isInt := o.(*ast.IntegerLiteral); isInt {
-							ops[i] = &elm.UnaryExpressionNode{
+							ops[i] = t.markConverted(&elm.UnaryExpressionNode{
 								Annotation: t.cqfAnnotation(),
 								Signature:  t.computeSig("ToDecimal", []elm.Expression{ops[i]}),
 								Operator:   "ToDecimal",
 								Operand:    ops[i],
-							}
+							})
 						}
 					}
 				}
@@ -2749,12 +2750,12 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				// wraps the source string in ToList.
 				if v.Name == "Contains" {
 					if _, isStr := v.Operands[0].(*ast.StringLiteral); isStr {
-						ops[0] = &elm.UnaryExpressionNode{
+						ops[0] = t.markConverted(&elm.UnaryExpressionNode{
 							Annotation: t.cqfAnnotation(),
 							Signature:  t.cqfEmptyArrayField(),
 							Operator:   "ToList",
 							Operand:    ops[0],
-						}
+						})
 					}
 				}
 				return &elm.OperatorExpressionNode{
@@ -2910,10 +2911,14 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		if propertyNode == nil {
 			// The source of a navigation is the FHIR structure being traversed,
 			// never a converted CQL value, so it is translated unconsumed.
+			src := t.translateExprUnconsumed(v.Source)
+			if traversal := t.listTraversal(src, v.Path); traversal != nil {
+				return traversal
+			}
 			propertyNode = &elm.PropertyNode{
 				Annotation: ann,
 				Path:       v.Path,
-				Source:     t.translateExprUnconsumed(v.Source),
+				Source:     src,
 			}
 		}
 		// Apply implicit FHIRHelpers coercion when FHIRHelpers is included and the
@@ -2949,13 +2954,13 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 					argSpec := namedTS{"{http://hl7.org/fhir}" + fhirType}
 					wrapperSig = t.buildSigFromTypes("FunctionRef", []typeSpec{argSpec})
 				}
-				return &elm.FunctionRefNode{
+				return t.markConverted(&elm.FunctionRefNode{
 					Annotation:  ann,
 					Signature:   wrapperSig,
 					Name:        fhirFunc,
 					LibraryName: t.fhirHelpersLocalName,
 					Operand:     []elm.Expression{propertyNode},
-				}
+				})
 			}
 		}
 		return propertyNode
@@ -3529,6 +3534,29 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 			if t.opts.EnableLocators {
 				vs.Locator = locatorStr(v.Right.Loc())
 			}
+			// A list of codes — List<CodeableConcept> such as Condition.category,
+			// or List<Coding> — is tested with AnyInValueSet, true when any
+			// element is in the value set. InValueSet over the list tests the
+			// list itself. A FHIR list is converted element-wise first, the
+			// same lift CQF uses everywhere a list of FHIR values is consumed.
+			// (Found rechecking an early gap: this applies with list traversal
+			// disabled too, i.e. under the measure profile.)
+			if raw := t.translateExprUnconsumed(v.Left); isListTS(t.inferTypeSpec(raw)) {
+				codes := raw
+				if lifted, ok := t.convertFHIRPrimitiveList(v.Left, raw); ok {
+					codes = lifted
+				}
+				anySig := t.cqfEmptyArrayField()
+				if lvl := t.opts.SignatureLevel; lvl != "" && lvl != "None" {
+					anySig = t.buildInferredSig([]elm.Expression{codes})
+				}
+				return &elm.AnyInValueSetNode{
+					Annotation: t.cqfAnnotation(),
+					Signature:  anySig,
+					Codes:      codes,
+					ValueSet:   vs,
+				}
+			}
 			codeExpr := t.translateExpr(v.Left)
 			invsSig := t.cqfEmptyArrayField()
 			if lvl := t.opts.SignatureLevel; lvl != "" && lvl != "None" {
@@ -3594,12 +3622,12 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 					}
 				} else {
 					// List promotion: wrap scalar RHS in ToList.
-					rhs = &elm.UnaryExpressionNode{
+					rhs = t.markConverted(&elm.UnaryExpressionNode{
 						Annotation: t.cqfAnnotation(),
 						Signature:  t.cqfEmptyArrayField(),
 						Operator:   "ToList",
 						Operand:    rhs,
-					}
+					})
 					listPromoted = true
 				}
 			}
@@ -3776,12 +3804,12 @@ func (t *Translator) promoteIntervalBounds(e elm.Expression) elm.Expression {
 }
 
 func (t *Translator) wrapToDateTime(e elm.Expression) elm.Expression {
-	return &elm.UnaryExpressionNode{
+	return t.markConverted(&elm.UnaryExpressionNode{
 		Annotation: t.cqfAnnotation(),
 		Signature:  t.computeSig("ToDateTime", []elm.Expression{e}),
 		Operator:   "ToDateTime",
 		Operand:    e,
-	}
+	})
 }
 
 // negatedEqualityOps maps the CQL negated-equality operators to the ELM
@@ -3815,26 +3843,26 @@ func (t *Translator) convertFHIRPrimitiveList(expr ast.Expr, translated elm.Expr
 		return nil, false
 	}
 	sourceType := t.resolveFHIRSourceType(pe.Source)
-	if sourceType == "" || !typesystem.IsFHIRListProperty(sourceType, pe.Path) {
+	if sourceType == "" || !typesystem.IsFHIRListPropertyOf(sourceType, pe.Path) {
 		return nil, false
 	}
-	fhirType := typesystem.FHIRPropertyType[sourceType+"."+pe.Path]
+	fhirType, _ := typesystem.FHIRPropertyTypeOf(sourceType, pe.Path)
 	fhirFunc := typesystem.FHIRCoercionFor(fhirType)
 	if fhirFunc == "" {
 		return nil, false
 	}
 
-	return t.fhirListConversionQuery(translated, fhirFunc), true
+	return t.fhirListConversionQuery(translated, fhirFunc, fhirType), true
 }
 
 // fhirListConversionQuery is the element-wise conversion CQF lifts a list of
 // FHIR values into: Query{ source: [X: list], return: { distinct: false,
 // expression: FHIRHelpers.To<T>(X) } }. None of its nodes carry a locator or a
 // result type.
-func (t *Translator) fhirListConversionQuery(translated elm.Expression, fhirFunc string) elm.Expression {
+func (t *Translator) fhirListConversionQuery(translated elm.Expression, fhirFunc string, elemFHIRType string) elm.Expression {
 	alias := &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: fhirConversionAlias}
 	distinct := false
-	return &elm.QueryNode{
+	return t.markConverted(&elm.QueryNode{
 		Annotation: t.cqfAnnotation(),
 		Source: []*elm.AliasedQuerySourceELM{{
 			Annotation: t.cqfAnnotation(),
@@ -3848,13 +3876,13 @@ func (t *Translator) fhirListConversionQuery(translated elm.Expression, fhirFunc
 			Distinct:   &distinct,
 			Expression: &elm.FunctionRefNode{
 				Annotation:  t.cqfAnnotation(),
-				Signature:   t.cqfEmptyArrayField(),
+				Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + elemFHIRType}}),
 				Name:        fhirFunc,
 				LibraryName: t.fhirHelpersLocalName,
 				Operand:     []elm.Expression{alias},
 			},
 		},
-	}
+	})
 }
 
 // fhirConversionAlias is the query alias CQF generates for an implicit
@@ -5291,7 +5319,7 @@ func (t *Translator) liftFHIRListOperand(op string, src elm.Expression) (elm.Exp
 	if fhirFunc == "" {
 		return nil, false
 	}
-	return t.fhirListConversionQuery(src, fhirFunc), true
+	return t.fhirListConversionQuery(src, fhirFunc, fhirLocalTypeName(lt.elem)), true
 }
 
 // pointContainsOps map interval inclusion to point membership, used when the
@@ -5373,7 +5401,7 @@ func (t *Translator) unitInterval(first elm.Expression, again func() elm.Express
 		_, spec := resultTypeOf(intervalTS{pt})
 		elm.SetResultType(null, "", spec)
 	}
-	return &elm.IfNode{
+	return t.markConverted(&elm.IfNode{
 		Annotation: t.cqfAnnotation(),
 		Condition:  isNull,
 		Then:       null,
@@ -5384,7 +5412,7 @@ func (t *Translator) unitInterval(first elm.Expression, again func() elm.Express
 			LowClosed:  true,
 			HighClosed: true,
 		},
-	}
+	})
 }
 
 // systemClassTypes are the System structured types an Instance selector can
@@ -5441,4 +5469,75 @@ func (t *Translator) sortFieldCoercion(name string) (fn, fhirType string) {
 		return "", ""
 	}
 	return typesystem.FHIRCoercionFor(fhirType), fhirType
+}
+
+// listTraversal is implicit list traversal: navigating `.p` on a list navigates
+// into each element. `Patient.name.family` is
+//
+//	Query($this in Patient.name where $this.family is not null return $this.family)
+//
+// flattened when p is itself list-valued (`Patient.name.given`). Without it the
+// property was taken of the list — a different value entirely. It is on unless
+// DisableListTraversal is set, so it applies to the modern `translate` default
+// and the CQF CLI default, though not to the measure-bundle profile.
+//
+// Only the outermost node is sourced from the expression, so it alone takes the
+// locator and result type (translateExpr stamps them); everything inside is
+// synthesized and bare, as in CQF. Returns nil when the source is not a list of
+// a model type with that property.
+func (t *Translator) listTraversal(src elm.Expression, path string) elm.Expression {
+	if t.opts.DisableListTraversal {
+		return nil
+	}
+	lt, ok := t.inferTypeSpec(src).(listTS)
+	if !ok {
+		return nil
+	}
+	local := fhirLocalTypeName(lt.elem)
+	if local == "" {
+		return nil
+	}
+	fhirType, ok := typesystem.FHIRPropertyTypeOf(local, path)
+	if !ok {
+		return nil
+	}
+	var elemTS typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+	isList := typesystem.IsFHIRListPropertyOf(local, path)
+	if isList {
+		elemTS = listTS{elemTS}
+	}
+	prop := func() elm.Expression {
+		return &elm.PropertyNode{
+			Annotation: t.cqfAnnotation(),
+			Path:       path,
+			Source:     &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: "$this"},
+		}
+	}
+	isNull := &elm.UnaryExpressionNode{Annotation: t.cqfAnnotation(), Operator: "IsNull", Operand: prop()}
+	isNull.Signature = t.computeSig("IsNull", []elm.Expression{isNull.Operand})
+	notNull := &elm.UnaryExpressionNode{Annotation: t.cqfAnnotation(), Operator: "Not", Operand: isNull}
+	notNull.Signature = t.computeSig("Not", []elm.Expression{isNull})
+	distinct := false
+	q := &elm.QueryNode{
+		Annotation: t.cqfAnnotation(),
+		Source: []*elm.AliasedQuerySourceELM{{
+			Annotation: t.cqfAnnotation(),
+			Alias:      "$this",
+			Expression: src,
+		}},
+		Let:          []*elm.LetClauseELM{},
+		Relationship: []*elm.RelationshipClauseELM{},
+		Where:        notNull,
+		Return:       &elm.ReturnClauseELM{Annotation: t.cqfAnnotation(), Distinct: &distinct, Expression: prop()},
+	}
+	t.queryTypes[q] = listTS{elemTS}
+	if !isList {
+		return q
+	}
+	return &elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig("Flatten", []elm.Expression{q}),
+		Operator:   "Flatten",
+		Operand:    q,
+	}
 }
