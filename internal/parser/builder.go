@@ -1,6 +1,7 @@
 package parser
 
 import (
+	"strconv"
 	"strings"
 
 	"github.com/antlr4-go/antlr/v4"
@@ -19,12 +20,53 @@ func newASTBuilder(sourceName string, stream *antlr.CommonTokenStream) *astBuild
 	return &astBuilder{sourceName: sourceName, stream: stream}
 }
 
-// unquoteString removes surrounding single-quotes and unescapes \' sequences.
+// unquoteString removes surrounding single-quotes and resolves the CQL escape
+// sequences: \' \" \` \\ \/ \f \n \r \t and \uXXXX.
+//
+// Only \' used to be resolved, so '\\d+' reached the ELM with two backslashes —
+// a different regular expression — and 'Hi' as eight characters rather
+// than "Hi". An unrecognised escape keeps its backslash.
 func unquoteString(s string) string {
 	if len(s) >= 2 && s[0] == '\'' && s[len(s)-1] == '\'' {
 		s = s[1 : len(s)-1]
 	}
-	return strings.ReplaceAll(s, "\\'", "'")
+	if !strings.Contains(s, `\`) {
+		return s
+	}
+	var b strings.Builder
+	for i := 0; i < len(s); i++ {
+		c := s[i]
+		if c != '\\' || i+1 >= len(s) {
+			b.WriteByte(c)
+			continue
+		}
+		i++
+		switch s[i] {
+		case '\'', '"', '`', '\\', '/':
+			b.WriteByte(s[i])
+		case 'f':
+			b.WriteByte('\f')
+		case 'n':
+			b.WriteByte('\n')
+		case 'r':
+			b.WriteByte('\r')
+		case 't':
+			b.WriteByte('\t')
+		case 'u':
+			if i+4 < len(s) {
+				if r, err := strconv.ParseUint(s[i+1:i+5], 16, 32); err == nil {
+					b.WriteRune(rune(r))
+					i += 4
+					continue
+				}
+			}
+			b.WriteString(`\u`)
+		default:
+			b.WriteByte('\\')
+			b.WriteByte(s[i])
+		}
+	}
+	return b.String()
 }
 
 // unquoteIdentifier handles IDENTIFIER, QUOTEDIDENTIFIER (double-quoted), and DELIMITEDIDENTIFIER (backtick-quoted).

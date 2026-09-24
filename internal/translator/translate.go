@@ -157,6 +157,7 @@ type Translator struct {
 	libDefTypes          map[string]map[string]typeSpec // included library alias → definition name → inferred type
 	defContexts          map[string]string              // definition name → the context it was declared in
 	sortElementTS        typeSpec                       // result element type of the query whose sort clause is being translated
+	anyAccumulators      map[string]bool                // aggregate accumulators with no starting value, whose type is Any
 	skipResultTypeStamp  bool                           // when true, translateExpr skips stamping a result type on its outer result (set by callees that stamped an inner node instead)
 }
 
@@ -1797,6 +1798,7 @@ var unarySystemOps = map[string]bool{
 	"ConvertsToTime": true,
 	// Interval operators
 	"Width": true, "Start": true, "End": true,
+	"Precision": true,
 }
 
 // aggregateSystemOps are CQL built-in aggregate functions that map to ELM AggregateExpression
@@ -1828,6 +1830,9 @@ var namedOperatorOps = map[string][]string{
 	"LastPositionOf": {"pattern", "string"},
 	"Round":          {"operand", "precision"},
 	"IndexOf":        {"source", "element"},
+	"Message":        {"source", "condition", "code", "severity", "message"},
+	"Descendents":    {"source"},
+	"Children":       {"source"},
 }
 
 // binaryOperandOps are CQL built-in operators that emit "operand": [a, b]
@@ -1836,12 +1841,14 @@ var binaryOperandOps = map[string]bool{
 	"StartsWith": true, "EndsWith": true, "Matches": true,
 	"Power": true, "Log": true,
 	"Contains": true,
+	"Indexer":  true, "HighBoundary": true, "LowBoundary": true,
 }
 
 // naryOperandOps are CQL built-in operators emitted as "operand": [a, b, ...]
 // for any arity.
 var naryOperandOps = map[string]bool{
 	"ReplaceMatches": true,
+	"Concatenate":    true,
 }
 
 // convertToOps maps a System named type to the ELM unary operator emitted by
@@ -2161,7 +2168,7 @@ func (t *Translator) inferBoundType(expr ast.Expr) string {
 // If a callee set skipLocatorStamp (because it manually placed the locator on
 // an inner node), the outer stamp is skipped.
 func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
-	result := t.translateExprCore(expr)
+	result := t.applyImplicitConversions(t.translateExprCore(expr))
 	if expr != nil && t.opts.EnableLocators && !t.skipLocatorStamp {
 		setLocator(result, locatorStr(expr.Loc()))
 	}
@@ -2239,7 +2246,7 @@ func (t *Translator) stampResultType(e elm.Expression) {
 		// Any is otherwise treated as "not resolved" and left unstamped, but some
 		// expressions really are Any-typed and CQF records them as such: a bare
 		// null literal, and an operator over nothing but nulls.
-		if isDefinitelyAny(e) {
+		if isDefinitelyAny(e) || t.definitelyAny(e) {
 			elm.SetResultType(e, typesystem.TypeAny, nil)
 		}
 		return
@@ -2287,7 +2294,12 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		return &elm.LiteralNode{Annotation: ann, ValueType: typesystem.TypeBoolean, Value: val}
 	case *ast.IntegerLiteral:
-		return &elm.LiteralNode{Annotation: ann, ValueType: typesystem.TypeInteger, Value: fmt.Sprintf("%d", v.Value)}
+		// The literal's value is recorded as written: CQF keeps `01` as "01".
+		value := v.Text
+		if value == "" {
+			value = fmt.Sprintf("%d", v.Value)
+		}
+		return &elm.LiteralNode{Annotation: ann, ValueType: typesystem.TypeInteger, Value: value}
 	case *ast.LongLiteral:
 		return &elm.LiteralNode{Annotation: ann, ValueType: typesystem.TypeLong, Value: fmt.Sprintf("%d", v.Value)}
 	case *ast.DecimalLiteral:
@@ -2415,6 +2427,16 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	case *ast.ExternalConstantExpr:
 		return &elm.ExternalConstantNode{Annotation: ann, Name: v.Name}
 	case *ast.FunctionRef:
+		// FHIRPath-style method invocations `.descendents()` / `.children()`
+		// name the system operators Descendents and Children.
+		if v.LibraryName == "" && len(v.Operands) == 1 {
+			switch v.Name {
+			case "descendents":
+				v.Name = "Descendents"
+			case "children":
+				v.Name = "Children"
+			}
+		}
 		// Map system Date/DateTime/Time function calls to structured ELM nodes.
 		if v.LibraryName == "" {
 			switch v.Name {
@@ -2525,7 +2547,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 					Operands: []elm.NamedOperand{
 						{Name: "source", Value: src},
 						{Name: "startIndex", Value: t.intLiteral(1)},
-						{Name: "endIndex", Value: &elm.NullNode{Annotation: t.cqfAnnotation()}},
+						{Name: "endIndex", Value: t.typedNull(intTS)},
 					},
 				}
 			}
@@ -2540,7 +2562,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 					Operands: []elm.NamedOperand{
 						{Name: "source", Value: src},
 						{Name: "startIndex", Value: start},
-						{Name: "endIndex", Value: &elm.NullNode{Annotation: t.cqfAnnotation()}},
+						{Name: "endIndex", Value: t.typedNull(intTS)},
 					},
 				}
 			}
@@ -2576,7 +2598,8 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				// Decimal. (issues/06 follow-up)
 				if lifted, ok := t.liftFHIRListOperand(v.Name, src); ok {
 					src = lifted
-				} else if decimalAggregateOps[v.Name] && !t.isDecimalListExpr(v.Operands[0]) {
+				} else if decimalAggregateOps[v.Name] && !t.isDecimalListExpr(v.Operands[0]) &&
+					!isQuantityList(t.inferTypeSpec(src)) {
 					src = t.wrapInDecimalQuery(src)
 				}
 				return &elm.AggregateExpressionNode{
@@ -3005,27 +3028,29 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	case *ast.TimingExpr:
 		return t.translateTimingExpr(v)
 	case *ast.BetweenExpr:
+		// ELM R1 has no Between operator: `X between A and B` is
+		// X >= A and X <= B (strict comparisons for `properly between`). The
+		// operand is translated once per comparison, as CQF emits two nodes.
+		lowOp, highOp := "GreaterOrEqual", "LessOrEqual"
 		if v.Properly {
-			return &elm.OperatorExpressionNode{
-				Annotation: ann,
-				Signature:  sig,
-				Operator:   "ProperBetween",
-				Operand: []elm.Expression{
-					t.translateExpr(v.Operand),
-					t.translateExpr(v.Low),
-					t.translateExpr(v.High),
-				},
-			}
+			lowOp, highOp = "Greater", "Less"
 		}
+		cmp := func(op string, bound ast.Expr) elm.Expression {
+			operands := []elm.Expression{t.translateExpr(v.Operand), t.translateExpr(bound)}
+			n := &elm.OperatorExpressionNode{
+				Annotation: t.cqfAnnotation(),
+				Signature:  t.computeSig(op, operands),
+				Operator:   op,
+				Operand:    operands,
+			}
+			return t.applyImplicitConversions(n)
+		}
+		operands := []elm.Expression{cmp(lowOp, v.Low), cmp(highOp, v.High)}
 		return &elm.OperatorExpressionNode{
 			Annotation: ann,
-			Signature:  sig,
-			Operator:   "Between",
-			Operand: []elm.Expression{
-				t.translateExpr(v.Operand),
-				t.translateExpr(v.Low),
-				t.translateExpr(v.High),
-			},
+			Signature:  t.computeSig("And", operands),
+			Operator:   "And",
+			Operand:    operands,
 		}
 	case *ast.DurationBetweenExpr:
 		operands := []elm.Expression{t.translateExpr(v.Low), t.translateExpr(v.High)}
@@ -3211,7 +3236,6 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		return &elm.MinMaxValueNode{
 			Annotation: ann,
-			Signature:  sig,
 			Operator:   op,
 			ValueType:  vt,
 		}
@@ -3264,7 +3288,14 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		in := &elm.InstanceNode{Annotation: ann}
 		if v.TypeSpec != nil {
 			if nt, ok := v.TypeSpec.(*ast.NamedTypeSpecifier); ok {
-				in.ClassType = nt.Name
+				switch {
+				case nt.Qualifier == "System" || systemClassTypes[nt.Name]:
+					in.ClassType = typesystem.SystemELMName + nt.Name
+				case nt.Qualifier != "":
+					in.ClassType = t.qualifyTypeName(nt.Qualifier + "." + nt.Name)
+				default:
+					in.ClassType = t.qualifyTypeName(nt.Name)
+				}
 			}
 		}
 		for _, e := range v.Elements {
@@ -3304,7 +3335,21 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	case *ast.SetAggregateExpr:
 		operands := []elm.Expression{t.translateExpr(v.Operand)}
 		if v.PerClause != nil {
-			operands = append(operands, t.translateExpr(v.PerClause))
+			// A bare number is a unitless quantity: `per 2` is 2 '1'.
+			per := v.PerClause
+			switch lit := per.(type) {
+			case *ast.IntegerLiteral:
+				per = &ast.QuantityLiteral{Value: lit.Text, Unit: "1"}
+			case *ast.DecimalLiteral:
+				per = &ast.QuantityLiteral{Value: lit.Value, Unit: "1"}
+			}
+			if _, synthesized := v.PerClause.(*ast.QuantityLiteral); per != v.PerClause || (synthesized && v.PerClause.Loc().Start.Line == 0) {
+				// The quantity was made from a bare number or a precision
+				// keyword: CQF builds it without a locator or result type.
+				operands = append(operands, t.translateExprCore(per))
+			} else {
+				operands = append(operands, t.translateExpr(per))
+			}
 		} else if v.Op == "Collapse" || v.Op == "Expand" {
 			// CQF always emits null as the second (per) argument when absent, and
 			// types it as the Quantity that slot declares.
@@ -3501,53 +3546,8 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		op = "Concatenate"
 	}
 
-	// Implicit Integer→Decimal promotion for `/` (Divide), which is decimal-only
-	// in CQL. CQF wraps Integer literal operands in ToDecimal. (Power has an
-	// integer overload, so we don't promote there.)
-	if op == "Divide" {
-		if _, ok := v.Left.(*ast.IntegerLiteral); ok {
-			lhs = &elm.UnaryExpressionNode{
-				Annotation: t.cqfAnnotation(),
-				Signature:  t.computeSig("ToDecimal", []elm.Expression{lhs}),
-				Operator:   "ToDecimal",
-				Operand:    lhs,
-			}
-		}
-		if _, ok := v.Right.(*ast.IntegerLiteral); ok {
-			rhs = &elm.UnaryExpressionNode{
-				Annotation: t.cqfAnnotation(),
-				Signature:  t.computeSig("ToDecimal", []elm.Expression{rhs}),
-				Operator:   "ToDecimal",
-				Operand:    rhs,
-			}
-		}
-	}
-
-	// Implicit Integer→Decimal promotion for mixed-type arithmetic:
-	// Add/Subtract/Multiply/Modulo with one Integer literal and one Decimal
-	// literal. CQF wraps the Integer side in ToDecimal so both operands match.
-	arithMixedOps := map[string]bool{"Add": true, "Subtract": true, "Multiply": true, "Modulo": true}
-	if arithMixedOps[op] {
-		_, leftInt := v.Left.(*ast.IntegerLiteral)
-		_, leftDec := v.Left.(*ast.DecimalLiteral)
-		_, rightInt := v.Right.(*ast.IntegerLiteral)
-		_, rightDec := v.Right.(*ast.DecimalLiteral)
-		if leftInt && rightDec {
-			lhs = &elm.UnaryExpressionNode{
-				Annotation: t.cqfAnnotation(),
-				Signature:  t.computeSig("ToDecimal", []elm.Expression{lhs}),
-				Operator:   "ToDecimal",
-				Operand:    lhs,
-			}
-		} else if rightInt && leftDec {
-			rhs = &elm.UnaryExpressionNode{
-				Annotation: t.cqfAnnotation(),
-				Signature:  t.computeSig("ToDecimal", []elm.Expression{rhs}),
-				Operator:   "ToDecimal",
-				Operand:    rhs,
-			}
-		}
-	}
+	// Numeric promotion (Integer → Long → Decimal → Quantity) is applied by
+	// applyImplicitConversions once the node is built, from operand *types*.
 
 	lhs, rhs = t.promoteDateToDateTime(op, lhs, rhs)
 	if t.opts.EnableResultTypes {
@@ -3588,6 +3588,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 			Operator:   inner,
 			Operand:    operands,
 		}
+		t.applyImplicitConversions(node)
 		if t.opts.EnableLocators {
 			node.Locator = locatorStr(v.Loc())
 		}
@@ -4184,7 +4185,14 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		}
 		srcExpr := t.translateExpr(src.Expression)
 		translatedSources[i] = srcExpr
-		if lt, ok := t.inferTypeSpec(srcExpr).(listTS); ok {
+		srcTS := t.inferTypeSpec(srcExpr)
+		if known := knownTS(srcTS); known != nil {
+			if _, isList := known.(listTS); !isList {
+				// A query over a single value ranges over just that value.
+				aliasTypeSpecs[src.Alias] = known
+			}
+		}
+		if lt, ok := srcTS.(listTS); ok {
 			aliasTypeSpecs[src.Alias] = lt.elem
 			// The cases above read the model type out of the source's syntax, so
 			// they only fire when a Retrieve is visible in it. A source that is a
@@ -4289,6 +4297,19 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			setLocator(qn.Where, locatorStr(q.WhereLoc))
 		}
 	}
+	if q.Return == nil && q.Aggregate == nil && len(q.Sources) > 1 {
+		// A multi-source query with no return clause returns a tuple of its
+		// aliases, distinct — CQF writes that return clause out.
+		tuple := &elm.TupleNode{Annotation: t.cqfAnnotation()}
+		for _, src := range q.Sources {
+			tuple.Element = append(tuple.Element, &elm.TupleElementNode{
+				Name:  src.Alias,
+				Value: &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: src.Alias},
+			})
+		}
+		distinct := true
+		qn.Return = &elm.ReturnClauseELM{Annotation: t.cqfAnnotation(), Distinct: &distinct, Expression: tuple}
+	}
 	if q.Return != nil {
 		// Plain 'return' omits the field; explicit 'return all'/'return distinct'
 		// emit distinct:false / distinct:true respectively.
@@ -4320,6 +4341,26 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 		starting := t.translateExpr(q.Aggregate.Starting)
 		if q.Aggregate.Starting != nil {
 			letTypeSpecs[q.Aggregate.Identifier] = t.inferTypeSpec(starting)
+		}
+		// With no starting value the accumulator starts as null, so it is typed
+		// Any — definitely, not merely unknown — and CQF casts it wherever it
+		// meets a typed operator.
+		if q.Aggregate.Starting == nil {
+			if t.anyAccumulators == nil {
+				t.anyAccumulators = map[string]bool{}
+			}
+			prev, had := t.anyAccumulators[q.Aggregate.Identifier]
+			t.anyAccumulators[q.Aggregate.Identifier] = true
+			defer func() {
+				if had {
+					t.anyAccumulators[q.Aggregate.Identifier] = prev
+				} else {
+					delete(t.anyAccumulators, q.Aggregate.Identifier)
+				}
+			}()
+		}
+		if q.Aggregate.Starting == nil && t.opts.EnableResultTypes {
+			elm.SetResultType(starting, typesystem.TypeAny, nil)
 		}
 		ac := &elm.AggregateClauseELM{
 			Distinct:   distinct,
@@ -4393,10 +4434,15 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			qn.Aggregate.ResultTypeName, qn.Aggregate.ResultTypeSpecifier =
 				resultTypeOf(t.nodeResultTS(qn.Aggregate.Expression))
 		}
-		if qn.Return != nil && qn.Return.Expression != nil {
-			// A return clause yields the list of its element type.
-			qn.Return.ResultTypeName, qn.Return.ResultTypeSpecifier =
-				resultTypeOf(listTS{t.nodeResultTS(qn.Return.Expression)})
+		if qn.Return != nil && qn.Return.Expression != nil && q.Return != nil {
+			// A return clause yields its element type, in a list unless the
+			// query ranges over a single value. The tuple return CQF writes for
+			// a multi-source query is synthesized and left untyped.
+			ret := t.nodeResultTS(qn.Return.Expression)
+			if !t.isSingularQuery(qn) {
+				ret = listTS{ret}
+			}
+			qn.Return.ResultTypeName, qn.Return.ResultTypeSpecifier = resultTypeOf(ret)
 		}
 		if qn.Sort != nil {
 			for _, item := range qn.Sort.By {
@@ -5230,4 +5276,11 @@ func (t *Translator) unitInterval(first elm.Expression, again func() elm.Express
 			HighClosed: true,
 		},
 	}
+}
+
+// systemClassTypes are the System structured types an Instance selector can
+// name without a qualifier; their class type is always the System one.
+var systemClassTypes = map[string]bool{
+	"Code": true, "Concept": true, "Quantity": true, "Ratio": true,
+	"ValueSet": true, "CodeSystem": true, "Vocabulary": true,
 }

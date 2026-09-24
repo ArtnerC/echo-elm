@@ -1,0 +1,1956 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ValueLiteralsAndSelectors",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Null"
+          },
+          "name": "Null.Null"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "false",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "name": "Boolean.BooleanFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "true",
+            "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+          },
+          "name": "Boolean.BooleanTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerPosZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Integer.IntegerNegZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "1",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerOne"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "1",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerPosOne"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Integer.IntegerNegOne"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerTwo"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerPosTwo"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Integer.IntegerNegTwo"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "9",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Integer.Integer10Pow9"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "9",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Integer.IntegerPos10Pow9"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Power"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Integer.IntegerNeg10Pow9"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "30",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Power"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Integer.Integer2Pow31ToZero1IntegerMaxValue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "30",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Power"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Integer.IntegerPos2Pow31ToZero1IntegerMaxValue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "type": "Literal",
+                          "value": "2",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        },
+                        {
+                          "annotation": [],
+                          "type": "Literal",
+                          "value": "30",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Power"
+                    },
+                    "signature": [],
+                    "type": "Negate"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Integer.IntegerNeg2Pow31ToZero1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2147483648",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.Integer2Pow31"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2147483648",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerPos2Pow31"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "2",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "30",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Power"
+                },
+                "signature": [],
+                "type": "Negate"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Integer.IntegerNeg2Pow31IntegerMinValue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2147483649",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.Integer2Pow31ToInf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2147483649",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "name": "Integer.IntegerPos2Pow31ToInf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2147483649",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Integer.IntegerNeg2Pow31ToInf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0.0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0.0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalPosZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "1.0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalOne"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "1.0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalPosOne"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegOne"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2.0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalTwo"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "2.0",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalPosTwo"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2.0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegTwo"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "9.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Decimal.Decimal10Pow9"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "9.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Decimal.DecimalPos10Pow9"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "signature": [],
+              "type": "Power"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNeg10Pow9"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "30.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Power"
+                  },
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "ToDecimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.Decimal2Pow31ToZero1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "30.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Power"
+                  },
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "1",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "ToDecimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.DecimalPos2Pow31ToZero1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "type": "Literal",
+                          "value": "2.0",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                        },
+                        {
+                          "annotation": [],
+                          "type": "Literal",
+                          "value": "30.0",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Power"
+                    },
+                    "signature": [],
+                    "type": "Negate"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Decimal.DecimalNeg2Pow31ToZero1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.Decimal2Pow31"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.DecimalPos2Pow31"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "2.0",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "30.0",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Power"
+                },
+                "signature": [],
+                "type": "Negate"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Decimal.DecimalNeg2Pow31"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "30.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Power"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.Decimal2Pow31ToInf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "2.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "30.0",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Power"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Add"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.DecimalPos2Pow31ToInf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "type": "Literal",
+                          "value": "2.0",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                        },
+                        {
+                          "annotation": [],
+                          "type": "Literal",
+                          "value": "30.0",
+                          "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "Power"
+                    },
+                    "signature": [],
+                    "type": "Negate"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Subtract"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "30.0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Power"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Decimal.DecimalNeg2Pow31ToInf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0.00000000",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalZeroStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0.00000000",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalPosZeroStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.00000000",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegZeroStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Negate"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Decimal.DecimalOneStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Negate"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Decimal.DecimalPosOneStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "8",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Negate"
+                }
+              ],
+              "signature": [],
+              "type": "Power"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegOneStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "8",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Negate"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Power"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "name": "Decimal.DecimalTwoStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "8",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Negate"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Power"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "name": "Decimal.DecimalPosTwoStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                "signature": [],
+                "type": "Negate"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "8",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Negate"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Power"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              }
+            ],
+            "signature": [],
+            "type": "Multiply"
+          },
+          "name": "Decimal.DecimalNegTwoStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Negate"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Decimal.DecimalTenStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "10",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "7",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Negate"
+              }
+            ],
+            "signature": [],
+            "type": "Power"
+          },
+          "name": "Decimal.DecimalPosTenStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "7",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Negate"
+                }
+              ],
+              "signature": [],
+              "type": "Power"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegTenStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0.000000001",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalTenthStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "0.000000001",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalPosTenthStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0.000000001",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNegTenthStep"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "ToDecimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1000000000000000000000000000.00000000",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0.00000001",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Decimal.Decimal10Pow28ToZeroOneStepDecimalMaxValue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "ToDecimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1000000000000000000000000000.00000000",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0.00000001",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Subtract"
+          },
+          "name": "Decimal.DecimalPos10Pow28ToZeroOneStepDecimalMaxValue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "operand": {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "10",
+                        "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                      },
+                      "signature": [],
+                      "type": "Negate"
+                    },
+                    "signature": [],
+                    "type": "ToDecimal"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "1000000000000000000000000000.00000000",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "Multiply"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0.00000001",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "Decimal.DecimalNeg10Pow28ToZeroOneStepDecimalMinValue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "10000000000000000000000000000.00000000",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.Decimal10Pow28"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "type": "Literal",
+            "value": "10000000000000000000000000000.00000000",
+            "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+          },
+          "name": "Decimal.DecimalPos10Pow28"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10000000000000000000000000000.00000000",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "signature": [],
+            "type": "Negate"
+          },
+          "name": "Decimal.DecimalNeg10Pow28"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

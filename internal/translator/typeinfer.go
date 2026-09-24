@@ -704,6 +704,9 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 	if e == nil {
 		return anyTS
 	}
+	if ts := t.inferSystemOperator(e); ts != nil {
+		return ts
+	}
 	switch v := e.(type) {
 	case *elm.LiteralNode:
 		if v.ValueType != "" {
@@ -949,12 +952,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return t.inferTypeSpec(v.Aggregate.Expression)
 		}
 		// Query result type = List<returnElementType>; default = List<sourceElementType>.
+		// A query over a single value yields a single value.
+		singular := t.isSingularQuery(v)
 		if v.Return != nil && v.Return.Expression != nil {
+			if singular {
+				return t.nodeResultTS(v.Return.Expression)
+			}
 			return listTS{t.nodeResultTS(v.Return.Expression)}
 		}
 		if len(v.Source) > 0 && v.Source[0] != nil {
-			if lt, ok := t.nodeResultTS(v.Source[0].Expression).(listTS); ok {
+			st := t.nodeResultTS(v.Source[0].Expression)
+			if lt, ok := st.(listTS); ok {
 				return lt
+			}
+			if singular {
+				return st
 			}
 		}
 		return listTS{anyTS}
@@ -980,6 +992,9 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "Concatenate":
 			return strTS
 		case "Coalesce":
+			if t.definitelyAny(v) {
+				return anyTS
+			}
 			// The result is the common type of the alternatives. A bare null
 			// among them leaves no common type but Any; a null already cast to
 			// the type an earlier operand established does not. (issues/06)
@@ -1122,6 +1137,10 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			fields = append(fields, tupleField{name: el.Name, ts: t.inferTypeSpec(el.Value)})
 		}
 		return tupleTS{fields: fields}
+	case *elm.InstanceNode:
+		if v.ClassType != "" {
+			return namedTS{v.ClassType}
+		}
 	case *elm.SingletonFromNode:
 		// singleton from List<T> → T. Its own ELM node rather than a
 		// UnaryExpression, so it reached neither operator branch and came out

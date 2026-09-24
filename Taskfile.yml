@@ -85,6 +85,11 @@ tasks:
       - go run ./demo/parity_full
 
 
+  corpus:cql-tests:
+    desc: Regenerate the HL7 CQL conformance-suite fixtures (clone github.com/cqframework/cql-tests into tools/cql-tests first)
+    cmds:
+      - go run ./internal/tools/cqltestsgen
+
   parity:goldens:
     desc: Generate committed golden files from the pinned CQF release (requires parity:jdk + parity:jar)
     cmds:

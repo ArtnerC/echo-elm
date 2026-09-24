@@ -109,6 +109,9 @@ var registry = map[string]Op{
 	"Power":           {Name: "Power", Kind: KindOperator},
 	"Log":             {Name: "Log", Kind: KindOperator},
 	"Round":           {Name: "Round", Kind: KindNamed, NamedFields: []string{"operand", "precision"}},
+	"HighBoundary":    {Name: "HighBoundary", Kind: KindOperator},
+	"LowBoundary":     {Name: "LowBoundary", Kind: KindOperator},
+	"Precision":       {Name: "Precision", Kind: KindUnary},
 
 	// ---- Boolean / null (CQL §11, §16) ----
 	"Not":      {Name: "Not", Kind: KindUnary},
@@ -204,6 +207,10 @@ var registry = map[string]Op{
 	"In":            {Name: "In", Kind: KindOperator},
 	"IndexOf":       {Name: "IndexOf", Kind: KindNamed, NamedFields: []string{"source", "element"}},
 	"Slice":         {Name: "Slice", Kind: KindNamed, NamedFields: []string{"source", "startIndex", "endIndex"}},
+	"Indexer":       {Name: "Indexer", Kind: KindOperator},
+	"Descendents":   {Name: "Descendents", Kind: KindNamed, NamedFields: []string{"source"}},
+	"Children":      {Name: "Children", Kind: KindNamed, NamedFields: []string{"source"}},
+	"Message":       {Name: "Message", Kind: KindNamed, NamedFields: []string{"source", "condition", "code", "severity", "message"}},
 	"First":         {Name: "First", Kind: KindAggregate},
 	"Last":          {Name: "Last", Kind: KindAggregate},
 

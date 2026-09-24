@@ -1,0 +1,1091 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "CqlLogicalOperatorsTest",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.TrueAndTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.TrueAndFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.TrueAndNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.FalseAndTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.FalseAndFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.FalseAndNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.NullAndTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.NullAndFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "And"
+          },
+          "name": "And.NullAndNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.TrueImpliesTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.TrueImpliesFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.TrueImpliesNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.FalseImpliesTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.FalseImpliesFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.FalseImpliesNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.NullImpliesTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.NullImpliesFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Implies"
+          },
+          "name": "Implies.NullImpliesNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "Not"
+          },
+          "name": "Not.NotTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "false",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "Not"
+          },
+          "name": "Not.NotFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "type": "Not"
+          },
+          "name": "Not.NotNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.TrueOrTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.TrueOrFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.TrueOrNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.FalseOrTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.FalseOrFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.FalseOrNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.NullOrTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.NullOrFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Or"
+          },
+          "name": "Or.NullOrNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.TrueXorTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.TrueXorFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.TrueXorNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.FalseXorTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.FalseXorFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.FalseXorNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "true",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.NullXorTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "false",
+                "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.NullXorFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Xor"
+          },
+          "name": "Xor.NullXorNull"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

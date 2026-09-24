@@ -1,0 +1,2666 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "CqlAggregateFunctionsTest",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueAllTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueTrueFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueFalseFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueAllTrueFalseTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueAllFalseTrueFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueNullFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "operand": {
+                    "annotation": [],
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "As"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "element": [],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueEmptyList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "AllTrue"
+          },
+          "name": "AllTrue.AllTrueIsTrueWhenNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueAllTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueAllFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueAllTrueFalseTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueAllFalseTrueFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueTrueFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueFalseFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "true",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueNullFirstThenTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "false",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueNullFirstThenFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "operand": {
+                    "annotation": [],
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "As"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "element": [],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueEmptyList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "AnyTrue"
+          },
+          "name": "AnyTrue.AnyTrueIsFalseWhenNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "6.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Avg"
+          },
+          "name": "Avg.AvgTest1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Product"
+          },
+          "name": "Product.ProductLong"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "99",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "Count.CountTest1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2014",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2001",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2010",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "Count.CountTestDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "15",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "20",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "Count.CountTestTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [],
+              "type": "List"
+            },
+            "type": "Count"
+          },
+          "name": "Count.CountTestNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "90",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "44",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "Max.MaxTestInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "90",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "44",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "Max.MaxTestLong"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "hi",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "bye",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "zebra",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "Max.MaxTestString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "9",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "6",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "Max.MaxTestDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "15",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "20",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "Max.MaxTestTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "6.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Median"
+          },
+          "name": "Median.MedianTestDecimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "90",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "44",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "Min.MinTestInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "90",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "44",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "Min.MinTestLong"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "hi",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "bye",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "zebra",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "Min.MinTestString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "9",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "6",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "Min.MinTestDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "15",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "20",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Min"
+          },
+          "name": "Min.MinTestTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "8",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "9",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Mode"
+          },
+          "name": "Mode.ModeTestInteger"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "9",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "6",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "9",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Mode"
+          },
+          "name": "Mode.ModeTestDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "6",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "10",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                },
+                {
+                  "annotation": [],
+                  "day": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "month": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "9",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "DateTime",
+                  "year": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2012",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Mode"
+          },
+          "name": "Mode.ModeTestDateTime2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "15",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "20",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                },
+                {
+                  "annotation": [],
+                  "hour": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "millisecond": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "999",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "minute": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "second": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "59",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Time"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Mode"
+          },
+          "name": "Mode.ModeTestTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "PopulationStdDev"
+          },
+          "name": "PopulationStdDev.PopStdDevTest1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "PopulationStdDev"
+          },
+          "name": "PopulationStdDev.PopulationStdDevIsNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "PopulationVariance"
+          },
+          "name": "PopulationVariance.PopVarianceTest1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "PopulationVariance"
+          },
+          "name": "PopulationVariance.PopVarianceIsNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "StdDev"
+          },
+          "name": "StdDev.StdDevTest1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "asTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}Quantity",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "strict": false,
+                  "type": "As"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "StdDev"
+          },
+          "name": "StdDev.StdDevIsNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "6.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Sum"
+          },
+          "name": "Sum.SumTest1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "6",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Long"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Sum"
+          },
+          "name": "Sum.SumTestLong"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Quantity",
+                  "unit": "ml",
+                  "value": 1
+                },
+                {
+                  "annotation": [],
+                  "type": "Quantity",
+                  "unit": "ml",
+                  "value": 2
+                },
+                {
+                  "annotation": [],
+                  "type": "Quantity",
+                  "unit": "ml",
+                  "value": 3
+                },
+                {
+                  "annotation": [],
+                  "type": "Quantity",
+                  "unit": "ml",
+                  "value": 4
+                },
+                {
+                  "annotation": [],
+                  "type": "Quantity",
+                  "unit": "ml",
+                  "value": 5
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Sum"
+          },
+          "name": "Sum.SumTestQuantity"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Sum"
+          },
+          "name": "Sum.SumTestNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "3.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "4.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5.0",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Variance"
+          },
+          "name": "Variance.VarianceTest1"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

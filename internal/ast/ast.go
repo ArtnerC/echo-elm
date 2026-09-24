@@ -286,6 +286,8 @@ type BooleanLiteral struct {
 type IntegerLiteral struct {
 	baseExpr
 	Value int64
+	// Text is the literal as written; ELM records it verbatim ("01").
+	Text string
 }
 
 // LongLiteral: 42L
