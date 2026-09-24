@@ -161,7 +161,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 	type translateCQLIn struct {
 		Content string            `json:"content"`
 		Format  string            `json:"format,omitempty"`
-		Options translatorOptions `json:"options"`
+		Options translatorOptions `json:"options,omitempty"` // omitempty keeps it optional in the MCP input schema
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name: "translate_cql",
@@ -184,7 +184,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 	type translateFileIn struct {
 		Path    string            `json:"path"`
 		Format  string            `json:"format,omitempty"`
-		Options translatorOptions `json:"options"`
+		Options translatorOptions `json:"options,omitempty"` // omitempty keeps it optional in the MCP input schema
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name: "translate_file",
@@ -331,7 +331,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 		CqfScript string `json:"cqfScript,omitempty"` // absolute path to run.bat / run.sh wrapper
 		CqfElm    string `json:"cqfElm,omitempty"`    // pre-computed ELM JSON from CQF (paste-in)
 		// Translator options for the echo-elm side.
-		Options translatorOptions `json:"options"`
+		Options translatorOptions `json:"options,omitempty"` // omitempty keeps it optional in the MCP input schema
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name: "compare_with_cqf",

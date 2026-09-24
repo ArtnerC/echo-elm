@@ -37,6 +37,7 @@ type cqfVersion struct {
 
 const (
 	coursierDir        = "tools/coursier"
+	coursierVersion    = "v2.1.24"
 	cqframeworkBaseDir = "tools/cqframework"
 )
 
@@ -105,7 +106,10 @@ func ensureCoursier() (string, error) {
 	}
 
 	// Download the Coursier JVM bootstrap launcher (~167KB).
-	dlURL := "https://github.com/coursier/launchers/raw/master/coursier"
+	// Pinned to a release. The launcher on the launchers repo's master branch
+	// is a moving target, and in September 2026 it started failing with a
+	// NoSuchMethodError inside cats, breaking every CI parity run.
+	dlURL := "https://github.com/coursier/coursier/releases/download/" + coursierVersion + "/coursier"
 	fmt.Printf("  downloading coursier bootstrap from %s…\n", dlURL)
 	if err := downloadFile(dlURL, localBin); err != nil {
 		return "", fmt.Errorf("download coursier: %w", err)

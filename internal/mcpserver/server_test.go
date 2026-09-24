@@ -3,10 +3,12 @@ package mcpserver_test
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"testing"
 	"time"
 
@@ -112,7 +114,7 @@ func TestMCPTranslateCQL(t *testing.T) {
 	})
 
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 
 	var out struct {
@@ -143,7 +145,7 @@ func TestMCPTranslateCQLSyntaxError(t *testing.T) {
 	})
 
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 
 	var out struct {
@@ -166,7 +168,7 @@ func TestMCPTranslateFile(t *testing.T) {
 	})
 
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 
 	var out struct {
@@ -190,7 +192,7 @@ func TestMCPListLibraries(t *testing.T) {
 	result := callTool(t, session, "list_libraries", nil)
 
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 
 	var out struct {
@@ -224,7 +226,7 @@ func TestMCPReadLibrary(t *testing.T) {
 	})
 
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 
 	var out struct {
@@ -247,7 +249,7 @@ func TestMCPGetTranslatorOptions(t *testing.T) {
 
 	result := callTool(t, session, "get_translator_options", nil)
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 
 	var out struct {
@@ -284,7 +286,7 @@ func TestMCPValidateELM(t *testing.T) {
 		"format":  "xml",
 	})
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 	var out struct {
 		Valid  bool     `json:"valid"`
@@ -326,7 +328,7 @@ func TestMCPTranslateCQLWithOptions(t *testing.T) {
 		},
 	})
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 	var out struct {
 		ElmXML    string `json:"elmXml"`
@@ -348,7 +350,7 @@ func TestMCPCompareWithCQF(t *testing.T) {
 		"content": "library CompareTest version '1.0.0'",
 	})
 	if result.IsError {
-		t.Fatalf("tool returned error: %+v", result.Content)
+		t.Fatalf("tool returned error: %s", contentText(result))
 	}
 	var out struct {
 		Status      string `json:"status"`
@@ -407,4 +409,18 @@ func TestMCPCompareWithCQFPreSupplied(t *testing.T) {
 	if out.Status == "echo-error" || out.Status == "cqf-error" {
 		t.Errorf("unexpected error status %q", out.Status)
 	}
+}
+
+// contentText renders a tool result's content for a failure message. Printing
+// result.Content directly shows only pointer addresses.
+func contentText(result *mcp.CallToolResult) string {
+	var b strings.Builder
+	for _, c := range result.Content {
+		if tc, ok := c.(*mcp.TextContent); ok {
+			b.WriteString(tc.Text)
+		} else {
+			fmt.Fprintf(&b, "%T", c)
+		}
+	}
+	return b.String()
 }
