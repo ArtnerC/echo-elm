@@ -5,6 +5,24 @@
         "signatureLevel": "None",
         "translatorOptions": "",
         "type": "CqlToElmInfo"
+      },
+      {
+        "errorSeverity": "warning",
+        "errorType": "semantic",
+        "message": "The function FHIRHelpers.ToDateTime has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+        "type": "CqlToElmError"
+      },
+      {
+        "errorSeverity": "warning",
+        "errorType": "semantic",
+        "message": "The function FHIRHelpers.ToDateTime has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+        "type": "CqlToElmError"
+      },
+      {
+        "errorSeverity": "warning",
+        "errorType": "semantic",
+        "message": "The function FHIRHelpers.ToInterval has multiple overloads and due to the SignatureLevel setting (None), the overload signature is not being included in the output. This may result in ambiguous function resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the output includes sufficient information to support correct overload selection at runtime.",
+        "type": "CqlToElmError"
       }
     ],
     "contexts": {

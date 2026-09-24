@@ -35,6 +35,10 @@ type Fixture struct {
 	// fixture+profile combination (upstream-error), so no golden can exist.
 	ExcludeProfiles []string `yaml:"excludeProfiles"`
 	Tags            []string `yaml:"tags"`
+	// Diagnostics opts the fixture into comparing CqlToElmError annotations,
+	// which are otherwise normalized away. For fixtures whose every CQF
+	// diagnostic echo-elm reproduces; see issues #8.
+	Diagnostics bool `yaml:"diagnostics"`
 
 	// Options is retained for backward compatibility but superseded by Profiles.
 	Options map[string]string `yaml:"options"`

@@ -162,7 +162,12 @@ type Translator struct {
 	includeCache         map[string]*includeTypes         // include path|version → the types it exposes, shared across nesting
 	includeVisiting      map[string]bool                  // include path|version currently being typed, to stop cycles
 	converted            map[elm.Expression]bool          // conversions and casts the translator synthesized
-	skipResultTypeStamp  bool                             // when true, translateExpr skips stamping a result type on its outer result (set by callees that stamped an inner node instead)
+	elmDiagnostics       []*elm.CqlToElmError             // CqlToElmError annotations, in the order they arise
+	libraryID            string                           // this library's identifier and version, for diagnostics
+	libraryVersion       string
+	includeLibraryNames  map[string]string         // include alias → the included library's identifier
+	libFuncCounts        map[string]map[string]int // include alias → function name → number of definitions
+	skipResultTypeStamp  bool                      // when true, translateExpr skips stamping a result type on its outer result (set by callees that stamped an inner node instead)
 }
 
 // New creates a new Translator with the given options.
@@ -652,12 +657,23 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	// call into a method invocation on an identifier named FHIRHelpers — an
 	// ExpressionRef operand and no libraryName. (issues/06)
 	t.includeAliases = make(map[string]bool, len(lib.Includes))
+	t.includeLibraryNames = make(map[string]string, len(lib.Includes))
+	t.libFuncCounts = make(map[string]map[string]int)
+	t.elmDiagnostics = nil
 	for _, inc := range lib.Includes {
-		if inc.LocalName != "" {
-			t.includeAliases[inc.LocalName] = true
-		} else {
-			t.includeAliases[inc.Path] = true
+		alias := inc.LocalName
+		if alias == "" {
+			alias = inc.Path
 		}
+		t.includeAliases[alias] = true
+		name := inc.Path
+		if i := strings.LastIndex(name, "."); i >= 0 {
+			name = name[i+1:]
+		}
+		t.includeLibraryNames[alias] = name
+	}
+	if lib.Name != nil {
+		t.libraryID, t.libraryVersion = lib.Name.Name, lib.Name.Version
 	}
 	t.libDefTypes = make(map[string]map[string]typeSpec)
 	t.libFluentFuncs = make(map[string][]string)
@@ -692,6 +708,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 						t.libFuncReturns[localName] = it.funcs
 						t.libFuncOperands[localName] = it.operands
 					}
+					t.libFuncCounts[localName] = functionCounts(pr.Library)
 				}
 			}
 		}
@@ -1117,6 +1134,18 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	}
 
 	if t.opts.CQFMode {
+		// Diagnostics follow CqlToElmInfo directly, ahead of the library's
+		// source-text annotation, as CQF orders them.
+		if len(t.elmDiagnostics) > 0 && len(out.Annotation) > 0 {
+			diags := make([]json.RawMessage, 0, len(t.elmDiagnostics))
+			for _, d := range t.elmDiagnostics {
+				if b, err := json.Marshal(d); err == nil {
+					diags = append(diags, json.RawMessage(b))
+				}
+			}
+			rest := append([]json.RawMessage{}, out.Annotation[1:]...)
+			out.Annotation = append(append(out.Annotation[:1], diags...), rest...)
+		}
 		// Every Element carries an annotation container in CQF's output, empty
 		// or not. Filling it here reaches the synthesized nodes too.
 		elm.FillEmptyAnnotations(out)
@@ -2428,6 +2457,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				if t.opts.EnableResultTypes {
 					elm.SetResultType(ref, "{http://hl7.org/fhir}"+fhirType, nil)
 				}
+				t.noteOverloadedCall(t.fhirHelpersLocalName, fhirFunc)
 				return t.markConverted(&elm.FunctionRefNode{
 					Annotation:  ann,
 					Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + fhirType}}),
@@ -2834,22 +2864,10 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				arg = t.castNullTo(arg, declared[i])
 			} else if i < len(declared) {
 				arg = t.castChoiceArgument(arg, declared[i])
-			} else if i < len(declared) {
-				// A value passed to a choice-typed parameter is cast to the
-				// choice, as CQF does: As{asTypeSpecifier: Choice<…>}. An
-				// argument that is already a choice, or whose type is unknown, is
-				// left alone. castNullTo builds exactly that node for any operand.
-				// (issues/06)
-				if ch, ok := declared[i].(choiceTS); ok {
-					if at := knownTS(t.inferTypeSpec(arg)); at != nil {
-						if _, isChoice := at.(choiceTS); !isChoice {
-							arg = t.castNullTo(arg, ch)
-						}
-					}
-				}
 			}
 			operands = append(operands, arg)
 		}
+		t.noteOverloadedCall(v.LibraryName, v.Name)
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
 			Signature:   t.computeFunctionRefSig(v.LibraryName, v.Name, operands),
@@ -2954,6 +2972,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 					argSpec := namedTS{"{http://hl7.org/fhir}" + fhirType}
 					wrapperSig = t.buildSigFromTypes("FunctionRef", []typeSpec{argSpec})
 				}
+				t.noteOverloadedCall(t.fhirHelpersLocalName, fhirFunc)
 				return t.markConverted(&elm.FunctionRefNode{
 					Annotation:  ann,
 					Signature:   wrapperSig,
@@ -3575,6 +3594,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	rhs := t.translateExpr(v.Right)
 
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
+	t.noteInclusionDemotion(op, v.Left, v.Right, lhs, rhs)
 
 	// For the "In" operator, apply either interval promotion or list promotion when
 	// the RHS cannot already satisfy an In overload for the LHS type. The check uses
@@ -3860,6 +3880,7 @@ func (t *Translator) convertFHIRPrimitiveList(expr ast.Expr, translated elm.Expr
 // expression: FHIRHelpers.To<T>(X) } }. None of its nodes carry a locator or a
 // result type.
 func (t *Translator) fhirListConversionQuery(translated elm.Expression, fhirFunc string, elemFHIRType string) elm.Expression {
+	t.noteOverloadedCall(t.fhirHelpersLocalName, fhirFunc)
 	alias := &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: fhirConversionAlias}
 	distinct := false
 	return t.markConverted(&elm.QueryNode{
@@ -4178,6 +4199,7 @@ func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
 
 	rhs := t.boundary(t.translateExpr(v.Right), v.RightBoundary, locatorStr(v.RightBoundaryLoc))
+	t.noteInclusionDemotion(op, v.Left, v.Right, lhs, rhs)
 	op = t.demotePointContainsOp(op, rhs)
 	promotedLHS, promotedRHS := t.promoteDateToDateTime(op, lhs, rhs)
 	promotedLHS, promotedRHS = t.promotePointToInterval(op, v, promotedLHS, promotedRHS)
@@ -5539,5 +5561,95 @@ func (t *Translator) listTraversal(src elm.Expression, path string) elm.Expressi
 		Signature:  t.computeSig("Flatten", []elm.Expression{q}),
 		Operator:   "Flatten",
 		Operand:    q,
+	}
+}
+
+// functionCounts counts a library's function definitions by name.
+func functionCounts(lib *ast.Library) map[string]int {
+	counts := map[string]int{}
+	for _, st := range lib.Statements {
+		if st.IsFunction {
+			counts[st.Name]++
+		}
+	}
+	return counts
+}
+
+// overloadWarning is CQF's text for a call to an overloaded function whose
+// signature is left out of the ELM.
+const overloadWarning = "The function %s.%s has multiple overloads and due to the SignatureLevel setting (None), " +
+	"the overload signature is not being included in the output. This may result in ambiguous function " +
+	"resolution at runtime, consider setting the SignatureLevel to Overloads or All to ensure that the " +
+	"output includes sufficient information to support correct overload selection at runtime."
+
+// noteOverloadedCall records CQF's signature-omitted warning for a call to an
+// overloaded function at SignatureLevel None — one per call, including the
+// FHIRHelpers conversions the translator inserts. It carries no location, as
+// CQF's does not. (#8)
+func (t *Translator) noteOverloadedCall(libraryAlias, name string) {
+	if !t.opts.CQFMode || (t.opts.SignatureLevel != "" && t.opts.SignatureLevel != "None") {
+		return
+	}
+	var libName string
+	var overloaded bool
+	switch {
+	case libraryAlias == "":
+		libName, overloaded = t.libraryID, t.localFuncCounts[name] > 1
+	case t.libFuncCounts[libraryAlias] != nil:
+		libName, overloaded = t.includeLibraryNames[libraryAlias], t.libFuncCounts[libraryAlias][name] > 1
+	case t.includeLibraryNames[libraryAlias] == "FHIRHelpers":
+		// Not resolvable from here; CQF resolves it from its classpath.
+		libName, overloaded = "FHIRHelpers", typesystem.FHIRHelpersOverloaded[name]
+	}
+	if !overloaded || libName == "" {
+		return
+	}
+	t.elmDiagnostics = append(t.elmDiagnostics, &elm.CqlToElmError{
+		Message:       fmt.Sprintf(overloadWarning, libName, name),
+		ErrorType:     "semantic",
+		ErrorSeverity: "warning",
+	})
+}
+
+// noteListDemotion records CQF's warning for a list operand demoted to a
+// singleton. CQF emits it while resolving a list-to-list inclusion — it tries
+// the point form, demoting the operand in the point position — even though it
+// then settles on the list form, so the warning accompanies ELM that contains
+// no demotion. Only while list demotion is enabled. (#8)
+func (t *Translator) noteListDemotion(loc ast.Interval) {
+	if !t.opts.CQFMode || t.opts.DisableListDemotion || loc.Start.Line == 0 {
+		return
+	}
+	t.elmDiagnostics = append(t.elmDiagnostics, &elm.CqlToElmError{
+		LibraryID:      t.libraryID,
+		LibraryVersion: t.libraryVersion,
+		StartLine:      loc.Start.Line,
+		StartChar:      loc.Start.Column,
+		EndLine:        loc.Stop.Line,
+		EndChar:        loc.Stop.Column,
+		Message:        "List-valued expression was demoted to a singleton.",
+		ErrorType:      "semantic",
+		ErrorSeverity:  "warning",
+	})
+}
+
+// noteInclusionDemotion applies noteListDemotion to a list-to-list inclusion:
+// the operand in the point position is the one CQF tried to demote.
+func (t *Translator) noteInclusionDemotion(op string, left, right ast.Expr, lhs, rhs elm.Expression) {
+	if !isListTS(t.inferTypeSpec(lhs)) || !isListTS(t.inferTypeSpec(rhs)) {
+		return
+	}
+	// Only against a collection whose element type is known: the point form is
+	// tried by matching the demoted operand to that element type, so with two
+	// untyped lists — `{} includes {}` — CQF never tries it and never warns.
+	switch op {
+	case "IncludedIn", "ProperIncludedIn":
+		if elementTypeOf(t.typeOf(rhs)) != nil {
+			t.noteListDemotion(left.Loc())
+		}
+	case "Includes", "ProperIncludes":
+		if elementTypeOf(t.typeOf(lhs)) != nil {
+			t.noteListDemotion(right.Loc())
+		}
 	}
 }

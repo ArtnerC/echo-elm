@@ -83,8 +83,8 @@ func TestGoldenCorpus(t *testing.T) {
 						t.Fatalf("translate %s: %v", cqlPath, err)
 					}
 
-					gotJSON := parity.NormalizeForGolden(string(echoBytes))
-					wantJSON := parity.NormalizeForGolden(string(goldenBytes))
+					gotJSON := parity.NormalizeForGoldenFixture(string(echoBytes), &fix)
+					wantJSON := parity.NormalizeForGoldenFixture(string(goldenBytes), &fix)
 
 					if gotJSON != wantJSON {
 						diff := parity.SimpleDiff(wantJSON, gotJSON)

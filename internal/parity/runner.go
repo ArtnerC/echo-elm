@@ -287,7 +287,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.UpstreamJSON = normalizeShape(upJSON, cfgShape)
+	r.UpstreamJSON = normalizeFixture(upJSON, cfgShape, fix.Diagnostics)
 
 	// Run echo-elm.
 	echoBytes, err := translateFn(cqlPath)
@@ -297,7 +297,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.EchoJSON = normalizeShape(string(echoBytes), cfgShape)
+	r.EchoJSON = normalizeFixture(string(echoBytes), cfgShape, fix.Diagnostics)
 
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
@@ -406,7 +406,7 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 				continue
 			}
 
-			normalized := normalizeJSON(jsonOut)
+			normalized := normalizeJSONOpt(jsonOut, fix.Diagnostics)
 			if err2 := os.WriteFile(outPath, []byte(normalized), 0o644); err2 != nil {
 				return written, nil, fmt.Errorf("write %s: %w", outPath, err2)
 			}
@@ -451,12 +451,18 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 // annotations at all yet; that gap is tracked in issues/03-cqf-parity-gaps.md
 // rather than being silently absorbed here.
 func normalizeJSON(s string) string {
+	return normalizeJSONOpt(s, false)
+}
+
+// normalizeJSONOpt is normalizeJSON, optionally keeping CqlToElmError
+// diagnostics for fixtures that opt into comparing them.
+func normalizeJSONOpt(s string, keepDiagnostics bool) string {
 	var v interface{}
 	if err := json.Unmarshal([]byte(s), &v); err != nil {
 		return strings.TrimSpace(s)
 	}
 	if m, ok := v.(map[string]interface{}); ok {
-		stripVolatileFields(m)
+		stripVolatileFieldsOpt(m, keepDiagnostics)
 	}
 	elm.StripImpliedTypesTree(v)
 	sortAnnotationTags(v)
@@ -641,6 +647,12 @@ func stripEmptyAnnotations(v interface{}) {
 // stripVolatileFields removes fields that differ between translators/runs
 // but are not semantically meaningful for parity checks.
 func stripVolatileFields(m map[string]interface{}) {
+	stripVolatileFieldsOpt(m, false)
+}
+
+// stripVolatileFieldsOpt is stripVolatileFields, optionally keeping the
+// CqlToElmError diagnostics for a fixture that compares them.
+func stripVolatileFieldsOpt(m map[string]interface{}, keepDiagnostics bool) {
 	if lib, ok := m["library"].(map[string]interface{}); ok {
 		if anns, ok := lib["annotation"].([]interface{}); ok {
 			var kept []interface{}
@@ -653,7 +665,7 @@ func stripVolatileFields(m map[string]interface{}) {
 					// echo-elm does not yet emit; see the parity notes in
 					// issues/03-cqf-parity-gaps.md.
 					delete(ann, "translatorVersion")
-					if t, _ := ann["type"].(string); t == "CqlToElmError" {
+					if t, _ := ann["type"].(string); t == "CqlToElmError" && !keepDiagnostics {
 						continue
 					}
 				}
@@ -756,4 +768,13 @@ func sortAnnotationTags(v interface{}) {
 			sortAnnotationTags(item)
 		}
 	}
+}
+
+// normalizeFixture normalizes one side of a fixture comparison. Diagnostics are
+// kept only for a fixture that opts in, and never on the bundle path.
+func normalizeFixture(s string, bundleShaped, keepDiagnostics bool) string {
+	if keepDiagnostics && !bundleShaped {
+		return normalizeJSONOpt(s, true)
+	}
+	return normalizeShape(s, bundleShaped)
 }

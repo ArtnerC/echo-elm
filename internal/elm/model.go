@@ -1546,6 +1546,26 @@ func (n *MinMaxValueNode) MarshalJSON() ([]byte, error) {
 // Annotation types
 // -----------------------------------------------------------------------
 
+// CqlToElmError is a translator diagnostic recorded in the ELM library's
+// annotations, as the CQF translator records its warnings and errors. Location
+// fields are omitted for a diagnostic that has none.
+type CqlToElmError struct {
+	LibraryID      string `json:"libraryId,omitempty"`
+	LibraryVersion string `json:"libraryVersion,omitempty"`
+	StartLine      int    `json:"startLine,omitempty"`
+	StartChar      int    `json:"startChar,omitempty"`
+	EndLine        int    `json:"endLine,omitempty"`
+	EndChar        int    `json:"endChar,omitempty"`
+	Message        string `json:"message"`
+	ErrorType      string `json:"errorType"`
+	ErrorSeverity  string `json:"errorSeverity"`
+}
+
+func (c *CqlToElmError) MarshalJSON() ([]byte, error) {
+	type alias CqlToElmError
+	return marshalWithType("CqlToElmError", (*alias)(c))
+}
+
 // CqlToElmInfo is the standard translator annotation injected into the Library.
 type CqlToElmInfo struct {
 	TranslatorOptions  string `json:"translatorOptions"` // always emit even if empty

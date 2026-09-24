@@ -9,6 +9,12 @@ func NormalizeForGolden(s string) string {
 	return normalizeJSON(s)
 }
 
+// NormalizeForGoldenFixture is NormalizeForGolden for a fixture, keeping its
+// CqlToElmError diagnostics when it opts into comparing them.
+func NormalizeForGoldenFixture(s string, fix *Fixture) string {
+	return normalizeJSONOpt(s, fix != nil && fix.Diagnostics)
+}
+
 // SimpleDiff returns a naive line-by-line diff summary for use in test
 // failure messages.
 func SimpleDiff(want, got string) string {

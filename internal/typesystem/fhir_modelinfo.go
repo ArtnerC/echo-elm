@@ -127,3 +127,16 @@ func FHIRPropertyChoiceOf(typeName, property string) ([]string, bool) {
 	}
 	return nil, false
 }
+
+// FHIRHelpersOverloaded lists the FHIRHelpers 4.0.1 functions that have more
+// than one definition. A call to one of them at SignatureLevel None records the
+// signature-omitted warning CQF emits. It is fixed knowledge rather than read
+// from source because FHIRHelpers is usually not resolvable from the library
+// being translated — CQF finds its own copy on its classpath — and the implicit
+// conversions it inserts are calls too. Verified against the vendored copy by
+// TestFHIRHelpersOverloadedMatchesSource.
+var FHIRHelpersOverloaded = map[string]bool{
+	"ToDateTime": true, "ToInterval": true, "ToString": true,
+	"checkModifiers": true, "extension": true, "memberOf": true, "modifierExtension": true,
+	"reference": true, "resolve": true, "subsumedBy": true, "subsumes": true,
+}

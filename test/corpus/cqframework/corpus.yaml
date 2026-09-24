@@ -219,6 +219,7 @@ fixtures:
     description: Library with inline comments, FHIR model, queries, and function definition
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all, disable-list-demotion, disable-list-promotion, compat-1.4]
+    diagnostics: true
     tags: [cqf-corpus, comments, fhir]
 
   - path: cqf-tests/TestPatientContext.cql
@@ -231,6 +232,7 @@ fixtures:
     description: Comprehensive translation tests using QUICK model
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, compat-1.4]
+    diagnostics: true
     tags: [cqf-corpus, translation]
 
   - path: cqf-tests/ArithmeticOpsTest.cql
@@ -400,6 +402,7 @@ fixtures:
     description: Inclusive relationships, boundary selectors and quantity offsets in timing phrases (issues/06)
     expectedStatus: success
     profiles: [default, measure-bundle]
+    diagnostics: true
     tags: [measure-shapes]
 
   - path: measure-shapes/NullCasts.cql
@@ -418,6 +421,7 @@ fixtures:
     description: Choice alternative order, result types and argument casts (issues/06)
     expectedStatus: success
     profiles: [default, measure-bundle]
+    diagnostics: true
     tags: [measure-shapes]
 
   - path: measure-shapes/FHIRConversionSites.cql
@@ -430,6 +434,7 @@ fixtures:
     description: within, trailing boundary keywords, includes against a point, point promotion (issues/06 follow-up)
     expectedStatus: success
     profiles: [default, measure-bundle]
+    diagnostics: true
     tags: [measure-shapes]
 
   - path: measure-shapes/AggregateConversions.cql
@@ -484,6 +489,7 @@ fixtures:
     description: Generated ModelInfo tables — property coverage, binding types, nested complex types, and Date/DateTime conversion
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, debug]
+    diagnostics: true
     tags: [elm-nodes, fhir, modelinfo]
 
   - path: elm-nodes/IntervalBoundPromotion.cql
@@ -548,6 +554,7 @@ fixtures:
     description: HL7 CQL conformance suite — CqlListOperatorsTest
     expectedStatus: success
     profiles: [default, debug]
+    diagnostics: true
     tags: [cql-tests]
 
   - path: cql-tests/CqlLogicalOperatorsTest.cql
@@ -597,6 +604,7 @@ fixtures:
     description: "Layered includes: the bottom library (choice-typed helper, fluent wrapper)"
     expectedStatus: success
     profiles: [default, measure-bundle]
+    diagnostics: true
     tags: [layered]
 
   - path: layered/Mid.cql
