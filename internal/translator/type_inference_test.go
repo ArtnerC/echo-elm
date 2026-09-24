@@ -8,7 +8,7 @@ import (
 	"github.com/artnerc/echo-elm/internal/translator"
 )
 
-func toJSON(t *testing.T, lib interface{}) string {
+func toJSON(t *testing.T, lib any) string {
 	t.Helper()
 	b, err := json.Marshal(lib)
 	if err != nil {

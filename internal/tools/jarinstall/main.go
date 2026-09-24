@@ -69,7 +69,7 @@ func main() {
 // then falls back to whatever is on PATH.
 func findJava() string {
 	if data, err := os.ReadFile("tools/jdk/jdk.env"); err == nil {
-		for _, line := range strings.Split(string(data), "\n") {
+		for line := range strings.SplitSeq(string(data), "\n") {
 			if after, ok := strings.CutPrefix(line, "JAVA_BIN="); ok {
 				p := strings.TrimSpace(after)
 				if p != "" {

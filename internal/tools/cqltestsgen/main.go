@@ -114,7 +114,7 @@ func run() error {
 					continue
 				}
 				fmt.Fprintf(&b, "\ndefine %q:\n", name)
-				for _, line := range strings.Split(expr, "\n") {
+				for line := range strings.SplitSeq(expr, "\n") {
 					fmt.Fprintf(&b, "  %s\n", strings.TrimRight(line, " \t\r"))
 				}
 				defines++

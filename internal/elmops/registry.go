@@ -11,6 +11,8 @@
 // reference exactly the same mapping. See references/specs/cql/1.5.3.
 package elmops
 
+import "maps"
+
 // Kind classifies the ELM JSON/XML node shape for a given operator.
 type Kind int
 
@@ -42,9 +44,7 @@ type Op struct {
 // All returns a copy of the registry, keyed by ELM operator name.
 func All() map[string]Op {
 	out := make(map[string]Op, len(registry))
-	for k, v := range registry {
-		out[k] = v
-	}
+	maps.Copy(out, registry)
 	return out
 }
 

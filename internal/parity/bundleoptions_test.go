@@ -168,7 +168,7 @@ func TestValidateProfileAgainstBundle(t *testing.T) {
 	})
 
 	mismatched := parity.OptionProfile{
-		TranslatorOptions: map[string]interface{}{
+		TranslatorOptions: map[string]any{
 			"enableLocators": false, "signatureLevel": "None",
 		},
 	}
@@ -183,7 +183,7 @@ func TestValidateProfileAgainstBundle(t *testing.T) {
 	}
 
 	matching := parity.OptionProfile{
-		TranslatorOptions: map[string]interface{}{
+		TranslatorOptions: map[string]any{
 			"enableLocators": true, "enableResultTypes": true, "signatureLevel": "None",
 		},
 	}

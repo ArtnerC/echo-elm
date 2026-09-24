@@ -78,7 +78,7 @@ func TestAnnotationTextInvariant(t *testing.T) {
 
 // annotationText returns the concatenated leaf text of an Annotation's s-tree.
 func annotationText(raw json.RawMessage) (string, bool) {
-	var node map[string]interface{}
+	var node map[string]any
 	if err := json.Unmarshal(raw, &node); err != nil {
 		return "", false
 	}
@@ -90,14 +90,14 @@ func annotationText(raw json.RawMessage) (string, bool) {
 		return "", false
 	}
 	var sb strings.Builder
-	var walk func(interface{})
-	walk = func(x interface{}) {
+	var walk func(any)
+	walk = func(x any) {
 		switch v := x.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			switch val := v["value"].(type) {
 			case string:
 				sb.WriteString(val)
-			case []interface{}:
+			case []any:
 				for _, item := range val {
 					if str, ok := item.(string); ok {
 						sb.WriteString(str)
@@ -107,7 +107,7 @@ func annotationText(raw json.RawMessage) (string, bool) {
 			if child, ok := v["s"]; ok {
 				walk(child)
 			}
-		case []interface{}:
+		case []any:
 			for _, item := range v {
 				walk(item)
 			}

@@ -451,8 +451,8 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 	inHash := false
 	inTag := false
 
-	lines := strings.Split(inner, "\n")
-	for _, line := range lines {
+	lines := strings.SplitSeq(inner, "\n")
+	for line := range lines {
 		// Detect start of a new @tag on this line.
 		trimmed := strings.TrimSpace(line)
 		atIdx := strings.Index(trimmed, "@")

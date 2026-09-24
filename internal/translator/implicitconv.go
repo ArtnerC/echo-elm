@@ -682,7 +682,7 @@ func typeSpecEqual(a, b typeSpec) bool {
 	return fmtJSON(av) == fmtJSON(bv)
 }
 
-func fmtJSON(v interface{}) string {
+func fmtJSON(v any) string {
 	b, _ := json.Marshal(v)
 	return string(b)
 }

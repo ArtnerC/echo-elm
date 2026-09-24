@@ -139,10 +139,7 @@ func (d *differ) compareLists(w, g []any, path string) {
 	if len(w) != len(g) {
 		d.report("%s: reference has %d element(s), echo-elm has %d", path, len(w), len(g))
 	}
-	n := len(w)
-	if len(g) < n {
-		n = len(g)
-	}
+	n := min(len(g), len(w))
 	for i := 0; i < n; i++ {
 		d.compare(w[i], g[i], fmt.Sprintf("%s[%d]", path, i))
 	}

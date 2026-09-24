@@ -47,7 +47,7 @@ func TestMarshalPreservesResultType(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%s: marshal: %v", typeName, err)
 			}
-			var got map[string]interface{}
+			var got map[string]any
 			if err := json.Unmarshal(b, &got); err != nil {
 				t.Fatalf("%s: unmarshal %s: %v", typeName, b, err)
 			}

@@ -138,24 +138,24 @@ func runExample(name, cql string) bool {
 		fmt.Printf("   Marshal error: %v\n", jsonErr)
 		return false
 	}
-	var obj map[string]interface{}
+	var obj map[string]any
 	if err := json.Unmarshal(data, &obj); err != nil {
 		fmt.Printf("   Invalid JSON: %v\n", err)
 		return false
 	}
 
-	lib, _ := obj["library"].(map[string]interface{})
-	stmts, _ := lib["statements"].(map[string]interface{})
-	defs, _ := stmts["def"].([]interface{})
+	lib, _ := obj["library"].(map[string]any)
+	stmts, _ := lib["statements"].(map[string]any)
+	defs, _ := stmts["def"].([]any)
 
 	unimplemented := 0
 	for _, def := range defs {
-		d, ok := def.(map[string]interface{})
+		d, ok := def.(map[string]any)
 		if !ok {
 			continue
 		}
 		defName, _ := d["name"].(string)
-		expr, _ := d["expression"].(map[string]interface{})
+		expr, _ := d["expression"].(map[string]any)
 		typeName, _ := expr["type"].(string)
 		if typeName == "Unimplemented" || typeName == "" {
 			unimplemented++

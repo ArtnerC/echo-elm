@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"slices"
 	"sort"
 	"strings"
 	"testing"
@@ -39,7 +40,6 @@ func TestGoldenCorpus(t *testing.T) {
 	profileNames := sortedKeys(corpus.OptionProfiles)
 
 	for _, profileName := range profileNames {
-		profileName := profileName
 		profile := corpus.OptionProfiles[profileName]
 
 		profileDir := filepath.Join(goldensDir, profileName)
@@ -56,7 +56,6 @@ func TestGoldenCorpus(t *testing.T) {
 			}
 			translateFn := parity.ProfileTranslateFunc(profile)
 			for _, fix := range corpus.Fixtures {
-				fix := fix
 
 				// Skip fixtures that exclude this profile.
 				fixProfiles := fix.ProfileNames(corpus.OptionProfiles)
@@ -112,7 +111,7 @@ func TestGoldenJSONWellFormed(t *testing.T) {
 		if err != nil {
 			return fmt.Errorf("read %s: %w", path, err)
 		}
-		var v interface{}
+		var v any
 		if err := json.Unmarshal(data, &v); err != nil {
 			return fmt.Errorf("invalid JSON in %s: %w", path, err)
 		}
@@ -133,10 +132,5 @@ func sortedKeys(m map[string]parity.OptionProfile) []string {
 }
 
 func contains(ss []string, s string) bool {
-	for _, x := range ss {
-		if x == s {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(ss, s)
 }

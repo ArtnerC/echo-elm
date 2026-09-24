@@ -12,21 +12,21 @@ import (
 
 // typeSpec represents a CQL type specifier used in ELM signature output.
 type typeSpec interface {
-	toJSONValue() interface{}
+	toJSONValue() any
 }
 
 // namedTS is a NamedTypeSpecifier: {"type":"NamedTypeSpecifier","name":"..."}
 type namedTS struct{ name string }
 
-func (n namedTS) toJSONValue() interface{} {
+func (n namedTS) toJSONValue() any {
 	return map[string]string{"type": "NamedTypeSpecifier", "name": n.name}
 }
 
 // intervalTS is an IntervalTypeSpecifier: {"type":"IntervalTypeSpecifier","pointType":{...}}
 type intervalTS struct{ point typeSpec }
 
-func (i intervalTS) toJSONValue() interface{} {
-	return map[string]interface{}{
+func (i intervalTS) toJSONValue() any {
+	return map[string]any{
 		"type":      "IntervalTypeSpecifier",
 		"pointType": i.point.toJSONValue(),
 	}
@@ -35,8 +35,8 @@ func (i intervalTS) toJSONValue() interface{} {
 // listTS is a ListTypeSpecifier: {"type":"ListTypeSpecifier","elementType":{...}}
 type listTS struct{ elem typeSpec }
 
-func (l listTS) toJSONValue() interface{} {
-	return map[string]interface{}{
+func (l listTS) toJSONValue() any {
+	return map[string]any{
 		"type":        "ListTypeSpecifier",
 		"elementType": l.elem.toJSONValue(),
 	}
@@ -53,15 +53,15 @@ type tupleField struct {
 	ts   typeSpec
 }
 
-func (t tupleTS) toJSONValue() interface{} {
-	els := make([]interface{}, 0, len(t.fields))
+func (t tupleTS) toJSONValue() any {
+	els := make([]any, 0, len(t.fields))
 	for _, f := range t.fields {
-		els = append(els, map[string]interface{}{
+		els = append(els, map[string]any{
 			"name":        f.name,
 			"elementType": f.ts.toJSONValue(),
 		})
 	}
-	return map[string]interface{}{
+	return map[string]any{
 		"type":    "TupleTypeSpecifier",
 		"element": els,
 	}
@@ -71,12 +71,12 @@ func (t tupleTS) toJSONValue() interface{} {
 // see sortChoiceTS.
 type choiceTS struct{ alts []typeSpec }
 
-func (c choiceTS) toJSONValue() interface{} {
-	alts := make([]interface{}, 0, len(c.alts))
+func (c choiceTS) toJSONValue() any {
+	alts := make([]any, 0, len(c.alts))
 	for _, a := range c.alts {
 		alts = append(alts, a.toJSONValue())
 	}
-	return map[string]interface{}{"type": "ChoiceTypeSpecifier", "choice": alts}
+	return map[string]any{"type": "ChoiceTypeSpecifier", "choice": alts}
 }
 
 func (t tupleTS) field(name string) (typeSpec, bool) {
@@ -540,7 +540,7 @@ func hasIntervalOperand(operands []elm.Expression) bool {
 
 // buildInferredSig builds a signature array by inferring the type of each operand.
 func (t *Translator) buildInferredSig(operands []elm.Expression) json.RawMessage {
-	specs := make([]interface{}, 0, len(operands))
+	specs := make([]any, 0, len(operands))
 	for _, op := range operands {
 		specs = append(specs, t.inferTypeSpec(op).toJSONValue())
 	}
@@ -549,7 +549,7 @@ func (t *Translator) buildInferredSig(operands []elm.Expression) json.RawMessage
 
 // buildFixedSig builds a signature array from pre-determined formal types.
 func (t *Translator) buildFixedSig(specs []typeSpec) json.RawMessage {
-	vals := make([]interface{}, 0, len(specs))
+	vals := make([]any, 0, len(specs))
 	for _, s := range specs {
 		vals = append(vals, s.toJSONValue())
 	}
@@ -558,7 +558,7 @@ func (t *Translator) buildFixedSig(specs []typeSpec) json.RawMessage {
 
 // buildVariadicSig builds a signature array with n copies of the same type.
 func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
-	vals := make([]interface{}, n)
+	vals := make([]any, n)
 	for i := range vals {
 		vals[i] = ts.toJSONValue()
 	}
@@ -1435,7 +1435,7 @@ func choiceTSKey(ts typeSpec) string {
 // marshalSig serializes a signature's type specifiers. In CQF mode each one —
 // and each tuple element definition inside one — carries the empty annotation
 // container every ELM Element does.
-func (t *Translator) marshalSig(vals []interface{}) json.RawMessage {
+func (t *Translator) marshalSig(vals []any) json.RawMessage {
 	if t.opts.CQFMode {
 		for i, v := range vals {
 			vals[i] = withEmptyAnnotation(v)
@@ -1447,24 +1447,24 @@ func (t *Translator) marshalSig(vals []interface{}) json.RawMessage {
 
 // withEmptyAnnotation adds "annotation": [] to a type specifier's JSON value and
 // to the specifiers and element definitions nested in it.
-func withEmptyAnnotation(v interface{}) interface{} {
+func withEmptyAnnotation(v any) any {
 	switch m := v.(type) {
 	case map[string]string:
-		out := make(map[string]interface{}, len(m)+1)
+		out := make(map[string]any, len(m)+1)
 		for k, s := range m {
 			out[k] = s
 		}
-		out["annotation"] = []interface{}{}
+		out["annotation"] = []any{}
 		return out
-	case map[string]interface{}:
-		out := make(map[string]interface{}, len(m)+1)
+	case map[string]any:
+		out := make(map[string]any, len(m)+1)
 		for k, x := range m {
 			switch k {
 			case "elementType", "pointType":
 				out[k] = withEmptyAnnotation(x)
 			case "choice", "element":
-				if xs, ok := x.([]interface{}); ok {
-					ys := make([]interface{}, len(xs))
+				if xs, ok := x.([]any); ok {
+					ys := make([]any, len(xs))
 					for i, y := range xs {
 						ys[i] = withEmptyAnnotation(y)
 					}
@@ -1476,7 +1476,7 @@ func withEmptyAnnotation(v interface{}) interface{} {
 				out[k] = x
 			}
 		}
-		out["annotation"] = []interface{}{}
+		out["annotation"] = []any{}
 		return out
 	}
 	return v

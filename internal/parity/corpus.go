@@ -4,15 +4,16 @@ package parity
 import (
 	"fmt"
 	"os"
+	"slices"
 
 	"gopkg.in/yaml.v3"
 )
 
 // OptionProfile defines a named set of translator options and their CQF CLI flag equivalents.
 type OptionProfile struct {
-	Description       string                 `yaml:"description"`
-	CLIFlags          []string               `yaml:"cliFlags"`
-	TranslatorOptions map[string]interface{} `yaml:"translatorOptions"`
+	Description       string         `yaml:"description"`
+	CLIFlags          []string       `yaml:"cliFlags"`
+	TranslatorOptions map[string]any `yaml:"translatorOptions"`
 	// PendingImplementation marks profiles whose corresponding echo-elm feature is
 	// not yet implemented. TestGoldenCorpus skips these profiles rather than failing.
 	PendingImplementation bool `yaml:"pendingImplementation"`
@@ -29,7 +30,7 @@ type Fixture struct {
 	ExpectedStatus string `yaml:"expectedStatus"`
 	// Profiles is either the string "all" or a list of profile names from option_profiles.
 	// If absent, defaults to ["default"].
-	RawProfiles interface{} `yaml:"profiles"`
+	RawProfiles any `yaml:"profiles"`
 	// ExcludeProfiles lists profile names to exclude even when Profiles is "all".
 	// Use this when the upstream CQF CLI itself produces no output for a given
 	// fixture+profile combination (upstream-error), so no golden can exist.
@@ -85,7 +86,7 @@ func (fix *Fixture) ProfileNames(allProfiles map[string]OptionProfile) []string 
 			return filter(names)
 		}
 		return filter([]string{v})
-	case []interface{}:
+	case []any:
 		names := make([]string, 0, len(v))
 		for _, item := range v {
 			if s, ok := item.(string); ok {
@@ -129,10 +130,5 @@ func LoadCorpus(dir string) (*Corpus, error) {
 
 // HasTag reports whether the fixture has the given tag.
 func (fix *Fixture) HasTag(tag string) bool {
-	for _, t := range fix.Tags {
-		if t == tag {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(fix.Tags, tag)
 }

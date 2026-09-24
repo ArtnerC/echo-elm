@@ -75,7 +75,7 @@ func ReadDeclaredOptions(elmJSON []byte) (DeclaredOptions, bool) {
 // empty entries so that "" yields no flags rather than one blank one.
 func splitOptions(s string) []string {
 	var out []string
-	for _, part := range strings.Split(s, ",") {
+	for part := range strings.SplitSeq(s, ",") {
 		if p := strings.TrimSpace(part); p != "" {
 			out = append(out, p)
 		}
@@ -91,7 +91,7 @@ func splitOptions(s string) []string {
 // unmappedOptions rather than silently ignored — quietly dropping one would put
 // the comparison back in exactly the state this is meant to prevent.
 func (d DeclaredOptions) Profile(description string) (OptionProfile, []string) {
-	opts := map[string]interface{}{}
+	opts := map[string]any{}
 	var unmapped []string
 	for _, flag := range d.Flags {
 		key, ok := optionProfileFields[flag]
