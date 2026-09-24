@@ -1,4 +1,7 @@
-# CQFramework CQL tooling 4.8.0 notes
+# CQFramework CQL tooling 4.8.0 notes
+
+> **History only.** echo-elm's single pinned parity target is 5.0.0 — see
+> `..\5.0.0\README.md`. This release is no longer installed or measured.
 
 This is the current stable line of the CQFramework reference CQL→ELM
 translator. echo-elm targets full CLI/option compatibility with this

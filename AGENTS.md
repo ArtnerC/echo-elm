@@ -50,8 +50,8 @@ pointers into the versioned reference library under `references\`.
 | QI-Core | 7.0.2 STU7 | `references\specs\qicore\7.0.2\README.md` |
 | US Core | 8.0.1 STU8 | `references\specs\us-core\8.0.1\README.md` |
 | QDM | 5.6 | `references\specs\qdm\5.6\README.md` |
-| CQFramework `cql-to-elm` (current) | `org.cqframework:cql-to-elm-jvm:4.8.0` | `references\tools\cqframework-cql\4.8.0\README.md` |
-| CQFramework `cql-to-elm` (legacy) | `info.cqframework:cql-to-elm:3.29.0` | `references\tools\cqframework-cql\3.29.0\README.md` |
+| CQFramework `cql-to-elm` (pinned parity target) | `org.cqframework:cql-to-elm-cli:5.0.0` | `references\tools\cqframework-cql\5.0.0\README.md` |
+| CQFramework `cql-to-elm` (history only) | `4.8.0`, `3.29.0` | `references\tools\cqframework-cql\<version>\README.md` |
 
 Versioning convention: new versions go under
 `references\specs\<spec>\<version>\` or
@@ -162,10 +162,11 @@ The full flag map is in
 - Output extension chosen from format when `--output` is a directory.
 - `--verify` parses + analyses without writing any ELM file.
 
-The option enum and defaults are **identical** between 3.29.0 and
-4.8.0; the deltas worth recording are the Maven group change
+The option enum and defaults are **identical** across 3.29.0, 4.8.0 and
+the pinned 5.0.0 (the 5.0.0 CLI's option names were diffed against
+4.8.0's). The historical deltas are the Maven group change
 (`info.cqframework` → `org.cqframework`), the Java → Kotlin port, and
-the 4.x-only `reportSelectivity` library knob.
+the 4.x+ `reportSelectivity` library knob.
 
 ## Working in this repo
 

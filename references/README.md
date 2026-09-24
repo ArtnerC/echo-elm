@@ -23,8 +23,9 @@ older content:
 | QI-Core | 7.0.2 STU7 | `specs\qicore\7.0.2\README.md` |
 | US Core | 8.0.1 STU8 | `specs\us-core\8.0.1\README.md` |
 | QDM | 5.6, published January 2021 | `specs\qdm\5.6\README.md` |
-| CQFramework translator (current) | `org.cqframework:cql-to-elm-jvm:4.8.0` | `tools\cqframework-cql\4.8.0\README.md` |
-| CQFramework translator (legacy) | `info.cqframework:cql-to-elm:3.29.0` | `tools\cqframework-cql\3.29.0\README.md` |
+| CQFramework translator (pinned parity target) | `org.cqframework:cql-to-elm-cli:5.0.0` | `tools\cqframework-cql\5.0.0\README.md` |
+| CQFramework translator (history only) | `org.cqframework:cql-to-elm-jvm:4.8.0` | `tools\cqframework-cql\4.8.0\README.md` |
+| CQFramework translator (history only) | `info.cqframework:cql-to-elm:3.29.0` | `tools\cqframework-cql\3.29.0\README.md` |
 | JavaScript CQL execution (engine-side ref) | `cql-execution@3.3.0` | `tools\cql-execution\3.3.0\README.md` |
 
 The following are kept as reference only — they describe downstream
@@ -42,7 +43,8 @@ ELM-runtime / measure-evaluation behavior that lives in the separate
 - `implementation\echo-elm.md` — echo-elm architecture, conformance,
   acceptance criteria (this is the primary translator playbook).
 - `implementation\cqframework-compatibility.md` — CQFramework
-  `cql-to-elm` CLI compatibility matrix for 3.29.0 and 4.8.0+.
+  `cql-to-elm` CLI compatibility matrix (flag surface unchanged through the
+  pinned 5.0.0).
 - `implementation\spec-compatibility.md` — wider spec compatibility
   matrix, packaging rules, and validation checklist.
 - `implementation\terminology.md` — terminology resolution, value-set

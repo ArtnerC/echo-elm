@@ -1,4 +1,7 @@
-# CQFramework CQL tooling 3.29.0 notes
+# CQFramework CQL tooling 3.29.0 notes
+
+> **History only.** echo-elm's single pinned parity target is 5.0.0 — see
+> `..\5.0.0\README.md`. This release is no longer installed or measured.
 
 This is the last release line under the `info.cqframework` Maven group.
 echo-elm must remain CLI-compatible with this version because many
