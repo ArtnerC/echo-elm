@@ -1,0 +1,639 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "4:1-4:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "Common",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "3:1-3:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "4:1-4:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "4:1-4:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "locator": "7:5-7:144",
+                "then": {
+                  "annotation": [],
+                  "high": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "locator": "7:97-7:143",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "asTypeSpecifier": {
+                          "annotation": [],
+                          "locator": "7:130-7:142",
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "locator": "7:120-7:142",
+                        "operand": {
+                          "annotation": [],
+                          "locator": "7:120-7:125",
+                          "name": "choice",
+                          "resultTypeSpecifier": {
+                            "annotation": [],
+                            "choice": [
+                              {
+                                "annotation": [],
+                                "name": "{http://hl7.org/fhir}Period",
+                                "type": "NamedTypeSpecifier"
+                              },
+                              {
+                                "annotation": [],
+                                "name": "{http://hl7.org/fhir}dateTime",
+                                "type": "NamedTypeSpecifier"
+                              }
+                            ],
+                            "type": "ChoiceTypeSpecifier"
+                          },
+                          "type": "OperandRef"
+                        },
+                        "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    ],
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "highClosed": true,
+                  "locator": "7:39-7:144",
+                  "low": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "locator": "7:48-7:94",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "asTypeSpecifier": {
+                          "annotation": [],
+                          "locator": "7:81-7:93",
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "locator": "7:71-7:93",
+                        "operand": {
+                          "annotation": [],
+                          "locator": "7:71-7:76",
+                          "name": "choice",
+                          "resultTypeSpecifier": {
+                            "annotation": [],
+                            "choice": [
+                              {
+                                "annotation": [],
+                                "name": "{http://hl7.org/fhir}Period",
+                                "type": "NamedTypeSpecifier"
+                              },
+                              {
+                                "annotation": [],
+                                "name": "{http://hl7.org/fhir}dateTime",
+                                "type": "NamedTypeSpecifier"
+                              }
+                            ],
+                            "type": "ChoiceTypeSpecifier"
+                          },
+                          "type": "OperandRef"
+                        },
+                        "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    ],
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "lowClosed": true,
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "pointType": {
+                      "annotation": [],
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "Interval"
+                },
+                "when": {
+                  "annotation": [],
+                  "isTypeSpecifier": {
+                    "annotation": [],
+                    "locator": "7:20-7:32",
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "locator": "7:10-7:32",
+                  "operand": {
+                    "annotation": [],
+                    "locator": "7:10-7:15",
+                    "name": "choice",
+                    "resultTypeSpecifier": {
+                      "annotation": [],
+                      "choice": [
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Period",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        }
+                      ],
+                      "type": "ChoiceTypeSpecifier"
+                    },
+                    "type": "OperandRef"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "signature": [],
+                  "type": "Is"
+                }
+              },
+              {
+                "annotation": [],
+                "locator": "8:5-8:81",
+                "then": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "locator": "8:37-8:81",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "asTypeSpecifier": {
+                        "annotation": [],
+                        "locator": "8:70-8:80",
+                        "name": "{http://hl7.org/fhir}Period",
+                        "resultTypeName": "{http://hl7.org/fhir}Period",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "locator": "8:60-8:80",
+                      "operand": {
+                        "annotation": [],
+                        "locator": "8:60-8:65",
+                        "name": "choice",
+                        "resultTypeSpecifier": {
+                          "annotation": [],
+                          "choice": [
+                            {
+                              "annotation": [],
+                              "name": "{http://hl7.org/fhir}Period",
+                              "type": "NamedTypeSpecifier"
+                            },
+                            {
+                              "annotation": [],
+                              "name": "{http://hl7.org/fhir}dateTime",
+                              "type": "NamedTypeSpecifier"
+                            }
+                          ],
+                          "type": "ChoiceTypeSpecifier"
+                        },
+                        "type": "OperandRef"
+                      },
+                      "resultTypeName": "{http://hl7.org/fhir}Period",
+                      "signature": [],
+                      "strict": false,
+                      "type": "As"
+                    }
+                  ],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "pointType": {
+                      "annotation": [],
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                "when": {
+                  "annotation": [],
+                  "isTypeSpecifier": {
+                    "annotation": [],
+                    "locator": "8:20-8:30",
+                    "name": "{http://hl7.org/fhir}Period",
+                    "resultTypeName": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "locator": "8:10-8:30",
+                  "operand": {
+                    "annotation": [],
+                    "locator": "8:10-8:15",
+                    "name": "choice",
+                    "resultTypeSpecifier": {
+                      "annotation": [],
+                      "choice": [
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Period",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        }
+                      ],
+                      "type": "ChoiceTypeSpecifier"
+                    },
+                    "type": "OperandRef"
+                  },
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "signature": [],
+                  "type": "Is"
+                }
+              }
+            ],
+            "else": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "locator": "9:18-9:35",
+                "pointType": {
+                  "annotation": [],
+                  "locator": "9:27-9:34",
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "pointType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "locator": "9:10-9:35",
+              "operand": {
+                "annotation": [],
+                "locator": "9:10-9:13",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+                "type": "Null"
+              },
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "pointType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "locator": "6:3-10:5",
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "pointType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "Case"
+          },
+          "locator": "5:1-10:5",
+          "name": "Normalize",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "choice",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "choice": [
+                  {
+                    "annotation": [],
+                    "locator": "5:58-5:68",
+                    "name": "{http://hl7.org/fhir}Period",
+                    "resultTypeName": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "annotation": [],
+                    "locator": "5:43-5:55",
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "locator": "5:36-5:69",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "choice": [
+                    {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Period",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}dateTime",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "ChoiceTypeSpecifier"
+                },
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "11:81-11:99",
+            "name": "Normalize",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "11:93-11:98",
+                "name": "choice",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "choice": [
+                    {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Period",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}dateTime",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "ChoiceTypeSpecifier"
+                },
+                "type": "OperandRef"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "pointType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "fluent": true,
+          "locator": "11:1-11:99",
+          "name": "toInterval",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "choice",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "choice": [
+                  {
+                    "annotation": [],
+                    "locator": "11:66-11:76",
+                    "name": "{http://hl7.org/fhir}Period",
+                    "resultTypeName": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "annotation": [],
+                    "locator": "11:51-11:63",
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "locator": "11:44-11:77",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "choice": [
+                    {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Period",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}dateTime",
+                      "type": "NamedTypeSpecifier"
+                    }
+                  ],
+                  "type": "ChoiceTypeSpecifier"
+                },
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "12:18-12:65",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Condition",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "12:18-12:28",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Condition",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                },
+                "locator": "12:18-12:30",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Condition",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "locator": "12:32-12:65",
+              "operand": {
+                "annotation": [],
+                "locator": "12:38-12:65",
+                "operand": {
+                  "annotation": [],
+                  "locator": "12:38-12:53",
+                  "path": "clinicalStatus",
+                  "resultTypeName": "{http://hl7.org/fhir}CodeableConcept",
+                  "scope": "C",
+                  "type": "Property"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                "signature": [],
+                "type": "IsNull"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "locator": "12:1-12:65",
+          "name": "Active",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Condition",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "2:1-2:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

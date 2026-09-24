@@ -1,0 +1,462 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "LayeredMain",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "H",
+          "path": "Helpers",
+          "version": "1.0"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "libraryName": "H",
+            "name": "Encs",
+            "type": "ExpressionRef"
+          },
+          "name": "RefList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "F",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "H",
+                  "name": "Finished",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "class",
+                  "scope": "F",
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "name": "RefQuery"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "libraryName": "H",
+            "name": "Starts",
+            "type": "ExpressionRef"
+          },
+          "name": "RefStarts"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "path": "period",
+            "source": {
+              "annotation": [],
+              "libraryName": "H",
+              "name": "FirstEnc",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "name": "RefFirst"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "P",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "H",
+                  "name": "Periods",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "name": "P",
+                  "type": "AliasRef"
+                },
+                {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "Overlaps"
+            }
+          },
+          "name": "RefPeriods"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "path": "status",
+            "source": {
+              "annotation": [],
+              "path": "enc",
+              "source": {
+                "annotation": [],
+                "libraryName": "H",
+                "name": "Pair",
+                "type": "ExpressionRef"
+              },
+              "type": "Property"
+            },
+            "type": "Property"
+          },
+          "name": "RefTuple"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "libraryName": "H",
+            "name": "EncsIn",
+            "operand": [
+              {
+                "annotation": [],
+                "name": "MP",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "CallList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "libraryName": "H",
+            "name": "StartOf",
+            "operand": [
+              {
+                "annotation": [],
+                "signature": [],
+                "source": {
+                  "annotation": [],
+                  "libraryName": "H",
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                },
+                "type": "First"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "CallScalar"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "libraryName": "H",
+            "name": "Untyped",
+            "operand": [
+              {
+                "annotation": [],
+                "signature": [],
+                "source": {
+                  "annotation": [],
+                  "libraryName": "H",
+                  "name": "Encs",
+                  "type": "ExpressionRef"
+                },
+                "type": "First"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "CallUntyped"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "expression": {
+                "annotation": [],
+                "libraryName": "H",
+                "name": "prevalence",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "C",
+                    "type": "AliasRef"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "Fluent"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "libraryName": "H",
+            "name": "earliest",
+            "operand": [
+              {
+                "annotation": [],
+                "libraryName": "H",
+                "name": "Encs",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "name": "FluentList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "expression": {
+                "annotation": [],
+                "path": "start",
+                "source": {
+                  "annotation": [],
+                  "path": "period",
+                  "scope": "E",
+                  "type": "Property"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "E",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "H",
+                  "name": "EncsIn",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "name": "MP",
+                      "type": "ParameterRef"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "Nested"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "libraryName": "H",
+              "name": "Finished",
+              "type": "ExpressionRef"
+            },
+            "signature": [],
+            "type": "Exists"
+          },
+          "name": "Exists"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "libraryName": "H",
+              "name": "Encs",
+              "type": "ExpressionRef"
+            },
+            "type": "Count"
+          },
+          "name": "CountRef"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

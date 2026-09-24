@@ -1,0 +1,334 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "Common",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "high": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "asTypeSpecifier": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "operand": {
+                          "annotation": [],
+                          "name": "choice",
+                          "type": "OperandRef"
+                        },
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "highClosed": true,
+                  "low": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToDateTime",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "asTypeSpecifier": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "operand": {
+                          "annotation": [],
+                          "name": "choice",
+                          "type": "OperandRef"
+                        },
+                        "signature": [],
+                        "strict": false,
+                        "type": "As"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "lowClosed": true,
+                  "type": "Interval"
+                },
+                "when": {
+                  "annotation": [],
+                  "isTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "name": "choice",
+                    "type": "OperandRef"
+                  },
+                  "signature": [],
+                  "type": "Is"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToInterval",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "asTypeSpecifier": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}Period",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "operand": {
+                        "annotation": [],
+                        "name": "choice",
+                        "type": "OperandRef"
+                      },
+                      "signature": [],
+                      "strict": false,
+                      "type": "As"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                "when": {
+                  "annotation": [],
+                  "isTypeSpecifier": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "operand": {
+                    "annotation": [],
+                    "name": "choice",
+                    "type": "OperandRef"
+                  },
+                  "signature": [],
+                  "type": "Is"
+                }
+              }
+            ],
+            "else": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "pointType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "type": "Case"
+          },
+          "name": "Normalize",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "choice",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "choice": [
+                  {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "name": "Normalize",
+            "operand": [
+              {
+                "annotation": [],
+                "name": "choice",
+                "type": "OperandRef"
+              }
+            ],
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "fluent": true,
+          "name": "toInterval",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "choice",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "choice": [
+                  {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Period",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  }
+                ],
+                "type": "ChoiceTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "otherFilter": [],
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "clinicalStatus",
+                  "scope": "C",
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "name": "Active"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

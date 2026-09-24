@@ -921,6 +921,16 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 					}
 				}
 			}
+			// A field of a FHIR element has its declared FHIR type.
+			if local := fhirLocalTypeName(t.sortElementTS); local != "" {
+				if fhirType, ok := typesystem.FHIRPropertyTypeOf(local, v.Name); ok {
+					var ts typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+					if typesystem.IsFHIRListPropertyOf(local, v.Name) {
+						ts = listTS{ts}
+					}
+					return ts
+				}
+			}
 		}
 	case *elm.CodeRefNode:
 		return namedTS{typesystem.TypeCode}

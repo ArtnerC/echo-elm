@@ -584,3 +584,46 @@ fixtures:
     expectedStatus: success
     profiles: [default, debug]
     tags: [cql-tests]
+
+  # ── Layered includes and issue-07 shapes (layered/, FHIRHelpers resolvable) ──
+  - path: layered/Common.cql
+    description: "Layered includes: the bottom library (choice-typed helper, fluent wrapper)"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]
+
+  - path: layered/Mid.cql
+    description: "Layered includes: the middle library, referencing Common"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]
+
+  - path: layered/LayeredTop.cql
+    description: "Types, choice casts and concatenation through two include levels (issues/07)"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]
+
+  - path: layered/Helpers.cql
+    description: "Single-hop included library for LayeredMain"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]
+
+  - path: layered/LayeredMain.cql
+    description: "References into an included library; is-null tests an unconverted FHIR value (issues/07)"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]
+
+  - path: layered/ParameterDefaults.cql
+    description: "Parameter defaults keep their locator unless CQF rewrites them (issues/07)"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]
+
+  - path: layered/DateTimeMixing.cql
+    description: "Date meets DateTime: membership, lists, branches, interval bounds, AgeInYearsAt (issues/07)"
+    expectedStatus: success
+    profiles: [default, measure-bundle]
+    tags: [layered]

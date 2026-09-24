@@ -1,0 +1,545 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "DateTimeMixing",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "D",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "name": "{urn:hl7-org:elm-types:r1}Date",
+            "type": "NamedTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "DT",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "otherFilter": [],
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "name": "Encs"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "name": "D",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "annotation": [],
+                "name": "DT",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "Less"
+          },
+          "name": "DateVsDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "DT",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "name": "D",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              }
+            ],
+            "signature": [],
+            "type": "Equal"
+          },
+          "name": "DateTimeVsDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "name": "D",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "annotation": [],
+                "name": "MP",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "In"
+          },
+          "name": "DateInDTInterval"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "birthDate.value",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "precision": "Year",
+            "signature": [],
+            "type": "CalculateAgeAt"
+          },
+          "name": "AgeAt"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "path": "birthDate.value",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              }
+            ],
+            "precision": "Year",
+            "signature": [],
+            "type": "CalculateAgeAt"
+          },
+          "name": "AgeAtDate"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "signature": [],
+                "type": "Today"
+              }
+            ],
+            "precision": "Year",
+            "signature": [],
+            "type": "DurationBetween"
+          },
+          "name": "DiffDates"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "libraryName": "FHIRHelpers",
+              "name": "ToDate",
+              "operand": [
+                {
+                  "annotation": [],
+                  "path": "birthDate",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              ],
+              "signature": [],
+              "type": "FunctionRef"
+            },
+            "signature": [],
+            "type": "ToDateTime"
+          },
+          "name": "ToDTCall"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "high": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "D",
+                        "type": "ParameterRef"
+                      },
+                      {
+                        "annotation": [],
+                        "type": "Quantity",
+                        "unit": "day",
+                        "value": 1
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Add"
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "highClosed": true,
+                "low": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "annotation": [],
+                "name": "MP",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "Overlaps"
+          },
+          "name": "DateIntervalOverlaps"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "libraryName": "FHIRHelpers",
+                "name": "ToDate",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "path": "birthDate",
+                    "source": {
+                      "annotation": [],
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "CoalesceDates"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "name": "DT",
+                  "type": "ParameterRef"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "name": "D",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "name": "MaxDateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "type": "Quantity",
+                "unit": "year",
+                "value": 1
+              }
+            ],
+            "signature": [],
+            "type": "Add"
+          },
+          "name": "DateAdd"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "name": "DT",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "DateFrom"
+              },
+              {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              }
+            ],
+            "signature": [],
+            "type": "Less"
+          },
+          "name": "DateFromDT"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "else": {
+              "annotation": [],
+              "name": "DT",
+              "type": "ParameterRef"
+            },
+            "then": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "name": "D",
+                "type": "ParameterRef"
+              },
+              "signature": [],
+              "type": "ToDateTime"
+            },
+            "type": "If"
+          },
+          "name": "IfDate"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

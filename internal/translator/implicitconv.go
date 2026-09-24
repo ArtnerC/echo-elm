@@ -126,6 +126,39 @@ func (t *Translator) applyImplicitConversions(e elm.Expression) elm.Expression {
 		}
 	case *elm.ListNode:
 		t.castNullListElements(n)
+		// Date and DateTime elements share the type DateTime.
+		if t.hasDateAndDateTime(n.Element) {
+			for i, el := range n.Element {
+				if t.isDateTS(el) {
+					n.Element[i] = t.wrapToDateTime(el)
+				}
+			}
+		}
+	case *elm.IfNode:
+		if t.isDateTS(n.Then) && t.isDateTimeTS(n.Else) {
+			n.Then = t.wrapToDateTime(n.Then)
+		} else if t.isDateTimeTS(n.Then) && t.isDateTS(n.Else) {
+			n.Else = t.wrapToDateTime(n.Else)
+		}
+	case *elm.CaseNode:
+		branches := []elm.Expression{n.Else}
+		for _, it := range n.CaseItem {
+			branches = append(branches, it.Then)
+		}
+		if t.hasDateAndDateTime(branches) {
+			for _, it := range n.CaseItem {
+				if t.isDateTS(it.Then) {
+					it.Then = t.wrapToDateTime(it.Then)
+				}
+			}
+			if t.isDateTS(n.Else) {
+				n.Else = t.wrapToDateTime(n.Else)
+			}
+		}
+	case *elm.PrecisionOperatorNode:
+		if len(n.Operand) == 2 {
+			n.Operand[0], n.Operand[1] = t.promoteDateIntervalOperands(n.Operand[0], n.Operand[1])
+		}
 	case *elm.InstanceNode:
 		// System.Quantity's value is a Decimal.
 		if n.ClassType == typesystem.TypeQuantity {
@@ -288,6 +321,29 @@ func (t *Translator) convertOperatorOperands(n *elm.OperatorExpressionNode) {
 			if elem != nil {
 				set(i, t.liftListCast(ops[i], elem))
 			}
+		}
+	}
+
+	// A Date meets a DateTime: the Date side converts. For a point tested
+	// against an Interval<DateTime> (In / Contains) that is the point; for two
+	// intervals it is the bounds of a Date interval selector.
+	if len(ops) == 2 {
+		switch n.Operator {
+		case "In", "ProperIn":
+			if t.isDateTS(ops[0]) && isDateTimeInterval(t.typeOf(ops[1])) {
+				set(0, t.wrapToDateTime(ops[0]))
+			}
+		case "Contains", "ProperContains":
+			if t.isDateTS(ops[1]) && isDateTimeInterval(t.typeOf(ops[0])) {
+				set(1, t.wrapToDateTime(ops[1]))
+			}
+		}
+		a, b := t.promoteDateIntervalOperands(ops[0], ops[1])
+		if a != ops[0] {
+			set(0, a)
+		}
+		if b != ops[1] {
+			set(1, b)
 		}
 	}
 
@@ -785,4 +841,83 @@ func (t *Translator) inferSystemOperator(e elm.Expression) typeSpec {
 		}
 	}
 	return nil
+}
+
+// castChoiceArgument casts an argument to a function's declared choice
+// parameter. FHIR choice elements are wide — Condition.onset is one of five
+// types — and a helper usually declares the few it handles, so CQF casts the
+// argument: As(C.onset, Choice<Period, dateTime>). The cast is synthesized: no
+// locator and no result type. (issues/07)
+func (t *Translator) castChoiceArgument(arg elm.Expression, declared typeSpec) elm.Expression {
+	want, ok := declared.(choiceTS)
+	if !ok {
+		return arg
+	}
+	// A choice argument already contained in the parameter's choice passes as
+	// it is; anything else — a narrower choice's superset, or a single-typed
+	// argument such as "Sys"('a') — is cast to the declared choice.
+	argTS := knownTS(t.inferTypeSpec(arg))
+	if argTS == nil {
+		return arg
+	}
+	if got, ok := argTS.(choiceTS); ok && choiceSubset(got, want) {
+		return arg
+	}
+	spec := toELMTypeSpecifier(want)
+	if spec == nil {
+		return arg
+	}
+	return &elm.AsNode{
+		Annotation:      t.cqfAnnotation(),
+		Signature:       t.cqfEmptyArrayField(),
+		Operand:         arg,
+		AsTypeSpecifier: spec,
+	}
+}
+
+// promoteDateIntervalOperands converts a Date interval selector's bounds to
+// DateTime when the other operand is an Interval<DateTime>. The rebuilt
+// interval is synthesized (promoteIntervalBounds drops its locator and type).
+func (t *Translator) promoteDateIntervalOperands(a, b elm.Expression) (elm.Expression, elm.Expression) {
+	if isDateTimeInterval(t.typeOf(b)) {
+		a = t.promoteIntervalBounds(a)
+	}
+	if isDateTimeInterval(t.typeOf(a)) {
+		b = t.promoteIntervalBounds(b)
+	}
+	return a, b
+}
+
+func isDateTimeInterval(ts typeSpec) bool {
+	iv, ok := ts.(intervalTS)
+	return ok && namedName(iv.point) == typesystem.TypeDateTime
+}
+
+func (t *Translator) hasDateAndDateTime(es []elm.Expression) bool {
+	date, dateTime := false, false
+	for _, e := range es {
+		if e == nil {
+			continue
+		}
+		date = date || t.isDateTS(e)
+		dateTime = dateTime || t.isDateTimeTS(e)
+	}
+	return date && dateTime
+}
+
+// choiceSubset reports whether every alternative of a is one of b's.
+func choiceSubset(a, b choiceTS) bool {
+	for _, x := range a.alts {
+		found := false
+		for _, y := range b.alts {
+			if typeSpecEqual(x, y) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
 }
