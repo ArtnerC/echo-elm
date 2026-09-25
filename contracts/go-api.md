@@ -148,6 +148,35 @@ type UcumService interface {
 }
 ```
 
+## Batch translation (implemented)
+
+```go
+// IncludeCache shares derived include data (symbols, types, fluent functions)
+// across translations; safe for concurrent use.
+type IncludeCache = translator.IncludeCache
+func NewIncludeCache() *IncludeCache
+func WithIncludeCache(c *IncludeCache) Option // apply after WithOptions
+
+// DefaultJobs: one per available CPU less one, at least one; ECHO_ELM_JOBS
+// overrides.
+func DefaultJobs() int
+
+type BatchInput struct {
+    Source  []byte
+    Name    string
+    Options []Option // per-library, applied after the batch-wide options
+}
+type BatchResult struct {
+    Result *TranslateResult
+    Err    error
+}
+
+// TranslateBatch translates jobs at a time (0 = DefaultJobs), sharing one
+// IncludeCache unless the options supply one; results are in input order and
+// identical to calling Translate on each input.
+func TranslateBatch(inputs []BatchInput, jobs int, opts ...Option) []BatchResult
+```
+
 ## Stability rules
 
 - Adding fields to structs: minor.

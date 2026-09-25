@@ -54,6 +54,16 @@ compatibility, or avoid fragile reimplementation. Keep dependencies scoped:
 
 - Translator is **goroutine-safe per call**; the `Translator` struct may be
   shared across goroutines once constructed.
+- Runs over many libraries (`translate`/`cqf translate` on a directory,
+  `bundle translate`, `parity`, golden refresh) translate them in parallel
+  through `internal/workers`: one worker per available CPU less one (at least
+  one), overridable with `--jobs` or `ECHO_ELM_JOBS`. Output is reported in
+  input order, so it is identical whatever the number of workers.
+- A run's translations share one `IncludeCache`, so each included library
+  (FHIRHelpers, a measure's common libraries) is parsed and typed once per run
+  rather than once per including library. It holds derived, read-only data
+  only, never a parse tree, keyed by library path, version, source hash and
+  options; it is safe for concurrent use.
 - `echo-elm ui` is a small stateless HTTP server; each request runs a
   synchronous translation (or filesystem walk) and returns. No background
   jobs, no worker pool, no queue.

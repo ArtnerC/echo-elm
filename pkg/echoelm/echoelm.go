@@ -11,6 +11,7 @@ import (
 	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/translator"
+	"github.com/artnerc/echo-elm/internal/workers"
 )
 
 // LibrarySource provides CQL source bytes for a named/versioned library.
@@ -74,6 +75,72 @@ func WithIntervalPromotion(v bool) Option {
 // WithLibrarySource sets a custom LibrarySource for resolving include declarations.
 func WithLibrarySource(src LibrarySource) Option {
 	return func(o *translator.Options) { o.LibrarySource = src }
+}
+
+// IncludeCache shares what is learned from each included library across
+// translations, so a run over many libraries parses and types each shared
+// helper (FHIRHelpers, a measure's common library) once instead of once per
+// library that includes it. It is safe for concurrent use; share one across
+// every translation in a run, including ones running in parallel.
+type IncludeCache = translator.IncludeCache
+
+// NewIncludeCache returns an empty IncludeCache.
+func NewIncludeCache() *IncludeCache { return translator.NewIncludeCache() }
+
+// WithIncludeCache makes the translation use a shared IncludeCache. Without it
+// each Translate call starts empty. Apply it after WithOptions, which replaces
+// every option including this one.
+func WithIncludeCache(c *IncludeCache) Option {
+	return func(o *translator.Options) { o.IncludeCache = c }
+}
+
+// DefaultJobs is the number of libraries TranslateBatch translates at once when
+// asked for 0: one per available CPU less one, at least one, or the value of the
+// ECHO_ELM_JOBS environment variable when that is a positive integer.
+func DefaultJobs() int { return workers.DefaultJobs() }
+
+// BatchInput is one library for TranslateBatch.
+type BatchInput struct {
+	Source []byte
+	// Name is the source name, as for Translate — typically the file name.
+	Name string
+	// Options apply to this library only, after the batch-wide options: for
+	// example a LibrarySource rooted at the library's own directory.
+	Options []Option
+}
+
+// BatchResult is the outcome of one BatchInput: what Translate returned for it.
+type BatchResult struct {
+	Result *TranslateResult
+	Err    error
+}
+
+// TranslateBatch translates many libraries, jobs at a time (0 means
+// DefaultJobs), and returns their results in input order. Unless the options
+// already supply one, the libraries share a new IncludeCache, so shared
+// includes are loaded once for the whole batch.
+//
+// The results are the same as calling Translate on each input in turn; only
+// the time differs. Libraries do not see each other's output — each is
+// translated from its own source and its includes, as a single Translate call
+// would be.
+func TranslateBatch(inputs []BatchInput, jobs int, opts ...Option) []BatchResult {
+	shared := NewIncludeCache()
+	useShared := func(o *translator.Options) {
+		if o.IncludeCache == nil {
+			o.IncludeCache = shared
+		}
+	}
+	out := make([]BatchResult, len(inputs))
+	workers.ForEach(len(inputs), jobs, func(i int) {
+		in := inputs[i]
+		all := make([]Option, 0, len(opts)+len(in.Options)+1)
+		all = append(all, opts...)
+		all = append(all, in.Options...)
+		all = append(all, useShared)
+		out[i].Result, out[i].Err = Translate(in.Source, in.Name, all...)
+	})
+	return out
 }
 
 // WithCQLOptionsFile loads a cql-options.json file and applies its settings.

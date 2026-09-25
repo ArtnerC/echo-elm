@@ -39,6 +39,24 @@ var optionProfileFields = map[string]string{
 	"EnableIntervalPromotion": "enableIntervalPromotion",
 }
 
+// optionCLIFlags maps the same CQF translator options to the cql-to-elm CLI
+// flag that turns each on, so that a fresh CQF compile of a bundle's CQL uses
+// the options the bundle declares. It must cover every key of
+// optionProfileFields; a test holds the two together.
+var optionCLIFlags = map[string]string{
+	"EnableAnnotations":       "--annotations",
+	"EnableLocators":          "--locators",
+	"EnableResultTypes":       "--result-types",
+	"EnableDetailedErrors":    "--detailed-errors",
+	"DisableListDemotion":     "--disable-list-demotion",
+	"DisableListPromotion":    "--disable-list-promotion",
+	"DisableListTraversal":    "--disable-list-traversal",
+	"DisableMethodInvocation": "--disable-method-invocation",
+	"RequireFromKeyword":      "--require-from-keyword",
+	"EnableIntervalDemotion":  "--enable-interval-demotion",
+	"EnableIntervalPromotion": "--enable-interval-promotion",
+}
+
 // ReadDeclaredOptions extracts the translator options an ELM document records in
 // its CqlToElmInfo annotation. ok is false when the document declares none,
 // which is not an error: a hand-written or stripped ELM file simply says nothing
@@ -87,12 +105,15 @@ func splitOptions(s string) []string {
 // compared against the configuration it says it was built with rather than one
 // the harness invented.
 //
+// The profile carries the matching CQF CLI flags as well, for a comparison
+// against a fresh CQF compile rather than the bundle's own ELM.
+//
 // Options echo-elm's profile format cannot express are reported by
 // unmappedOptions rather than silently ignored — quietly dropping one would put
 // the comparison back in exactly the state this is meant to prevent.
 func (d DeclaredOptions) Profile(description string) (OptionProfile, []string) {
 	opts := map[string]any{}
-	var unmapped []string
+	var cliFlags, unmapped []string
 	for _, flag := range d.Flags {
 		key, ok := optionProfileFields[flag]
 		if !ok {
@@ -100,13 +121,15 @@ func (d DeclaredOptions) Profile(description string) (OptionProfile, []string) {
 			continue
 		}
 		opts[key] = true
+		cliFlags = append(cliFlags, optionCLIFlags[flag])
 	}
 	// CQF writes signatureLevel as its own annotation field rather than as a
 	// translator option, and omits it only when it was never set.
 	if d.SignatureLevel != "" {
 		opts["signatureLevel"] = d.SignatureLevel
+		cliFlags = append(cliFlags, "--signatures", d.SignatureLevel)
 	}
-	return OptionProfile{Description: description, TranslatorOptions: opts}, unmapped
+	return OptionProfile{Description: description, CLIFlags: cliFlags, TranslatorOptions: opts}, unmapped
 }
 
 // String renders the declared options for an error message.

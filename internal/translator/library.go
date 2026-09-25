@@ -3,10 +3,15 @@ package translator
 // Included libraries, library-qualified calls, statement emission order and the implicit context accessor.
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
 	"slices"
+	"sync"
 
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
+	"github.com/artnerc/echo-elm/internal/parser"
 )
 
 // buildSymMap builds a name→symKind map from an ast.Library, used for cross-library
@@ -36,9 +41,56 @@ func buildSymMap(lib *ast.Library) map[string]symKind {
 	return m
 }
 
-// includedDefTypes translates an included library far enough to learn the type
-// of each of its definitions. Result types are the only thing that needs this,
-// so it runs only when they are enabled; the translated output is discarded.
+// IncludeCache holds what a translation learns from each included library —
+// its symbols, fluent functions, types and function counts — so that a run over
+// many libraries loads each shared helper once. Every measure library includes
+// FHIRHelpers; without the cache a 300-library run parses and types it 300
+// times, which was about half the time of an in-process run.
+//
+// Only derived, read-only data is cached, never a parse tree: translation
+// rewrites the AST it is given, so a shared tree would be both wrong and a data
+// race. Entries are keyed by the include's path, version, a hash of its source
+// and the translation options that shape its types, so the same name resolved
+// from two directories, or translated two ways, cannot collide.
+//
+// It is safe for concurrent use. Two workers that miss on the same entry at
+// once both compute it and the first to finish is kept — a little duplicate
+// work at the start of a run, in exchange for no waiting, so an include cycle
+// (invalid CQL, but possible input) can never deadlock one worker on another.
+type IncludeCache struct {
+	mu      sync.Mutex
+	entries map[string]*includedLibrary
+}
+
+// NewIncludeCache returns an empty cache.
+func NewIncludeCache() *IncludeCache {
+	return &IncludeCache{entries: map[string]*includedLibrary{}}
+}
+
+func (c *IncludeCache) get(key string) *includedLibrary {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.entries[key]
+}
+
+func (c *IncludeCache) put(key string, il *includedLibrary) *includedLibrary {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if prev, ok := c.entries[key]; ok {
+		return prev
+	}
+	c.entries[key] = il
+	return il
+}
+
+// includedLibrary is what an includer needs from one included library.
+type includedLibrary struct {
+	syms       map[string]symKind
+	fluent     []string
+	types      *includeTypes
+	funcCounts map[string]int
+}
+
 // includeTypes are the types an included library exposes to its includer.
 type includeTypes struct {
 	defs     map[string]typeSpec
@@ -46,42 +98,68 @@ type includeTypes struct {
 	operands map[string][]typeSpec
 }
 
-// includedTypes translates an included library once to learn the types of its
-// definitions and functions.
+// loadInclude loads an included library through the cache, or returns nil when
+// its source cannot be found or parsed.
 //
-// It recurses into the include's own includes. It used to stop at one level —
-// the sub-translator was given no library source — so a definition in Mid that
-// referenced one in Common came out List<Any> when read from Top, and so did
-// everything built on it. Real measure libraries are layered exactly that way.
-// (issues/07)
-//
-// Results are cached per path and version across the whole include tree, and a
-// library already being typed further up the chain is skipped, so shared
-// helpers like FHIRHelpers are translated once and a cycle cannot loop.
-func (t *Translator) includedTypes(lib *ast.Library, path, version string) *includeTypes {
-	if t.includeCache == nil {
-		t.includeCache = map[string]*includeTypes{}
+// Types come from translating the include, which recurses into the include's
+// own includes: it used to stop at one level, so a definition two includes deep
+// came out List<Any> (issues/07). A library already being typed further up this
+// chain yields no types rather than looping. Anything typed with such a gap
+// below it is right only for this chain, so it is not cached.
+func (t *Translator) loadInclude(path, version string) *includedLibrary {
+	src, found, err := t.opts.LibrarySource.GetLibrarySource(path, version)
+	if err != nil || !found {
+		return nil
 	}
+	sum := sha256.Sum256(src)
+	key := path + "|" + version + "|" + hex.EncodeToString(sum[:]) + "|" + optionsKey(&t.opts)
+	if il := t.opts.IncludeCache.get(key); il != nil {
+		return il
+	}
+	pr, err := parser.ParseBytes(src, path+".cql")
+	if err != nil {
+		return nil
+	}
+	il := &includedLibrary{
+		syms:       buildSymMap(pr.Library),
+		funcCounts: functionCounts(pr.Library),
+	}
+	for _, st := range pr.Library.Statements {
+		if st.IsFunction && st.IsFluent && !containsString(il.fluent, st.Name) {
+			il.fluent = append(il.fluent, st.Name)
+		}
+	}
+
 	if t.includeVisiting == nil {
 		t.includeVisiting = map[string]bool{}
 	}
-	key := path + "|" + version
-	if it, ok := t.includeCache[key]; ok {
-		return it
+	chainKey := path + "|" + version
+	if t.includeVisiting[chainKey] {
+		t.includeTruncated = true
+		return il // a cycle: no types, and not cached
 	}
-	if t.includeVisiting[key] {
-		return nil
-	}
-	t.includeVisiting[key] = true
-	defer delete(t.includeVisiting, key)
-
+	t.includeVisiting[chainKey] = true
 	sub := New(t.opts)
-	sub.includeCache = t.includeCache
 	sub.includeVisiting = t.includeVisiting
-	sub.Translate(lib, path+".cql")
-	it := &includeTypes{defs: sub.defTypeSpecs, funcs: sub.funcReturnSpecs, operands: sub.localFuncOperands}
-	t.includeCache[key] = it
-	return it
+	sub.Translate(pr.Library, path+".cql")
+	delete(t.includeVisiting, chainKey)
+	il.types = &includeTypes{defs: sub.defTypeSpecs, funcs: sub.funcReturnSpecs, operands: sub.localFuncOperands}
+	if sub.includeTruncated {
+		t.includeTruncated = true
+		return il
+	}
+	return t.opts.IncludeCache.put(key, il)
+}
+
+// optionsKey renders the options that shape a translation's types, for the
+// include cache key. The library source and the cache itself are excluded:
+// they identify where libraries come from, not how they translate.
+func optionsKey(opts *Options) string {
+	o := *opts
+	o.LibrarySource = nil
+	o.IncludeCache = nil
+	o.TranslatorVersion = ""
+	return fmt.Sprintf("%+v", o)
 }
 
 // fluentLibraryFor returns the include alias declaring a fluent function called

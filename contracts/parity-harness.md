@@ -37,6 +37,21 @@ For each fixture:
    ordering) listed in `parity/tolerated.json`.
 6. Diff ELM JSON with object-key-sorted normalization; tolerated diffs likewise.
 
+### Parallelism
+
+Fixture × profile runs execute `--jobs` at a time (default one per CPU less
+one, or `ECHO_ELM_JOBS`), each CQF invocation writing into a private temporary
+directory, and the report lists them in corpus order. Golden refresh
+(`go run ./demo/goldens`) runs the same way.
+
+### Bundles
+
+`--bundle <file>` extracts a FHIR Bundle's libraries into a temporary corpus
+whose one profile is the options the bundle's ELM declares. By default the
+reference is the ELM the bundle carries; with `--fresh-cqf` it is a fresh CQF
+compile of the bundle's CQL with those same options (as CLI flags), which is
+the right oracle when the carried ELM came from another build (issue #5).
+
 ## Output
 
 Per parity run:
