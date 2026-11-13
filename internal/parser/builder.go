@@ -14,6 +14,12 @@ import (
 type astBuilder struct {
 	sourceName string
 	stream     *antlr.CommonTokenStream
+	// includeAliases names every library this one includes, by local identifier
+	// and by path. A dotted identifier is a library reference only when its first
+	// part is one of these; otherwise it is a property path off an alias, operand
+	// or let. Nil means the include set is unknown (a fragment parsed on its own),
+	// and the old library-first reading is kept.
+	includeAliases map[string]bool
 }
 
 func newASTBuilder(sourceName string, stream *antlr.CommonTokenStream) *astBuilder {
@@ -144,6 +150,9 @@ func setLoc(n ast.Expr, ctx antlr.ParserRuleContext) ast.Expr {
 func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 	lc := ctx.(*cqlparser.LibraryContext)
 	lib := &ast.Library{}
+	// Within a library the include set is known: includes are header
+	// definitions, all built before any statement is.
+	b.includeAliases = map[string]bool{}
 
 	if ld := lc.LibraryDefinition(); ld != nil {
 		lib.Name = b.buildVersionedIdentifier(ld)
@@ -156,7 +165,9 @@ func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 		case dc.UsingDefinition() != nil:
 			lib.Usings = append(lib.Usings, b.buildUsing(dc.UsingDefinition()))
 		case dc.IncludeDefinition() != nil:
-			lib.Includes = append(lib.Includes, b.buildInclude(dc.IncludeDefinition()))
+			inc := b.buildInclude(dc.IncludeDefinition())
+			lib.Includes = append(lib.Includes, inc)
+			b.recordIncludeAlias(inc)
 		case dc.CodesystemDefinition() != nil:
 			lib.Codesystems = append(lib.Codesystems, b.buildCodesystem(dc.CodesystemDefinition()))
 		case dc.ValuesetDefinition() != nil:
@@ -234,6 +245,22 @@ func (b *astBuilder) buildUsing(ctx cqlparser.IUsingDefinitionContext) *ast.Usin
 // -----------------------------------------------------------------------
 // Includes
 // -----------------------------------------------------------------------
+
+// recordIncludeAlias registers the names a reference to inc can use: its local
+// identifier when it has one, otherwise its path (as the translator resolves an
+// unaliased include).
+func (b *astBuilder) recordIncludeAlias(inc *ast.IncludeDefinition) {
+	if b.includeAliases == nil || inc == nil {
+		return
+	}
+	if inc.LocalName != "" {
+		b.includeAliases[inc.LocalName] = true
+		return
+	}
+	if inc.Path != "" {
+		b.includeAliases[inc.Path] = true
+	}
+}
 
 func (b *astBuilder) buildInclude(ctx cqlparser.IIncludeDefinitionContext) *ast.IncludeDefinition {
 	idc := ctx.(*cqlparser.IncludeDefinitionContext)
@@ -666,9 +693,18 @@ func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast
 func (b *astBuilder) buildNamedTypeSpecifier(ctx cqlparser.INamedTypeSpecifierContext) *ast.NamedTypeSpecifier {
 	ndc := ctx.(*cqlparser.NamedTypeSpecifierContext)
 	nts := &ast.NamedTypeSpecifier{}
+	// Keep every qualifier. `FHIR.Claim.Item` is the model alias FHIR plus the
+	// backbone type Claim.Item; keeping only the first qualifier turned it into
+	// FHIR.Item, a different (and usually nonexistent) type. That one dropped
+	// segment collided overloads, sent element types to Any and suppressed the
+	// implicit conversions on every backbone-typed operand. (issues/08 W3)
 	qualifiers := ndc.AllQualifier()
 	if len(qualifiers) > 0 {
-		nts.Qualifier = qualifiers[0].GetText()
+		parts := make([]string, len(qualifiers))
+		for i, q := range qualifiers {
+			parts[i] = q.GetText()
+		}
+		nts.Qualifier = strings.Join(parts, ".")
 	}
 	if ri := ndc.ReferentialOrTypeNameIdentifier(); ri != nil {
 		nts.Name = ri.GetText()

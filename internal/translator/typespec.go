@@ -57,11 +57,15 @@ func (t *Translator) qualifyDataType(rawType string) (dataType, templateID strin
 		return rawType, "" // already namespace-qualified
 	}
 
-	var modelAlias, typeName string
+	// The first segment is a model alias only if a model is declared under that
+	// name. Otherwise the whole dotted name is a type in the primary model: an
+	// unqualified backbone type such as Claim.Item, whose "Claim" is part of the
+	// type name, not a model.
+	modelAlias, typeName := "", rawType
 	if before, after, ok := strings.Cut(rawType, "."); ok {
-		modelAlias, typeName = before, after
-	} else {
-		typeName = before
+		if _, isModel := t.modelsByAlias[before]; isModel {
+			modelAlias, typeName = before, after
+		}
 	}
 
 	var (

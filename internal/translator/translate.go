@@ -126,45 +126,48 @@ type Translator struct {
 	sourceText           string // original CQL source for annotation s-tree extraction
 	lineOffsets          []int  // byte offsets of each line start in sourceText (1-indexed via [line-1])
 	diags                []Diagnostic
-	syms                 map[string]symKind               // symbol table built before statement pass
-	paramTypes           map[string]string                // maps parameter name → ELM qualified type name (named types only)
-	paramTypeSpecs       map[string]typeSpec              // maps parameter name → full typeSpec (named, list, interval)
-	defTypeSpecs         map[string]typeSpec              // maps statement-def name → full typeSpec inferred from its body
-	queryAliases         []map[string]bool                // stack of alias sets for current query scopes
-	queryLetScopes       []map[string]bool                // stack of let-identifier sets for current query scopes
-	queryAliasTypes      []map[string]string              // stack: alias name → FHIR resource type (e.g. "Encounter")
-	queryAliasTypeSpecs  []map[string]typeSpec            // stack: alias name → element typeSpec (for sig inference)
-	queryLetTypeSpecs    []map[string]typeSpec            // stack: let-id → inferred typeSpec for QueryLetRef inference
-	modelsByAlias        map[string]string                // model local-identifier → model URI (populated per Translate call)
-	primaryModelURI      string                           // URI of the first non-System declared model
-	primaryModelName     string                           // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
-	currentContextName   string                           // context being translated (for age function expansion)
-	functionParamScope   map[string]bool                  // set of operand (parameter) names in the current function body
-	operandTypeSpecs     map[string]typeSpec              // function operand name → declared typeSpec, set during function body translation
-	listNodeTypes        map[*elm.ListNode]typeSpec       // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
-	fhirHelpersLocalName string                           // local identifier of included FHIRHelpers library, or "" if not included
-	queryTypes           map[*elm.QueryNode]typeSpec      // each query's type, recorded while its aliases were in scope
-	includeAliases       map[string]bool                  // every include's local name, whether or not its source resolved
-	libSyms              map[string]map[string]symKind    // included library alias → name → symKind (for QualifiedRef resolution)
-	libFluentFuncs       map[string][]string              // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
-	funcReturnSpecs      map[string]typeSpec              // local function name → inferred return type (unambiguous names only)
-	localFuncOperands    map[string][]typeSpec            // local function name → declared operand types (unambiguous names only)
-	libFuncReturns       map[string]map[string]typeSpec   // included library alias → function name → inferred return type
-	skipLocatorStamp     bool                             // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
-	inSortScope          bool                             // when true, identifiers resolve to IdentifierRef (sort-by expressions are scoped to the query result element)
-	noFHIRCoerce         bool                             // when true, the next expression is in an unconsumed position and skips implicit FHIRHelpers coercion
-	localFuncCounts      map[string]int                   // local function name → number of definitions (>1 means overloaded)
-	localFuncReturns     map[string]typeSpec              // local function name → declared return type
-	libDefTypes          map[string]map[string]typeSpec   // included library alias → definition name → inferred type
-	defContexts          map[string]string                // definition name → the context it was declared in
-	sortElementTS        typeSpec                         // result element type of the query whose sort clause is being translated
-	anyAccumulators      map[string]bool                  // aggregate accumulators with no starting value, whose type is Any
-	libFuncOperands      map[string]map[string][]typeSpec // included library alias → function name → declared operand types
-	includeVisiting      map[string]bool                  // include path|version currently being typed in this chain, to stop cycles
-	includeTruncated     bool                             // an include below this translation was cut short by a cycle
-	converted            map[elm.Expression]bool          // conversions and casts the translator synthesized
-	elmDiagnostics       []*elm.CqlToElmError             // CqlToElmError annotations, in the order they arise
-	libraryID            string                           // this library's identifier and version, for diagnostics
+	syms                 map[string]symKind                          // symbol table built before statement pass
+	paramTypes           map[string]string                           // maps parameter name → ELM qualified type name (named types only)
+	paramTypeSpecs       map[string]typeSpec                         // maps parameter name → full typeSpec (named, list, interval)
+	defTypeSpecs         map[string]typeSpec                         // maps statement-def name → full typeSpec inferred from its body
+	queryAliases         []map[string]bool                           // stack of alias sets for current query scopes
+	queryLetScopes       []map[string]bool                           // stack of let-identifier sets for current query scopes
+	queryAliasTypes      []map[string]string                         // stack: alias name → FHIR resource type (e.g. "Encounter")
+	queryAliasTypeSpecs  []map[string]typeSpec                       // stack: alias name → element typeSpec (for sig inference)
+	queryLetTypeSpecs    []map[string]typeSpec                       // stack: let-id → inferred typeSpec for QueryLetRef inference
+	modelsByAlias        map[string]string                           // model local-identifier → model URI (populated per Translate call)
+	primaryModelURI      string                                      // URI of the first non-System declared model
+	primaryModelName     string                                      // original model name of the first non-System declared model (e.g. "QUICK", "FHIR")
+	currentContextName   string                                      // context being translated (for age function expansion)
+	functionParamScope   map[string]bool                             // set of operand (parameter) names in the current function body
+	operandTypeSpecs     map[string]typeSpec                         // function operand name → declared typeSpec, set during function body translation
+	listNodeTypes        map[*elm.ListNode]typeSpec                  // typed-list literals: ListNode pointer → element typeSpec (does not serialize)
+	fhirHelpersLocalName string                                      // local identifier of included FHIRHelpers library, or "" if not included
+	queryTypes           map[*elm.QueryNode]typeSpec                 // each query's type, recorded while its aliases were in scope
+	includeAliases       map[string]bool                             // every include's local name, whether or not its source resolved
+	libSyms              map[string]map[string]symKind               // included library alias → name → symKind (for QualifiedRef resolution)
+	libFluentFuncs       map[string][]string                         // fluent function name → include aliases declaring it (for `receiver.Func()` resolution)
+	localOverloads       map[string][]*funcOverload                  // local function name → every overload (see overloads.go)
+	overloadOf           map[*ast.ExpressionDefinition]*funcOverload // function definition → its overload entry, to record the inferred return type
+	libOverloads         map[string]map[string][]*funcOverload       // include alias → function name → every overload
+	funcReturnSpecs      map[string]typeSpec                         // local function name → inferred return type (unambiguous names only)
+	localFuncOperands    map[string][]typeSpec                       // local function name → declared operand types (unambiguous names only)
+	libFuncReturns       map[string]map[string]typeSpec              // included library alias → function name → inferred return type
+	skipLocatorStamp     bool                                        // when true, translateExpr skips stamping locator on its outer result (set by callees that placed locator on an inner node)
+	inSortScope          bool                                        // when true, identifiers resolve to IdentifierRef (sort-by expressions are scoped to the query result element)
+	noFHIRCoerce         bool                                        // when true, the next expression is in an unconsumed position and skips implicit FHIRHelpers coercion
+	localFuncCounts      map[string]int                              // local function name → number of definitions (>1 means overloaded)
+	localFuncReturns     map[string]typeSpec                         // local function name → declared return type
+	libDefTypes          map[string]map[string]typeSpec              // included library alias → definition name → inferred type
+	defContexts          map[string]string                           // definition name → the context it was declared in
+	sortElementTS        typeSpec                                    // result element type of the query whose sort clause is being translated
+	anyAccumulators      map[string]bool                             // aggregate accumulators with no starting value, whose type is Any
+	libFuncOperands      map[string]map[string][]typeSpec            // included library alias → function name → declared operand types
+	includeVisiting      map[string]bool                             // include path|version currently being typed in this chain, to stop cycles
+	includeTruncated     bool                                        // an include below this translation was cut short by a cycle
+	converted            map[elm.Expression]bool                     // conversions and casts the translator synthesized
+	elmDiagnostics       []*elm.CqlToElmError                        // CqlToElmError annotations, in the order they arise
+	libraryID            string                                      // this library's identifier and version, for diagnostics
 	libraryVersion       string
 	includeLibraryNames  map[string]string         // include alias → the included library's identifier
 	libFuncCounts        map[string]map[string]int // include alias → function name → number of definitions
@@ -374,6 +377,8 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	t.funcReturnSpecs = make(map[string]typeSpec)
 	t.queryTypes = make(map[*elm.QueryNode]typeSpec)
 	t.localFuncOperands = make(map[string][]typeSpec)
+	t.localOverloads = make(map[string][]*funcOverload)
+	t.overloadOf = make(map[*ast.ExpressionDefinition]*funcOverload)
 	t.defContexts = make(map[string]string)
 	for _, s := range lib.Statements {
 		t.defContexts[s.Name] = s.Context
@@ -383,11 +388,20 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			continue
 		}
 		t.localFuncCounts[s.Name]++
+		ov := &funcOverload{operands: make([]typeSpec, len(s.Operands)), fluent: s.IsFluent}
+		for i, op := range s.Operands {
+			if op.Type != nil {
+				ov.operands[i] = t.declaredTypeSpec(*op.Type)
+			}
+		}
 		if s.ReturnType != nil {
 			if ts := t.declaredTypeSpec(*s.ReturnType); ts != nil {
 				t.localFuncReturns[s.Name] = ts
+				ov.returns = ts
 			}
 		}
+		t.recordLocalOverload(s.Name, ov)
+		t.overloadOf[s] = ov
 		// Declared operand types, for casting untyped arguments at call sites.
 		// Only unambiguous names: with overloads the parameter list depends on
 		// which one the call resolves to, which is not decided here.
@@ -434,6 +448,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	t.libFluentFuncs = make(map[string][]string)
 	t.libFuncReturns = make(map[string]map[string]typeSpec)
 	t.libFuncOperands = make(map[string]map[string][]typeSpec)
+	t.libOverloads = make(map[string]map[string][]*funcOverload)
 	if t.opts.LibrarySource != nil {
 		if t.opts.IncludeCache == nil {
 			t.opts.IncludeCache = NewIncludeCache()
@@ -463,6 +478,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				t.libDefTypes[localName] = il.types.defs
 				t.libFuncReturns[localName] = il.types.funcs
 				t.libFuncOperands[localName] = il.types.operands
+				t.libOverloads[localName] = overloadsUnder(il.types.overloads, localName)
 			}
 			t.libFuncCounts[localName] = il.funcCounts
 		}
@@ -868,7 +884,12 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				if ts := t.inferTypeSpec(sd.Expression); ts != nil {
 					t.defTypeSpecs[s.Name] = ts
 				}
-			} else if t.localFuncCounts[s.Name] == 1 {
+			} else if ov := t.overloadOf[s]; ov != nil && ov.returns == nil {
+				// Every overload gets its body's type, so a call can resolve to the
+				// right one by argument type — overloaded or not.
+				ov.returns = t.inferTypeSpec(sd.Expression)
+			}
+			if s.IsFunction && t.localFuncCounts[s.Name] == 1 {
 				// Record the inferred return type so callers in *other* libraries
 				// can resolve it. defTypeSpecs deliberately excludes functions, so
 				// this is a separate map. Overloaded names are skipped: picking
@@ -1015,6 +1036,11 @@ func (t *Translator) inferBoundType(expr ast.Expr) string {
 // an inner node), the outer stamp is skipped.
 func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 	result := t.applyImplicitConversions(t.translateExprCore(expr))
+	if ir, ok := expr.(*ast.IdentifierRef); ok && ir.PathRoot {
+		// See ast.IdentifierRef.PathRoot: CQF stamps only the outer path node.
+		t.skipLocatorStamp, t.skipResultTypeStamp = false, false
+		return result
+	}
 	if expr != nil && t.opts.EnableLocators && !t.skipLocatorStamp {
 		setLocator(result, locatorStr(expr.Loc()))
 	}
@@ -1630,12 +1656,25 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			}
 			operands = append(operands, arg)
 		}
-		t.noteOverloadedCall(v.LibraryName, v.Name)
+		lib := v.LibraryName
+		if lib == "" && t.localFuncCounts[v.Name] == 0 && len(t.libFluentFuncs[v.Name]) > 1 {
+			// A fluent name declared by several includes: the receiver's type
+			// picks the library, which needs the translated operands, so it
+			// cannot be settled in the pre-pass. Left unresolved this emitted a
+			// call naming no library at all — 99.7% of issues/08 W4's ~9,800
+			// sites. (#13)
+			args := make([]typeSpec, len(operands))
+			for i, o := range operands {
+				args[i] = t.inferTypeSpec(o)
+			}
+			lib = t.fluentLibraryByArgs(v.Name, args)
+		}
+		t.noteOverloadedCall(lib, v.Name)
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
-			Signature:   t.computeFunctionRefSig(v.LibraryName, v.Name, operands),
+			Signature:   t.computeFunctionRefSig(lib, v.Name, operands),
 			Name:        v.Name,
-			LibraryName: v.LibraryName,
+			LibraryName: lib,
 			Operand:     operands,
 		}
 	case *ast.PropertyExpr:
@@ -2353,8 +2392,19 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		}
 	}
 
-	lhs := t.translateExpr(v.Left)
-	rhs := t.translateExpr(v.Right)
+	var lhs, rhs elm.Expression
+	if t.sharesFHIRType(v.Op, v.Left, v.Right) {
+		// Equality between two compatible FHIR values resolves to the generic
+		// Equal<T>(T, T) with no conversion: `T.sequence = I.sequence` compares
+		// positiveInt with positiveInt, and `Id.value = E.id` compares string with
+		// id, which derives from string. Converting both sides to System values
+		// is a different (though usually equal-valued) expression. (issues/08 W9)
+		lhs = t.translateExprUnconsumed(v.Left)
+		rhs = t.translateExprUnconsumed(v.Right)
+	} else {
+		lhs = t.translateExpr(v.Left)
+		rhs = t.translateExpr(v.Right)
+	}
 
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
 	t.noteInclusionDemotion(op, v.Left, v.Right, lhs, rhs)

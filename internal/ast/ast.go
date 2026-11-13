@@ -353,6 +353,11 @@ type RatioLiteral struct {
 type IdentifierRef struct {
 	baseExpr
 	Name string
+	// PathRoot marks the leading identifier of a qualified identifier path used
+	// as a query source or retrieve terminology, e.g. `ref` in `ref.identifier Id`.
+	// CQF resolves the whole path in one step and records a locator and result
+	// type only on the outermost node, so the root carries neither.
+	PathRoot bool
 }
 
 // QualifiedRef: Library.Name

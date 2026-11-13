@@ -93,9 +93,28 @@ type includedLibrary struct {
 
 // includeTypes are the types an included library exposes to its includer.
 type includeTypes struct {
-	defs     map[string]typeSpec
-	funcs    map[string]typeSpec
-	operands map[string][]typeSpec
+	defs      map[string]typeSpec
+	funcs     map[string]typeSpec
+	operands  map[string][]typeSpec
+	overloads map[string][]*funcOverload
+}
+
+// overloadsUnder copies an included library's overloads, tagged with the alias
+// this library includes it under. The cached originals are shared by every
+// translation that includes the library, under whatever alias each one uses,
+// so they are never tagged in place.
+func overloadsUnder(src map[string][]*funcOverload, alias string) map[string][]*funcOverload {
+	out := make(map[string][]*funcOverload, len(src))
+	for name, ovs := range src {
+		copied := make([]*funcOverload, len(ovs))
+		for i, ov := range ovs {
+			c := *ov
+			c.library = alias
+			copied[i] = &c
+		}
+		out[name] = copied
+	}
+	return out
 }
 
 // loadInclude loads an included library through the cache, or returns nil when
@@ -143,7 +162,7 @@ func (t *Translator) loadInclude(path, version string) *includedLibrary {
 	sub.includeVisiting = t.includeVisiting
 	sub.Translate(pr.Library, path+".cql")
 	delete(t.includeVisiting, chainKey)
-	il.types = &includeTypes{defs: sub.defTypeSpecs, funcs: sub.funcReturnSpecs, operands: sub.localFuncOperands}
+	il.types = &includeTypes{defs: sub.defTypeSpecs, funcs: sub.funcReturnSpecs, operands: sub.localFuncOperands, overloads: sub.localOverloads}
 	if sub.includeTruncated {
 		t.includeTruncated = true
 		return il

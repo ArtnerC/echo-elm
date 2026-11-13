@@ -628,6 +628,14 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 	}
 	switch v := ts.(type) {
 	case *ast.NamedTypeSpecifier:
+		// A model-qualified name stays qualified so qualifyTypeSpec can render it
+		// in its model's namespace. Resolving only the last segment did two kinds
+		// of damage: FHIR.Claim.Item became the nonexistent FHIR.Item, and
+		// FHIR.Quantity became System.Quantity, because the bare name matched a
+		// System type. (issues/08 W3, T1)
+		if v.Qualifier != "" && v.Qualifier != "System" {
+			return namedTS{v.Qualifier + "." + v.Name}
+		}
 		return namedTS{resolveTypeName(v.Name)}
 	case *ast.ListTypeSpecifier:
 		inner := astTypeSpecToTypeSpec(v.ElementType)
@@ -1094,6 +1102,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 	case *elm.InValueSetNode, *elm.AnyInValueSetNode:
 		return boolTS
 	case *elm.FunctionRefNode:
+		// An overloaded name resolves by argument type to one declaration, whose
+		// return type is the call's. FHIRHelpers keeps its own table below: its
+		// conversions are many overloads of one name whose System result the
+		// table already states.
+		if v.LibraryName == "" || v.LibraryName != t.fhirHelpersLocalName {
+			if len(t.callCandidates(v.LibraryName, v.Name)) > 1 {
+				args := make([]typeSpec, len(v.Operand))
+				for i, o := range v.Operand {
+					args[i] = t.inferTypeSpec(o)
+				}
+				if ov := t.overloadForCall(v.LibraryName, v.Name, args); ov != nil && ov.returns != nil {
+					return ov.returns
+				}
+			}
+		}
 		// A call to a function declared in this library resolves to its
 		// declared return type.
 		if v.LibraryName == "" {

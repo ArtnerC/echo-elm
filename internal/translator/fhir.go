@@ -236,6 +236,14 @@ func (t *Translator) resolveFHIRSourceType(expr ast.Expr) string {
 				return typ
 			}
 		}
+		// A function operand declared with a model type, e.g. (dx FHIR.Claim.Diagnosis).
+		// Without this, navigation off an operand had no source type, so the
+		// implicit conversion on dx.sequence = 1 was never inserted. (issues/08 W3)
+		if t.functionParamScope[e.Name] {
+			if local := fhirLocalTypeName(t.operandTypeSpecs[e.Name]); local != "" {
+				return local
+			}
+		}
 		// Fall back to the current context singleton (e.g., "Patient").
 		if e.Name == t.currentContextName {
 			return t.currentContextName
@@ -252,8 +260,8 @@ func (t *Translator) resolveFHIRSourceType(expr ast.Expr) string {
 		if sourceType == "" {
 			return ""
 		}
-		key := sourceType + "." + e.Path
-		return typesystem.FHIRPropertyType[key] // empty string if not found
+		typ, _ := typesystem.FHIRPropertyTypeOf(sourceType, e.Path)
+		return typ
 	}
 	return ""
 }
@@ -265,7 +273,10 @@ func (t *Translator) resolveFHIRPropertyType(source ast.Expr, path string) strin
 	if sourceType == "" {
 		return ""
 	}
-	return typesystem.FHIRPropertyType[sourceType+"."+path]
+	// Walk the base-type chain: id, meta and extension are declared on
+	// Resource/Element, so a direct index misses them on every concrete type.
+	typ, _ := typesystem.FHIRPropertyTypeOf(sourceType, path)
+	return typ
 }
 
 // resolveFHIRPropertyCoercion returns the FHIRHelpers function name (e.g. "ToString",
@@ -281,7 +292,7 @@ func (t *Translator) resolveFHIRPropertyCoercion(source ast.Expr, path string) s
 		return ""
 	}
 	if sourceType := t.resolveFHIRSourceType(source); sourceType != "" {
-		if typesystem.IsFHIRListProperty(sourceType, path) {
+		if typesystem.IsFHIRListPropertyOf(sourceType, path) {
 			return ""
 		}
 	}
@@ -550,4 +561,46 @@ func (t *Translator) sortFieldCoercion(name string) (fn, fhirType string) {
 		return "", ""
 	}
 	return typesystem.FHIRCoercionFor(fhirType), fhirType
+}
+
+// equalityOps are the operators CQF resolves generically over any type, so two
+// operands of a common FHIR type need no conversion to System values. Ordering
+// comparisons are not here: they need an ordered System type, and CQF converts.
+var equalityOps = map[string]bool{
+	"Equal": true, "NotEqual": true, "Equivalent": true, "NotEquivalent": true,
+}
+
+// sharesFHIRType reports whether both operands of an equality are FHIR-typed
+// properties with a common FHIR type — the same type, or one deriving from the
+// other through the model's base-type chain.
+func (t *Translator) sharesFHIRType(op string, left, right ast.Expr) bool {
+	if !equalityOps[op] || t.fhirHelpersLocalName == "" {
+		return false
+	}
+	lt, rt := t.fhirOperandType(left), t.fhirOperandType(right)
+	if lt == "" || rt == "" {
+		return false
+	}
+	return fhirDerivesFrom(lt, rt) || fhirDerivesFrom(rt, lt)
+}
+
+// fhirOperandType is the FHIR type of a property access, or "" for anything
+// else (literals and System-typed expressions take the conversion path).
+func (t *Translator) fhirOperandType(e ast.Expr) string {
+	p, ok := e.(*ast.PropertyExpr)
+	if !ok {
+		return ""
+	}
+	return t.resolveFHIRPropertyType(p.Source, p.Path)
+}
+
+// fhirDerivesFrom reports whether FHIR type sub is super or derives from it.
+func fhirDerivesFrom(sub, super string) bool {
+	for depth := 0; sub != "" && depth < 32; depth++ {
+		if sub == super {
+			return true
+		}
+		sub = typesystem.FHIRBaseType[sub]
+	}
+	return false
 }
