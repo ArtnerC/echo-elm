@@ -1,0 +1,781 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "codeSystems": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "id": "urn:example:codesystem",
+          "locator": "7:1-7:52",
+          "name": "ExampleSystem",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}CodeSystem"
+        }
+      ]
+    },
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "11:1-11:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ImplicitConversions",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "5:1-5:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "11:1-11:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "11:1-11:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "15:3-15:34",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Claim",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Claim",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "15:3-15:9",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Claim",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Claim",
+                  "type": "Retrieve"
+                },
+                "locator": "15:3-15:11",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Claim",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "locator": "15:13-15:34",
+              "operand": [
+                {
+                  "annotation": [],
+                  "libraryName": "FHIRHelpers",
+                  "name": "ToString",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "locator": "15:19-15:22",
+                      "path": "id",
+                      "resultTypeName": "{http://hl7.org/fhir}id",
+                      "scope": "C",
+                      "type": "Property"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "annotation": [],
+                  "locator": "15:26-15:34",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "Literal",
+                  "value": "example",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Equal"
+            }
+          },
+          "locator": "14:1-15:34",
+          "name": "Claim ids equal",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Claim",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "20:3-20:84",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Claim",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Claim",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "20:3-20:9",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Claim",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Claim",
+                  "type": "Retrieve"
+                },
+                "locator": "20:3-20:11",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Claim",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "locator": "20:13-20:84",
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "locator": "20:26-20:84",
+                "relationship": [],
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Coding",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "locator": "20:27-20:41",
+                      "path": "coding",
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "elementType": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Coding",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "ListTypeSpecifier"
+                      },
+                      "source": {
+                        "annotation": [],
+                        "locator": "20:28-20:33",
+                        "path": "type",
+                        "resultTypeName": "{http://hl7.org/fhir}CodeableConcept",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    },
+                    "locator": "20:27-20:43",
+                    "resultTypeSpecifier": {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}Coding",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "locator": "20:45-20:83",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "libraryName": "FHIRHelpers",
+                      "name": "ToCode",
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "locator": "20:51",
+                          "name": "X",
+                          "resultTypeName": "{http://hl7.org/fhir}Coding",
+                          "type": "AliasRef"
+                        }
+                      ],
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    {
+                      "annotation": [],
+                      "code": "x",
+                      "locator": "20:55-20:83",
+                      "resultTypeName": "{urn:hl7-org:elm-types:r1}Code",
+                      "system": {
+                        "annotation": [],
+                        "locator": "20:69-20:83",
+                        "name": "ExampleSystem",
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}CodeSystem"
+                      },
+                      "type": "Code"
+                    }
+                  ],
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "signature": [],
+                  "type": "Equivalent"
+                }
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Exists"
+            }
+          },
+          "locator": "19:1-20:84",
+          "name": "Coding alias equal",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Claim",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "23:3-23:67",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Claim",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Claim",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "23:3-23:9",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Claim",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Claim",
+                  "type": "Retrieve"
+                },
+                "locator": "23:3-23:11",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Claim",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "locator": "23:13-23:67",
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "locator": "23:26-23:67",
+                "relationship": [],
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Coding",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "source": [
+                  {
+                    "alias": "X",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "locator": "23:27-23:41",
+                      "path": "coding",
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "elementType": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Coding",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "ListTypeSpecifier"
+                      },
+                      "source": {
+                        "annotation": [],
+                        "locator": "23:28-23:33",
+                        "path": "type",
+                        "resultTypeName": "{http://hl7.org/fhir}CodeableConcept",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    },
+                    "locator": "23:27-23:43",
+                    "resultTypeSpecifier": {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}Coding",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "code": {
+                    "annotation": [],
+                    "libraryName": "FHIRHelpers",
+                    "name": "ToCode",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "locator": "23:51",
+                        "name": "X",
+                        "resultTypeName": "{http://hl7.org/fhir}Coding",
+                        "type": "AliasRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "locator": "23:45-23:66",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                  "signature": [],
+                  "type": "InValueSet",
+                  "valueset": {
+                    "annotation": [],
+                    "locator": "23:56-23:66",
+                    "name": "Example A",
+                    "preserve": true,
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet"
+                  }
+                }
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "signature": [],
+              "type": "Exists"
+            }
+          },
+          "locator": "22:1-23:67",
+          "name": "Coding alias in",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Claim",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "27:3-27:73",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}id",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "id"
+                  },
+                  {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}dateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "created"
+                  },
+                  {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}decimal",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "name": "total"
+                  }
+                ],
+                "type": "TupleTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "annotation": [],
+              "expression": {
+                "annotation": [],
+                "element": [
+                  {
+                    "name": "id",
+                    "value": {
+                      "annotation": [],
+                      "locator": "27:26-27:29",
+                      "path": "id",
+                      "resultTypeName": "{http://hl7.org/fhir}id",
+                      "scope": "C",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "created",
+                    "value": {
+                      "annotation": [],
+                      "locator": "27:41-27:49",
+                      "path": "created",
+                      "resultTypeName": "{http://hl7.org/fhir}dateTime",
+                      "scope": "C",
+                      "type": "Property"
+                    }
+                  },
+                  {
+                    "name": "total",
+                    "value": {
+                      "annotation": [],
+                      "locator": "27:59-27:71",
+                      "path": "value",
+                      "resultTypeName": "{http://hl7.org/fhir}decimal",
+                      "source": {
+                        "annotation": [],
+                        "locator": "27:59-27:65",
+                        "path": "total",
+                        "resultTypeName": "{http://hl7.org/fhir}Money",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "locator": "27:20-27:73",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}id",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "id"
+                    },
+                    {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}dateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "created"
+                    },
+                    {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}decimal",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "total"
+                    }
+                  ],
+                  "type": "TupleTypeSpecifier"
+                },
+                "type": "Tuple"
+              },
+              "locator": "27:13-27:73",
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "element": [
+                    {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}id",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "id"
+                    },
+                    {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}dateTime",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "created"
+                    },
+                    {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}decimal",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "name": "total"
+                    }
+                  ],
+                  "type": "TupleTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Claim",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "27:3-27:9",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Claim",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Claim",
+                  "type": "Retrieve"
+                },
+                "locator": "27:3-27:11",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Claim",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "26:1-27:73",
+          "name": "Claim tuple",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}id",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "id"
+                },
+                {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}dateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "created"
+                },
+                {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}decimal",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "name": "total"
+                }
+              ],
+              "type": "TupleTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "3:1-3:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "valueSets": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "codeSystem": [],
+          "id": "urn:example:valueset:a",
+          "locator": "9:1-9:46",
+          "name": "Example A",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}ValueSet"
+        }
+      ]
+    }
+  }
+}

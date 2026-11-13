@@ -1,0 +1,314 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "SortImplicitReceiver",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "5:1-5:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "Obs",
+          "locator": "6:1-6:46",
+          "path": "SortFluentLib",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "7:1-7:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "8:29-8:83",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Observation",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "sort": {
+              "annotation": [],
+              "by": [
+                {
+                  "annotation": [],
+                  "direction": "asc",
+                  "expression": {
+                    "annotation": [],
+                    "locator": "8:53-8:83",
+                    "operand": {
+                      "annotation": [],
+                      "libraryName": "Obs",
+                      "locator": "8:62-8:83",
+                      "name": "Effective interval",
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "name": "$this",
+                          "type": "IdentifierRef"
+                        }
+                      ],
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "pointType": {
+                          "annotation": [],
+                          "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "locator": "8:53-8:83",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "ByExpression"
+                }
+              ],
+              "locator": "8:45-8:83"
+            },
+            "source": [
+              {
+                "alias": "O",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Observation",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "8:29-8:41",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Observation",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+                  "type": "Retrieve"
+                },
+                "locator": "8:29-8:43",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Observation",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "8:1-8:83",
+          "name": "Implicit receiver",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Observation",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "9:34-9:94",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Observation",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "sort": {
+              "annotation": [],
+              "by": [
+                {
+                  "annotation": [],
+                  "direction": "asc",
+                  "expression": {
+                    "annotation": [],
+                    "locator": "9:58-9:94",
+                    "operand": {
+                      "annotation": [],
+                      "libraryName": "Obs",
+                      "locator": "9:67-9:94",
+                      "name": "Effective interval",
+                      "operand": [
+                        {
+                          "annotation": [],
+                          "locator": "9:67-9:71",
+                          "name": "$this",
+                          "resultTypeName": "{http://hl7.org/fhir}Observation",
+                          "type": "IdentifierRef"
+                        }
+                      ],
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "pointType": {
+                          "annotation": [],
+                          "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "IntervalTypeSpecifier"
+                      },
+                      "signature": [],
+                      "type": "FunctionRef"
+                    },
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "signature": [],
+                    "type": "Start"
+                  },
+                  "locator": "9:58-9:94",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "ByExpression"
+                }
+              ],
+              "locator": "9:50-9:94"
+            },
+            "source": [
+              {
+                "alias": "O",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Observation",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "9:34-9:46",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Observation",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Observation",
+                  "type": "Retrieve"
+                },
+                "locator": "9:34-9:48",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Observation",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "9:1-9:94",
+          "name": "Explicit this receiver",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Observation",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "4:1-4:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

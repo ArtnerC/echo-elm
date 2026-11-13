@@ -565,13 +565,10 @@ func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
 	return t.marshalSig(vals)
 }
 
-// astTypeSpecToTypeSpec converts an AST type specifier to the translator's
-// internal typeSpec used for signature inference. Returns nil for tuple/choice
-// or other unhandled forms.
 // declaredTypeSpec converts a source-declared type specifier and renders every
 // model type name the one way CQF does: {modelUri}LocalName.
 //
-// astTypeSpecToTypeSpec keeps the name as written, which is why the same type
+// astTypeSpecWith keeps the name as written, which is why the same type
 // could come out three ways in one library — `{http://hl7.org/fhir}Encounter`
 // from a retrieve, `FHIR.Encounter` from an alias-qualified declaration, and
 // bare `Encounter` from an unqualified one. Only the first is right. Routing
@@ -622,12 +619,9 @@ func (t *Translator) qualifyTypeName(name string) string {
 	return name
 }
 
-func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
-	return astTypeSpecWith(ts, resolveTypeName)
-}
-
-// astTypeSpecWith converts a type specifier, resolving unqualified names with
-// resolve. A translator passes one that knows the library's models.
+// astTypeSpecWith converts an AST type specifier to the translator's internal
+// typeSpec, resolving unqualified names with resolve — in practice the
+// translator's resolveUnqualifiedTypeName, which knows the library's models.
 func astTypeSpecWith(ts ast.TypeSpecifier, resolve func(string) string) typeSpec {
 	if ts == nil {
 		return nil

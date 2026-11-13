@@ -658,3 +658,136 @@ fixtures:
     expectedStatus: success
     profiles: [default, sig-differing, sig-all]
     tags: [layered]
+
+  # -- issues/08 measure families -----------------------------------------------
+  # Synthetic reproductions of the difference families the three-release
+  # fresh-CQF remeasurement found in licensed measure content. Shapes only; see
+  # measure-families/PROVENANCE.md. Run under measure-bundle, the option set
+  # published measure bundles declare.
+  - path: measure-families/FluentClaims.cql
+    description: "#13 fluent overloads across includes: first declaring library"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-13, measure-families]
+
+  - path: measure-families/FluentEncounters.cql
+    description: "#13 fluent overloads across includes: second declaring library"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-13, measure-families]
+
+  - path: measure-families/FluentOverloadMain.cql
+    description: "#13 fluent overloads across includes: receiver type selects the library"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-13, measure-families]
+
+  - path: measure-families/FluentNonFluentCall.cql
+    description: "#8 negative: fluent function invoked without fluent syntax is an error"
+    expectedStatus: upstream-error
+    profiles: [measure-bundle]
+    tags: [issue-08, negative, measure-families]
+
+  - path: measure-families/SortByFhirField.cql
+    description: "sort by a FHIR-typed element under result types"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, measure-families]
+
+  - path: measure-families/FHIRHelpers.cql
+    description: "#15 FHIRHelpers translated as a fixture under the measure-bundle profile"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-15, measure-families]
+
+  - path: measure-families/ExplicitHelperCall.cql
+    description: "explicit FHIRHelpers call and .value navigation, in sort and non-sort positions"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, measure-families]
+
+  - path: measure-families/PrimitiveValue.cql
+    description: ".value on FHIR primitive elements is typed with the System type"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-15, new-family, measure-families]
+
+  - path: measure-families/ExternalFunction.cql
+    description: "external functions keep external: true and no body"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-15, new-family, measure-families]
+
+  - path: measure-families/QualifiedQuerySource.cql
+    description: "#7 query/with source written as alias.field or operand.field resolves to Property"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-07, new-family, measure-families]
+
+  - path: measure-families/BackboneOperand.cql
+    description: "operands typed with nested FHIR types keep the qualified type name"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, measure-families]
+
+  - path: measure-families/ParameterTags.cql
+    description: "documentation tags on parameter definitions are emitted as Annotation t entries"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, measure-families]
+
+  - path: measure-families/SortFluentLib.cql
+    description: "declares the fluent function used as a sort key by SortImplicitReceiver"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, measure-families]
+
+  - path: measure-families/SortImplicitReceiver.cql
+    description: "fluent call with no explicit receiver in sort by binds $this"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, measure-families]
+
+  - path: measure-families/ValueSetMembership.cql
+    description: "membership against a ValueSet operand is InValueSet; valuesets used as code lists get ExpandValueSet"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, operators, measure-families]
+
+  - path: measure-families/AgeFunctions.cql
+    description: "direct CalculateAgeIn*At calls are CalculateAgeAt with a precision"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, operators, measure-families]
+
+  - path: measure-families/ImplicitConversions.cql
+    description: "implicit FHIRHelpers conversions on comparison operands, not on tuple elements"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, operators, measure-families]
+
+  - path: measure-families/DecimalPromotion.cql
+    description: "Integer operands in Decimal positions are wrapped in ToDecimal"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [new-family, operators, measure-families]
+
+  - path: measure-families/FlattenAmbiguity.cql
+    description: "#8/#9 negative: Flatten(List<Any>) is ambiguous once two Flatten instantiations exist"
+    expectedStatus: upstream-error
+    divergence: "CQF 5.0.0 rejects this as an ambiguous Flatten(list<System.Any>) call because two earlier Flatten instantiations exist; echo-elm compiles it, deliberately. See FlattenOneInstance. (issues/08 W15b, #9)"
+    profiles: [measure-bundle]
+    tags: [issue-08, issue-09, negative, measure-families]
+
+  - path: measure-families/FlattenOneInstance.cql
+    description: "#8/#9 control: the same Flatten(List<Any>) call after one instantiation compiles"
+    expectedStatus: divergent
+    divergence: "CQF 5.0.0 resolves Flatten(List<Any>) against generic instantiations created earlier in the library: after one prior Flatten(List<List<Integer>>) it casts {'a'} to List<Integer> and types the result List<Integer>; after two it reports an ambiguity (FlattenAmbiguity). echo-elm emits the stateless form, each element cast to List<Any>, as CQF does when no prior instantiation exists (FlattenMixedOnly). Reproducing CQF would mean emitting a cast of a String list to List<Integer>, or rejecting valid CQL, depending on unrelated definitions. (issues/08 W15b, #9)"
+    profiles: [measure-bundle]
+    tags: [issue-08, issue-09, measure-families]
+
+  - path: measure-families/FlattenMixedOnly.cql
+    description: "#8/#9 control: the same Flatten(List<Any>) call with no prior instantiation"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-08, issue-09, measure-families]

@@ -1,0 +1,285 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "identifier": {
+      "id": "ParameterTags",
+      "version": "1.0.0"
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Synthetic parameter with documentation tags"
+                },
+                {
+                  "name": "uri",
+                  "value": "http://example.org/parameters/period"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "default": {
+            "annotation": [],
+            "high": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "10:44-10:65",
+              "millisecond": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "second": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2026",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "highClosed": false,
+            "locator": "10:11-10:66",
+            "low": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "locator": "10:20-10:41",
+              "millisecond": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "second": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2025",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "lowClosed": true,
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "pointType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "Interval"
+          },
+          "locator": "9:1-10:66",
+          "name": "Report period",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "locator": "9:27-9:44",
+            "pointType": {
+              "annotation": [],
+              "locator": "9:36-9:43",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "pointType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "max",
+                  "value": "10"
+                },
+                {
+                  "name": "min",
+                  "value": "1"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "default": {
+            "annotation": [],
+            "locator": "16:44",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Literal",
+            "value": "3",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "locator": "16:1-16:44",
+          "name": "Lookback count",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "locator": "16:28-16:34",
+            "name": "{urn:hl7-org:elm-types:r1}Integer",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "NamedTypeSpecifier"
+          },
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "t": [
+                {
+                  "name": "description",
+                  "value": "Synthetic statement with a documentation tag"
+                }
+              ],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "locator": "22:3-22:22",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "22:3-22:18",
+                "name": "Lookback count",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "locator": "22:22",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "21:1-22:22",
+          "name": "Tagged statement",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "3:1-3:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}
