@@ -644,8 +644,13 @@ func astTypeSpecWith(ts ast.TypeSpecifier, resolve func(string) string) typeSpec
 			return namedTS{resolve(v.Name)}
 		case "System":
 			// Explicitly System: never subject to the model-first reading an
-			// unqualified Quantity gets. `gap System.Quantity` is System's.
-			return namedTS{resolveTypeName(v.Name)}
+			// unqualified Quantity gets. `gap System.Quantity` is System's, and
+			// so is `System.ValueSet` — which resolveTypeName does not list, so
+			// it used to fall through to the primary model as FHIR.ValueSet.
+			if r := resolveTypeName(v.Name); strings.HasPrefix(r, "{") {
+				return namedTS{r}
+			}
+			return namedTS{typesystem.SystemELMName + v.Name}
 		}
 		return namedTS{v.Qualifier + "." + v.Name}
 	case *ast.ListTypeSpecifier:
@@ -790,6 +795,8 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "ToList":
 			// ToList(scalar) → List<typeof(scalar)>
 			return listTS{t.inferTypeSpec(v.Operand)}
+		case "ExpandValueSet":
+			return listTS{namedTS{typesystem.TypeCode}}
 		case "Negate", "Abs", "Successor", "Predecessor":
 			// These preserve the operand type.
 			return t.inferTypeSpec(v.Operand)

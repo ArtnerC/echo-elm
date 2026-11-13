@@ -1070,6 +1070,11 @@ func (t *Translator) translateExpr(expr ast.Expr) elm.Expression {
 		t.skipLocatorStamp, t.skipResultTypeStamp = false, false
 		return result
 	}
+	if th, ok := expr.(*ast.ThisExpr); ok && th.Implicit {
+		// A $this the translator supplied has no source of its own.
+		t.skipLocatorStamp, t.skipResultTypeStamp = false, false
+		return result
+	}
 	if expr != nil && t.opts.EnableLocators && !t.skipLocatorStamp {
 		setLocator(result, locatorStr(expr.Loc()))
 	}
@@ -1269,7 +1274,12 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			// access: `sort by start of period` takes the Start of
 			// ToInterval(period), not of the FHIR Period. The conversion is
 			// synthesized; the identifier keeps the locator. (issues/07)
-			if fhirFunc, fhirType := t.sortFieldCoercion(v.Name); fhirFunc != "" {
+			// noCoerce, not t.noFHIRCoerce: translateExprCore has already moved
+			// the flag into noCoerce and cleared it. Reading the field meant an
+			// unconsumed identifier — the source of `created.value`, or the
+			// argument of an explicit FHIRHelpers.ToDateTime(created) — was
+			// converted anyway, the latter twice. (issues/08 W13)
+			if fhirFunc, fhirType := t.sortFieldCoercion(v.Name, noCoerce); fhirFunc != "" {
 				if t.opts.EnableLocators {
 					setLocator(ref, locatorStr(v.Loc()))
 					t.skipLocatorStamp = true
@@ -1665,6 +1675,11 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			// Expand age functions (AgeInYears, AgeInYearsAt, etc.) to CalculateAge/CalculateAgeAt.
 			if expanded := t.expandAgeFunction(ann, sig, v.Name, v.Operands); expanded != nil {
 				return expanded
+			}
+			if t.localFuncCounts[v.Name] == 0 {
+				if calc := t.calculateAgeCall(ann, v.Name, v.Operands); calc != nil {
+					return calc
+				}
 			}
 		}
 		declared := t.localFuncOperands[v.Name]
@@ -2450,6 +2465,23 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 	} else {
 		lhs = t.translateExpr(v.Left)
 		rhs = t.translateExpr(v.Right)
+	}
+
+	// Membership in a value set given as an expression — an operand or
+	// parameter typed System.ValueSet — is InValueSet with a valuesetExpression,
+	// not list In. The value set is not a list; In over it asked a different
+	// question. (issues/08 W5)
+	if v.Op == "In" && namedName(t.inferTypeSpec(rhs)) == typesystem.TypeValueSet {
+		sig := t.cqfEmptyArrayField()
+		if lvl := t.opts.SignatureLevel; lvl != "" && lvl != "None" {
+			sig = t.buildInferredSig([]elm.Expression{lhs, rhs})
+		}
+		return &elm.InValueSetNode{
+			Annotation:         t.cqfAnnotation(),
+			Signature:          sig,
+			Code:               t.convertFHIRCode(lhs),
+			ValuesetExpression: rhs,
+		}
 	}
 
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)

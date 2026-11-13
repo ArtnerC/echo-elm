@@ -386,7 +386,13 @@ type LetRef struct {
 }
 
 // ThisExpr: $this — the current iteration element
-type ThisExpr struct{ baseExpr }
+type ThisExpr struct {
+	baseExpr
+	// Implicit marks a $this supplied by the translator rather than written:
+	// the receiver of a receiverless fluent call in a sort item. CQF records no
+	// locator or result type on it.
+	Implicit bool
+}
 
 // IndexExpr: $index — the current iteration index
 type IndexExpr struct{ baseExpr }

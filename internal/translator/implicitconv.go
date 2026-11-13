@@ -417,6 +417,14 @@ func (t *Translator) convertOperatorOperands(n *elm.OperatorExpressionNode) {
 	case "Union", "Intersect", "Except":
 		if len(ops) == 2 {
 			for i := range ops {
+				// A value set where a list is required is its expansion: the
+				// implicit ValueSet → List<Code> conversion CQF writes as
+				// ExpandValueSet. Without it the union was of two value sets,
+				// which is not an operation on lists at all. (issues/08 W6)
+				if namedName(t.typeOf(ops[i])) == typesystem.TypeValueSet {
+					set(i, t.expandValueSet(ops[i]))
+					continue
+				}
 				if isBareNull(ops[i]) {
 					if other := t.typeOf(ops[1-i]); isCollection(other) {
 						set(i, t.castNull(ops[i], other))
@@ -954,4 +962,15 @@ func sameExprs(a, b []elm.Expression) bool {
 		}
 	}
 	return true
+}
+
+// expandValueSet wraps a value set in the ExpandValueSet CQF inserts when a
+// value set is used as a list of codes. The node is synthesized: no locator.
+func (t *Translator) expandValueSet(vs elm.Expression) elm.Expression {
+	return t.markConverted(&elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig("ExpandValueSet", []elm.Expression{vs}),
+		Operator:   "ExpandValueSet",
+		Operand:    vs,
+	})
 }

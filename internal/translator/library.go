@@ -282,6 +282,12 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 			continue
 		}
 		ast.Walk(s.Expression, func(n ast.Node) {
+			// Walk is pre-order, so a sort item's calls are rewritten here, on
+			// the query, before the walk reaches them below.
+			if q, isQuery := n.(*ast.QueryExpression); isQuery {
+				t.bindSortReceivers(q)
+				return
+			}
 			fr, isCall := n.(*ast.FunctionRef)
 			if !isCall || fr.LibraryName != "" || len(fr.Operands) == 0 {
 				return
@@ -432,4 +438,55 @@ func functionCounts(lib *ast.Library) map[string]int {
 		}
 	}
 	return counts
+}
+
+// bindSortReceivers gives a receiverless fluent call in a sort item the sort
+// element as its receiver: in `sort by start of "Effective interval"()` the
+// call is "Effective interval"($this). CQF resolves it so; left alone it was a
+// call with no operand and no library, naming a function that takes one.
+// (issues/08 W2)
+//
+// Only when the call cannot resolve as written: no declaration of that name
+// takes the given number of arguments, and a fluent one takes exactly one more.
+func (t *Translator) bindSortReceivers(q *ast.QueryExpression) {
+	if q.Sort == nil {
+		return
+	}
+	for _, item := range q.Sort.Items {
+		if item == nil || item.Expression == nil {
+			continue
+		}
+		ast.Walk(item.Expression, func(n ast.Node) {
+			fr, isCall := n.(*ast.FunctionRef)
+			if !isCall || fr.LibraryName != "" {
+				return
+			}
+			if t.declaresArity(fr.Name, len(fr.Operands), false) || !t.declaresArity(fr.Name, len(fr.Operands)+1, true) {
+				return
+			}
+			fr.Operands = append([]ast.Expr{&ast.ThisExpr{Implicit: true}}, fr.Operands...)
+		})
+	}
+}
+
+// declaresArity reports a declaration of name — in this library or an include —
+// taking n operands; with fluentOnly, a fluent one.
+func (t *Translator) declaresArity(name string, n int, fluentOnly bool) bool {
+	match := func(ovs []*funcOverload) bool {
+		for _, ov := range ovs {
+			if len(ov.operands) == n && (!fluentOnly || ov.fluent) {
+				return true
+			}
+		}
+		return false
+	}
+	if match(t.localOverloads[name]) {
+		return true
+	}
+	for _, byName := range t.libOverloads {
+		if match(byName[name]) {
+			return true
+		}
+	}
+	return false
 }

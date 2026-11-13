@@ -338,6 +338,16 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 						if fts, found := tt.field(item.Path); found {
 							item.ResultTypeName, item.ResultTypeSpecifier = resultTypeOf(fts)
 						}
+					} else if local := fhirLocalTypeName(t.sortElementTS); local != "" {
+						// A field of a FHIR element: its FHIR type, unconverted —
+						// ByColumn sorts by the element's own value. (issues/08 M2)
+						if fhirType, found := typesystem.FHIRPropertyTypeOf(local, item.Path); found {
+							var fts typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+							if typesystem.IsFHIRListPropertyOf(local, item.Path) {
+								fts = listTS{fts}
+							}
+							item.ResultTypeName, item.ResultTypeSpecifier = resultTypeOf(fts)
+						}
 					}
 				}
 			}

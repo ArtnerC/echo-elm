@@ -527,7 +527,10 @@ type InValueSetNode struct {
 	ResultTypeSpecifier TypeSpecifier    `json:"resultTypeSpecifier,omitempty"`
 	Signature           json.RawMessage  `json:"signature,omitempty"`
 	Code                Expression       `json:"code"`
-	ValueSet            *ValueSetRefNode `json:"valueset"`
+	ValueSet            *ValueSetRefNode `json:"valueset,omitempty"`
+	// ValuesetExpression is the value set when it is an expression rather than
+	// a reference to a declared value set — e.g. an operand typed System.ValueSet.
+	ValuesetExpression Expression `json:"valuesetExpression,omitempty"`
 }
 
 func (*InValueSetNode) isExpression() {}
@@ -539,7 +542,7 @@ func (n *InValueSetNode) MarshalJSON() ([]byte, error) {
 	type alias InValueSetNode
 	return marshalWithType("InValueSet", struct {
 		*alias
-		ValueSet *vsAlias `json:"valueset"`
+		ValueSet *vsAlias `json:"valueset,omitempty"`
 	}{
 		alias:    (*alias)(n),
 		ValueSet: (*vsAlias)(n.ValueSet),

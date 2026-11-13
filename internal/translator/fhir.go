@@ -548,8 +548,8 @@ func (t *Translator) liftFHIRListOperand(op string, src elm.Expression) (elm.Exp
 
 // sortFieldCoercion returns the FHIRHelpers conversion for a sort-by identifier
 // naming a field of a FHIR-typed query element, and that field's FHIR type.
-func (t *Translator) sortFieldCoercion(name string) (fn, fhirType string) {
-	if t.fhirHelpersLocalName == "" || t.noFHIRCoerce {
+func (t *Translator) sortFieldCoercion(name string, noCoerce bool) (fn, fhirType string) {
+	if t.fhirHelpersLocalName == "" || noCoerce {
 		return "", ""
 	}
 	local := fhirLocalTypeName(t.sortElementTS)
@@ -603,4 +603,72 @@ func fhirDerivesFrom(sub, super string) bool {
 		sub = typesystem.FHIRBaseType[sub]
 	}
 	return false
+}
+
+// calculateAgePrecisions maps the precision word in CalculateAgeIn<P>[At].
+var calculateAgePrecisions = map[string]string{
+	"Years": "Year", "Months": "Month", "Weeks": "Week", "Days": "Day",
+	"Hours": "Hour", "Minutes": "Minute", "Seconds": "Second",
+}
+
+// calculateAgeCall maps the explicit-birth-date age functions to their system
+// operators: CalculateAgeIn<P>At(birthDate, asOf) is CalculateAgeAt{precision P},
+// and CalculateAgeIn<P>(birthDate) is CalculateAge{precision P}. Left as calls
+// they named a library function that does not exist, with no libraryName, which
+// no engine can evaluate. (issues/08 W7)
+//
+// Unlike AgeInYearsAt, the birth date is an argument here, so it is translated
+// as written — and, being consumed, converted like any FHIR value would be.
+func (t *Translator) calculateAgeCall(ann json.RawMessage, name string, args []ast.Expr) elm.Expression {
+	rest, ok := strings.CutPrefix(name, "CalculateAgeIn")
+	if !ok {
+		return nil
+	}
+	word, isAt := strings.CutSuffix(rest, "At")
+	precision, ok := calculateAgePrecisions[word]
+	if !ok {
+		return nil
+	}
+	switch {
+	case isAt && len(args) == 2:
+		ops := []elm.Expression{t.translateExpr(args[0]), t.translateExpr(args[1])}
+		return &elm.PrecisionOperatorNode{
+			Annotation: ann,
+			Signature:  t.computeSig("CalculateAgeAt", ops),
+			Operator:   "CalculateAgeAt",
+			Precision:  precision,
+			Operand:    ops,
+		}
+	case !isAt && len(args) == 1:
+		op := t.translateExpr(args[0])
+		return &elm.CalculateAgeNode{
+			Annotation: ann,
+			Signature:  t.computeSig("CalculateAge", []elm.Expression{op}),
+			Precision:  precision,
+			Operand:    op,
+		}
+	}
+	return nil
+}
+
+// convertFHIRCode converts an already-translated FHIR value used as the code of
+// a membership test — a Coding to ToCode, a CodeableConcept to ToConcept. The
+// call is synthesized, so it carries no locator or result type of its own.
+// A value that is not a convertible FHIR type is returned as it is.
+func (t *Translator) convertFHIRCode(e elm.Expression) elm.Expression {
+	if t.fhirHelpersLocalName == "" {
+		return e
+	}
+	local := fhirLocalTypeName(t.inferTypeSpec(e))
+	fn := typesystem.FHIRCoercionFor(local)
+	if local == "" || fn == "" {
+		return e
+	}
+	return t.markConverted(&elm.FunctionRefNode{
+		Annotation:  t.cqfAnnotation(),
+		Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + local}}),
+		Name:        fn,
+		LibraryName: t.fhirHelpersLocalName,
+		Operand:     []elm.Expression{e},
+	})
 }
