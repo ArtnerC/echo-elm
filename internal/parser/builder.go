@@ -156,6 +156,9 @@ func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 
 	if ld := lc.LibraryDefinition(); ld != nil {
 		lib.Name = b.buildVersionedIdentifier(ld)
+		if tok := ld.GetStart(); tok != nil {
+			lib.Annotations = b.extractAnnotations(tok.GetTokenIndex())
+		}
 	}
 
 	// Header-level definitions (using, include, codesystem, valueset, code, concept, parameter)
@@ -411,6 +414,9 @@ func (b *astBuilder) buildParameter(ctx cqlparser.IParameterDefinitionContext) *
 		pd.Default = b.buildExpr(defaultExpr)
 	}
 	pd.SetLoc(intervalFromCtx(pdc))
+	if tok := pdc.GetStart(); tok != nil {
+		pd.Annotations = b.extractAnnotations(tok.GetTokenIndex())
+	}
 	return pd
 }
 
@@ -480,6 +486,7 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 
 	lines := strings.SplitSeq(inner, "\n")
 	for line := range lines {
+		line = strings.TrimSuffix(line, "\r")
 		// Detect start of a new @tag on this line.
 		trimmed := strings.TrimSpace(line)
 		atIdx := strings.Index(trimmed, "@")
@@ -492,8 +499,11 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 				})
 				currentValue.Reset()
 			}
-			// Parse "@name: value" or "@name value".
-			rest := trimmed[atIdx+1:]
+			// Parse "@name: value" or "@name value". The value keeps its trailing
+			// spaces: in a value that continues onto the next line they are part
+			// of the text CQF records.
+			leftTrimmed := strings.TrimLeft(line, " \t")
+			rest := leftTrimmed[strings.Index(leftTrimmed, "@")+1:]
 			colonIdx := strings.Index(rest, ":")
 			spaceIdx := strings.IndexByte(rest, ' ')
 			var nameEnd int
@@ -539,14 +549,16 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 				currentValue.WriteString(line)
 			}
 		} else {
-			// Non-hash continuation: strip leading "* " block-comment decoration and append.
-			// CQF collects multi-line tag values when subsequent lines don't start a new @tag.
-			cont := trimmed
-			// Strip leading asterisk decoration: "* text" → "text", "*" → ""
-			if strings.HasPrefix(cont, "*") {
-				cont = strings.TrimLeft(cont[1:], " \t")
+			// Non-hash continuation. CQF strips a leading "*" decoration and
+			// the spaces around it, and otherwise keeps the line as written:
+			// FHIRHelpers' @description continues with " data types and CQL…",
+			// leading space included. Trimming every line changed the value.
+			// (issues/08 #15)
+			cont := line
+			if strings.HasPrefix(trimmed, "*") {
+				cont = strings.TrimLeft(trimmed[1:], " \t*")
 			}
-			if cont != "" {
+			if strings.TrimSpace(cont) != "" {
 				currentValue.WriteByte('\n')
 				currentValue.WriteString(cont)
 			}
@@ -621,6 +633,8 @@ func (b *astBuilder) buildFunctionDef(ctx cqlparser.IFunctionDefinitionContext) 
 		spec := b.buildTypeSpecifier(ts)
 		ed.ReturnType = &spec
 	}
+	// The grammar's only alternative to a body is the `external` keyword.
+	ed.IsExternal = fdc.FunctionBody() == nil
 	if fb := fdc.FunctionBody(); fb != nil {
 		if expr := fb.(*cqlparser.FunctionBodyContext).Expression(); expr != nil {
 			ed.Expression = b.buildExpr(expr)

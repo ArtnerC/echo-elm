@@ -262,6 +262,7 @@ type StatementDef struct {
 	AccessLevel         string          `json:"accessLevel,omitempty"`
 	IsFunction          bool            `json:"-"`
 	IsFluent            bool            `json:"fluent,omitempty"`
+	External            bool            `json:"external,omitempty"`
 	Operand             []*OperandDef   `json:"operand,omitempty"`
 	ResultTypeName      string          `json:"resultTypeName,omitempty"`
 	ResultTypeSpecifier TypeSpecifier   `json:"resultTypeSpecifier,omitempty"`

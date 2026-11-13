@@ -116,7 +116,11 @@ func (t *Translator) translateTypeSpecifier(ts ast.TypeSpecifier) elm.TypeSpecif
 		// resolveTypeName only maps System names, so an alias-qualified
 		// `FHIR.Encounter` or a bare `Encounter` would otherwise reach the ELM
 		// as written and give one type two more spellings.
-		name = t.qualifyTypeName(resolveTypeName(name))
+		if v.Qualifier == "" {
+			name = t.qualifyTypeName(t.resolveUnqualifiedTypeName(name))
+		} else {
+			name = t.qualifyTypeName(resolveTypeName(name))
+		}
 		nts := &elm.NamedTypeSpecifier{Annotation: ann, Name: name}
 		if t.opts.EnableLocators {
 			nts.Locator = locatorStr(v.Loc())
@@ -238,6 +242,21 @@ func knownTS(ts typeSpec) typeSpec {
 }
 
 // resolveTypeName maps a bare CQL type name to its ELM-qualified form.
+// resolveUnqualifiedTypeName resolves a type name written without a model
+// qualifier. A name the library's FHIR model defines resolves there before the
+// System model: with `using FHIR`, CQF reads an unqualified Quantity or Ratio as
+// FHIR.Quantity / FHIR.Ratio, and only `System.Quantity` names the System type.
+// echo-elm read both as System, which is why FHIRHelpers' ToValue choice lost
+// two alternatives. They are the only names the two models share. (issues/08 #15)
+func (t *Translator) resolveUnqualifiedTypeName(name string) string {
+	if dataNamespaceForModelURI(t.primaryModelName, t.primaryModelURI) == "http://hl7.org/fhir" {
+		if _, isFHIR := typesystem.FHIRBaseType[name]; isFHIR {
+			return "{http://hl7.org/fhir}" + name
+		}
+	}
+	return resolveTypeName(name)
+}
+
 func resolveTypeName(name string) string {
 	switch name {
 	case "Boolean":

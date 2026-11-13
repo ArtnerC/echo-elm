@@ -3,6 +3,8 @@ package translator
 import (
 	"strings"
 
+	"github.com/artnerc/echo-elm/internal/ast"
+
 	"github.com/artnerc/echo-elm/internal/typesystem"
 )
 
@@ -187,4 +189,62 @@ func fhirPrimitiveSystemType(local string) string {
 		return sys
 	}
 	return typesystem.SystemELMName + sys
+}
+
+// localFunctionFits reports whether a function this library defines under name
+// accepts the arguments' FHIR types. Only FHIR-typed arguments are considered:
+// that is where a local definition and a System operator of the same name part
+// ways, since System operators take no FHIR model types.
+func (t *Translator) localFunctionFits(name string, args []ast.Expr) bool {
+	if t.localFuncCounts[name] == 0 {
+		return false
+	}
+	types := make([]typeSpec, len(args))
+	for i, a := range args {
+		types[i] = t.astFHIRArgType(a)
+		if types[i] == nil {
+			return false
+		}
+	}
+	return selectOverload(t.localOverloads[name], types) != nil
+}
+
+// astFHIRArgType is the FHIR model type of an untranslated argument, when it can
+// be read off the syntax: a FHIR property, a typed function operand, or a query
+// alias. Nil otherwise.
+func (t *Translator) astFHIRArgType(e ast.Expr) typeSpec {
+	switch v := e.(type) {
+	case *ast.PropertyExpr:
+		typ := t.resolveFHIRPropertyType(v.Source, v.Path)
+		if typ == "" {
+			return nil
+		}
+		var ts typeSpec = namedTS{"{http://hl7.org/fhir}" + typ}
+		if src := t.resolveFHIRSourceType(v.Source); src != "" && typesystem.IsFHIRListPropertyOf(src, v.Path) {
+			ts = listTS{ts}
+		}
+		return ts
+	case *ast.IdentifierRef:
+		if t.functionParamScope[v.Name] {
+			if fhirLocalTypeName(t.operandTypeSpecs[v.Name]) != "" {
+				return t.operandTypeSpecs[v.Name]
+			}
+			return nil
+		}
+		if typ := t.resolveFHIRSourceType(v); typ != "" {
+			return namedTS{"{http://hl7.org/fhir}" + typ}
+		}
+	case *ast.AliasRef:
+		if typ := t.resolveFHIRSourceType(v); typ != "" {
+			return namedTS{"{http://hl7.org/fhir}" + typ}
+		}
+	case *ast.TypeAsExpr:
+		// `value as Quantity` has exactly the type it names.
+		if v.TypeSpec != nil {
+			if ts := t.declaredTypeSpec(v.TypeSpec); fhirLocalTypeName(ts) != "" {
+				return ts
+			}
+		}
+	}
+	return nil
 }

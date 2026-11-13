@@ -553,6 +553,23 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			out.Annotation = append(out.Annotation, json.RawMessage(b))
 		}
 	}
+	// Tags in the block comment before `library` (FHIRHelpers' @author and
+	// @description) annotate the library itself. (issues/08 #15)
+	if tagged := t.withTags(nil, lib.Annotations); tagged != nil {
+		if len(out.Annotation) > 1 {
+			if merged := t.withTags(json.RawMessage("["+string(out.Annotation[len(out.Annotation)-1])+"]"), lib.Annotations); merged != nil {
+				var one []json.RawMessage
+				if json.Unmarshal(merged, &one) == nil && len(one) == 1 {
+					out.Annotation[len(out.Annotation)-1] = one[0]
+				}
+			}
+		} else {
+			var entries []json.RawMessage
+			if json.Unmarshal(tagged, &entries) == nil {
+				out.Annotation = append(out.Annotation, entries...)
+			}
+		}
+	}
 
 	// Usings: always add implicit System first
 	usings := &elm.UsingDefs{}
@@ -720,7 +737,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				LocalID:     t.defID(),
 				Name:        p.Name,
 				AccessLevel: accessLevelStr(p.AccessLevel),
-				Annotation:  t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(p.Loc())),
+				Annotation:  t.withTags(t.mergeAnnotations(t.cqfAnnotation(), t.srcAnnotationJSON(p.Loc())), p.Annotations),
 			}
 			if t.opts.EnableLocators {
 				pd.Locator = locatorStr(p.Loc())
@@ -835,7 +852,13 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			// under --result-types. A declared `returns` clause does not by itself
 			// put the type in the ELM.
 			if s.ReturnType != nil && t.opts.EnableResultTypes {
-				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(t.declaredTypeSpec(*s.ReturnType))
+				declared := t.declaredTypeSpec(*s.ReturnType)
+				sd.ResultTypeName, sd.ResultTypeSpecifier = resultTypeOf(declared)
+				// resultTypeOf treats Any as "unresolved", but a declared
+				// `returns Any` is resolved — to Any — and CQF records it.
+				if sd.ResultTypeName == "" && sd.ResultTypeSpecifier == nil && isAnyTS(declared) {
+					sd.ResultTypeName = typesystem.TypeAny
+				}
 			}
 			// Build function parameter scope before translating the body,
 			// so IdentifierRef nodes matching operand names emit OperandRef.
@@ -864,9 +887,15 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				}
 				sd.Operand = append(sd.Operand, opd)
 			}
-			if s.Expression != nil {
+			switch {
+			case s.IsExternal:
+				// An external function has no body to translate. Emitting a Null
+				// expression in its place gave an engine something to evaluate —
+				// null — instead of the call it must make. (issues/08 W12)
+				sd.External = true
+			case s.Expression != nil:
 				sd.Expression = t.translateExprUnconsumed(s.Expression)
-			} else {
+			default:
 				sd.Expression = &elm.NullNode{Annotation: t.cqfAnnotation()}
 			}
 			// A declared `returns` type wins; otherwise the definition's type is
@@ -1075,6 +1104,9 @@ func isDefinitelyAny(e elm.Expression) bool {
 	switch v := e.(type) {
 	case *elm.NullNode:
 		return true
+	case *elm.NamedOperatorExpressionNode:
+		// Message returns the type of its source, so a null source makes it Any.
+		return isDefinitelyAnyBranch(v)
 	case *elm.OperatorExpressionNode:
 		if len(v.Operand) == 0 {
 			return false
@@ -1422,8 +1454,13 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 					Operator:   v.Name,
 				}
 			}
-			// Map unary system operators to UnaryExpressionNode.
-			if unarySystemOps[v.Name] && len(v.Operands) == 1 {
+			// Map unary system operators to UnaryExpressionNode — unless this
+			// library defines a function of the same name that fits the argument.
+			// FHIRHelpers calls its own ToQuantity(FHIR.Quantity) on Range.low;
+			// the System ToQuantity takes no FHIR type, so CQF resolves to the
+			// local function and emitting the operator was a different call.
+			// (issues/08 #15)
+			if unarySystemOps[v.Name] && len(v.Operands) == 1 && !t.localFunctionFits(v.Name, v.Operands) {
 				operand := t.translateExpr(v.Operands[0])
 				return &elm.UnaryExpressionNode{
 					Annotation: ann,
@@ -1850,8 +1887,15 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		elseExpr := t.translateExpr(v.Else)
 		branchType := t.caseBranchType(v, thens, elseExpr)
+		if unified := t.unifyCaseBranches(thens, elseExpr); unified != nil {
+			// Branches of different types: CQF types the case as a Choice of them
+			// and casts each branch to it. (issues/08 #15, FHIRHelpers.ToValue)
+			branchType = unified
+		}
 		if _, isNull := v.Else.(*ast.NullLiteral); isNull && branchType != nil {
 			elseExpr = t.castNullTo(elseExpr, branchType)
+		} else {
+			elseExpr = t.castCaseBranch(elseExpr, branchType)
 		}
 		cn := &elm.CaseNode{Annotation: ann, Else: elseExpr}
 		if v.Comparand != nil {
@@ -1861,6 +1905,8 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			thenExpr := thens[i]
 			if _, isNull := item.Then.(*ast.NullLiteral); isNull && branchType != nil {
 				thenExpr = t.castNullTo(thenExpr, branchType)
+			} else {
+				thenExpr = t.castCaseBranch(thenExpr, branchType)
 			}
 			ci := &elm.CaseItem{
 				Annotation: t.cqfAnnotation(),
@@ -1992,7 +2038,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		// Any. Stamping the bound type on the Null as well is the mismatch
 		// issues/06 4.1 reported.
 		if _, isNull := low.(*elm.NullNode); isNull {
-			if bndType := t.inferBoundType(v.High); bndType != "" {
+			if bndType := t.boundTypeName(v.High, high); bndType != "" {
 				if t.opts.EnableResultTypes {
 					elm.SetResultType(low, typesystem.TypeAny, nil)
 				}
@@ -2005,7 +2051,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			}
 		}
 		if _, isNull := high.(*elm.NullNode); isNull {
-			if bndType := t.inferBoundType(v.Low); bndType != "" {
+			if bndType := t.boundTypeName(v.Low, low); bndType != "" {
 				if t.opts.EnableResultTypes {
 					elm.SetResultType(high, typesystem.TypeAny, nil)
 				}
@@ -2764,6 +2810,138 @@ func (t *Translator) caseBranchType(v *ast.CaseExpr, thens []elm.Expression, els
 		return knownTS(t.inferTypeSpec(elseExpr))
 	}
 	return nil
+}
+
+// boundTypeName is the named type a null interval bound is cast to: the type of
+// the other bound. The translated bound is asked first, since the syntactic
+// probe only recognises literals and so missed a function call such as
+// FHIRHelpers' Interval[null, ToQuantityIgnoringComparator(quantity)).
+// (issues/08 #15)
+func (t *Translator) boundTypeName(other ast.Expr, translated elm.Expression) string {
+	if n, ok := knownTS(t.inferTypeSpec(translated)).(namedTS); ok {
+		return n.name
+	}
+	return t.inferBoundType(other)
+}
+
+// unifyCaseBranches returns the Choice CQF types a case as when its non-null
+// branches have incompatible types, or nil when they unify to a single type (or
+// too little is known to say).
+//
+// It follows CQF's accumulation: the result starts as the first branch's type,
+// and each later branch either fits it (equal, a FHIR subtype, or implicitly
+// convertible to it), widens it (the result converts to the branch), or — when
+// neither — turns it into a Choice. Once the result is a Choice, a new type that
+// is not already an alternative simply joins it, which is why FHIRHelpers'
+// ToValue carries both Integer and Decimal. Alternatives sort as CQF orders them.
+func (t *Translator) unifyCaseBranches(thens []elm.Expression, elseExpr elm.Expression) typeSpec {
+	var result typeSpec
+	for _, e := range append(append([]elm.Expression{}, thens...), elseExpr) {
+		if e == nil || isNullLike(e) || isDefinitelyAnyBranch(e) {
+			continue
+		}
+		ts := knownTS(t.inferTypeSpec(e))
+		if ts == nil {
+			continue
+		}
+		result = accumulateCaseType(result, ts)
+	}
+	c, ok := result.(choiceTS)
+	if !ok {
+		return nil
+	}
+	sortChoiceTS(c.alts)
+	return c
+}
+
+// accumulateCaseType folds one more branch type into a case's result type.
+func accumulateCaseType(result, ts typeSpec) typeSpec {
+	if result == nil {
+		return ts
+	}
+	if c, ok := result.(choiceTS); ok {
+		for _, a := range c.alts {
+			if typeSpecEqual(a, ts) || fhirSubtypeTS(ts, a) {
+				return c
+			}
+		}
+		if tc, ok := ts.(choiceTS); ok {
+			for _, a := range tc.alts {
+				c = accumulateCaseType(c, a).(choiceTS)
+			}
+			return c
+		}
+		return choiceTS{alts: append(append([]typeSpec{}, c.alts...), ts)}
+	}
+	switch {
+	case typeSpecEqual(result, ts), fhirSubtypeTS(ts, result), implicitlyConvertible(ts, result):
+		return result
+	case fhirSubtypeTS(result, ts), implicitlyConvertible(result, ts):
+		return ts
+	}
+	if tc, ok := ts.(choiceTS); ok {
+		return accumulateCaseType(choiceTS{alts: []typeSpec{result}}, tc)
+	}
+	return choiceTS{alts: []typeSpec{result, ts}}
+}
+
+// fhirSubtypeTS reports a FHIR named type deriving from another.
+func fhirSubtypeTS(sub, super typeSpec) bool {
+	sl, pl := fhirLocalTypeName(sub), fhirLocalTypeName(super)
+	return sl != "" && pl != "" && sl != pl && fhirDerivesFrom(sl, pl)
+}
+
+// castCaseBranch casts a non-null case branch to the case's result type when it
+// is not already of that type: a branch of one alternative of a Choice result,
+// or a branch that is definitely Any, such as Message over a null source. A
+// branch whose type is merely unknown to echo-elm is left alone — casting it
+// would add an As that CQF, which does know the type, does not emit.
+func (t *Translator) castCaseBranch(e elm.Expression, result typeSpec) elm.Expression {
+	if e == nil || result == nil {
+		return e
+	}
+	if rc, isChoice := result.(choiceTS); isChoice {
+		ts := t.inferTypeSpec(e)
+		if ts == nil || typeSpecEqual(ts, result) || choiceWithin(ts, rc) {
+			return e
+		}
+		return t.castNullTo(e, result)
+	}
+	if isDefinitelyAnyBranch(e) {
+		return t.castNullTo(e, result)
+	}
+	return e
+}
+
+// choiceWithin reports a choice type all of whose alternatives are alternatives
+// of within: a subtype of it, which CQF does not cast. A single type is not a
+// choice and is cast, even when it is one of the alternatives.
+func choiceWithin(ts typeSpec, within choiceTS) bool {
+	c, ok := ts.(choiceTS)
+	if !ok {
+		return false
+	}
+	for _, a := range c.alts {
+		found := false
+		for _, w := range within.alts {
+			if typeSpecEqual(a, w) {
+				found = true
+				break
+			}
+		}
+		if !found {
+			return false
+		}
+	}
+	return true
+}
+
+// isDefinitelyAnyBranch is a non-null expression whose type is Any by
+// construction: Message returns the type of its source, and a null source makes
+// that Any.
+func isDefinitelyAnyBranch(e elm.Expression) bool {
+	n, ok := e.(*elm.NamedOperatorExpressionNode)
+	return ok && n.Operator == "Message" && isNullLike(namedOperand(n, "source"))
 }
 
 // castNullOperand wraps a bare null operand of a same-type binary operator in

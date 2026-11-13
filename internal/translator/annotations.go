@@ -325,3 +325,62 @@ func (t *Translator) buildStatementAnnotation(s *ast.ExpressionDefinition) json.
 	}
 	return json.RawMessage(b)
 }
+
+// withTags adds @tag data to an annotation list, as CQF does for statements:
+// into the existing Annotation entry when there is one (alongside its s-tree),
+// otherwise as a new entry of its own. Tags are emitted with or without
+// --annotations, but not below compatibility level 1.5. Returns raw unchanged
+// when there are no tags to add.
+//
+// Statements already did this; parameters and the library header did not, so
+// their documentation tags never reached the ELM. (issues/08 M1, #15)
+func (t *Translator) withTags(raw json.RawMessage, anns []ast.CQLAnnotation) json.RawMessage {
+	if compat := t.opts.CompatibilityLevel; compat != "" && compat < "1.5" {
+		return raw
+	}
+	type tagJSON struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	}
+	var tags []tagJSON
+	for _, ann := range anns {
+		for _, tag := range ann.Tags {
+			if isStandardAnnotationTag(tag.Name) {
+				tags = append(tags, tagJSON{Name: tag.Name, Value: tag.Value})
+			}
+		}
+	}
+	if len(tags) == 0 {
+		return raw
+	}
+	tagBytes, err := json.Marshal(tags)
+	if err != nil {
+		return raw
+	}
+
+	var entries []map[string]json.RawMessage
+	if len(raw) > 0 {
+		if err := json.Unmarshal(raw, &entries); err != nil {
+			return raw
+		}
+	}
+	placed := false
+	for _, e := range entries {
+		if string(e["type"]) == `"Annotation"` {
+			e["t"] = tagBytes
+			placed = true
+			break
+		}
+	}
+	if !placed {
+		entries = append(entries, map[string]json.RawMessage{
+			"t":    tagBytes,
+			"type": json.RawMessage(`"Annotation"`),
+		})
+	}
+	out, err := json.Marshal(entries)
+	if err != nil {
+		return raw
+	}
+	return out
+}

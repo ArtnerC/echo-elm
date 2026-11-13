@@ -578,7 +578,7 @@ func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
 // declared specifiers through qualifyDataType, which retrieves already use,
 // makes that one rule rather than three code paths that must agree.
 func (t *Translator) declaredTypeSpec(ts ast.TypeSpecifier) typeSpec {
-	return t.qualifyTypeSpec(astTypeSpecToTypeSpec(ts))
+	return t.qualifyTypeSpec(astTypeSpecWith(ts, t.resolveUnqualifiedTypeName))
 }
 
 // qualifyTypeSpec rewrites every model type name in a spec tree to its
@@ -623,6 +623,12 @@ func (t *Translator) qualifyTypeName(name string) string {
 }
 
 func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
+	return astTypeSpecWith(ts, resolveTypeName)
+}
+
+// astTypeSpecWith converts a type specifier, resolving unqualified names with
+// resolve. A translator passes one that knows the library's models.
+func astTypeSpecWith(ts ast.TypeSpecifier, resolve func(string) string) typeSpec {
 	if ts == nil {
 		return nil
 	}
@@ -633,18 +639,23 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 		// of damage: FHIR.Claim.Item became the nonexistent FHIR.Item, and
 		// FHIR.Quantity became System.Quantity, because the bare name matched a
 		// System type. (issues/08 W3, T1)
-		if v.Qualifier != "" && v.Qualifier != "System" {
-			return namedTS{v.Qualifier + "." + v.Name}
+		switch v.Qualifier {
+		case "":
+			return namedTS{resolve(v.Name)}
+		case "System":
+			// Explicitly System: never subject to the model-first reading an
+			// unqualified Quantity gets. `gap System.Quantity` is System's.
+			return namedTS{resolveTypeName(v.Name)}
 		}
-		return namedTS{resolveTypeName(v.Name)}
+		return namedTS{v.Qualifier + "." + v.Name}
 	case *ast.ListTypeSpecifier:
-		inner := astTypeSpecToTypeSpec(v.ElementType)
+		inner := astTypeSpecWith(v.ElementType, resolve)
 		if inner == nil {
 			inner = anyTS
 		}
 		return listTS{inner}
 	case *ast.IntervalTypeSpecifier:
-		inner := astTypeSpecToTypeSpec(v.PointType)
+		inner := astTypeSpecWith(v.PointType, resolve)
 		if inner == nil {
 			inner = anyTS
 		}
@@ -655,7 +666,7 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 		// (issues/06)
 		alts := make([]typeSpec, 0, len(v.Types))
 		for _, ct := range v.Types {
-			if a := astTypeSpecToTypeSpec(ct); a != nil {
+			if a := astTypeSpecWith(ct, resolve); a != nil {
 				alts = append(alts, a)
 			}
 		}
@@ -666,7 +677,7 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 			if el == nil {
 				continue
 			}
-			fts := astTypeSpecToTypeSpec(el.Type)
+			fts := astTypeSpecWith(el.Type, resolve)
 			if fts == nil {
 				fts = anyTS
 			}
@@ -1246,6 +1257,17 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		// List<Any>. (issues/05 Part 5 / #12)
 		if v.Path != "" {
 			if local := fhirLocalTypeName(srcTS); local != "" {
+				// `.value` on a FHIR primitive is the primitive's System value:
+				// dateTime.value is DateTime, ClaimStatus.value is String. The
+				// property table omits these elements because they are
+				// System-typed, so without this `.value` came out untyped and took
+				// every enclosing Interval and FunctionDef type down to Any.
+				// (issues/08 T1, #15)
+				if v.Path == "value" {
+					if sys := fhirPrimitiveSystemType(local); sys != "" {
+						return namedTS{sys}
+					}
+				}
 				if alts, ok := typesystem.FHIRPropertyChoiceOf(local, v.Path); ok {
 					// A choice element's type is the choice itself, with its
 					// alternatives in CQF's order: Condition.onset is

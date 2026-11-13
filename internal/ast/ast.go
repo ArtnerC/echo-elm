@@ -75,6 +75,8 @@ type Library struct {
 	Statements  []*ExpressionDefinition
 	Context     *ContextDefinition   // last declared context (backward compat)
 	Contexts    []*ContextDefinition // all declared contexts in declaration order
+	// Annotations are the @tag annotations in block comments before `library`.
+	Annotations []CQLAnnotation
 }
 
 // VersionedIdentifier holds a qualified name and optional version string.
@@ -158,6 +160,7 @@ type ParameterDefinition struct {
 	ParameterType *TypeSpecifier
 	Default       Expr
 	AccessLevel   AccessLevel
+	Annotations   []CQLAnnotation // @tag annotations in preceding block comments
 }
 
 // ContextDefinition: context Patient
@@ -188,6 +191,9 @@ type ExpressionDefinition struct {
 	Operands    []*OperandDef // non-nil when IsFunction=true
 	ReturnType  *TypeSpecifier
 	IsFluent    bool
+	// IsExternal marks `define function F(...) returns T : external` — a
+	// function implemented by the engine, which has no body at all.
+	IsExternal  bool
 	Context     string          // active context name at declaration time (empty = Unfiltered)
 	Annotations []CQLAnnotation // parsed @tag: value annotations from preceding block comments
 }
