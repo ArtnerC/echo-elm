@@ -852,7 +852,34 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return listTS{ts}
 		}
 		if len(v.Element) > 0 {
-			// Prefer the first non-null element for type inference.
+			// The element type is the common type of the non-null elements.
+			// Elements with none make the list List<Any> — CQF types both
+			// { 1, 'a' } and { {1}, {'a'} } so, rather than as a choice. Taking
+			// the first element's type called the second List<Integer>, and
+			// flattening it then skipped the cast Flatten needs. (issues/08 W15)
+			var common typeSpec
+			for _, el := range v.Element {
+				if isNullLike(el) {
+					continue
+				}
+				ts := knownTS(t.nodeResultTS(el))
+				if ts == nil {
+					continue
+				}
+				switch {
+				case common == nil, typeSpecEqual(common, ts), fhirSubtypeTS(ts, common):
+					if common == nil {
+						common = ts
+					}
+				case fhirSubtypeTS(common, ts):
+					common = ts
+				default:
+					return listTS{anyTS}
+				}
+			}
+			if common != nil {
+				return listTS{common}
+			}
 			for _, el := range v.Element {
 				if !isNullLike(el) {
 					return listTS{t.nodeResultTS(el)}

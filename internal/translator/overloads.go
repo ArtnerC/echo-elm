@@ -1,9 +1,11 @@
 package translator
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/artnerc/echo-elm/internal/ast"
+	"github.com/artnerc/echo-elm/internal/elm"
 
 	"github.com/artnerc/echo-elm/internal/typesystem"
 )
@@ -247,4 +249,44 @@ func (t *Translator) astFHIRArgType(e ast.Expr) typeSpec {
 		}
 	}
 	return nil
+}
+
+// checkFluentOnlyCall reports CQF's error for a fluent function invoked with
+// ordinary call syntax: `Claims."Claim ids"([Claim])` where "Claim ids" is
+// declared fluent. echo-elm accepted it silently. (issues/08 #8)
+//
+// Only when every declaration the call could reach is fluent; a name with a
+// non-fluent overload of the right arity resolves to that one instead.
+func (t *Translator) checkFluentOnlyCall(v *ast.FunctionRef, lib string, operands []elm.Expression) {
+	if v.Fluent {
+		return
+	}
+	var fits []*funcOverload
+	for _, ov := range t.callCandidates(lib, v.Name) {
+		if len(ov.operands) == len(operands) {
+			fits = append(fits, ov)
+		}
+	}
+	if len(fits) == 0 {
+		return
+	}
+	for _, ov := range fits {
+		if !ov.fluent {
+			return
+		}
+	}
+	types := make([]string, len(operands))
+	for i, o := range operands {
+		if ts := t.inferTypeSpec(o); ts != nil {
+			types[i] = choiceTSKey(ts)
+		} else {
+			types[i] = "System.Any"
+		}
+	}
+	t.diags = append(t.diags, Diagnostic{
+		Severity: "Error",
+		Locator:  locatorStr(v.Loc()),
+		Message: fmt.Sprintf("Operator %s with signature (%s) is a fluent function and can only be invoked with fluent syntax.",
+			v.Name, strings.Join(types, ",")),
+	})
 }

@@ -585,7 +585,7 @@ func (b *astBuilder) buildQualifiedInvocationInner(ctx cqlparser.IQualifiedInvoc
 				operands = append(operands, b.buildExpr(expr))
 			}
 		}
-		return &ast.FunctionRef{Name: name,
+		return &ast.FunctionRef{Name: name, Fluent: true,
 			Operands: append([]ast.Expr{source}, operands...)}
 
 	default:
@@ -782,9 +782,20 @@ func (b *astBuilder) buildCodeSelector(ctx cqlparser.ICodeSelectorContext) ast.E
 func (b *astBuilder) buildCodeSelectorInner(ctx cqlparser.ICodeSelectorContext) ast.Expr {
 	csc := ctx.(*cqlparser.CodeSelectorContext)
 	code := unquoteString(csc.STRING().GetText())
-	system := ""
+	system, systemLib := "", ""
+	var systemLoc ast.Interval
 	if csid := csc.CodesystemIdentifier(); csid != nil {
-		system = csid.GetText()
+		// The identifier is unquoted like any other: `from "ExampleSystem"`
+		// names the code system ExampleSystem. Taking the raw text kept the
+		// quotes in the ELM reference. (issues/08 W14)
+		c := csid.(*cqlparser.CodesystemIdentifierContext)
+		if id := c.Identifier(); id != nil {
+			system = unquoteIdentifier(id.GetText())
+		}
+		if lib := c.LibraryIdentifier(); lib != nil {
+			systemLib = unquoteIdentifier(lib.GetText())
+		}
+		systemLoc = intervalFromCtx(c)
 	}
 	display := ""
 	if dc := csc.DisplayClause(); dc != nil {
@@ -793,7 +804,7 @@ func (b *astBuilder) buildCodeSelectorInner(ctx cqlparser.ICodeSelectorContext) 
 			display = parts[1]
 		}
 	}
-	return &ast.CodeExpr{Code: code, System: system, Display: display}
+	return &ast.CodeExpr{Code: code, System: system, SystemLibrary: systemLib, SystemLoc: systemLoc, Display: display}
 }
 
 func (b *astBuilder) buildConceptSelector(ctx cqlparser.IConceptSelectorContext) ast.Expr {

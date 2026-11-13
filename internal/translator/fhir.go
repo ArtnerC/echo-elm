@@ -672,3 +672,17 @@ func (t *Translator) convertFHIRCode(e elm.Expression) elm.Expression {
 		Operand:     []elm.Expression{e},
 	})
 }
+
+// codeSystemRef is the code system reference of an inline Code selector,
+// stamped as CQF stamps it: annotation, locator and the CodeSystem type, as a
+// declared CodeDef's codeSystem already is.
+func (t *Translator) codeSystemRef(name, library string, loc ast.Interval) *elm.CodeSystemRef {
+	ref := &elm.CodeSystemRef{Annotation: t.cqfAnnotation(), Name: name, LibraryName: library}
+	if t.opts.EnableLocators {
+		ref.Locator = locatorStr(loc)
+	}
+	if t.opts.EnableResultTypes {
+		ref.ResultTypeName = typesystem.TypeCodeSystem
+	}
+	return ref
+}

@@ -296,6 +296,7 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 				if _, isLib := t.libSyms[ir.Name]; isLib || t.includeAliases[ir.Name] {
 					fr.LibraryName = ir.Name
 					fr.Operands = fr.Operands[1:]
+					fr.Fluent = false // a library qualifier, not a receiver
 					return
 				}
 			}
@@ -465,6 +466,7 @@ func (t *Translator) bindSortReceivers(q *ast.QueryExpression) {
 				return
 			}
 			fr.Operands = append([]ast.Expr{&ast.ThisExpr{Implicit: true}}, fr.Operands...)
+			fr.Fluent = true
 		})
 	}
 }

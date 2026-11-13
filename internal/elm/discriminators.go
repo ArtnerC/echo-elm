@@ -80,6 +80,7 @@ var impliedTypes = map[[2]string]string{
 	{"ExpressionDef", "operand"}:   "OperandDef",
 	{"FunctionDef", "operand"}:     "OperandDef",
 	{"CodeDef", "codeSystem"}:      "CodeSystemRef",
+	{"Code", "system"}:             "CodeSystemRef",
 	{"ConceptDef", "code"}:         "CodeRef",
 	{"ValueSetDef", "codeSystem"}:  "CodeSystemRef",
 

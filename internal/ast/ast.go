@@ -650,9 +650,13 @@ type InstanceExpr struct {
 // CodeExpr: Code 'code' from codesystemIdent [display 'text']
 type CodeExpr struct {
 	baseExpr
-	Code    string
-	System  string
-	Display string
+	Code   string
+	System string
+	// SystemLibrary is the library qualifier of the code system, if any.
+	SystemLibrary string
+	// SystemLoc is the span of the code system identifier.
+	SystemLoc Interval
+	Display   string
 }
 
 // ConceptExpr: Concept { code selectors } [display 'text']
@@ -723,6 +727,10 @@ type FunctionRef struct {
 	LibraryName string
 	Name        string
 	Operands    []Expr
+	// Fluent marks a call written with dot syntax on a receiver, `X.F()`, which
+	// the first operand then is. A library qualifier is not a receiver: once
+	// `Lib.F(x)` is recognised as library-qualified, Fluent is cleared.
+	Fluent bool
 }
 
 // ExternalFunctionRef: ExternalLib.FunctionName(args...)

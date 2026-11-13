@@ -201,15 +201,20 @@ type CodeSystemDefinitionRef struct {
 
 // CodeSystemRef is a reference to a code system by name.
 type CodeSystemRef struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID        string          `json:"localId,omitempty"`
+	Locator        string          `json:"locator,omitempty"`
+	Annotation     json.RawMessage `json:"annotation,omitempty"`
+	ResultTypeName string          `json:"resultTypeName,omitempty"`
+	Name           string          `json:"name"`
+	LibraryName    string          `json:"libraryName,omitempty"`
 }
 
+// MarshalJSON emits no "type": a CodeSystemRef only ever sits where the schema
+// declares exactly that type — a CodeDef's codeSystem, a Code's system — and the
+// cql-to-elm CLI omits a discriminator there. (issues/08 W14)
 func (r *CodeSystemRef) MarshalJSON() ([]byte, error) {
 	type alias CodeSystemRef
-	return marshalWithType("CodeSystemRef", (*alias)(r))
+	return json.Marshal((*alias)(r))
 }
 
 // ConceptDef corresponds to a `concept` declaration.

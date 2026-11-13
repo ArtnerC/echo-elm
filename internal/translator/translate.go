@@ -1721,6 +1721,20 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			}
 			lib = t.fluentLibraryByArgs(v.Name, args)
 		}
+		// A numeric argument narrower than its operand is promoted, against the
+		// overload the call resolves to — an overloaded name included.
+		if lib == "" || lib != t.fhirHelpersLocalName {
+			args := make([]typeSpec, len(operands))
+			for i, o := range operands {
+				args[i] = t.inferTypeSpec(o)
+			}
+			if ov := t.overloadForCall(lib, v.Name, args); ov != nil && len(ov.operands) == len(operands) {
+				for i := range operands {
+					operands[i] = t.promoteArgument(operands[i], ov.operands[i])
+				}
+			}
+		}
+		t.checkFluentOnlyCall(v, lib, operands)
 		t.noteOverloadedCall(lib, v.Name)
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
@@ -1870,6 +1884,9 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		thenExpr := t.translateExpr(v.ThenExpr)
 		elseExpr := t.translateExpr(v.ElseExpr)
+		branches := []elm.Expression{thenExpr, elseExpr}
+		t.promoteToCommonType(branches)
+		thenExpr, elseExpr = branches[0], branches[1]
 		// CQF types a bare-null branch with the type of the other branch. That
 		// type is read from the translated node, so calls — `else Now()` — and
 		// structured types count; the syntactic probe used before only
@@ -1901,6 +1918,10 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			thens[i] = t.translateExpr(item.Then)
 		}
 		elseExpr := t.translateExpr(v.Else)
+		all := append(append([]elm.Expression{}, thens...), elseExpr)
+		t.promoteToCommonType(all)
+		copy(thens, all[:len(thens)])
+		elseExpr = all[len(thens)]
 		branchType := t.caseBranchType(v, thens, elseExpr)
 		if unified := t.unifyCaseBranches(thens, elseExpr); unified != nil {
 			// Branches of different types: CQF types the case as a Choice of them
@@ -2232,6 +2253,10 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			}
 			ln.Element = append(ln.Element, elem)
 		}
+		if v.TypeSpec == nil {
+			// `{ 1.5, 2 }` is a List<Decimal>: its Integer is promoted.
+			t.promoteToCommonType(ln.Element)
+		}
 		if typedElemTS != nil {
 			if t.listNodeTypes == nil {
 				t.listNodeTypes = map[*elm.ListNode]typeSpec{}
@@ -2240,11 +2265,15 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		}
 		return ln
 	case *ast.TupleExpr:
+		// A tuple element imposes no type, so its value keeps its FHIR type:
+		// CQF types { id: C.id } as Tuple{id FHIR.id}. Converting it changed the
+		// tuple's type to System.String. (Instance selectors differ: their
+		// class declares each element's type.) (issues/08 W9)
 		tn := &elm.TupleNode{Annotation: ann}
 		for _, e := range v.Elements {
 			tn.Element = append(tn.Element, &elm.TupleElementNode{
 				Name:  e.Name,
-				Value: t.translateExpr(e.Expression),
+				Value: t.translateExprUnconsumed(e.Expression),
 			})
 		}
 		return tn
@@ -2272,7 +2301,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	case *ast.CodeExpr:
 		cn := &elm.CodeNode{Annotation: ann, Code: v.Code, Display: v.Display}
 		if v.System != "" {
-			cn.System = &elm.CodeSystemRef{Name: v.System}
+			cn.System = t.codeSystemRef(v.System, v.SystemLibrary, v.SystemLoc)
 		}
 		return cn
 	case *ast.ConceptExpr:
@@ -2280,7 +2309,7 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 		for _, c := range v.Codes {
 			codeNode := &elm.CodeNode{Code: c.Code, Display: c.Display}
 			if c.System != "" {
-				codeNode.System = &elm.CodeSystemRef{Name: c.System}
+				codeNode.System = t.codeSystemRef(c.System, c.SystemLibrary, c.SystemLoc)
 			}
 			cn.Code = append(cn.Code, codeNode)
 		}
@@ -2290,6 +2319,9 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 	case *ast.AggregateExpr:
 		// Distinct and Flatten are UnaryExpression in ELM (single operand object, not array).
 		operand := t.translateExpr(v.Operand)
+		if v.Op == "Flatten" {
+			operand = t.castFlattenOperand(operand)
+		}
 		return &elm.UnaryExpressionNode{
 			Annotation: ann,
 			Signature:  t.computeSig(v.Op, []elm.Expression{operand}),
