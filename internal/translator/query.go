@@ -141,7 +141,18 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 			Expression: t.translateExpr(rel.Source.Expression),
 		}
 		if rel.Source.Alias != "" {
-			if lt, ok := t.inferTypeSpec(r.Expression).(listTS); ok {
+			// A `with` over a single value ranges over just that value, as a
+			// query source does: `with ref.identifier Id` binds Id to the one
+			// Identifier. Only list-valued sources were typed, so a singleton
+			// relationship alias carried no type and nothing navigated off it
+			// was typed or converted. (issues/08 W1)
+			relTS := t.inferTypeSpec(r.Expression)
+			if known := knownTS(relTS); known != nil {
+				if _, isList := known.(listTS); !isList {
+					relTS = listTS{known}
+				}
+			}
+			if lt, ok := relTS.(listTS); ok {
 				aliasTypeSpecs[rel.Source.Alias] = lt.elem
 				// The same fallback query sources get (issues/05 3.2). A `with`
 				// alias never had its model type recorded at all, so properties
@@ -325,6 +336,16 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 					// ByColumn names a field of the query's result element.
 					if tt, ok := t.sortElementTS.(tupleTS); ok {
 						if fts, found := tt.field(item.Path); found {
+							item.ResultTypeName, item.ResultTypeSpecifier = resultTypeOf(fts)
+						}
+					} else if local := fhirLocalTypeName(t.sortElementTS); local != "" {
+						// A field of a FHIR element: its FHIR type, unconverted —
+						// ByColumn sorts by the element's own value. (issues/08 M2)
+						if fhirType, found := typesystem.FHIRPropertyTypeOf(local, item.Path); found {
+							var fts typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+							if typesystem.IsFHIRListPropertyOf(local, item.Path) {
+								fts = listTS{fts}
+							}
 							item.ResultTypeName, item.ResultTypeSpecifier = resultTypeOf(fts)
 						}
 					}

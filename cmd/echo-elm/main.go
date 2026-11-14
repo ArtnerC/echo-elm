@@ -2,10 +2,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"flag"
 	"fmt"
+	iofs "io/fs"
 	"os"
 	"path/filepath"
 	"strings"
@@ -14,7 +16,9 @@ import (
 	"github.com/artnerc/echo-elm/internal/mcpserver"
 	"github.com/artnerc/echo-elm/internal/parity"
 	"github.com/artnerc/echo-elm/internal/resolver"
+	"github.com/artnerc/echo-elm/internal/translator"
 	"github.com/artnerc/echo-elm/internal/ui"
+	"github.com/artnerc/echo-elm/internal/workers"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
@@ -76,135 +80,262 @@ func usage() {
 
 // runTranslate implements both `translate` and `cqf translate` subcommands.
 // cqfMode applies cqframework-compatible defaults (signatureLevel=None, etc.).
+//
+// --input takes a file or a directory, and may be repeated. A directory is
+// searched recursively for .cql files, as the CQF CLI does. Libraries are
+// translated --jobs at a time and share one include cache, while everything
+// written to stdout and stderr comes out in input order, so a run's output is
+// the same whatever the number of jobs.
 func runTranslate(args []string, cqfMode bool) {
 	fs := flag.NewFlagSet("translate", flag.ContinueOnError)
 
 	var (
-		input    string
 		output   string
 		format   string
 		target   string
 		validate bool
+		jobs     int
 	)
-	var libDirs multiFlag
+	var inputs, libDirs multiFlag
 
-	fs.StringVar(&input, "input", "", "Input CQL file (required)")
-	fs.StringVar(&output, "output", "", "Output file or directory (default: next to input)")
+	fs.Var(&inputs, "input", "Input CQL file or directory, searched recursively for .cql files (required; repeatable)")
+	fs.StringVar(&output, "output", "", "Output file, or directory when translating more than one file (default: next to each input)")
 	fs.StringVar(&format, "format", "JSON", "Output format: JSON or XML")
 	fs.StringVar(&target, "target", "cqf", "ELM shape: cqf (cql-to-elm CLI parity) or bundle (fully type-discriminated, as embedded in FHIR Library resources)")
 	fs.BoolVar(&validate, "validate", false, "Run structural validation on the serialized ELM before writing it")
 	fs.Var(&libDirs, "lib-dir", "Additional directory to search for included CQL libraries (repeatable; the input file's own directory is always searched)")
+	fs.IntVar(&jobs, "jobs", 0, "Libraries to translate at once (0: one per CPU less one, or $"+workers.EnvJobs+")")
 	tf := registerTranslatorFlags(fs, cqfMode)
 
 	if err := fs.Parse(args); err != nil {
 		os.Exit(2)
 	}
-	if input == "" {
+	if len(inputs) == 0 {
 		fmt.Fprintln(os.Stderr, "error: --input is required")
 		fs.Usage()
 		os.Exit(2)
 	}
-
-	src, err := os.ReadFile(input)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: cannot read %s: %v\n", input, err)
-		os.Exit(1)
-	}
-
-	// Includes resolve from the input file's own directory first (matching the
-	// CQF CLI), then from any --lib-dir directories in the order given.
-	searchDirs := append([]string{filepath.Dir(input)}, libDirs...)
-	sources := make([]echoelm.LibrarySource, 0, len(searchDirs))
-	for _, dir := range searchDirs {
-		sources = append(sources, resolver.NewDirSource(dir))
-	}
-
-	opts := []echoelm.Option{
-		echoelm.WithOptions(tf.options()),
-		echoelm.WithCQFMode(cqfMode),
-		echoelm.WithLibrarySource(resolver.NewMultiSource(sources...)),
-	}
-
-	result, err := echoelm.Translate(src, filepath.Base(input), opts...)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: %v\n", err)
-		os.Exit(1)
-	}
-
-	// Report diagnostics to stderr.
-	hasErrors := false
-	for _, d := range result.Diagnostics {
-		fmt.Fprintf(os.Stderr, "%s:[n/a] %s\n", d.Severity, d.Message)
-		if strings.EqualFold(d.Severity, "error") {
-			hasErrors = true
-		}
-	}
-
-	if cqfMode {
-		// CQF banner to stderr.
-		sep := strings.Repeat("=", 80)
-		fmt.Fprintf(os.Stderr, "%s\n", sep)
-		fmt.Fprintf(os.Stderr, "TRANSLATE %s\n", input)
-		if hasErrors {
-			fmt.Fprintln(os.Stderr, "Translation failed due to errors:")
-		} else {
-			fmt.Fprintln(os.Stderr, "Translation completed successfully.")
-		}
-	}
-
-	if hasErrors {
-		os.Exit(1)
-	}
-
-	// Determine output path.
-	outPath := resolveOutput(input, output, format)
-
-	// Serialize.
 	bundleShape := strings.EqualFold(target, "bundle")
 	if !bundleShape && !strings.EqualFold(target, "cqf") {
 		fmt.Fprintf(os.Stderr, "error: --target must be cqf or bundle (got %q)\n", target)
 		os.Exit(2)
 	}
+	if bundleShape && strings.EqualFold(format, "XML") {
+		// The discriminated shape is a property of the elm-json writer; XML
+		// already carries xsi:type on every node.
+		fmt.Fprintln(os.Stderr, "error: --target bundle applies to JSON output only")
+		os.Exit(2)
+	}
+
+	files, many, err := collectInputs(inputs)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(1)
+	}
+	outPaths, err := planOutputs(files, many, output, format)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error: %v\n", err)
+		os.Exit(2)
+	}
+
+	job := translateJob{
+		cqfMode:  cqfMode,
+		format:   format,
+		bundle:   bundleShape,
+		validate: validate,
+		libDirs:  libDirs,
+		options:  tf.options(),
+		cache:    echoelm.NewIncludeCache(),
+	}
+	exit := 0
+	workers.Ordered(len(files), jobs, func(i int) fileOutcome {
+		return job.run(files[i], outPaths[i])
+	}, func(_ int, o fileOutcome) {
+		_, _ = os.Stderr.Write(o.stderr.Bytes())
+		_, _ = os.Stdout.Write(o.stdout.Bytes())
+		exit = max(exit, o.exit)
+	})
+	os.Exit(exit)
+}
+
+// collectInputs expands each --input into the CQL files to translate: a file as
+// given, a directory as every .cql file beneath it in lexical order. many
+// reports whether the run is a multi-file one — more than one input, or any
+// directory — whose --output must then be a directory.
+func collectInputs(inputs []string) (files []string, many bool, err error) {
+	seen := map[string]bool{}
+	add := func(p string) {
+		if key := filepath.Clean(p); !seen[key] {
+			seen[key] = true
+			files = append(files, p)
+		}
+	}
+	for _, in := range inputs {
+		info, err := os.Stat(in)
+		if err != nil {
+			return nil, false, fmt.Errorf("cannot read %s: %w", in, err)
+		}
+		if !info.IsDir() {
+			add(in)
+			continue
+		}
+		many = true
+		err = filepath.WalkDir(in, func(p string, d iofs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
+			if !d.IsDir() && strings.EqualFold(filepath.Ext(p), ".cql") {
+				add(p)
+			}
+			return nil
+		})
+		if err != nil {
+			return nil, false, err
+		}
+	}
+	if len(files) == 0 {
+		return nil, false, fmt.Errorf("no .cql files found in %s", strings.Join(inputs, ", "))
+	}
+	return files, many || len(files) > 1, nil
+}
+
+// planOutputs picks each input's output path. A single file keeps the old
+// rules (resolveOutput). With many, --output is a directory — created when
+// missing — that every output goes into by base name, as the CQF CLI does, or
+// when absent each output goes next to its input. Two inputs that would write
+// the same file are an error, not a silent overwrite.
+func planOutputs(files []string, many bool, output, format string) ([]string, error) {
+	if !many {
+		return []string{resolveOutput(files[0], output, format)}, nil
+	}
+	if output != "" {
+		if info, err := os.Stat(output); err == nil && !info.IsDir() {
+			return nil, fmt.Errorf("--output %s is a file; it must be a directory when translating more than one file", output)
+		}
+		if err := os.MkdirAll(output, 0o755); err != nil {
+			return nil, fmt.Errorf("create --output directory: %w", err)
+		}
+	}
+	outs := make([]string, len(files))
+	from := map[string]string{}
+	for i, f := range files {
+		outs[i] = resolveOutput(f, output, format)
+		key := strings.ToLower(filepath.Clean(outs[i]))
+		if prev, dup := from[key]; dup {
+			return nil, fmt.Errorf("%s and %s would both be written to %s", prev, f, outs[i])
+		}
+		from[key] = f
+	}
+	return outs, nil
+}
+
+// translateJob is what every file in one translate run shares.
+type translateJob struct {
+	cqfMode  bool
+	format   string
+	bundle   bool
+	validate bool
+	libDirs  []string
+	options  translator.Options
+	cache    *echoelm.IncludeCache
+}
+
+// fileOutcome is what translating one file printed, held back so that parallel
+// runs print in input order, and the exit code it earned.
+type fileOutcome struct {
+	stderr, stdout bytes.Buffer
+	exit           int
+}
+
+// run translates one file to outPath.
+func (j *translateJob) run(input, outPath string) fileOutcome {
+	var o fileOutcome
+	fail := func(code int, format string, args ...any) fileOutcome {
+		fmt.Fprintf(&o.stderr, format, args...)
+		o.exit = code
+		return o
+	}
+
+	src, err := os.ReadFile(input)
+	if err != nil {
+		return fail(1, "error: cannot read %s: %v\n", input, err)
+	}
+
+	// Includes resolve from the input file's own directory first (matching the
+	// CQF CLI), then from any --lib-dir directories in the order given.
+	searchDirs := append([]string{filepath.Dir(input)}, j.libDirs...)
+	sources := make([]echoelm.LibrarySource, 0, len(searchDirs))
+	for _, dir := range searchDirs {
+		sources = append(sources, resolver.NewDirSource(dir))
+	}
+
+	result, err := echoelm.Translate(src, filepath.Base(input),
+		echoelm.WithOptions(j.options),
+		echoelm.WithCQFMode(j.cqfMode),
+		echoelm.WithLibrarySource(resolver.NewMultiSource(sources...)),
+		echoelm.WithIncludeCache(j.cache),
+	)
+	if err != nil {
+		return fail(1, "error: %v\n", err)
+	}
+
+	// Report diagnostics to stderr.
+	hasErrors := false
+	for _, d := range result.Diagnostics {
+		fmt.Fprintf(&o.stderr, "%s:[n/a] %s\n", d.Severity, d.Message)
+		if strings.EqualFold(d.Severity, "error") {
+			hasErrors = true
+		}
+	}
+
+	if j.cqfMode {
+		// CQF banner to stderr.
+		fmt.Fprintf(&o.stderr, "%s\n", strings.Repeat("=", 80))
+		fmt.Fprintf(&o.stderr, "TRANSLATE %s\n", input)
+		if hasErrors {
+			fmt.Fprintln(&o.stderr, "Translation failed due to errors:")
+		} else {
+			fmt.Fprintln(&o.stderr, "Translation completed successfully.")
+		}
+	}
+	if hasErrors {
+		o.exit = 1
+		return o
+	}
+
 	var outBytes []byte
 	switch {
-	case strings.EqualFold(format, "XML"):
-		if bundleShape {
-			// The discriminated shape is a property of the elm-json writer; XML
-			// already carries xsi:type on every node.
-			fmt.Fprintln(os.Stderr, "error: --target bundle applies to JSON output only")
-			os.Exit(2)
-		}
+	case strings.EqualFold(j.format, "XML"):
 		outBytes, err = result.XMLBytes()
-	case bundleShape:
+	case j.bundle:
 		outBytes, err = result.BundleJSON()
 	default: // JSON
 		outBytes, err = json.MarshalIndent(result, "", "   ")
 	}
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error: marshal: %v\n", err)
-		os.Exit(1)
+		return fail(1, "error: marshal: %v\n", err)
 	}
 
-	if validate {
+	if j.validate {
 		vfmt := "json"
-		if strings.EqualFold(format, "XML") {
+		if strings.EqualFold(j.format, "XML") {
 			vfmt = "xml"
 		}
 		if verr := echoelm.Validate(outBytes, vfmt); verr != nil {
-			fmt.Fprintf(os.Stderr, "Warning:[n/a] ELM validation: %v\n", verr)
+			fmt.Fprintf(&o.stderr, "Warning:[n/a] ELM validation: %v\n", verr)
 		}
 	}
 
 	if err := os.WriteFile(outPath, outBytes, 0o644); err != nil {
-		fmt.Fprintf(os.Stderr, "error: write %s: %v\n", outPath, err)
-		os.Exit(1)
+		return fail(1, "error: write %s: %v\n", outPath, err)
 	}
 
-	if cqfMode {
-		fmt.Fprintf(os.Stderr, "ELM output written to: %s\n", outPath)
+	if j.cqfMode {
+		fmt.Fprintf(&o.stderr, "ELM output written to: %s\n", outPath)
 	} else {
-		fmt.Printf("%s\n", outPath)
+		fmt.Fprintf(&o.stdout, "%s\n", outPath)
 	}
+	return o
 }
 
 // runMCP starts the MCP server over stdio.
@@ -280,6 +411,8 @@ func runParity(args []string) {
 		parityLib  string
 		profile    string
 		bundlePath string
+		freshCQF   bool
+		jobs       int
 	)
 	fs.StringVar(&cqfVersion, "cqf-version", parity.PinnedCQFVersion,
 		"CQFramework version to compare against (default: the pinned release)")
@@ -292,8 +425,15 @@ func runParity(args []string) {
 	fs.StringVar(&parityLib, "lib-dir", "", "Additional directory to search for included CQL libraries")
 	fs.StringVar(&profile, "profile", "", "Run only fixtures under this option profile (default: all)")
 	fs.StringVar(&bundlePath, "bundle", "", "Compare against the ELM inside a FHIR Bundle, taking its libraries as the corpus")
+	fs.BoolVar(&freshCQF, "fresh-cqf", false, "With --bundle: compare against a fresh CQF compile of the bundle's CQL, with the options the bundle declares, instead of the ELM the bundle carries")
+	fs.IntVar(&jobs, "jobs", 0, "Fixture runs at once (0: one per CPU less one, or $"+workers.EnvJobs+")")
 
 	if err := fs.Parse(args); err != nil {
+		os.Exit(2)
+	}
+
+	if freshCQF && (bundlePath == "" || refDir != "") {
+		fmt.Fprintln(os.Stderr, "error: --fresh-cqf requires --bundle and cannot be combined with --ref-dir")
 		os.Exit(2)
 	}
 
@@ -329,8 +469,10 @@ func runParity(args []string) {
 		bundleWorkDir = workDir
 
 		loaded := loadBundle(bundlePath)
-		for _, w := range parity.ReferenceWarnings(loaded, parity.PinnedCQFVersion) {
-			fmt.Fprintf(os.Stderr, "warning: %s\n", w)
+		if !freshCQF {
+			for _, w := range parity.ReferenceWarnings(loaded, parity.PinnedCQFVersion) {
+				fmt.Fprintf(os.Stderr, "warning: %s\n", w)
+			}
 		}
 
 		// An explicitly named profile is checked against what the bundle says it
@@ -353,10 +495,32 @@ func runParity(args []string) {
 			os.Exit(1)
 		}
 		bundleCfg.TagFilter = tag
+		if n := len(bundleCfg.BOMStripped); n > 0 {
+			// Both translators reject a byte-order mark, so a BOM-prefixed
+			// library and everything including it would otherwise report as
+			// upstream errors and never be compared.
+			fmt.Fprintf(os.Stderr, "parity: stripped a UTF-8 byte-order mark from %d library(ies) before translating; "+
+				"this is a defect in the published CQL, not in either translator:\n", n)
+			for _, name := range bundleCfg.BOMStripped {
+				fmt.Fprintf(os.Stderr, "  %s\n", name)
+			}
+		}
 		cfg = bundleCfg
 		corpus = bundlePath
 		label = "bundle=" + filepath.Base(bundlePath)
+		if freshCQF {
+			// The bundle supplies the CQL and the options; the reference is
+			// what CQF itself produces from them now, since the ELM a bundle
+			// carries may come from some other build (issue #5). CQF CLI
+			// output is CLI-shaped, so no bundle-shape reduction applies.
+			cfg.RefDir = ""
+			cfg.BundleShapedRef = false
+			cfg.CQFVersion = cqfVersion
+			cfg.ToolsDir = toolsDir
+			label += " vs cqf=" + cqfVersion
+		}
 	}
+	cfg.Jobs = jobs
 
 	fmt.Fprintf(os.Stderr, "echo-elm parity  run=%s  %s  corpus=%s\n", runID, label, corpus)
 
@@ -391,10 +555,20 @@ func runParity(args []string) {
 		if r.Status == parity.StatusEchoError || r.Status == parity.StatusUpstreamError {
 			icon = "✗"
 		}
+		if r.Status == parity.StatusDivergent {
+			icon = "~"
+		}
 		fmt.Printf("%s  %-45s  %s\n", icon, r.Fixture, r.Status)
+		if r.Status == parity.StatusMatch && r.Error != "" {
+			fmt.Printf("   note: %s\n", r.Error)
+		}
 	}
-	fmt.Printf("\nmatch=%d  differ=%d  error=%d  total=%d\n",
-		summary[parity.StatusMatch], summary[parity.StatusDifferJSON],
+	divergent := ""
+	if n := summary[parity.StatusDivergent]; n > 0 {
+		divergent = fmt.Sprintf("  divergent=%d", n)
+	}
+	fmt.Printf("\nmatch=%d  differ=%d%s  error=%d  total=%d\n",
+		summary[parity.StatusMatch], summary[parity.StatusDifferJSON], divergent,
 		summary[parity.StatusEchoError]+summary[parity.StatusUpstreamError], len(results))
 
 	if err := parity.WriteReport(outDir, runID, cqfVersion, results); err != nil {

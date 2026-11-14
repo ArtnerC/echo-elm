@@ -15,6 +15,7 @@ import (
 	"github.com/artnerc/echo-elm/internal/elm"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/translator"
+	"github.com/artnerc/echo-elm/internal/workers"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
 
@@ -27,6 +28,9 @@ const (
 	StatusEchoError     Status = "echo-error"
 	StatusUpstreamError Status = "upstream-error"
 	StatusSkipped       Status = "skipped"
+	// StatusDivergent is a difference on a fixture whose corpus entry declares
+	// it a deliberate divergence (expectedStatus: divergent).
+	StatusDivergent Status = "divergent"
 )
 
 // FixtureResult holds the outcome of running one fixture through both translators.
@@ -88,6 +92,13 @@ type Config struct {
 	// "signature": [] is a real requirement that CQF also satisfies, and
 	// reducing it away would stop checking it.
 	BundleShapedRef bool
+	// BOMStripped names the bundle libraries whose CQL began with a UTF-8
+	// byte-order mark, removed before translation. Set by MaterializeBundle so
+	// the caller can report the publisher defect.
+	BOMStripped []string
+	// Jobs is how many fixture × profile runs happen at once; 0 means
+	// workers.DefaultJobs. Results come back in corpus order regardless.
+	Jobs int
 }
 
 // DefaultConfig returns a Config pointing at the default corpus.
@@ -151,14 +162,15 @@ func profileOptions(profile OptionProfile) translator.Options {
 //
 //nolint:gocritic // hugeParam: internal helper with stable interface
 func translateWithProfile(cqlPath string, opts translator.Options) ([]byte, error) {
-	return translateWithProfileAndLibDir(cqlPath, opts, "")
+	return translateWithProfileAndLibDir(cqlPath, opts, "", nil)
 }
 
 // translateWithProfileAndLibDir translates cqlPath, resolving includes from the
-// fixture's own directory first and then from libDir when one is given.
+// fixture's own directory first and then from libDir when one is given. A
+// non-nil cache is shared with the run's other translations.
 //
 //nolint:gocritic // hugeParam: internal helper with stable interface
-func translateWithProfileAndLibDir(cqlPath string, opts translator.Options, libDir string) ([]byte, error) {
+func translateWithProfileAndLibDir(cqlPath string, opts translator.Options, libDir string, cache *echoelm.IncludeCache) ([]byte, error) {
 	src, err := os.ReadFile(cqlPath)
 	if err != nil {
 		return nil, fmt.Errorf("read %s: %w", cqlPath, err)
@@ -170,6 +182,7 @@ func translateWithProfileAndLibDir(cqlPath string, opts translator.Options, libD
 	result, err := echoelm.Translate(src, filepath.Base(cqlPath),
 		echoelm.WithOptions(opts),
 		echoelm.WithLibrarySource(libSrc),
+		echoelm.WithIncludeCache(cache),
 	)
 	if err != nil {
 		return nil, err
@@ -205,10 +218,42 @@ func ProfileTranslateFunc(profile OptionProfile) func(cqlPath string) ([]byte, e
 func ProfileTranslateFuncWithLibDir(profile OptionProfile, libDir string) func(cqlPath string) ([]byte, error) {
 	opts := profileOptions(profile)
 	return func(cqlPath string) ([]byte, error) {
-		return translateWithProfileAndLibDir(cqlPath, opts, libDir)
+		return translateWithProfileAndLibDir(cqlPath, opts, libDir, nil)
 	}
 }
 
+// fixtureRun is one fixture under one option profile: the unit a parity run or
+// a golden refresh parallelizes over.
+type fixtureRun struct {
+	fix         Fixture
+	profileName string
+	profile     OptionProfile
+}
+
+// fixtureRuns lists every fixture × profile pair the filters select, in corpus
+// order and then profile-name order.
+func fixtureRuns(corpus *Corpus, tagFilter, profileFilter string) []fixtureRun {
+	profileNames := sortedProfileNames(corpus.OptionProfiles)
+	var runs []fixtureRun
+	for i := range corpus.Fixtures {
+		fix := &corpus.Fixtures[i]
+		if tagFilter != "" && !fix.HasTag(tagFilter) {
+			continue
+		}
+		for _, name := range resolveProfileNames(fix.ProfileNames(corpus.OptionProfiles), profileNames) {
+			if profileFilter != "" && name != profileFilter {
+				continue
+			}
+			runs = append(runs, fixtureRun{fix: *fix, profileName: name, profile: corpus.OptionProfiles[name]})
+		}
+	}
+	return runs
+}
+
+// Run executes all (or filtered) fixtures in the corpus against every
+// applicable option profile, cfg.Jobs at a time, and returns the results in
+// corpus order. The echo-elm side of every run shares one include cache.
+//
 //nolint:gocritic // hugeParam: public API
 func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]FixtureResult, error) {
 	corpus, err := LoadCorpus(cfg.CorpusDir)
@@ -217,33 +262,20 @@ func Run(cfg Config, translateFn func(cqlPath string) ([]byte, error)) ([]Fixtur
 	}
 
 	launcher := upstreamLauncher(cfg.ToolsDir, cfg.CQFVersion)
-
-	// Sort profile names for deterministic output.
-	profileNames := sortedProfileNames(corpus.OptionProfiles)
-
-	var results []FixtureResult
-	for _, fix := range corpus.Fixtures {
-		if cfg.TagFilter != "" && !fix.HasTag(cfg.TagFilter) {
-			continue
+	runs := fixtureRuns(corpus, cfg.TagFilter, cfg.ProfileFilter)
+	cache := echoelm.NewIncludeCache()
+	results := make([]FixtureResult, len(runs))
+	workers.ForEach(len(runs), cfg.Jobs, func(i int) {
+		fr := runs[i]
+		opts := profileOptions(fr.profile)
+		translateProfileFn := func(cqlPath string) ([]byte, error) {
+			return translateWithProfileAndLibDir(cqlPath, opts, cfg.LibDir, cache)
 		}
-
-		fixProfiles := resolveProfileNames(fix.ProfileNames(corpus.OptionProfiles), profileNames)
-		for _, profileName := range fixProfiles {
-			if cfg.ProfileFilter != "" && profileName != cfg.ProfileFilter {
-				continue
-			}
-			profile := corpus.OptionProfiles[profileName]
-			opts := profileOptions(profile)
-			libDir := cfg.LibDir
-			translateProfileFn := func(cqlPath string) ([]byte, error) {
-				return translateWithProfileAndLibDir(cqlPath, opts, libDir)
-			}
-			r := runFixtureWithRef(fix, corpus.Root, launcher, profile.CLIFlags,
-				translateProfileFn, cfg.RefDir, profileName, cfg.BundleShapedRef)
-			r.Profile = profileName
-			results = append(results, r)
-		}
-	}
+		r := runFixtureWithRef(fr.fix, corpus.Root, launcher, fr.profile.CLIFlags,
+			translateProfileFn, cfg.RefDir, fr.profileName, cfg.BundleShapedRef)
+		r.Profile = fr.profileName
+		results[i] = r
+	})
 	return results, nil
 }
 
@@ -302,8 +334,14 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
 		r.Status = StatusMatch
+		if fix.ExpectedStatus == ExpectedDivergent {
+			r.Error = "matches CQF although declared divergent — remove the divergence marker"
+		}
 	} else {
 		r.Status = StatusDifferJSON
+		if fix.ExpectedStatus == ExpectedDivergent {
+			r.Status = StatusDivergent
+		}
 		r.Diff = StructuralDiff(r.UpstreamJSON, r.EchoJSON)
 	}
 
@@ -311,15 +349,22 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 	return r
 }
 
-// runUpstream invokes the launcher with optional extra flags and captures the output JSON file.
+// runUpstream invokes the launcher with optional extra flags and captures the
+// output JSON file.
+//
+// The output goes to a directory of its own, not next to the input as the CQF
+// CLI would default to: parity runs in parallel, and the same fixture under two
+// profiles would otherwise write, and read back, the same file.
 func runUpstream(launcher, cqlPath string, extraFlags []string) (jsonOut, stderr string, err error) {
-	dir := filepath.Dir(cqlPath)
+	outDir, err := os.MkdirTemp("", "echo-elm-cqf-*")
+	if err != nil {
+		return "", "", err
+	}
+	defer func() { _ = os.RemoveAll(outDir) }()
 	base := strings.TrimSuffix(filepath.Base(cqlPath), ".cql")
-	outJSON := filepath.Join(dir, base+".json")
+	outJSON := filepath.Join(outDir, base+".json")
 
-	_ = os.Remove(outJSON)
-
-	args := append([]string{"--input", cqlPath, "--format", "JSON"}, extraFlags...)
+	args := append([]string{"--input", cqlPath, "--format", "JSON", "--output", outDir}, extraFlags...)
 
 	var cmd *exec.Cmd
 	if runtime.GOOS == "windows" {
@@ -380,40 +425,51 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 	}
 
 	launcher := upstreamLauncher(cfg.ToolsDir, cfg.CQFVersion)
-	profileNames := sortedProfileNames(corpus.OptionProfiles)
+	runs := fixtureRuns(corpus, "", "")
 
-	for _, fix := range corpus.Fixtures {
-		fixProfiles := resolveProfileNames(fix.ProfileNames(corpus.OptionProfiles), profileNames)
-		for _, profileName := range fixProfiles {
-			profile := corpus.OptionProfiles[profileName]
-			outPath := filepath.Join(baseDir, profileName,
-				strings.TrimSuffix(fix.Path, ".cql")+".json")
-
-			if err2 := os.MkdirAll(filepath.Dir(outPath), 0o755); err2 != nil {
-				return written, nil, fmt.Errorf("mkdir %s: %w", filepath.Dir(outPath), err2)
-			}
-
-			jsonOut, upStderr, upErr := runUpstream(launcher, filepath.Join(corpus.Root, fix.Path), profile.CLIFlags)
-			if upErr != nil {
-				// Skip expected failures silently.
-				if fix.ExpectedStatus == "failure" || fix.ExpectedStatus == "upstream-error" {
-					continue
-				}
-				// For unexpected upstream failures (e.g. a profile flag rejects valid code)
-				// skip writing a golden and log a warning — don't abort the whole run.
-				_ = upStderr
-				fmt.Fprintf(os.Stderr, "  SKIP %s/%s: upstream error (%v)\n", profileName, fix.Path, upErr)
-				continue
-			}
-
-			normalized := normalizeJSONOpt(jsonOut, fix.Diagnostics)
-			if err2 := os.WriteFile(outPath, []byte(normalized), 0o644); err2 != nil {
-				return written, nil, fmt.Errorf("write %s: %w", outPath, err2)
-			}
-			written++
-		}
+	// CQF runs in parallel; what each produced is reported and written in
+	// corpus order, so the log and any error are the same as a serial run's.
+	type golden struct {
+		outPath, normalized string
+		skip                string // why no golden is written; "" to write one
+		quiet               bool   // an expected upstream failure: skip silently
 	}
-	return written, nil, nil
+	var firstErr error
+	workers.Ordered(len(runs), cfg.Jobs, func(i int) golden {
+		fr := runs[i]
+		g := golden{outPath: filepath.Join(baseDir, fr.profileName, strings.TrimSuffix(fr.fix.Path, ".cql")+".json")}
+		jsonOut, _, upErr := runUpstream(launcher, filepath.Join(corpus.Root, fr.fix.Path), fr.profile.CLIFlags)
+		if upErr != nil {
+			// Expected failures are skipped silently. An unexpected one (e.g. a
+			// profile flag rejects valid code) writes no golden and is logged,
+			// without aborting the whole run.
+			g.skip = upErr.Error()
+			g.quiet = fr.fix.ExpectedStatus == "failure" || fr.fix.ExpectedStatus == "upstream-error"
+			return g
+		}
+		g.normalized = normalizeJSONOpt(jsonOut, fr.fix.Diagnostics)
+		return g
+	}, func(i int, g golden) {
+		if firstErr != nil {
+			return
+		}
+		if g.skip != "" {
+			if !g.quiet {
+				fmt.Fprintf(os.Stderr, "  SKIP %s/%s: upstream error (%s)\n", runs[i].profileName, runs[i].fix.Path, g.skip)
+			}
+			return
+		}
+		if err := os.MkdirAll(filepath.Dir(g.outPath), 0o755); err != nil {
+			firstErr = fmt.Errorf("mkdir %s: %w", filepath.Dir(g.outPath), err)
+			return
+		}
+		if err := os.WriteFile(g.outPath, []byte(g.normalized), 0o644); err != nil {
+			firstErr = fmt.Errorf("write %s: %w", g.outPath, err)
+			return
+		}
+		written++
+	})
+	return written, nil, firstErr
 }
 
 // normalizeJSON re-marshals JSON with sorted keys and consistent spacing, after

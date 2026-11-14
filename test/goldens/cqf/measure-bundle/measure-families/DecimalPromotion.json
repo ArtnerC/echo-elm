@@ -1,0 +1,308 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "5:1-5:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "DecimalPromotion",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "5:1-5:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "5:1-5:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "locator": "9:6",
+              "name": "b",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "OperandRef"
+            },
+            "else": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "locator": "9:22",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "ToDecimal"
+            },
+            "locator": "9:3-9:22",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+            "then": {
+              "annotation": [],
+              "locator": "9:13-9:15",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "Literal",
+              "value": "1.5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "If"
+          },
+          "locator": "8:1-9:22",
+          "name": "Weight",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "b",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "8:28-8:34",
+                "name": "{urn:hl7-org:elm-types:r1}Boolean",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "12:3-12:9",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "12:3",
+                "name": "d",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "type": "OperandRef"
+              },
+              {
+                "annotation": [],
+                "locator": "12:7-12:9",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "type": "Literal",
+                "value": "1.0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "11:1-12:9",
+          "name": "Takes decimal",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "d",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "11:35-11:41",
+                "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "15:3-15:20",
+            "name": "Takes decimal",
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "locator": "15:19",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "14:1-15:20",
+          "name": "Call with integer",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "18:3-18:17",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "locator": "18:9-18:11",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                  "type": "Literal",
+                  "value": "1.5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "locator": "18:14",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "2",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "ToDecimal"
+                }
+              ],
+              "locator": "18:7-18:16",
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "locator": "17:1-18:17",
+          "name": "Max mixed",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "22:3-22:34",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "22:3-22:16",
+                "name": "Weight",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "locator": "22:12-22:15",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                    "type": "Literal",
+                    "value": "true",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "annotation": [],
+                "locator": "22:20-22:34",
+                "name": "Weight",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "locator": "22:29-22:33",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+                    "type": "Literal",
+                    "value": "false",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+                  }
+                ],
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "signature": [],
+                "type": "FunctionRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "21:1-22:34",
+          "name": "Sum of weights",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "3:1-3:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

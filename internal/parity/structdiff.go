@@ -150,6 +150,7 @@ func (d *differ) compareLists(w, g []any, path string) {
 func (d *differ) compareByName(w, g []any, path string) {
 	wByName, wOrder := indexByName(w)
 	gByName, gOrder := indexByName(g)
+	gOrder = pairOverloadLeftovers(wByName, wOrder, gByName, gOrder)
 
 	for _, name := range wOrder {
 		gv, ok := gByName[name]
@@ -222,6 +223,13 @@ func unwrapsTo(outer, target map[string]any) (inner any, field string, ok bool) 
 }
 
 func indexByName(items []any) (map[string]any, []string) {
+	counts := map[string]int{}
+	for _, it := range items {
+		if m, ok := it.(map[string]any); ok {
+			name, _ := m["name"].(string)
+			counts[name]++
+		}
+	}
 	byName := make(map[string]any, len(items))
 	order := make([]string, 0, len(items))
 	for _, it := range items {
@@ -230,15 +238,107 @@ func indexByName(items []any) (map[string]any, []string) {
 			continue
 		}
 		name, _ := m["name"].(string)
-		if _, dup := byName[name]; dup {
-			// Overloads share a name; fall back to positional identity for them
-			// by suffixing, so they still pair up stably.
-			name = fmt.Sprintf("%s#%d", name, len(order))
+		key := name
+		if counts[name] > 1 {
+			// Overloads share a name, so they are keyed by signature: the same
+			// overload pairs with itself whatever position it sits in. Pairing
+			// by position paired the wrong overloads whenever one side lacked
+			// one, and every later overload of the name reported as unpaired.
+			// (issues/08 Part 7, M4)
+			key = name + "(" + operandSignature(m) + ")"
 		}
-		byName[name] = it
-		order = append(order, name)
+		if _, dup := byName[key]; dup {
+			key = fmt.Sprintf("%s#%d", key, len(order))
+		}
+		byName[key] = it
+		order = append(order, key)
 	}
 	return byName, order
+}
+
+// pairOverloadLeftovers re-keys overloads that did not pair by signature but
+// share a name and operand count with an unpaired overload on the other side,
+// in order, so a signature difference is reported as the field-level difference
+// it is rather than as two unrelated definitions.
+func pairOverloadLeftovers(wBy map[string]any, wOrder []string, gBy map[string]any, gOrder []string) []string {
+	type slot struct {
+		base  string
+		arity int
+	}
+	unpaired := map[slot][]string{}
+	for _, k := range wOrder {
+		if _, ok := gBy[k]; !ok {
+			s := slot{baseName(k), arity(wBy[k])}
+			unpaired[s] = append(unpaired[s], k)
+		}
+	}
+	out := make([]string, len(gOrder))
+	copy(out, gOrder)
+	for i, k := range out {
+		if _, ok := wBy[k]; ok {
+			continue
+		}
+		s := slot{baseName(k), arity(gBy[k])}
+		if cands := unpaired[s]; len(cands) > 0 && strings.Contains(k, "(") {
+			wk := cands[0]
+			unpaired[s] = cands[1:]
+			gBy[wk] = gBy[k]
+			delete(gBy, k)
+			out[i] = wk
+		}
+	}
+	return out
+}
+
+func baseName(key string) string {
+	if i := strings.Index(key, "("); i >= 0 {
+		return key[:i]
+	}
+	return key
+}
+
+func arity(def any) int {
+	m, _ := def.(map[string]any)
+	ops, _ := m["operand"].([]any)
+	return len(ops)
+}
+
+// operandSignature renders a FunctionDef's operand types, e.g.
+// "{http://hl7.org/fhir}Claim.Item" or "list<{urn:hl7-org:elm-types:r1}Integer>".
+func operandSignature(def map[string]any) string {
+	ops, _ := def["operand"].([]any)
+	parts := make([]string, 0, len(ops))
+	for _, o := range ops {
+		om, _ := o.(map[string]any)
+		parts = append(parts, specifierString(om["operandTypeSpecifier"]))
+	}
+	return strings.Join(parts, ",")
+}
+
+func specifierString(v any) string {
+	m, ok := v.(map[string]any)
+	if !ok {
+		return "?"
+	}
+	switch m["type"] {
+	case "ListTypeSpecifier":
+		return "list<" + specifierString(m["elementType"]) + ">"
+	case "IntervalTypeSpecifier":
+		return "interval<" + specifierString(m["pointType"]) + ">"
+	case "ChoiceTypeSpecifier":
+		alts, _ := m["choice"].([]any)
+		parts := make([]string, len(alts))
+		for i, a := range alts {
+			parts[i] = specifierString(a)
+		}
+		return "choice<" + strings.Join(parts, ",") + ">"
+	case "TupleTypeSpecifier":
+		return "tuple"
+	}
+	if n, ok := m["name"].(string); ok {
+		return n
+	}
+	return "?"
 }
 
 // sharedOrder returns the names of order that also exist in other, preserving

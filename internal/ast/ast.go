@@ -75,6 +75,8 @@ type Library struct {
 	Statements  []*ExpressionDefinition
 	Context     *ContextDefinition   // last declared context (backward compat)
 	Contexts    []*ContextDefinition // all declared contexts in declaration order
+	// Annotations are the @tag annotations in block comments before `library`.
+	Annotations []CQLAnnotation
 }
 
 // VersionedIdentifier holds a qualified name and optional version string.
@@ -158,6 +160,7 @@ type ParameterDefinition struct {
 	ParameterType *TypeSpecifier
 	Default       Expr
 	AccessLevel   AccessLevel
+	Annotations   []CQLAnnotation // @tag annotations in preceding block comments
 }
 
 // ContextDefinition: context Patient
@@ -188,6 +191,9 @@ type ExpressionDefinition struct {
 	Operands    []*OperandDef // non-nil when IsFunction=true
 	ReturnType  *TypeSpecifier
 	IsFluent    bool
+	// IsExternal marks `define function F(...) returns T : external` — a
+	// function implemented by the engine, which has no body at all.
+	IsExternal  bool
 	Context     string          // active context name at declaration time (empty = Unfiltered)
 	Annotations []CQLAnnotation // parsed @tag: value annotations from preceding block comments
 }
@@ -353,6 +359,11 @@ type RatioLiteral struct {
 type IdentifierRef struct {
 	baseExpr
 	Name string
+	// PathRoot marks the leading identifier of a qualified identifier path used
+	// as a query source or retrieve terminology, e.g. `ref` in `ref.identifier Id`.
+	// CQF resolves the whole path in one step and records a locator and result
+	// type only on the outermost node, so the root carries neither.
+	PathRoot bool
 }
 
 // QualifiedRef: Library.Name
@@ -375,7 +386,13 @@ type LetRef struct {
 }
 
 // ThisExpr: $this — the current iteration element
-type ThisExpr struct{ baseExpr }
+type ThisExpr struct {
+	baseExpr
+	// Implicit marks a $this supplied by the translator rather than written:
+	// the receiver of a receiverless fluent call in a sort item. CQF records no
+	// locator or result type on it.
+	Implicit bool
+}
 
 // IndexExpr: $index — the current iteration index
 type IndexExpr struct{ baseExpr }
@@ -633,9 +650,13 @@ type InstanceExpr struct {
 // CodeExpr: Code 'code' from codesystemIdent [display 'text']
 type CodeExpr struct {
 	baseExpr
-	Code    string
-	System  string
-	Display string
+	Code   string
+	System string
+	// SystemLibrary is the library qualifier of the code system, if any.
+	SystemLibrary string
+	// SystemLoc is the span of the code system identifier.
+	SystemLoc Interval
+	Display   string
 }
 
 // ConceptExpr: Concept { code selectors } [display 'text']
@@ -706,6 +727,10 @@ type FunctionRef struct {
 	LibraryName string
 	Name        string
 	Operands    []Expr
+	// Fluent marks a call written with dot syntax on a receiver, `X.F()`, which
+	// the first operand then is. A library qualifier is not a receiver: once
+	// `Lib.F(x)` is recognised as library-qualified, Fluent is cleared.
+	Fluent bool
 }
 
 // ExternalFunctionRef: ExternalLib.FunctionName(args...)

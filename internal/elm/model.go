@@ -201,15 +201,20 @@ type CodeSystemDefinitionRef struct {
 
 // CodeSystemRef is a reference to a code system by name.
 type CodeSystemRef struct {
-	LocalID     string `json:"localId,omitempty"`
-	Locator     string `json:"locator,omitempty"`
-	Name        string `json:"name"`
-	LibraryName string `json:"libraryName,omitempty"`
+	LocalID        string          `json:"localId,omitempty"`
+	Locator        string          `json:"locator,omitempty"`
+	Annotation     json.RawMessage `json:"annotation,omitempty"`
+	ResultTypeName string          `json:"resultTypeName,omitempty"`
+	Name           string          `json:"name"`
+	LibraryName    string          `json:"libraryName,omitempty"`
 }
 
+// MarshalJSON emits no "type": a CodeSystemRef only ever sits where the schema
+// declares exactly that type — a CodeDef's codeSystem, a Code's system — and the
+// cql-to-elm CLI omits a discriminator there. (issues/08 W14)
 func (r *CodeSystemRef) MarshalJSON() ([]byte, error) {
 	type alias CodeSystemRef
-	return marshalWithType("CodeSystemRef", (*alias)(r))
+	return json.Marshal((*alias)(r))
 }
 
 // ConceptDef corresponds to a `concept` declaration.
@@ -262,6 +267,7 @@ type StatementDef struct {
 	AccessLevel         string          `json:"accessLevel,omitempty"`
 	IsFunction          bool            `json:"-"`
 	IsFluent            bool            `json:"fluent,omitempty"`
+	External            bool            `json:"external,omitempty"`
 	Operand             []*OperandDef   `json:"operand,omitempty"`
 	ResultTypeName      string          `json:"resultTypeName,omitempty"`
 	ResultTypeSpecifier TypeSpecifier   `json:"resultTypeSpecifier,omitempty"`
@@ -526,7 +532,10 @@ type InValueSetNode struct {
 	ResultTypeSpecifier TypeSpecifier    `json:"resultTypeSpecifier,omitempty"`
 	Signature           json.RawMessage  `json:"signature,omitempty"`
 	Code                Expression       `json:"code"`
-	ValueSet            *ValueSetRefNode `json:"valueset"`
+	ValueSet            *ValueSetRefNode `json:"valueset,omitempty"`
+	// ValuesetExpression is the value set when it is an expression rather than
+	// a reference to a declared value set — e.g. an operand typed System.ValueSet.
+	ValuesetExpression Expression `json:"valuesetExpression,omitempty"`
 }
 
 func (*InValueSetNode) isExpression() {}
@@ -538,7 +547,7 @@ func (n *InValueSetNode) MarshalJSON() ([]byte, error) {
 	type alias InValueSetNode
 	return marshalWithType("InValueSet", struct {
 		*alias
-		ValueSet *vsAlias `json:"valueset"`
+		ValueSet *vsAlias `json:"valueset,omitempty"`
 	}{
 		alias:    (*alias)(n),
 		ValueSet: (*vsAlias)(n.ValueSet),

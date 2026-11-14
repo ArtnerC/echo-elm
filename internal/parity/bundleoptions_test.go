@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -137,6 +139,11 @@ func TestMaterializeBundleDerivesProfile(t *testing.T) {
 	if profile.TranslatorOptions["signatureLevel"] != "Overloads" {
 		t.Errorf("signatureLevel = %v, want Overloads", profile.TranslatorOptions["signatureLevel"])
 	}
+	// The same options as CQF CLI flags, so `parity --bundle --fresh-cqf`
+	// compiles the bundle's CQL the way the bundle says it was compiled.
+	if got, want := strings.Join(profile.CLIFlags, " "), "--locators --result-types --signatures Overloads"; got != want {
+		t.Errorf("CLIFlags = %q, want %q", got, want)
+	}
 }
 
 // TestMaterializeBundleRejectsDisagreeingLibraries pins that a bundle whose
@@ -251,5 +258,54 @@ func TestBundleShapeKeepsRealDifferences(t *testing.T) {
 
 	if parity.NormalizeBundleShape(withContent) == parity.NormalizeBundleShape(without) {
 		t.Error("a non-empty codeFilter was reduced away")
+	}
+}
+
+// TestMaterializeBundleStripsBOM pins issues/08 Part 2: a UTF-8 byte-order mark
+// on a library's CQL is removed before either translator sees it, and the
+// library is named so the publisher defect is still reported. Both translators
+// reject a BOM at 1:0, so leaving it made a library — and everything including
+// it — an upstream error that was never compared.
+func TestMaterializeBundleStripsBOM(t *testing.T) {
+	src := append([]byte{0xEF, 0xBB, 0xBF}, []byte("library Bommed version '1.0'\ndefine One: 1\n")...)
+	raw, err := json.Marshal(map[string]any{
+		"resourceType": "Bundle", "type": "collection",
+		"entry": []any{map[string]any{"resource": map[string]any{
+			"resourceType": "Library", "name": "Bommed", "version": "1.0",
+			"content": []any{
+				map[string]any{"contentType": bundle.ContentTypeCQL, "data": base64.StdEncoding.EncodeToString(src)},
+				map[string]any{"contentType": bundle.ContentTypeELMJSON, "data": base64.StdEncoding.EncodeToString(elmDeclaring("", "None"))},
+			},
+		}}},
+	})
+	if err != nil {
+		t.Fatalf("marshal: %v", err)
+	}
+	b, err := bundle.Load(bytes.NewReader(raw))
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+
+	cfg, err := parity.MaterializeBundle(b, t.TempDir(), "")
+	if err != nil {
+		t.Fatalf("materialize: %v", err)
+	}
+	if len(cfg.BOMStripped) != 1 {
+		t.Errorf("BOMStripped = %v, want the one library", cfg.BOMStripped)
+	}
+	// The extracted file name carries the version; find it rather than guess.
+	matches, _ := filepath.Glob(filepath.Join(cfg.CorpusDir, "Bommed*.cql"))
+	if len(matches) != 1 {
+		t.Fatalf("extracted CQL files = %v, want exactly one", matches)
+	}
+	written, err := os.ReadFile(matches[0])
+	if err != nil {
+		t.Fatalf("read extracted CQL: %v", err)
+	}
+	if bytes.HasPrefix(written, []byte{0xEF, 0xBB, 0xBF}) {
+		t.Error("extracted CQL still starts with a byte-order mark")
+	}
+	if !bytes.HasPrefix(written, []byte("library Bommed")) {
+		t.Errorf("extracted CQL lost content: %q", written[:min(len(written), 30)])
 	}
 }

@@ -10,6 +10,7 @@ import (
 	"strings"
 
 	"github.com/artnerc/echo-elm/internal/parity"
+	"github.com/artnerc/echo-elm/internal/workers"
 	"github.com/artnerc/echo-elm/pkg/bundle"
 	"github.com/artnerc/echo-elm/pkg/echoelm"
 )
@@ -134,12 +135,14 @@ func runBundleTranslate(args []string) {
 		library string
 		format  string
 		verify  bool
+		jobs    int
 	)
 	fs.StringVar(&input, "input", "", "FHIR Bundle JSON file (required)")
 	fs.StringVar(&output, "output", "", "Write an updated bundle with the generated ELM to this path")
 	fs.StringVar(&library, "library", "", "Translate only this library (default: all)")
 	fs.StringVar(&format, "format", "JSON", "ELM output format: JSON or XML")
 	fs.BoolVar(&verify, "verify", false, "Compare generated ELM against the bundled ELM and report differences")
+	fs.IntVar(&jobs, "jobs", 0, "Libraries to translate at once (0: one per CPU less one, or $"+workers.EnvJobs+")")
 	tf := registerTranslatorFlags(fs, true)
 
 	if err := fs.Parse(args); err != nil {
@@ -169,18 +172,31 @@ func runBundleTranslate(args []string) {
 	var translated, differed, failed int
 	var verifyFailures []string
 
+	var libs []bundle.Library
 	for _, lib := range b.Libraries() {
-		if library != "" && lib.Name != library {
-			continue
+		if library == "" || lib.Name == library {
+			libs = append(libs, lib)
 		}
+	}
+
+	// Libraries translate in parallel against a snapshot of the bundle's CQL,
+	// sharing one include cache; results are reported, and written back into
+	// the bundle, one at a time in library order.
+	type libOutcome struct {
+		elm    []byte
+		err    string
+		verify string // "none", "match" or "differs"; "" when not verifying
+	}
+	cache := echoelm.NewIncludeCache()
+	workers.Ordered(len(libs), jobs, func(i int) libOutcome {
+		lib := libs[i]
 		result, err := echoelm.Translate(lib.CQLSource, lib.FileName(),
 			echoelm.WithOptions(opts),
 			echoelm.WithLibrarySource(libSrc),
+			echoelm.WithIncludeCache(cache),
 		)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "✗  %-40s translate error: %v\n", lib.Name, err)
-			failed++
-			continue
+			return libOutcome{err: "translate error: " + err.Error()}
 		}
 		var elmBytes []byte
 		if asXML {
@@ -189,23 +205,38 @@ func runBundleTranslate(args []string) {
 			elmBytes, err = json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
 		}
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "✗  %-40s marshal error: %v\n", lib.Name, err)
-			failed++
-			continue
+			return libOutcome{err: "marshal error: " + err.Error()}
 		}
-		translated++
-
+		o := libOutcome{elm: elmBytes}
 		if verify {
 			switch {
 			case len(lib.ReferenceELM) == 0:
-				fmt.Fprintf(os.Stderr, "–  %-40s no bundled ELM to verify against\n", lib.Name)
+				o.verify = "none"
 			case parity.NormalizeForGolden(string(lib.ReferenceELM)) == parity.NormalizeForGolden(string(elmBytes)):
-				fmt.Fprintf(os.Stderr, "✓  %-40s match\n", lib.Name)
+				o.verify = "match"
 			default:
-				fmt.Fprintf(os.Stderr, "✗  %-40s differs\n", lib.Name)
-				differed++
-				verifyFailures = append(verifyFailures, lib.Name)
+				o.verify = "differs"
 			}
+		}
+		return o
+	}, func(i int, o libOutcome) {
+		lib := libs[i]
+		if o.err != "" {
+			fmt.Fprintf(os.Stderr, "✗  %-40s %s\n", lib.Name, o.err)
+			failed++
+			return
+		}
+		translated++
+
+		switch o.verify {
+		case "none":
+			fmt.Fprintf(os.Stderr, "–  %-40s no bundled ELM to verify against\n", lib.Name)
+		case "match":
+			fmt.Fprintf(os.Stderr, "✓  %-40s match\n", lib.Name)
+		case "differs":
+			fmt.Fprintf(os.Stderr, "✗  %-40s differs\n", lib.Name)
+			differed++
+			verifyFailures = append(verifyFailures, lib.Name)
 		}
 
 		if output != "" {
@@ -213,12 +244,12 @@ func runBundleTranslate(args []string) {
 			if asXML {
 				contentType = bundle.ContentTypeELMXML
 			}
-			if err := b.SetContent(lib.Name, lib.Version, contentType, elmBytes); err != nil {
+			if err := b.SetContent(lib.Name, lib.Version, contentType, o.elm); err != nil {
 				fmt.Fprintf(os.Stderr, "error: %v\n", err)
 				os.Exit(1)
 			}
 		}
-	}
+	})
 
 	if output != "" {
 		out, err := b.Marshal()

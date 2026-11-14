@@ -85,6 +85,16 @@ func TestGoldenCorpus(t *testing.T) {
 					gotJSON := parity.NormalizeForGoldenFixture(string(echoBytes), &fix)
 					wantJSON := parity.NormalizeForGoldenFixture(string(goldenBytes), &fix)
 
+					if fix.ExpectedStatus == parity.ExpectedDivergent {
+						// A declared divergence must still diverge: if it
+						// starts matching, the reason recorded for it no
+						// longer holds and the marker should be removed.
+						if gotJSON == wantJSON {
+							t.Errorf("%s %s matches CQF but is declared divergent (%s): remove the marker",
+								profileName, fix.Path, fix.Divergence)
+						}
+						return
+					}
 					if gotJSON != wantJSON {
 						diff := parity.SimpleDiff(wantJSON, gotJSON)
 						t.Errorf("golden mismatch %s %s:\n%s",

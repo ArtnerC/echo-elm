@@ -14,6 +14,12 @@ import (
 type astBuilder struct {
 	sourceName string
 	stream     *antlr.CommonTokenStream
+	// includeAliases names every library this one includes, by local identifier
+	// and by path. A dotted identifier is a library reference only when its first
+	// part is one of these; otherwise it is a property path off an alias, operand
+	// or let. Nil means the include set is unknown (a fragment parsed on its own),
+	// and the old library-first reading is kept.
+	includeAliases map[string]bool
 }
 
 func newASTBuilder(sourceName string, stream *antlr.CommonTokenStream) *astBuilder {
@@ -144,9 +150,15 @@ func setLoc(n ast.Expr, ctx antlr.ParserRuleContext) ast.Expr {
 func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 	lc := ctx.(*cqlparser.LibraryContext)
 	lib := &ast.Library{}
+	// Within a library the include set is known: includes are header
+	// definitions, all built before any statement is.
+	b.includeAliases = map[string]bool{}
 
 	if ld := lc.LibraryDefinition(); ld != nil {
 		lib.Name = b.buildVersionedIdentifier(ld)
+		if tok := ld.GetStart(); tok != nil {
+			lib.Annotations = b.extractAnnotations(tok.GetTokenIndex())
+		}
 	}
 
 	// Header-level definitions (using, include, codesystem, valueset, code, concept, parameter)
@@ -156,7 +168,9 @@ func (b *astBuilder) buildLibrary(ctx cqlparser.ILibraryContext) *ast.Library {
 		case dc.UsingDefinition() != nil:
 			lib.Usings = append(lib.Usings, b.buildUsing(dc.UsingDefinition()))
 		case dc.IncludeDefinition() != nil:
-			lib.Includes = append(lib.Includes, b.buildInclude(dc.IncludeDefinition()))
+			inc := b.buildInclude(dc.IncludeDefinition())
+			lib.Includes = append(lib.Includes, inc)
+			b.recordIncludeAlias(inc)
 		case dc.CodesystemDefinition() != nil:
 			lib.Codesystems = append(lib.Codesystems, b.buildCodesystem(dc.CodesystemDefinition()))
 		case dc.ValuesetDefinition() != nil:
@@ -234,6 +248,22 @@ func (b *astBuilder) buildUsing(ctx cqlparser.IUsingDefinitionContext) *ast.Usin
 // -----------------------------------------------------------------------
 // Includes
 // -----------------------------------------------------------------------
+
+// recordIncludeAlias registers the names a reference to inc can use: its local
+// identifier when it has one, otherwise its path (as the translator resolves an
+// unaliased include).
+func (b *astBuilder) recordIncludeAlias(inc *ast.IncludeDefinition) {
+	if b.includeAliases == nil || inc == nil {
+		return
+	}
+	if inc.LocalName != "" {
+		b.includeAliases[inc.LocalName] = true
+		return
+	}
+	if inc.Path != "" {
+		b.includeAliases[inc.Path] = true
+	}
+}
 
 func (b *astBuilder) buildInclude(ctx cqlparser.IIncludeDefinitionContext) *ast.IncludeDefinition {
 	idc := ctx.(*cqlparser.IncludeDefinitionContext)
@@ -384,6 +414,9 @@ func (b *astBuilder) buildParameter(ctx cqlparser.IParameterDefinitionContext) *
 		pd.Default = b.buildExpr(defaultExpr)
 	}
 	pd.SetLoc(intervalFromCtx(pdc))
+	if tok := pdc.GetStart(); tok != nil {
+		pd.Annotations = b.extractAnnotations(tok.GetTokenIndex())
+	}
 	return pd
 }
 
@@ -453,6 +486,7 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 
 	lines := strings.SplitSeq(inner, "\n")
 	for line := range lines {
+		line = strings.TrimSuffix(line, "\r")
 		// Detect start of a new @tag on this line.
 		trimmed := strings.TrimSpace(line)
 		atIdx := strings.Index(trimmed, "@")
@@ -465,8 +499,11 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 				})
 				currentValue.Reset()
 			}
-			// Parse "@name: value" or "@name value".
-			rest := trimmed[atIdx+1:]
+			// Parse "@name: value" or "@name value". The value keeps its trailing
+			// spaces: in a value that continues onto the next line they are part
+			// of the text CQF records.
+			leftTrimmed := strings.TrimLeft(line, " \t")
+			rest := leftTrimmed[strings.Index(leftTrimmed, "@")+1:]
 			colonIdx := strings.Index(rest, ":")
 			spaceIdx := strings.IndexByte(rest, ' ')
 			var nameEnd int
@@ -512,14 +549,16 @@ func parseBlockCommentTags(inner string) []ast.CQLAnnotationTag {
 				currentValue.WriteString(line)
 			}
 		} else {
-			// Non-hash continuation: strip leading "* " block-comment decoration and append.
-			// CQF collects multi-line tag values when subsequent lines don't start a new @tag.
-			cont := trimmed
-			// Strip leading asterisk decoration: "* text" → "text", "*" → ""
-			if strings.HasPrefix(cont, "*") {
-				cont = strings.TrimLeft(cont[1:], " \t")
+			// Non-hash continuation. CQF strips a leading "*" decoration and
+			// the spaces around it, and otherwise keeps the line as written:
+			// FHIRHelpers' @description continues with " data types and CQL…",
+			// leading space included. Trimming every line changed the value.
+			// (issues/08 #15)
+			cont := line
+			if strings.HasPrefix(trimmed, "*") {
+				cont = strings.TrimLeft(trimmed[1:], " \t*")
 			}
-			if cont != "" {
+			if strings.TrimSpace(cont) != "" {
 				currentValue.WriteByte('\n')
 				currentValue.WriteString(cont)
 			}
@@ -594,6 +633,8 @@ func (b *astBuilder) buildFunctionDef(ctx cqlparser.IFunctionDefinitionContext) 
 		spec := b.buildTypeSpecifier(ts)
 		ed.ReturnType = &spec
 	}
+	// The grammar's only alternative to a body is the `external` keyword.
+	ed.IsExternal = fdc.FunctionBody() == nil
 	if fb := fdc.FunctionBody(); fb != nil {
 		if expr := fb.(*cqlparser.FunctionBodyContext).Expression(); expr != nil {
 			ed.Expression = b.buildExpr(expr)
@@ -666,9 +707,18 @@ func (b *astBuilder) buildTypeSpecifier(ctx cqlparser.ITypeSpecifierContext) ast
 func (b *astBuilder) buildNamedTypeSpecifier(ctx cqlparser.INamedTypeSpecifierContext) *ast.NamedTypeSpecifier {
 	ndc := ctx.(*cqlparser.NamedTypeSpecifierContext)
 	nts := &ast.NamedTypeSpecifier{}
+	// Keep every qualifier. `FHIR.Claim.Item` is the model alias FHIR plus the
+	// backbone type Claim.Item; keeping only the first qualifier turned it into
+	// FHIR.Item, a different (and usually nonexistent) type. That one dropped
+	// segment collided overloads, sent element types to Any and suppressed the
+	// implicit conversions on every backbone-typed operand. (issues/08 W3)
 	qualifiers := ndc.AllQualifier()
 	if len(qualifiers) > 0 {
-		nts.Qualifier = qualifiers[0].GetText()
+		parts := make([]string, len(qualifiers))
+		for i, q := range qualifiers {
+			parts[i] = q.GetText()
+		}
+		nts.Qualifier = strings.Join(parts, ".")
 	}
 	if ri := ndc.ReferentialOrTypeNameIdentifier(); ri != nil {
 		nts.Name = ri.GetText()
