@@ -417,6 +417,14 @@ func (t *Translator) convertOperatorOperands(n *elm.OperatorExpressionNode) {
 	case "Union", "Intersect", "Except":
 		if len(ops) == 2 {
 			for i := range ops {
+				// A value set where a list is required is its expansion: the
+				// implicit ValueSet → List<Code> conversion CQF writes as
+				// ExpandValueSet. Without it the union was of two value sets,
+				// which is not an operation on lists at all. (issues/08 W6)
+				if namedName(t.typeOf(ops[i])) == typesystem.TypeValueSet {
+					set(i, t.expandValueSet(ops[i]))
+					continue
+				}
 				if isBareNull(ops[i]) {
 					if other := t.typeOf(ops[1-i]); isCollection(other) {
 						set(i, t.castNull(ops[i], other))
@@ -954,4 +962,91 @@ func sameExprs(a, b []elm.Expression) bool {
 		}
 	}
 	return true
+}
+
+// expandValueSet wraps a value set in the ExpandValueSet CQF inserts when a
+// value set is used as a list of codes. The node is synthesized: no locator.
+func (t *Translator) expandValueSet(vs elm.Expression) elm.Expression {
+	return t.markConverted(&elm.UnaryExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig("ExpandValueSet", []elm.Expression{vs}),
+		Operator:   "ExpandValueSet",
+		Operand:    vs,
+	})
+}
+
+// promoteToCommonType converts the narrower numeric expressions among exprs to
+// the widest numeric type present, in place — the implicit Integer→Decimal
+// promotion CQF applies where several values must share one type: the branches
+// of an if or case, the elements of a list literal. `if b then 1.5 else 0` is
+// Decimal, with the 0 wrapped in ToDecimal; without the wrapper the else branch
+// is an Integer where a Decimal is required. (issues/08 W10)
+//
+// Only numeric types take part. If any known type is not numeric the values do
+// not unify by promotion at all, and they are left as they are.
+func (t *Translator) promoteToCommonType(exprs []elm.Expression) {
+	widest := ""
+	for _, e := range exprs {
+		ts := t.typeOf(e)
+		if ts == nil {
+			continue
+		}
+		n := namedName(ts)
+		if numericRank[n] == 0 {
+			return
+		}
+		if numericRank[n] > numericRank[widest] {
+			widest = n
+		}
+	}
+	if conversionOperator[widest] == "" {
+		return
+	}
+	for i, e := range exprs {
+		if n := namedName(t.typeOf(e)); numericRank[n] > 0 && numericRank[n] < numericRank[widest] {
+			exprs[i] = t.convertTo(e, widest)
+		}
+	}
+}
+
+// promoteArgument converts a numeric argument to its operand's wider declared
+// numeric type: "Takes decimal"(1) passes ToDecimal(1). (issues/08 W10)
+func (t *Translator) promoteArgument(arg elm.Expression, declared typeSpec) elm.Expression {
+	d := namedName(declared)
+	if conversionOperator[d] == "" {
+		return arg
+	}
+	if a := namedName(t.typeOf(arg)); numericRank[a] > 0 && numericRank[a] < numericRank[d] {
+		return t.convertTo(arg, d)
+	}
+	return arg
+}
+
+// castFlattenOperand gives Flatten the List<List<T>> it requires when its
+// operand is a List<Any> — a list literal whose sub-lists have different element
+// types, such as { {1, 2}, {'a'} }. CQF casts each element in a query:
+// (operand) X return X as List<Any>. The query is synthesized and carries no
+// locator or result type. (issues/08 W15a)
+func (t *Translator) castFlattenOperand(operand elm.Expression) elm.Expression {
+	lt, ok := t.inferTypeSpec(operand).(listTS)
+	if !ok || !isAnyTS(lt.elem) {
+		return operand
+	}
+	alias := &elm.AliasRefNode{Annotation: t.cqfAnnotation(), Name: fhirConversionAlias}
+	distinct := false
+	return t.markConverted(&elm.QueryNode{
+		Annotation: t.cqfAnnotation(),
+		Source: []*elm.AliasedQuerySourceELM{{
+			Annotation: t.cqfAnnotation(),
+			Alias:      fhirConversionAlias,
+			Expression: operand,
+		}},
+		Let:          []*elm.LetClauseELM{},
+		Relationship: []*elm.RelationshipClauseELM{},
+		Return: &elm.ReturnClauseELM{
+			Annotation: t.cqfAnnotation(),
+			Distinct:   &distinct,
+			Expression: t.castNullTo(alias, listTS{anyTS}),
+		},
+	})
 }

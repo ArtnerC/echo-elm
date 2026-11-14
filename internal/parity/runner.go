@@ -28,6 +28,9 @@ const (
 	StatusEchoError     Status = "echo-error"
 	StatusUpstreamError Status = "upstream-error"
 	StatusSkipped       Status = "skipped"
+	// StatusDivergent is a difference on a fixture whose corpus entry declares
+	// it a deliberate divergence (expectedStatus: divergent).
+	StatusDivergent Status = "divergent"
 )
 
 // FixtureResult holds the outcome of running one fixture through both translators.
@@ -89,6 +92,10 @@ type Config struct {
 	// "signature": [] is a real requirement that CQF also satisfies, and
 	// reducing it away would stop checking it.
 	BundleShapedRef bool
+	// BOMStripped names the bundle libraries whose CQL began with a UTF-8
+	// byte-order mark, removed before translation. Set by MaterializeBundle so
+	// the caller can report the publisher defect.
+	BOMStripped []string
 	// Jobs is how many fixture × profile runs happen at once; 0 means
 	// workers.DefaultJobs. Results come back in corpus order regardless.
 	Jobs int
@@ -327,8 +334,14 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
 		r.Status = StatusMatch
+		if fix.ExpectedStatus == ExpectedDivergent {
+			r.Error = "matches CQF although declared divergent — remove the divergence marker"
+		}
 	} else {
 		r.Status = StatusDifferJSON
+		if fix.ExpectedStatus == ExpectedDivergent {
+			r.Status = StatusDivergent
+		}
 		r.Diff = StructuralDiff(r.UpstreamJSON, r.EchoJSON)
 	}
 

@@ -236,6 +236,14 @@ func (t *Translator) resolveFHIRSourceType(expr ast.Expr) string {
 				return typ
 			}
 		}
+		// A function operand declared with a model type, e.g. (dx FHIR.Claim.Diagnosis).
+		// Without this, navigation off an operand had no source type, so the
+		// implicit conversion on dx.sequence = 1 was never inserted. (issues/08 W3)
+		if t.functionParamScope[e.Name] {
+			if local := fhirLocalTypeName(t.operandTypeSpecs[e.Name]); local != "" {
+				return local
+			}
+		}
 		// Fall back to the current context singleton (e.g., "Patient").
 		if e.Name == t.currentContextName {
 			return t.currentContextName
@@ -252,8 +260,8 @@ func (t *Translator) resolveFHIRSourceType(expr ast.Expr) string {
 		if sourceType == "" {
 			return ""
 		}
-		key := sourceType + "." + e.Path
-		return typesystem.FHIRPropertyType[key] // empty string if not found
+		typ, _ := typesystem.FHIRPropertyTypeOf(sourceType, e.Path)
+		return typ
 	}
 	return ""
 }
@@ -265,7 +273,10 @@ func (t *Translator) resolveFHIRPropertyType(source ast.Expr, path string) strin
 	if sourceType == "" {
 		return ""
 	}
-	return typesystem.FHIRPropertyType[sourceType+"."+path]
+	// Walk the base-type chain: id, meta and extension are declared on
+	// Resource/Element, so a direct index misses them on every concrete type.
+	typ, _ := typesystem.FHIRPropertyTypeOf(sourceType, path)
+	return typ
 }
 
 // resolveFHIRPropertyCoercion returns the FHIRHelpers function name (e.g. "ToString",
@@ -281,7 +292,7 @@ func (t *Translator) resolveFHIRPropertyCoercion(source ast.Expr, path string) s
 		return ""
 	}
 	if sourceType := t.resolveFHIRSourceType(source); sourceType != "" {
-		if typesystem.IsFHIRListProperty(sourceType, path) {
+		if typesystem.IsFHIRListPropertyOf(sourceType, path) {
 			return ""
 		}
 	}
@@ -537,8 +548,8 @@ func (t *Translator) liftFHIRListOperand(op string, src elm.Expression) (elm.Exp
 
 // sortFieldCoercion returns the FHIRHelpers conversion for a sort-by identifier
 // naming a field of a FHIR-typed query element, and that field's FHIR type.
-func (t *Translator) sortFieldCoercion(name string) (fn, fhirType string) {
-	if t.fhirHelpersLocalName == "" || t.noFHIRCoerce {
+func (t *Translator) sortFieldCoercion(name string, noCoerce bool) (fn, fhirType string) {
+	if t.fhirHelpersLocalName == "" || noCoerce {
 		return "", ""
 	}
 	local := fhirLocalTypeName(t.sortElementTS)
@@ -550,4 +561,128 @@ func (t *Translator) sortFieldCoercion(name string) (fn, fhirType string) {
 		return "", ""
 	}
 	return typesystem.FHIRCoercionFor(fhirType), fhirType
+}
+
+// equalityOps are the operators CQF resolves generically over any type, so two
+// operands of a common FHIR type need no conversion to System values. Ordering
+// comparisons are not here: they need an ordered System type, and CQF converts.
+var equalityOps = map[string]bool{
+	"Equal": true, "NotEqual": true, "Equivalent": true, "NotEquivalent": true,
+}
+
+// sharesFHIRType reports whether both operands of an equality are FHIR-typed
+// properties with a common FHIR type — the same type, or one deriving from the
+// other through the model's base-type chain.
+func (t *Translator) sharesFHIRType(op string, left, right ast.Expr) bool {
+	if !equalityOps[op] || t.fhirHelpersLocalName == "" {
+		return false
+	}
+	lt, rt := t.fhirOperandType(left), t.fhirOperandType(right)
+	if lt == "" || rt == "" {
+		return false
+	}
+	return fhirDerivesFrom(lt, rt) || fhirDerivesFrom(rt, lt)
+}
+
+// fhirOperandType is the FHIR type of a property access, or "" for anything
+// else (literals and System-typed expressions take the conversion path).
+func (t *Translator) fhirOperandType(e ast.Expr) string {
+	p, ok := e.(*ast.PropertyExpr)
+	if !ok {
+		return ""
+	}
+	return t.resolveFHIRPropertyType(p.Source, p.Path)
+}
+
+// fhirDerivesFrom reports whether FHIR type sub is super or derives from it.
+func fhirDerivesFrom(sub, super string) bool {
+	for depth := 0; sub != "" && depth < 32; depth++ {
+		if sub == super {
+			return true
+		}
+		sub = typesystem.FHIRBaseType[sub]
+	}
+	return false
+}
+
+// calculateAgePrecisions maps the precision word in CalculateAgeIn<P>[At].
+var calculateAgePrecisions = map[string]string{
+	"Years": "Year", "Months": "Month", "Weeks": "Week", "Days": "Day",
+	"Hours": "Hour", "Minutes": "Minute", "Seconds": "Second",
+}
+
+// calculateAgeCall maps the explicit-birth-date age functions to their system
+// operators: CalculateAgeIn<P>At(birthDate, asOf) is CalculateAgeAt{precision P},
+// and CalculateAgeIn<P>(birthDate) is CalculateAge{precision P}. Left as calls
+// they named a library function that does not exist, with no libraryName, which
+// no engine can evaluate. (issues/08 W7)
+//
+// Unlike AgeInYearsAt, the birth date is an argument here, so it is translated
+// as written — and, being consumed, converted like any FHIR value would be.
+func (t *Translator) calculateAgeCall(ann json.RawMessage, name string, args []ast.Expr) elm.Expression {
+	rest, ok := strings.CutPrefix(name, "CalculateAgeIn")
+	if !ok {
+		return nil
+	}
+	word, isAt := strings.CutSuffix(rest, "At")
+	precision, ok := calculateAgePrecisions[word]
+	if !ok {
+		return nil
+	}
+	switch {
+	case isAt && len(args) == 2:
+		ops := []elm.Expression{t.translateExpr(args[0]), t.translateExpr(args[1])}
+		return &elm.PrecisionOperatorNode{
+			Annotation: ann,
+			Signature:  t.computeSig("CalculateAgeAt", ops),
+			Operator:   "CalculateAgeAt",
+			Precision:  precision,
+			Operand:    ops,
+		}
+	case !isAt && len(args) == 1:
+		op := t.translateExpr(args[0])
+		return &elm.CalculateAgeNode{
+			Annotation: ann,
+			Signature:  t.computeSig("CalculateAge", []elm.Expression{op}),
+			Precision:  precision,
+			Operand:    op,
+		}
+	}
+	return nil
+}
+
+// convertFHIRCode converts an already-translated FHIR value used as the code of
+// a membership test — a Coding to ToCode, a CodeableConcept to ToConcept. The
+// call is synthesized, so it carries no locator or result type of its own.
+// A value that is not a convertible FHIR type is returned as it is.
+func (t *Translator) convertFHIRCode(e elm.Expression) elm.Expression {
+	if t.fhirHelpersLocalName == "" {
+		return e
+	}
+	local := fhirLocalTypeName(t.inferTypeSpec(e))
+	fn := typesystem.FHIRCoercionFor(local)
+	if local == "" || fn == "" {
+		return e
+	}
+	return t.markConverted(&elm.FunctionRefNode{
+		Annotation:  t.cqfAnnotation(),
+		Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + local}}),
+		Name:        fn,
+		LibraryName: t.fhirHelpersLocalName,
+		Operand:     []elm.Expression{e},
+	})
+}
+
+// codeSystemRef is the code system reference of an inline Code selector,
+// stamped as CQF stamps it: annotation, locator and the CodeSystem type, as a
+// declared CodeDef's codeSystem already is.
+func (t *Translator) codeSystemRef(name, library string, loc ast.Interval) *elm.CodeSystemRef {
+	ref := &elm.CodeSystemRef{Annotation: t.cqfAnnotation(), Name: name, LibraryName: library}
+	if t.opts.EnableLocators {
+		ref.Locator = locatorStr(loc)
+	}
+	if t.opts.EnableResultTypes {
+		ref.ResultTypeName = typesystem.TypeCodeSystem
+	}
+	return ref
 }

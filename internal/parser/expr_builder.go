@@ -521,9 +521,46 @@ func (b *astBuilder) buildQualifiedIdentifierExpr(ctx *cqlparser.QualifiedIdenti
 	if len(qualifiers) == 0 {
 		return setLoc(&ast.IdentifierRef{Name: name}, ctx)
 	}
-	// Use the first qualifier as the library name (CQL only allows one qualifier for library refs).
-	libName := unquoteIdentifier(qualifiers[0].(*cqlparser.QualifierExpressionContext).ReferentialIdentifier().GetText())
-	return setLoc(&ast.QualifiedRef{LibraryName: libName, Name: name}, ctx)
+	first := qualifiers[0].(*cqlparser.QualifierExpressionContext)
+	firstName := unquoteIdentifier(first.ReferentialIdentifier().GetText())
+
+	// A fragment parsed without its library cannot tell, so it keeps the
+	// library reading. CQL allows a single library qualifier.
+	if b.includeAliases == nil || b.includeAliases[firstName] {
+		if len(qualifiers) == 1 {
+			return setLoc(&ast.QualifiedRef{LibraryName: firstName, Name: name}, ctx)
+		}
+		second := unquoteIdentifier(qualifiers[1].(*cqlparser.QualifierExpressionContext).ReferentialIdentifier().GetText())
+		var expr ast.Expr = &ast.QualifiedRef{LibraryName: firstName, Name: second}
+		expr.(interface{ SetLoc(ast.Interval) }).SetLoc(spanTo(ctx, qualifiers[1]))
+		return b.propertyChain(expr, ctx, qualifiers[2:], name)
+	}
+
+	// Otherwise the first part is an alias, operand or let, and the rest is a
+	// property path: `C.item I` is Property{scope C, path item}, not a reference
+	// to a definition "item" in a library called C. (issues/08 W1, echo-elm #7)
+	root := &ast.IdentifierRef{Name: firstName, PathRoot: true}
+	root.SetLoc(intervalFromCtx(first))
+	return b.propertyChain(root, ctx, qualifiers[1:], name)
+}
+
+// propertyChain applies the remaining qualifiers and the final name to source
+// as nested property accesses, each spanning from the start of the whole
+// expression to the end of its own segment.
+func (b *astBuilder) propertyChain(source ast.Expr, whole *cqlparser.QualifiedIdentifierExpressionContext, rest []cqlparser.IQualifierExpressionContext, name string) ast.Expr {
+	for _, q := range rest {
+		qc := q.(*cqlparser.QualifierExpressionContext)
+		p := &ast.PropertyExpr{Source: source, Path: unquoteIdentifier(qc.ReferentialIdentifier().GetText())}
+		p.SetLoc(spanTo(whole, qc))
+		source = p
+	}
+	return setLoc(&ast.PropertyExpr{Source: source, Path: name}, whole)
+}
+
+// spanTo is the interval from the start of whole to the end of part.
+func spanTo(whole, part antlr.ParserRuleContext) ast.Interval {
+	w, p := intervalFromCtx(whole), intervalFromCtx(part)
+	return ast.Interval{Start: w.Start, Stop: p.Stop, SourceName: w.SourceName}
 }
 
 func (b *astBuilder) buildQualifiedInvocation(ctx cqlparser.IQualifiedInvocationContext, source ast.Expr) ast.Expr {
@@ -548,7 +585,7 @@ func (b *astBuilder) buildQualifiedInvocationInner(ctx cqlparser.IQualifiedInvoc
 				operands = append(operands, b.buildExpr(expr))
 			}
 		}
-		return &ast.FunctionRef{Name: name,
+		return &ast.FunctionRef{Name: name, Fluent: true,
 			Operands: append([]ast.Expr{source}, operands...)}
 
 	default:
@@ -745,9 +782,20 @@ func (b *astBuilder) buildCodeSelector(ctx cqlparser.ICodeSelectorContext) ast.E
 func (b *astBuilder) buildCodeSelectorInner(ctx cqlparser.ICodeSelectorContext) ast.Expr {
 	csc := ctx.(*cqlparser.CodeSelectorContext)
 	code := unquoteString(csc.STRING().GetText())
-	system := ""
+	system, systemLib := "", ""
+	var systemLoc ast.Interval
 	if csid := csc.CodesystemIdentifier(); csid != nil {
-		system = csid.GetText()
+		// The identifier is unquoted like any other: `from "ExampleSystem"`
+		// names the code system ExampleSystem. Taking the raw text kept the
+		// quotes in the ELM reference. (issues/08 W14)
+		c := csid.(*cqlparser.CodesystemIdentifierContext)
+		if id := c.Identifier(); id != nil {
+			system = unquoteIdentifier(id.GetText())
+		}
+		if lib := c.LibraryIdentifier(); lib != nil {
+			systemLib = unquoteIdentifier(lib.GetText())
+		}
+		systemLoc = intervalFromCtx(c)
 	}
 	display := ""
 	if dc := csc.DisplayClause(); dc != nil {
@@ -756,7 +804,7 @@ func (b *astBuilder) buildCodeSelectorInner(ctx cqlparser.ICodeSelectorContext) 
 			display = parts[1]
 		}
 	}
-	return &ast.CodeExpr{Code: code, System: system, Display: display}
+	return &ast.CodeExpr{Code: code, System: system, SystemLibrary: systemLib, SystemLoc: systemLoc, Display: display}
 }
 
 func (b *astBuilder) buildConceptSelector(ctx cqlparser.IConceptSelectorContext) ast.Expr {

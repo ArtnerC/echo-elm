@@ -1,0 +1,153 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "6:1-6:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ExternalFunction",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "5:1-5:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "6:1-6:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "6:1-6:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "external": true,
+          "locator": "7:1-7:76",
+          "name": "Lookup",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "key",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "7:30-7:42",
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "external": true,
+          "locator": "8:1-8:78",
+          "name": "Resolve",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "ref",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "8:31-8:44",
+                "name": "{http://hl7.org/fhir}Reference",
+                "resultTypeName": "{http://hl7.org/fhir}Reference",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{http://hl7.org/fhir}Resource",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "9:21-9:33",
+            "name": "Lookup",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "9:30-9:32",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "Literal",
+                "value": "k",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "9:1-9:33",
+          "name": "Looked up",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}String"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "4:1-4:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

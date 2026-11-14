@@ -1,6 +1,7 @@
 package parity
 
 import (
+	"bytes"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -59,11 +60,24 @@ func MaterializeBundle(b *bundle.Bundle, dir, profileName string) (Config, error
 
 	libs := b.Libraries()
 	fixtures := make([]Fixture, 0, len(libs))
+	var bomStripped []string
 	for i := range libs {
 		lib := &libs[i]
 		base := strings.TrimSuffix(lib.FileName(), ".cql")
 
-		if err := os.WriteFile(filepath.Join(corpusDir, base+".cql"), lib.CQLSource, 0o644); err != nil {
+		// A UTF-8 byte-order mark is a publisher-side encoding defect: CQF and
+		// echo-elm both reject it as a syntax error at 1:0, and every library
+		// that includes one inherits the failure. Left in, one release reported
+		// 308 libraries as upstream errors and compared none of them. Stripped,
+		// both translators see the same source and the comparison means
+		// something; the libraries are reported so the defect stays visible.
+		// (issues/08 Part 2)
+		cql := lib.CQLSource
+		if trimmed, had := bytes.CutPrefix(cql, utf8BOM); had {
+			cql = trimmed
+			bomStripped = append(bomStripped, libraryDescription(lib))
+		}
+		if err := os.WriteFile(filepath.Join(corpusDir, base+".cql"), cql, 0o644); err != nil {
 			return Config{}, fmt.Errorf("parity: write %s: %w", base+".cql", err)
 		}
 		// A library with no bundled ELM has nothing to compare against; it is
@@ -107,6 +121,7 @@ func MaterializeBundle(b *bundle.Bundle, dir, profileName string) (Config, error
 		// The reference is Library.content[], written by CQF's JAXB/MOXy writer,
 		// not the cql-to-elm CLI. See Config.BundleShapedRef.
 		BundleShapedRef: true,
+		BOMStripped:     bomStripped,
 	}, nil
 }
 
@@ -247,3 +262,6 @@ func summarizeNames(names []string) string {
 	}
 	return strings.Join(names[:3], ", ") + fmt.Sprintf(", and %d more", len(names)-3)
 }
+
+// utf8BOM is the byte-order mark some publishers prefix to text/cql content.
+var utf8BOM = []byte{0xEF, 0xBB, 0xBF}

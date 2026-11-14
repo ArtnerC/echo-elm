@@ -86,3 +86,42 @@ func TestStructuralDiffEmptyWhenIdentical(t *testing.T) {
 		t.Errorf("identical documents reported a difference:\n%s", diff)
 	}
 }
+
+// overloadDef builds a FunctionDef named name with one operand of type opType.
+func overloadDef(name, opType, body string) string {
+	return `{"name":"` + name + `","type":"FunctionDef","operand":[{"name":"x","operandTypeSpecifier":` +
+		`{"type":"NamedTypeSpecifier","name":"` + opType + `"}}],"expression":{"type":"` + body + `"}}`
+}
+
+// TestStructuralDiffPairsOverloadsBySignature pins issues/08 Part 7: overloads
+// pair by signature, not by position, so emitting them in a different order is
+// an ordering finding only — not a mismatch at every overload.
+func TestStructuralDiffPairsOverloadsBySignature(t *testing.T) {
+	a, b := overloadDef("F", "{x}A", "If"), overloadDef("F", "{x}B", "Or")
+	want := `{"library":{"statements":{"def":[` + a + `,` + b + `]}}}`
+	got := `{"library":{"statements":{"def":[` + b + `,` + a + `]}}}`
+
+	diff := StructuralDiff(want, got)
+	if strings.Contains(diff, "If") || strings.Contains(diff, "only in") {
+		t.Errorf("reordered overloads were paired by position:\n%s", diff)
+	}
+	if !strings.Contains(diff, "different order") {
+		t.Errorf("reordering not reported:\n%s", diff)
+	}
+}
+
+// TestStructuralDiffPairsChangedOverloadSignature pins that an overload whose
+// operand type differs between the sides — the issues/08 W3 shape, Claim.Item
+// emitted as Item — reports that one field, not two unrelated definitions.
+func TestStructuralDiffPairsChangedOverloadSignature(t *testing.T) {
+	want := `{"library":{"statements":{"def":[` + overloadDef("F", "{x}Claim.Item", "If") + `,` + overloadDef("F", "{x}Other", "If") + `]}}}`
+	got := `{"library":{"statements":{"def":[` + overloadDef("F", "{x}Item", "If") + `,` + overloadDef("F", "{x}Other", "If") + `]}}}`
+
+	diff := StructuralDiff(want, got)
+	if strings.Contains(diff, "only in") {
+		t.Errorf("a changed signature was reported as unpaired definitions:\n%s", diff)
+	}
+	if !strings.Contains(diff, "Claim.Item") {
+		t.Errorf("the operand type difference was not reported:\n%s", diff)
+	}
+}

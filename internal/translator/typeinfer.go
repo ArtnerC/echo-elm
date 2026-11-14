@@ -565,20 +565,17 @@ func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
 	return t.marshalSig(vals)
 }
 
-// astTypeSpecToTypeSpec converts an AST type specifier to the translator's
-// internal typeSpec used for signature inference. Returns nil for tuple/choice
-// or other unhandled forms.
 // declaredTypeSpec converts a source-declared type specifier and renders every
 // model type name the one way CQF does: {modelUri}LocalName.
 //
-// astTypeSpecToTypeSpec keeps the name as written, which is why the same type
+// astTypeSpecWith keeps the name as written, which is why the same type
 // could come out three ways in one library — `{http://hl7.org/fhir}Encounter`
 // from a retrieve, `FHIR.Encounter` from an alias-qualified declaration, and
 // bare `Encounter` from an unqualified one. Only the first is right. Routing
 // declared specifiers through qualifyDataType, which retrieves already use,
 // makes that one rule rather than three code paths that must agree.
 func (t *Translator) declaredTypeSpec(ts ast.TypeSpecifier) typeSpec {
-	return t.qualifyTypeSpec(astTypeSpecToTypeSpec(ts))
+	return t.qualifyTypeSpec(astTypeSpecWith(ts, t.resolveUnqualifiedTypeName))
 }
 
 // qualifyTypeSpec rewrites every model type name in a spec tree to its
@@ -622,21 +619,42 @@ func (t *Translator) qualifyTypeName(name string) string {
 	return name
 }
 
-func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
+// astTypeSpecWith converts an AST type specifier to the translator's internal
+// typeSpec, resolving unqualified names with resolve — in practice the
+// translator's resolveUnqualifiedTypeName, which knows the library's models.
+func astTypeSpecWith(ts ast.TypeSpecifier, resolve func(string) string) typeSpec {
 	if ts == nil {
 		return nil
 	}
 	switch v := ts.(type) {
 	case *ast.NamedTypeSpecifier:
-		return namedTS{resolveTypeName(v.Name)}
+		// A model-qualified name stays qualified so qualifyTypeSpec can render it
+		// in its model's namespace. Resolving only the last segment did two kinds
+		// of damage: FHIR.Claim.Item became the nonexistent FHIR.Item, and
+		// FHIR.Quantity became System.Quantity, because the bare name matched a
+		// System type. (issues/08 W3, T1)
+		switch v.Qualifier {
+		case "":
+			return namedTS{resolve(v.Name)}
+		case "System":
+			// Explicitly System: never subject to the model-first reading an
+			// unqualified Quantity gets. `gap System.Quantity` is System's, and
+			// so is `System.ValueSet` — which resolveTypeName does not list, so
+			// it used to fall through to the primary model as FHIR.ValueSet.
+			if r := resolveTypeName(v.Name); strings.HasPrefix(r, "{") {
+				return namedTS{r}
+			}
+			return namedTS{typesystem.SystemELMName + v.Name}
+		}
+		return namedTS{v.Qualifier + "." + v.Name}
 	case *ast.ListTypeSpecifier:
-		inner := astTypeSpecToTypeSpec(v.ElementType)
+		inner := astTypeSpecWith(v.ElementType, resolve)
 		if inner == nil {
 			inner = anyTS
 		}
 		return listTS{inner}
 	case *ast.IntervalTypeSpecifier:
-		inner := astTypeSpecToTypeSpec(v.PointType)
+		inner := astTypeSpecWith(v.PointType, resolve)
 		if inner == nil {
 			inner = anyTS
 		}
@@ -647,7 +665,7 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 		// (issues/06)
 		alts := make([]typeSpec, 0, len(v.Types))
 		for _, ct := range v.Types {
-			if a := astTypeSpecToTypeSpec(ct); a != nil {
+			if a := astTypeSpecWith(ct, resolve); a != nil {
 				alts = append(alts, a)
 			}
 		}
@@ -658,7 +676,7 @@ func astTypeSpecToTypeSpec(ts ast.TypeSpecifier) typeSpec {
 			if el == nil {
 				continue
 			}
-			fts := astTypeSpecToTypeSpec(el.Type)
+			fts := astTypeSpecWith(el.Type, resolve)
 			if fts == nil {
 				fts = anyTS
 			}
@@ -771,6 +789,8 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "ToList":
 			// ToList(scalar) → List<typeof(scalar)>
 			return listTS{t.inferTypeSpec(v.Operand)}
+		case "ExpandValueSet":
+			return listTS{namedTS{typesystem.TypeCode}}
 		case "Negate", "Abs", "Successor", "Predecessor":
 			// These preserve the operand type.
 			return t.inferTypeSpec(v.Operand)
@@ -826,7 +846,34 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return listTS{ts}
 		}
 		if len(v.Element) > 0 {
-			// Prefer the first non-null element for type inference.
+			// The element type is the common type of the non-null elements.
+			// Elements with none make the list List<Any> — CQF types both
+			// { 1, 'a' } and { {1}, {'a'} } so, rather than as a choice. Taking
+			// the first element's type called the second List<Integer>, and
+			// flattening it then skipped the cast Flatten needs. (issues/08 W15)
+			var common typeSpec
+			for _, el := range v.Element {
+				if isNullLike(el) {
+					continue
+				}
+				ts := knownTS(t.nodeResultTS(el))
+				if ts == nil {
+					continue
+				}
+				switch {
+				case common == nil, typeSpecEqual(common, ts), fhirSubtypeTS(ts, common):
+					if common == nil {
+						common = ts
+					}
+				case fhirSubtypeTS(common, ts):
+					common = ts
+				default:
+					return listTS{anyTS}
+				}
+			}
+			if common != nil {
+				return listTS{common}
+			}
 			for _, el := range v.Element {
 				if !isNullLike(el) {
 					return listTS{t.nodeResultTS(el)}
@@ -1094,6 +1141,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 	case *elm.InValueSetNode, *elm.AnyInValueSetNode:
 		return boolTS
 	case *elm.FunctionRefNode:
+		// An overloaded name resolves by argument type to one declaration, whose
+		// return type is the call's. FHIRHelpers keeps its own table below: its
+		// conversions are many overloads of one name whose System result the
+		// table already states.
+		if v.LibraryName == "" || v.LibraryName != t.fhirHelpersLocalName {
+			if len(t.callCandidates(v.LibraryName, v.Name)) > 1 {
+				args := make([]typeSpec, len(v.Operand))
+				for i, o := range v.Operand {
+					args[i] = t.inferTypeSpec(o)
+				}
+				if ov := t.overloadForCall(v.LibraryName, v.Name, args); ov != nil && ov.returns != nil {
+					return ov.returns
+				}
+			}
+		}
 		// A call to a function declared in this library resolves to its
 		// declared return type.
 		if v.LibraryName == "" {
@@ -1223,6 +1285,17 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		// List<Any>. (issues/05 Part 5 / #12)
 		if v.Path != "" {
 			if local := fhirLocalTypeName(srcTS); local != "" {
+				// `.value` on a FHIR primitive is the primitive's System value:
+				// dateTime.value is DateTime, ClaimStatus.value is String. The
+				// property table omits these elements because they are
+				// System-typed, so without this `.value` came out untyped and took
+				// every enclosing Interval and FunctionDef type down to Any.
+				// (issues/08 T1, #15)
+				if v.Path == "value" {
+					if sys := fhirPrimitiveSystemType(local); sys != "" {
+						return namedTS{sys}
+					}
+				}
 				if alts, ok := typesystem.FHIRPropertyChoiceOf(local, v.Path); ok {
 					// A choice element's type is the choice itself, with its
 					// alternatives in CQF's order: Condition.onset is

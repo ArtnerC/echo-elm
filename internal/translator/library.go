@@ -93,9 +93,28 @@ type includedLibrary struct {
 
 // includeTypes are the types an included library exposes to its includer.
 type includeTypes struct {
-	defs     map[string]typeSpec
-	funcs    map[string]typeSpec
-	operands map[string][]typeSpec
+	defs      map[string]typeSpec
+	funcs     map[string]typeSpec
+	operands  map[string][]typeSpec
+	overloads map[string][]*funcOverload
+}
+
+// overloadsUnder copies an included library's overloads, tagged with the alias
+// this library includes it under. The cached originals are shared by every
+// translation that includes the library, under whatever alias each one uses,
+// so they are never tagged in place.
+func overloadsUnder(src map[string][]*funcOverload, alias string) map[string][]*funcOverload {
+	out := make(map[string][]*funcOverload, len(src))
+	for name, ovs := range src {
+		copied := make([]*funcOverload, len(ovs))
+		for i, ov := range ovs {
+			c := *ov
+			c.library = alias
+			copied[i] = &c
+		}
+		out[name] = copied
+	}
+	return out
 }
 
 // loadInclude loads an included library through the cache, or returns nil when
@@ -143,7 +162,7 @@ func (t *Translator) loadInclude(path, version string) *includedLibrary {
 	sub.includeVisiting = t.includeVisiting
 	sub.Translate(pr.Library, path+".cql")
 	delete(t.includeVisiting, chainKey)
-	il.types = &includeTypes{defs: sub.defTypeSpecs, funcs: sub.funcReturnSpecs, operands: sub.localFuncOperands}
+	il.types = &includeTypes{defs: sub.defTypeSpecs, funcs: sub.funcReturnSpecs, operands: sub.localFuncOperands, overloads: sub.localOverloads}
 	if sub.includeTruncated {
 		t.includeTruncated = true
 		return il
@@ -263,6 +282,12 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 			continue
 		}
 		ast.Walk(s.Expression, func(n ast.Node) {
+			// Walk is pre-order, so a sort item's calls are rewritten here, on
+			// the query, before the walk reaches them below.
+			if q, isQuery := n.(*ast.QueryExpression); isQuery {
+				t.bindSortReceivers(q)
+				return
+			}
 			fr, isCall := n.(*ast.FunctionRef)
 			if !isCall || fr.LibraryName != "" || len(fr.Operands) == 0 {
 				return
@@ -271,6 +296,7 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 				if _, isLib := t.libSyms[ir.Name]; isLib || t.includeAliases[ir.Name] {
 					fr.LibraryName = ir.Name
 					fr.Operands = fr.Operands[1:]
+					fr.Fluent = false // a library qualifier, not a receiver
 					return
 				}
 			}
@@ -413,4 +439,56 @@ func functionCounts(lib *ast.Library) map[string]int {
 		}
 	}
 	return counts
+}
+
+// bindSortReceivers gives a receiverless fluent call in a sort item the sort
+// element as its receiver: in `sort by start of "Effective interval"()` the
+// call is "Effective interval"($this). CQF resolves it so; left alone it was a
+// call with no operand and no library, naming a function that takes one.
+// (issues/08 W2)
+//
+// Only when the call cannot resolve as written: no declaration of that name
+// takes the given number of arguments, and a fluent one takes exactly one more.
+func (t *Translator) bindSortReceivers(q *ast.QueryExpression) {
+	if q.Sort == nil {
+		return
+	}
+	for _, item := range q.Sort.Items {
+		if item == nil || item.Expression == nil {
+			continue
+		}
+		ast.Walk(item.Expression, func(n ast.Node) {
+			fr, isCall := n.(*ast.FunctionRef)
+			if !isCall || fr.LibraryName != "" {
+				return
+			}
+			if t.declaresArity(fr.Name, len(fr.Operands), false) || !t.declaresArity(fr.Name, len(fr.Operands)+1, true) {
+				return
+			}
+			fr.Operands = append([]ast.Expr{&ast.ThisExpr{Implicit: true}}, fr.Operands...)
+			fr.Fluent = true
+		})
+	}
+}
+
+// declaresArity reports a declaration of name — in this library or an include —
+// taking n operands; with fluentOnly, a fluent one.
+func (t *Translator) declaresArity(name string, n int, fluentOnly bool) bool {
+	match := func(ovs []*funcOverload) bool {
+		for _, ov := range ovs {
+			if len(ov.operands) == n && (!fluentOnly || ov.fluent) {
+				return true
+			}
+		}
+		return false
+	}
+	if match(t.localOverloads[name]) {
+		return true
+	}
+	for _, byName := range t.libOverloads {
+		if match(byName[name]) {
+			return true
+		}
+	}
+	return false
 }

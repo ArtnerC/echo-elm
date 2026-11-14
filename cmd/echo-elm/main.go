@@ -495,6 +495,16 @@ func runParity(args []string) {
 			os.Exit(1)
 		}
 		bundleCfg.TagFilter = tag
+		if n := len(bundleCfg.BOMStripped); n > 0 {
+			// Both translators reject a byte-order mark, so a BOM-prefixed
+			// library and everything including it would otherwise report as
+			// upstream errors and never be compared.
+			fmt.Fprintf(os.Stderr, "parity: stripped a UTF-8 byte-order mark from %d library(ies) before translating; "+
+				"this is a defect in the published CQL, not in either translator:\n", n)
+			for _, name := range bundleCfg.BOMStripped {
+				fmt.Fprintf(os.Stderr, "  %s\n", name)
+			}
+		}
 		cfg = bundleCfg
 		corpus = bundlePath
 		label = "bundle=" + filepath.Base(bundlePath)
@@ -545,10 +555,20 @@ func runParity(args []string) {
 		if r.Status == parity.StatusEchoError || r.Status == parity.StatusUpstreamError {
 			icon = "✗"
 		}
+		if r.Status == parity.StatusDivergent {
+			icon = "~"
+		}
 		fmt.Printf("%s  %-45s  %s\n", icon, r.Fixture, r.Status)
+		if r.Status == parity.StatusMatch && r.Error != "" {
+			fmt.Printf("   note: %s\n", r.Error)
+		}
 	}
-	fmt.Printf("\nmatch=%d  differ=%d  error=%d  total=%d\n",
-		summary[parity.StatusMatch], summary[parity.StatusDifferJSON],
+	divergent := ""
+	if n := summary[parity.StatusDivergent]; n > 0 {
+		divergent = fmt.Sprintf("  divergent=%d", n)
+	}
+	fmt.Printf("\nmatch=%d  differ=%d%s  error=%d  total=%d\n",
+		summary[parity.StatusMatch], summary[parity.StatusDifferJSON], divergent,
 		summary[parity.StatusEchoError]+summary[parity.StatusUpstreamError], len(results))
 
 	if err := parity.WriteReport(outDir, runID, cqfVersion, results); err != nil {

@@ -23,6 +23,13 @@ type OptionProfile struct {
 	OptIn bool `yaml:"optIn"`
 }
 
+// ExpectedDivergent is the expectedStatus of a fixture where echo-elm
+// deliberately differs from CQF — reproducing CQF there would mean emitting ELM
+// known to be wrong. Such a fixture still has a CQF golden; a difference from it
+// is expected and reported as StatusDivergent, and a match is flagged, since it
+// means the divergence is gone and the marker should go too.
+const ExpectedDivergent = "divergent"
+
 // Fixture is a single test entry from corpus.yaml.
 type Fixture struct {
 	Path           string `yaml:"path"`
@@ -36,6 +43,10 @@ type Fixture struct {
 	// fixture+profile combination (upstream-error), so no golden can exist.
 	ExcludeProfiles []string `yaml:"excludeProfiles"`
 	Tags            []string `yaml:"tags"`
+	// Divergence explains a fixture with expectedStatus "divergent": one
+	// where echo-elm deliberately does not reproduce what CQF emits. It must
+	// say why, so the decision can be revisited rather than rediscovered.
+	Divergence string `yaml:"divergence,omitempty"`
 	// Diagnostics opts the fixture into comparing CqlToElmError annotations,
 	// which are otherwise normalized away. For fixtures whose every CQF
 	// diagnostic echo-elm reproduces; see issues #8.
