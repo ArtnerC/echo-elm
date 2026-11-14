@@ -8,7 +8,6 @@ import (
 
 	"github.com/artnerc/echo-elm/internal/ast"
 	"github.com/artnerc/echo-elm/internal/elm"
-	"github.com/artnerc/echo-elm/internal/parser"
 	"github.com/artnerc/echo-elm/internal/resolver"
 	"github.com/artnerc/echo-elm/internal/typesystem"
 	"github.com/artnerc/echo-elm/internal/ucum"
@@ -49,6 +48,11 @@ type Options struct {
 	// LibrarySource resolves CQL library includes by name and version.
 	// When nil, includes are recorded in ELM output but not resolved.
 	LibrarySource resolver.LibrarySource
+
+	// IncludeCache, when set, shares what is learned from each included library
+	// across every translation that uses it — a run translating many libraries
+	// loads each shared helper once. Nil gives each translation its own.
+	IncludeCache *IncludeCache
 }
 
 // DefaultOptions returns the modern echo-elm defaults per spec.
@@ -156,8 +160,8 @@ type Translator struct {
 	sortElementTS        typeSpec                         // result element type of the query whose sort clause is being translated
 	anyAccumulators      map[string]bool                  // aggregate accumulators with no starting value, whose type is Any
 	libFuncOperands      map[string]map[string][]typeSpec // included library alias → function name → declared operand types
-	includeCache         map[string]*includeTypes         // include path|version → the types it exposes, shared across nesting
-	includeVisiting      map[string]bool                  // include path|version currently being typed, to stop cycles
+	includeVisiting      map[string]bool                  // include path|version currently being typed in this chain, to stop cycles
+	includeTruncated     bool                             // an include below this translation was cut short by a cycle
 	converted            map[elm.Expression]bool          // conversions and casts the translator synthesized
 	elmDiagnostics       []*elm.CqlToElmError             // CqlToElmError annotations, in the order they arise
 	libraryID            string                           // this library's identifier and version, for diagnostics
@@ -431,37 +435,36 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 	t.libFuncReturns = make(map[string]map[string]typeSpec)
 	t.libFuncOperands = make(map[string]map[string][]typeSpec)
 	if t.opts.LibrarySource != nil {
+		if t.opts.IncludeCache == nil {
+			t.opts.IncludeCache = NewIncludeCache()
+		}
 		for _, inc := range lib.Includes {
 			localName := inc.LocalName
 			if localName == "" {
 				localName = inc.Path
 			}
-			src, found, err := t.opts.LibrarySource.GetLibrarySource(inc.Path, inc.Version)
-			if err == nil && found {
-				if pr, parseErr := parser.ParseBytes(src, inc.Path+".cql"); parseErr == nil {
-					t.libSyms[localName] = buildSymMap(pr.Library)
-					// `receiver.Func()` can only resolve to a fluent function, so
-					// record which includes declare one under each name.
-					for _, st := range pr.Library.Statements {
-						if st.IsFunction && st.IsFluent {
-							if !containsString(t.libFluentFuncs[st.Name], localName) {
-								t.libFluentFuncs[st.Name] = append(t.libFluentFuncs[st.Name], localName)
-							}
-						}
-					}
-					// A qualified reference resolves to the type the included
-					// library gives that definition, so translate it once to
-					// learn those types. They are needed for implicit
-					// conversions as well as result types, so this is not gated
-					// on --result-types.
-					if it := t.includedTypes(pr.Library, inc.Path, inc.Version); it != nil {
-						t.libDefTypes[localName] = it.defs
-						t.libFuncReturns[localName] = it.funcs
-						t.libFuncOperands[localName] = it.operands
-					}
-					t.libFuncCounts[localName] = functionCounts(pr.Library)
+			il := t.loadInclude(inc.Path, inc.Version)
+			if il == nil {
+				continue
+			}
+			t.libSyms[localName] = il.syms
+			// `receiver.Func()` can only resolve to a fluent function, so
+			// record which includes declare one under each name.
+			for _, name := range il.fluent {
+				if !containsString(t.libFluentFuncs[name], localName) {
+					t.libFluentFuncs[name] = append(t.libFluentFuncs[name], localName)
 				}
 			}
+			// A qualified reference resolves to the type the included library
+			// gives that definition. Those types are needed for implicit
+			// conversions as well as result types, so they are not gated on
+			// --result-types.
+			if il.types != nil {
+				t.libDefTypes[localName] = il.types.defs
+				t.libFuncReturns[localName] = il.types.funcs
+				t.libFuncOperands[localName] = il.types.operands
+			}
+			t.libFuncCounts[localName] = il.funcCounts
 		}
 	}
 

@@ -137,6 +137,11 @@ func TestMaterializeBundleDerivesProfile(t *testing.T) {
 	if profile.TranslatorOptions["signatureLevel"] != "Overloads" {
 		t.Errorf("signatureLevel = %v, want Overloads", profile.TranslatorOptions["signatureLevel"])
 	}
+	// The same options as CQF CLI flags, so `parity --bundle --fresh-cqf`
+	// compiles the bundle's CQL the way the bundle says it was compiled.
+	if got, want := strings.Join(profile.CLIFlags, " "), "--locators --result-types --signatures Overloads"; got != want {
+		t.Errorf("CLIFlags = %q, want %q", got, want)
+	}
 }
 
 // TestMaterializeBundleRejectsDisagreeingLibraries pins that a bundle whose
