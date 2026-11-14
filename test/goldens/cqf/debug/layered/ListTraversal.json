@@ -1,0 +1,1267 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableAnnotations,EnableLocators,EnableResultTypes",
+        "type": "CqlToElmInfo"
+      },
+      {
+        "s": {
+          "s": [
+            {
+              "value": [
+                "// Implicit list traversal: navigating `.p` on a list navigates into each\n// element — `Patient.name.family` is a query over Patient.name, flattened when\n// the property is itself a list (`Patient.name.given`). echo-elm took the\n// property of the list itself, a different value. Traversal is on by default in\n// CQF and in echo-elm's modern translate, and off under the measure profile.\nlibrary ListTraversal version '1.0'"
+              ]
+            }
+          ]
+        },
+        "t": [],
+        "type": "Annotation"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "9:1-9:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "ListTraversal",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "include FHIRHelpers version '4.0.1' called FHIRHelpers"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "8:1-8:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "9:1-9:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "9:1-9:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Addr\": Patient.address"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "10:16-10:30",
+            "path": "address",
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Address",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "source": {
+              "annotation": [],
+              "locator": "10:16-10:22",
+              "name": "Patient",
+              "resultTypeName": "{http://hl7.org/fhir}Patient",
+              "type": "ExpressionRef"
+            },
+            "type": "Property"
+          },
+          "locator": "10:1-10:30",
+          "name": "Addr",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Address",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"FirstLine\": First(Patient.address.line)"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "11:21-11:47",
+            "resultTypeName": "{http://hl7.org/fhir}string",
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "locator": "11:27-11:46",
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "line",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "locator": "11:27-11:41",
+                      "path": "address",
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "elementType": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Address",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "ListTypeSpecifier"
+                      },
+                      "source": {
+                        "annotation": [],
+                        "locator": "11:27-11:33",
+                        "name": "Patient",
+                        "resultTypeName": "{http://hl7.org/fhir}Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "line",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{http://hl7.org/fhir}string",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "signature": [],
+              "type": "Flatten"
+            },
+            "type": "First"
+          },
+          "locator": "11:1-11:47",
+          "name": "FirstLine",
+          "resultTypeName": "{http://hl7.org/fhir}string"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"FirstLineDirect\": First(Patient.address[0].line)"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "12:27-12:56",
+            "resultTypeName": "{http://hl7.org/fhir}string",
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "locator": "12:33-12:55",
+              "path": "line",
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{http://hl7.org/fhir}string",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "source": {
+                "annotation": [],
+                "locator": "12:33-12:50",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "locator": "12:33-12:47",
+                    "path": "address",
+                    "resultTypeSpecifier": {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}Address",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    },
+                    "source": {
+                      "annotation": [],
+                      "locator": "12:33-12:39",
+                      "name": "Patient",
+                      "resultTypeName": "{http://hl7.org/fhir}Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  },
+                  {
+                    "annotation": [],
+                    "locator": "12:49",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                    "type": "Literal",
+                    "value": "0",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  }
+                ],
+                "resultTypeName": "{http://hl7.org/fhir}Address",
+                "signature": [],
+                "type": "Indexer"
+              },
+              "type": "Property"
+            },
+            "type": "First"
+          },
+          "locator": "12:1-12:56",
+          "name": "FirstLineDirect",
+          "resultTypeName": "{http://hl7.org/fhir}string"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Given\": Patient.name.given"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "13:17-13:34",
+            "operand": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "path": "given",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                }
+              },
+              "source": [
+                {
+                  "alias": "$this",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "locator": "13:17-13:28",
+                    "path": "name",
+                    "resultTypeSpecifier": {
+                      "annotation": [],
+                      "elementType": {
+                        "annotation": [],
+                        "name": "{http://hl7.org/fhir}HumanName",
+                        "type": "NamedTypeSpecifier"
+                      },
+                      "type": "ListTypeSpecifier"
+                    },
+                    "source": {
+                      "annotation": [],
+                      "locator": "13:17-13:23",
+                      "name": "Patient",
+                      "resultTypeName": "{http://hl7.org/fhir}Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                }
+              ],
+              "type": "Query",
+              "where": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "path": "given",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                },
+                "signature": [],
+                "type": "Not"
+              }
+            },
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}string",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "signature": [],
+            "type": "Flatten"
+          },
+          "locator": "13:1-13:34",
+          "name": "Given",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}string",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"Family\": Patient.name.family"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "14:18-14:36",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}string",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "annotation": [],
+              "distinct": false,
+              "expression": {
+                "annotation": [],
+                "path": "family",
+                "source": {
+                  "annotation": [],
+                  "name": "$this",
+                  "type": "AliasRef"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "$this",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "locator": "14:18-14:29",
+                  "path": "name",
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}HumanName",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "source": {
+                    "annotation": [],
+                    "locator": "14:18-14:24",
+                    "name": "Patient",
+                    "resultTypeName": "{http://hl7.org/fhir}Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "family",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "locator": "14:1-14:36",
+          "name": "Family",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}string",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"GivenFirst\": First(Patient.name.given)"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "15:22-15:46",
+            "resultTypeName": "{http://hl7.org/fhir}string",
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "locator": "15:28-15:45",
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "given",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "locator": "15:28-15:39",
+                      "path": "name",
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "elementType": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}HumanName",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "ListTypeSpecifier"
+                      },
+                      "source": {
+                        "annotation": [],
+                        "locator": "15:28-15:34",
+                        "name": "Patient",
+                        "resultTypeName": "{http://hl7.org/fhir}Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "given",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{http://hl7.org/fhir}string",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "signature": [],
+              "type": "Flatten"
+            },
+            "type": "First"
+          },
+          "locator": "15:1-15:46",
+          "name": "GivenFirst",
+          "resultTypeName": "{http://hl7.org/fhir}string"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"TelecomValues\": Patient.telecom.value"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "16:25-16:45",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}string",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "annotation": [],
+              "distinct": false,
+              "expression": {
+                "annotation": [],
+                "path": "value",
+                "source": {
+                  "annotation": [],
+                  "name": "$this",
+                  "type": "AliasRef"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "$this",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "locator": "16:25-16:39",
+                  "path": "telecom",
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}ContactPoint",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "source": {
+                    "annotation": [],
+                    "locator": "16:25-16:31",
+                    "name": "Patient",
+                    "resultTypeName": "{http://hl7.org/fhir}Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "value",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "locator": "16:1-16:45",
+          "name": "TelecomValues",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}string",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"IdentSystems\": Patient.identifier.system"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "17:24-17:48",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}uri",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "annotation": [],
+              "distinct": false,
+              "expression": {
+                "annotation": [],
+                "path": "system",
+                "source": {
+                  "annotation": [],
+                  "name": "$this",
+                  "type": "AliasRef"
+                },
+                "type": "Property"
+              }
+            },
+            "source": [
+              {
+                "alias": "$this",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "locator": "17:24-17:41",
+                  "path": "identifier",
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Identifier",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "source": {
+                    "annotation": [],
+                    "locator": "17:24-17:30",
+                    "name": "Patient",
+                    "resultTypeName": "{http://hl7.org/fhir}Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "system",
+                  "source": {
+                    "annotation": [],
+                    "name": "$this",
+                    "type": "AliasRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            }
+          },
+          "locator": "17:1-17:48",
+          "name": "IdentSystems",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}uri",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"CodingCodes\": [Condition] C return C.code.coding.code"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "locator": "18:23-18:61",
+            "relationship": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{http://hl7.org/fhir}code",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "return": {
+              "annotation": [],
+              "expression": {
+                "annotation": [],
+                "let": [],
+                "locator": "18:44-18:61",
+                "relationship": [],
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}code",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "code",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "locator": "18:44-18:56",
+                      "path": "coding",
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "elementType": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Coding",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "ListTypeSpecifier"
+                      },
+                      "source": {
+                        "annotation": [],
+                        "locator": "18:44-18:49",
+                        "path": "code",
+                        "resultTypeName": "{http://hl7.org/fhir}CodeableConcept",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "code",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "locator": "18:37-18:61",
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}code",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "codeFilter": [],
+                  "dataType": "{http://hl7.org/fhir}Condition",
+                  "dateFilter": [],
+                  "include": [],
+                  "locator": "18:23-18:33",
+                  "otherFilter": [],
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "elementType": {
+                      "annotation": [],
+                      "name": "{http://hl7.org/fhir}Condition",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "ListTypeSpecifier"
+                  },
+                  "templateId": "http://hl7.org/fhir/StructureDefinition/Condition",
+                  "type": "Retrieve"
+                },
+                "locator": "18:23-18:35",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{http://hl7.org/fhir}Condition",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "locator": "18:1-18:61",
+          "name": "CodingCodes",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}code",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"ExistsLine\": exists Patient.address.line"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "19:22-19:48",
+            "operand": {
+              "annotation": [],
+              "locator": "19:29-19:48",
+              "operand": {
+                "annotation": [],
+                "let": [],
+                "relationship": [],
+                "return": {
+                  "annotation": [],
+                  "distinct": false,
+                  "expression": {
+                    "annotation": [],
+                    "path": "line",
+                    "source": {
+                      "annotation": [],
+                      "name": "$this",
+                      "type": "AliasRef"
+                    },
+                    "type": "Property"
+                  }
+                },
+                "source": [
+                  {
+                    "alias": "$this",
+                    "annotation": [],
+                    "expression": {
+                      "annotation": [],
+                      "locator": "19:29-19:43",
+                      "path": "address",
+                      "resultTypeSpecifier": {
+                        "annotation": [],
+                        "elementType": {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Address",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        "type": "ListTypeSpecifier"
+                      },
+                      "source": {
+                        "annotation": [],
+                        "locator": "19:29-19:35",
+                        "name": "Patient",
+                        "resultTypeName": "{http://hl7.org/fhir}Patient",
+                        "type": "ExpressionRef"
+                      },
+                      "type": "Property"
+                    }
+                  }
+                ],
+                "type": "Query",
+                "where": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "operand": {
+                      "annotation": [],
+                      "path": "line",
+                      "source": {
+                        "annotation": [],
+                        "name": "$this",
+                        "type": "AliasRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "IsNull"
+                  },
+                  "signature": [],
+                  "type": "Not"
+                }
+              },
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{http://hl7.org/fhir}string",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "signature": [],
+              "type": "Flatten"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Exists"
+          },
+          "locator": "19:1-19:48",
+          "name": "ExistsLine",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "define \"CountNames\": Count(Patient.name)"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "20:22-20:40",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "locator": "20:28-20:39",
+              "path": "name",
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{http://hl7.org/fhir}HumanName",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "source": {
+                "annotation": [],
+                "locator": "20:28-20:34",
+                "name": "Patient",
+                "resultTypeName": "{http://hl7.org/fhir}Patient",
+                "type": "ExpressionRef"
+              },
+              "type": "Property"
+            },
+            "type": "Count"
+          },
+          "locator": "20:1-20:40",
+          "name": "CountNames",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [
+            {
+              "s": {
+                "s": [
+                  {
+                    "value": [
+                      "using FHIR version '4.0.1'"
+                    ]
+                  }
+                ]
+              },
+              "t": [],
+              "type": "Annotation"
+            }
+          ],
+          "localIdentifier": "FHIR",
+          "locator": "7:1-7:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

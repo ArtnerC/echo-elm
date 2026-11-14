@@ -16,7 +16,7 @@ func Walk(n Node, fn func(Node)) {
 	walkValue(reflect.ValueOf(n), fn, seen)
 }
 
-var nodeType = reflect.TypeOf((*Node)(nil)).Elem()
+var nodeType = reflect.TypeFor[Node]()
 
 func walkValue(v reflect.Value, fn func(Node), seen map[uintptr]bool) {
 	if !v.IsValid() {

@@ -1,0 +1,745 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "CqlNullologicalOperatorsTest",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceANull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceNullA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceEmptyList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  },
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}String",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}String",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceListFirstA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}String",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}String",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceListLastA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "type": "List"
+              },
+              {
+                "annotation": [],
+                "asTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceFirstList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "a",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.CoalesceLastList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Null"
+              },
+              {
+                "annotation": [],
+                "type": "Null"
+              },
+              {
+                "annotation": [],
+                "day": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "18",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "DateTime",
+                "year": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2012",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.DateTimeCoalesce"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "day": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "18",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "month": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "DateTime",
+                    "year": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "2012",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.DateTimeListCoalesce"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Null"
+              },
+              {
+                "annotation": [],
+                "type": "Null"
+              },
+              {
+                "annotation": [],
+                "hour": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "millisecond": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "556",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "minute": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "15",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "second": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "33",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Time"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.TimeCoalesce"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}Time",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "asType": "{urn:hl7-org:elm-types:r1}Time",
+                    "operand": {
+                      "annotation": [],
+                      "type": "Null"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  },
+                  {
+                    "annotation": [],
+                    "hour": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "millisecond": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "556",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "minute": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "15",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "second": {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "33",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    "signature": [],
+                    "type": "Time"
+                  }
+                ],
+                "type": "List"
+              }
+            ],
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "name": "Coalesce.TimeListCoalesce"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Null"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "name": "IsNull.IsNullTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "name": "IsNull.IsNullFalseEmptyString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "abc",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "name": "IsNull.IsNullAlsoFalseAbcString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "name": "IsNull.IsNullAlsoFalseNumber1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "type": "IsNull"
+          },
+          "name": "IsNull.IsNullAlsoFalseNumberZero"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "false",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "IsFalse"
+          },
+          "name": "IsFalse.IsFalseFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "IsFalse"
+          },
+          "name": "IsFalse.IsFalseTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "type": "IsFalse"
+          },
+          "name": "IsFalse.IsFalseNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "IsTrue"
+          },
+          "name": "IsTrue.IsTrueTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "false",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "signature": [],
+            "type": "IsTrue"
+          },
+          "name": "IsTrue.IsTrueFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Boolean",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "type": "IsTrue"
+          },
+          "name": "IsTrue.IsTrueNull"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

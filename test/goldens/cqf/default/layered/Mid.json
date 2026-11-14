@@ -1,0 +1,318 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "Mid",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "Common",
+          "path": "Common",
+          "version": "1.0"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "return": {
+              "annotation": [],
+              "expression": {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "toInterval",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "asTypeSpecifier": {
+                      "annotation": [],
+                      "choice": [
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Period",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        }
+                      ],
+                      "type": "ChoiceTypeSpecifier"
+                    },
+                    "operand": {
+                      "annotation": [],
+                      "path": "onset",
+                      "scope": "C",
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              }
+            },
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "Common",
+                  "name": "Active",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query"
+          },
+          "name": "Onsets"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "let": [],
+            "relationship": [],
+            "source": [
+              {
+                "alias": "C",
+                "annotation": [],
+                "expression": {
+                  "annotation": [],
+                  "libraryName": "Common",
+                  "name": "Active",
+                  "type": "ExpressionRef"
+                }
+              }
+            ],
+            "type": "Query",
+            "where": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "libraryName": "Common",
+                  "name": "Normalize",
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "asTypeSpecifier": {
+                        "annotation": [],
+                        "choice": [
+                          {
+                            "annotation": [],
+                            "name": "{http://hl7.org/fhir}Period",
+                            "type": "NamedTypeSpecifier"
+                          },
+                          {
+                            "annotation": [],
+                            "name": "{http://hl7.org/fhir}dateTime",
+                            "type": "NamedTypeSpecifier"
+                          }
+                        ],
+                        "type": "ChoiceTypeSpecifier"
+                      },
+                      "operand": {
+                        "annotation": [],
+                        "path": "onset",
+                        "scope": "C",
+                        "type": "Property"
+                      },
+                      "signature": [],
+                      "type": "As"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "FunctionRef"
+                },
+                {
+                  "annotation": [],
+                  "name": "MP",
+                  "type": "ParameterRef"
+                }
+              ],
+              "signature": [],
+              "type": "Overlaps"
+            }
+          },
+          "name": "ActiveInMP"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "toInterval",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "asTypeSpecifier": {
+                      "annotation": [],
+                      "choice": [
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}Period",
+                          "type": "NamedTypeSpecifier"
+                        },
+                        {
+                          "annotation": [],
+                          "name": "{http://hl7.org/fhir}dateTime",
+                          "type": "NamedTypeSpecifier"
+                        }
+                      ],
+                      "type": "ChoiceTypeSpecifier"
+                    },
+                    "operand": {
+                      "annotation": [],
+                      "path": "onset",
+                      "source": {
+                        "annotation": [],
+                        "name": "c",
+                        "type": "OperandRef"
+                      },
+                      "type": "Property"
+                    },
+                    "signature": [],
+                    "type": "As"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "annotation": [],
+                "name": "p",
+                "type": "OperandRef"
+              }
+            ],
+            "signature": [],
+            "type": "IncludedIn"
+          },
+          "name": "Within",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "c",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Condition",
+                "type": "NamedTypeSpecifier"
+              }
+            },
+            {
+              "annotation": [],
+              "name": "p",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "pointType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              }
+            }
+          ],
+          "type": "FunctionDef"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

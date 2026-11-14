@@ -1,0 +1,748 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "11:1-11:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "DateTimeMixing",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "7:1-7:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "locator": "8:1-8:33",
+          "name": "MP",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "locator": "8:16-8:33",
+            "pointType": {
+              "annotation": [],
+              "locator": "8:25-8:32",
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "pointType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "IntervalTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          },
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "locator": "9:1-9:18",
+          "name": "D",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "locator": "9:15-9:18",
+            "name": "{urn:hl7-org:elm-types:r1}Date",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+            "type": "NamedTypeSpecifier"
+          },
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Date"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "locator": "10:1-10:23",
+          "name": "DT",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "locator": "10:16-10:23",
+            "name": "{urn:hl7-org:elm-types:r1}DateTime",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "type": "NamedTypeSpecifier"
+          },
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "11:1-11:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "11:1-11:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "codeFilter": [],
+            "dataType": "{http://hl7.org/fhir}Encounter",
+            "dateFilter": [],
+            "include": [],
+            "locator": "12:16-12:26",
+            "otherFilter": [],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{http://hl7.org/fhir}Encounter",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+            "type": "Retrieve"
+          },
+          "locator": "12:1-12:26",
+          "name": "Encs",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{http://hl7.org/fhir}Encounter",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "13:26-13:35",
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "locator": "13:26-13:28",
+                  "name": "D",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "annotation": [],
+                "locator": "13:32-13:35",
+                "name": "DT",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Less"
+          },
+          "locator": "13:1-13:35",
+          "name": "DateVsDateTime",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "14:26-14:35",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "14:26-14:29",
+                "name": "DT",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "locator": "14:33-14:35",
+                  "name": "D",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Equal"
+          },
+          "locator": "14:1-14:35",
+          "name": "DateTimeVsDate",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "15:28-15:38",
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "locator": "15:28-15:30",
+                  "name": "D",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "ParameterRef"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "annotation": [],
+                "locator": "15:35-15:38",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "pointType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "In"
+          },
+          "locator": "15:1-15:38",
+          "name": "DateInDTInterval",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "16:17-16:43",
+            "operand": [
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "birthDate.value",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "ToDateTime"
+              },
+              {
+                "annotation": [],
+                "locator": "16:30-16:42",
+                "operand": {
+                  "annotation": [],
+                  "locator": "16:39-16:42",
+                  "name": "MP",
+                  "resultTypeSpecifier": {
+                    "annotation": [],
+                    "pointType": {
+                      "annotation": [],
+                      "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                      "type": "NamedTypeSpecifier"
+                    },
+                    "type": "IntervalTypeSpecifier"
+                  },
+                  "type": "ParameterRef"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                "signature": [],
+                "type": "Start"
+              }
+            ],
+            "precision": "Year",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "CalculateAgeAt"
+          },
+          "locator": "16:1-16:43",
+          "name": "AgeAt",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "17:21-17:37",
+            "operand": [
+              {
+                "annotation": [],
+                "path": "birthDate.value",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              {
+                "annotation": [],
+                "locator": "17:34-17:36",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ParameterRef"
+              }
+            ],
+            "precision": "Year",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "CalculateAgeAt"
+          },
+          "locator": "17:1-17:37",
+          "name": "AgeAtDate",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "18:21-18:49",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "18:35-18:37",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "locator": "18:43-18:49",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "signature": [],
+                "type": "Today"
+              }
+            ],
+            "precision": "Year",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "DurationBetween"
+          },
+          "locator": "18:1-18:49",
+          "name": "DiffDates",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "19:20-19:48",
+            "operand": {
+              "annotation": [],
+              "libraryName": "FHIRHelpers",
+              "name": "ToDate",
+              "operand": [
+                {
+                  "annotation": [],
+                  "locator": "19:31-19:47",
+                  "path": "birthDate",
+                  "resultTypeName": "{http://hl7.org/fhir}date",
+                  "source": {
+                    "annotation": [],
+                    "locator": "19:31-19:37",
+                    "name": "Patient",
+                    "resultTypeName": "{http://hl7.org/fhir}Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                }
+              ],
+              "signature": [],
+              "type": "FunctionRef"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "signature": [],
+            "type": "ToDateTime"
+          },
+          "locator": "19:1-19:48",
+          "name": "ToDTCall",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "20:32-20:71",
+            "operand": [
+              {
+                "annotation": [],
+                "high": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "locator": "20:46-20:56",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "locator": "20:46-20:48",
+                        "name": "D",
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                        "type": "ParameterRef"
+                      },
+                      {
+                        "annotation": [],
+                        "locator": "20:52-20:56",
+                        "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                        "type": "Quantity",
+                        "unit": "day",
+                        "value": 1
+                      }
+                    ],
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                    "signature": [],
+                    "type": "Add"
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "highClosed": true,
+                "low": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "locator": "20:41-20:43",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                },
+                "lowClosed": true,
+                "type": "Interval"
+              },
+              {
+                "annotation": [],
+                "locator": "20:68-20:71",
+                "name": "MP",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "pointType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "IntervalTypeSpecifier"
+                },
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Overlaps"
+          },
+          "locator": "20:1-20:71",
+          "name": "DateIntervalOverlaps",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "21:25-21:56",
+            "operand": [
+              {
+                "annotation": [],
+                "libraryName": "FHIRHelpers",
+                "name": "ToDate",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "locator": "21:34-21:50",
+                    "path": "birthDate",
+                    "resultTypeName": "{http://hl7.org/fhir}date",
+                    "source": {
+                      "annotation": [],
+                      "locator": "21:34-21:40",
+                      "name": "Patient",
+                      "resultTypeName": "{http://hl7.org/fhir}Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              {
+                "annotation": [],
+                "locator": "21:53-21:55",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+            "signature": [],
+            "type": "Coalesce"
+          },
+          "locator": "21:1-21:56",
+          "name": "CoalesceDates",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Date"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "22:23-22:40",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "locator": "22:29-22:32",
+                  "name": "DT",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "ParameterRef"
+                },
+                {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "locator": "22:35-22:37",
+                    "name": "D",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                    "type": "ParameterRef"
+                  },
+                  "signature": [],
+                  "type": "ToDateTime"
+                }
+              ],
+              "locator": "22:27-22:39",
+              "resultTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "type": "List"
+            },
+            "type": "Max"
+          },
+          "locator": "22:1-22:40",
+          "name": "MaxDateTime",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "23:19-23:30",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "23:19-23:21",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ParameterRef"
+              },
+              {
+                "annotation": [],
+                "locator": "23:25-23:30",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Quantity",
+                "type": "Quantity",
+                "unit": "year",
+                "value": 1
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "23:1-23:30",
+          "name": "DateAdd",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Date"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "24:22-24:41",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "24:22-24:35",
+                "operand": {
+                  "annotation": [],
+                  "locator": "24:32-24:35",
+                  "name": "DT",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+                  "type": "ParameterRef"
+                },
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "signature": [],
+                "type": "DateFrom"
+              },
+              {
+                "annotation": [],
+                "locator": "24:39-24:41",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ParameterRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+            "signature": [],
+            "type": "Less"
+          },
+          "locator": "24:1-24:41",
+          "name": "DateFromDT",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "locator": "25:21-25:24",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "else": {
+              "annotation": [],
+              "locator": "25:40-25:43",
+              "name": "DT",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "ParameterRef"
+            },
+            "locator": "25:18-25:43",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime",
+            "then": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "locator": "25:31-25:33",
+                "name": "D",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Date",
+                "type": "ParameterRef"
+              },
+              "signature": [],
+              "type": "ToDateTime"
+            },
+            "type": "If"
+          },
+          "locator": "25:1-25:43",
+          "name": "IfDate",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}DateTime"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "6:1-6:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

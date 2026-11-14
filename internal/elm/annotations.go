@@ -5,7 +5,7 @@ import (
 	"reflect"
 )
 
-var rawMessageType = reflect.TypeOf(json.RawMessage(nil))
+var rawMessageType = reflect.TypeFor[json.RawMessage]()
 
 // emptyAnnotation is the container CQF writes on an Element with no annotations.
 var emptyAnnotation = json.RawMessage("[]")

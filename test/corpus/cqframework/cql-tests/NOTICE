@@ -1,0 +1,9 @@
+The CQL expressions in this directory (cql-tests/) are generated from the
+HL7 CQL conformance suite at https://github.com/cqframework/cql-tests,
+licensed under the Apache License, Version 2.0:
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+Each suite file's test expressions are wrapped as `define` statements in one
+CQL library per file; the expressions themselves are unchanged. See
+PROVENANCE.md for the source commit and the tests left out.

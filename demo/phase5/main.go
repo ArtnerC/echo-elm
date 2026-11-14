@@ -41,16 +41,16 @@ define "Initial Population":
 			return false
 		}
 		out, _ := res.MarshalJSON()
-		var lib map[string]interface{}
+		var lib map[string]any
 		_ = json.Unmarshal(out, &lib)
-		libMap := lib["library"].(map[string]interface{})
+		libMap := lib["library"].(map[string]any)
 
 		// Contexts section
 		if ctxs, ok := libMap["contexts"]; ok {
-			defs := ctxs.(map[string]interface{})["def"].([]interface{})
+			defs := ctxs.(map[string]any)["def"].([]any)
 			fmt.Printf("   contexts.def: %d entry(ies)\n", len(defs))
 			for _, d := range defs {
-				dm := d.(map[string]interface{})
+				dm := d.(map[string]any)
 				fmt.Printf("     - name: %q\n", dm["name"])
 			}
 		} else {
@@ -59,16 +59,16 @@ define "Initial Population":
 		}
 
 		// Implicit Patient accessor
-		stmts := libMap["statements"].(map[string]interface{})["def"].([]interface{})
+		stmts := libMap["statements"].(map[string]any)["def"].([]any)
 		found := false
 		for _, s := range stmts {
-			sm := s.(map[string]interface{})
+			sm := s.(map[string]any)
 			if sm["name"] == "Patient" {
 				found = true
 				fmt.Printf("   implicit accessor: name=%q context=%q\n", sm["name"], sm["context"])
-				expr := sm["expression"].(map[string]interface{})
+				expr := sm["expression"].(map[string]any)
 				fmt.Printf("   expression.type: %q\n", expr["type"])
-				operand := expr["operand"].(map[string]interface{})
+				operand := expr["operand"].(map[string]any)
 				fmt.Printf("   operand.type: %q dataType: %q\n", operand["type"], operand["dataType"])
 			}
 		}
@@ -76,7 +76,7 @@ define "Initial Population":
 			fmt.Println("   ✗ implicit Patient accessor missing!")
 			return false
 		}
-		fmt.Printf("   signatureLevel: %q\n", libMap["annotation"].([]interface{})[0].(map[string]interface{})["signatureLevel"])
+		fmt.Printf("   signatureLevel: %q\n", libMap["annotation"].([]any)[0].(map[string]any)["signatureLevel"])
 		fmt.Println("   ✓ contexts + implicit accessor present")
 		return true
 	})
@@ -96,10 +96,10 @@ using FHIR version '4.0.1'
 			return false
 		}
 		out, _ := res.MarshalJSON()
-		var lib map[string]interface{}
+		var lib map[string]any
 		_ = json.Unmarshal(out, &lib)
-		libMap := lib["library"].(map[string]interface{})
-		ann := libMap["annotation"].([]interface{})[0].(map[string]interface{})
+		libMap := lib["library"].(map[string]any)
+		ann := libMap["annotation"].([]any)[0].(map[string]any)
 		level := ann["signatureLevel"]
 		fmt.Printf("   signatureLevel: %q (expected: \"None\")\n", level)
 		if level != "None" {
@@ -145,10 +145,10 @@ define "Adults":
 		info, _ := os.Stat(outFile)
 		fmt.Printf("   ELM written: %s (%d bytes)\n", outFile, info.Size())
 		// Verify round-trip.
-		var lib map[string]interface{}
+		var lib map[string]any
 		_ = json.Unmarshal(elmBytes, &lib)
-		libMap := lib["library"].(map[string]interface{})
-		id := libMap["identifier"].(map[string]interface{})
+		libMap := lib["library"].(map[string]any)
+		id := libMap["identifier"].(map[string]any)
 		fmt.Printf("   identifier: %s %s\n", id["id"], id["version"])
 		fmt.Println("   ✓ file I/O round-trip OK")
 		return true

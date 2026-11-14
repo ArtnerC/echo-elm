@@ -9,7 +9,7 @@ import (
 )
 
 // marshalDef returns the serialized ELM JSON for the named statement definition.
-func marshalDef(t *testing.T, r *translator.Result, name string) map[string]interface{} {
+func marshalDef(t *testing.T, r *translator.Result, name string) map[string]any {
 	t.Helper()
 	if r.Library == nil || r.Library.Statements == nil {
 		t.Fatal("expected statements")
@@ -22,7 +22,7 @@ func marshalDef(t *testing.T, r *translator.Result, name string) map[string]inte
 		if err != nil {
 			t.Fatalf("marshal %s: %v", name, err)
 		}
-		var m map[string]interface{}
+		var m map[string]any
 		if err := json.Unmarshal(b, &m); err != nil {
 			t.Fatalf("unmarshal %s: %v", name, err)
 		}
@@ -33,17 +33,17 @@ func marshalDef(t *testing.T, r *translator.Result, name string) map[string]inte
 }
 
 // exprOf returns the "expression" object of a marshalled statement definition.
-func exprOf(t *testing.T, r *translator.Result, name string) map[string]interface{} {
+func exprOf(t *testing.T, r *translator.Result, name string) map[string]any {
 	t.Helper()
 	def := marshalDef(t, r, name)
-	e, ok := def["expression"].(map[string]interface{})
+	e, ok := def["expression"].(map[string]any)
 	if !ok {
 		t.Fatalf("statement %q has no expression object", name)
 	}
 	return e
 }
 
-func nodeType(t *testing.T, m map[string]interface{}) string {
+func nodeType(t *testing.T, m map[string]any) string {
 	t.Helper()
 	s, _ := m["type"].(string)
 	return s
@@ -79,7 +79,7 @@ define Ms: millisecond from @2025-01-15T10:30:00`)
 			t.Errorf("%s: precision = %q, want %q", c.def, prec, c.wantPrecision)
 		}
 		// All five are UnaryExpression in ELM: "operand" is an object, not an array.
-		if _, isArray := e["operand"].([]interface{}); isArray {
+		if _, isArray := e["operand"].([]any); isArray {
 			t.Errorf("%s: operand is an array, want a single object", c.def)
 		}
 	}
@@ -93,7 +93,7 @@ func TestDateFromDateOperandConverts(t *testing.T) {
 define D: date from @2025-01-15
 define Y: year from @2025-01-15`)
 
-	inner, ok := exprOf(t, r, "D")["operand"].(map[string]interface{})
+	inner, ok := exprOf(t, r, "D")["operand"].(map[string]any)
 	if !ok {
 		t.Fatal("D: expected operand object")
 	}
@@ -101,7 +101,7 @@ define Y: year from @2025-01-15`)
 		t.Errorf("D: operand type = %q, want ToDateTime", got)
 	}
 
-	inner, ok = exprOf(t, r, "Y")["operand"].(map[string]interface{})
+	inner, ok = exprOf(t, r, "Y")["operand"].(map[string]any)
 	if !ok {
 		t.Fatal("Y: expected operand object")
 	}
@@ -126,7 +126,7 @@ define Eq: 1 = 2`)
 		if got := nodeType(t, e); got != "Not" {
 			t.Fatalf("%s: type = %q, want Not", c.def, got)
 		}
-		inner, ok := e["operand"].(map[string]interface{})
+		inner, ok := e["operand"].(map[string]any)
 		if !ok {
 			t.Fatalf("%s: expected single Not operand", c.def)
 		}
@@ -152,11 +152,11 @@ define InIntervalRef: Day in Period
 define InIntervalOfInterval: Interval[@2024-02-01, @2024-03-01] in Period`)
 
 	for _, def := range []string{"InListRef", "InIntervalRef"} {
-		operands, ok := exprOf(t, r, def)["operand"].([]interface{})
+		operands, ok := exprOf(t, r, def)["operand"].([]any)
 		if !ok || len(operands) != 2 {
 			t.Fatalf("%s: expected two operands", def)
 		}
-		rhs, _ := operands[1].(map[string]interface{})
+		rhs, _ := operands[1].(map[string]any)
 		if got := nodeType(t, rhs); got == "ToList" {
 			t.Errorf("%s: right operand was promoted with ToList, want the reference unchanged", def)
 		}
@@ -164,11 +164,11 @@ define InIntervalOfInterval: Interval[@2024-02-01, @2024-03-01] in Period`)
 
 	// An interval left operand resolves to In(T, List<T>) with T = Interval<T'>,
 	// so here the right operand IS promoted.
-	operands, ok := exprOf(t, r, "InIntervalOfInterval")["operand"].([]interface{})
+	operands, ok := exprOf(t, r, "InIntervalOfInterval")["operand"].([]any)
 	if !ok || len(operands) != 2 {
 		t.Fatal("InIntervalOfInterval: expected two operands")
 	}
-	rhs, _ := operands[1].(map[string]interface{})
+	rhs, _ := operands[1].(map[string]any)
 	if got := nodeType(t, rhs); got != "ToList" {
 		t.Errorf("InIntervalOfInterval: right operand type = %q, want ToList", got)
 	}
@@ -206,12 +206,12 @@ func TestQuotedIdentifierQuerySource(t *testing.T) {
 define "My Items": { 1, 2, 3 }
 define "InQuery": "My Items" I return I`)
 
-	sources, ok := exprOf(t, r, "InQuery")["source"].([]interface{})
+	sources, ok := exprOf(t, r, "InQuery")["source"].([]any)
 	if !ok || len(sources) != 1 {
 		t.Fatal("expected one query source")
 	}
-	src, _ := sources[0].(map[string]interface{})
-	expr, _ := src["expression"].(map[string]interface{})
+	src, _ := sources[0].(map[string]any)
+	expr, _ := src["expression"].(map[string]any)
 	name, _ := expr["name"].(string)
 	if name != "My Items" {
 		t.Errorf("query source name = %q, want %q", name, "My Items")
@@ -228,11 +228,11 @@ define Plain: Items I aggregate Total starting 0: Total + I
 define All: Items I aggregate all Acc starting 1: Acc * I
 define Distinct: Items I aggregate distinct Acc starting 1: Acc * I`)
 
-	agg, ok := exprOf(t, r, "Plain")["aggregate"].(map[string]interface{})
+	agg, ok := exprOf(t, r, "Plain")["aggregate"].(map[string]any)
 	if !ok {
 		t.Fatal("Plain: expected aggregate clause")
 	}
-	starting, _ := agg["starting"].(map[string]interface{})
+	starting, _ := agg["starting"].(map[string]any)
 	if got := nodeType(t, starting); got != "Literal" {
 		t.Errorf("Plain: starting type = %q, want Literal", got)
 	}
@@ -243,12 +243,12 @@ define Distinct: Items I aggregate distinct Acc starting 1: Acc * I`)
 		t.Error("Plain: distinct should be omitted for a plain aggregate")
 	}
 	// The accumulator is in scope inside the body and resolves to a QueryLetRef.
-	body, _ := agg["expression"].(map[string]interface{})
-	operands, _ := body["operand"].([]interface{})
+	body, _ := agg["expression"].(map[string]any)
+	operands, _ := body["operand"].([]any)
 	if len(operands) != 2 {
 		t.Fatalf("Plain: expected two body operands, got %d", len(operands))
 	}
-	acc, _ := operands[0].(map[string]interface{})
+	acc, _ := operands[0].(map[string]any)
 	if got := nodeType(t, acc); got != "QueryLetRef" {
 		t.Errorf("Plain: accumulator type = %q, want QueryLetRef", got)
 	}
@@ -260,7 +260,7 @@ define Distinct: Items I aggregate distinct Acc starting 1: Acc * I`)
 		{"All", false},
 		{"Distinct", true},
 	} {
-		agg, ok := exprOf(t, r, c.def)["aggregate"].(map[string]interface{})
+		agg, ok := exprOf(t, r, c.def)["aggregate"].(map[string]any)
 		if !ok {
 			t.Fatalf("%s: expected aggregate clause", c.def)
 		}
@@ -293,7 +293,7 @@ define Distinct: Items I return distinct I`)
 		{"All", true, false},
 		{"Distinct", true, true},
 	} {
-		ret, ok := exprOf(t, r, c.def)["return"].(map[string]interface{})
+		ret, ok := exprOf(t, r, c.def)["return"].(map[string]any)
 		if !ok {
 			t.Fatalf("%s: expected return clause", c.def)
 		}
@@ -316,17 +316,17 @@ func TestSortByExpressionUsesIdentifierRef(t *testing.T) {
 define Items: { Tuple { p: Interval[@2024-01-01, @2024-02-01] } }
 define Sorted: Items I sort by start of p`)
 
-	sort, ok := exprOf(t, r, "Sorted")["sort"].(map[string]interface{})
+	sort, ok := exprOf(t, r, "Sorted")["sort"].(map[string]any)
 	if !ok {
 		t.Fatal("expected sort clause")
 	}
-	by, _ := sort["by"].([]interface{})
+	by, _ := sort["by"].([]any)
 	if len(by) != 1 {
 		t.Fatalf("expected one sort item, got %d", len(by))
 	}
-	item, _ := by[0].(map[string]interface{})
-	expr, _ := item["expression"].(map[string]interface{})
-	operand, _ := expr["operand"].(map[string]interface{})
+	item, _ := by[0].(map[string]any)
+	expr, _ := item["expression"].(map[string]any)
+	operand, _ := expr["operand"].(map[string]any)
 	if got := nodeType(t, operand); got != "IdentifierRef" {
 		t.Errorf("sort-by identifier type = %q, want IdentifierRef", got)
 	}
@@ -406,17 +406,17 @@ define "City": exists ((Patient.address) A where A.city = 'Boston')`)
 		{"City", "ToString"},
 	} {
 		found := false
-		var walk func(interface{})
-		walk = func(o interface{}) {
+		var walk func(any)
+		walk = func(o any) {
 			switch v := o.(type) {
-			case map[string]interface{}:
+			case map[string]any:
 				if v["type"] == "FunctionRef" && v["name"] == c.wantFn && v["libraryName"] == "FHIRHelpers" {
 					found = true
 				}
 				for _, child := range v {
 					walk(child)
 				}
-			case []interface{}:
+			case []any:
 				for _, child := range v {
 					walk(child)
 				}
@@ -439,11 +439,11 @@ include FHIRHelpers version '4.0.1'
 context Patient
 define "Lines": (Patient.address) A return A.line`)
 
-	ret, ok := exprOf(t, r, "Lines")["return"].(map[string]interface{})
+	ret, ok := exprOf(t, r, "Lines")["return"].(map[string]any)
 	if !ok {
 		t.Fatal("expected return clause")
 	}
-	expr, _ := ret["expression"].(map[string]interface{})
+	expr, _ := ret["expression"].(map[string]any)
 	if got := nodeType(t, expr); got != "Property" {
 		t.Errorf("list-valued property type = %q, want an uncoerced Property", got)
 	}
@@ -460,34 +460,34 @@ define "MixedRight": D before DT
 define "BothDates": D before D
 define "InDateInterval": DT in Interval[@2020-01-01, @2020-12-31]`)
 
-	operands, _ := exprOf(t, r, "MixedLeft")["operand"].([]interface{})
-	rhs, _ := operands[1].(map[string]interface{})
+	operands, _ := exprOf(t, r, "MixedLeft")["operand"].([]any)
+	rhs, _ := operands[1].(map[string]any)
 	if got := nodeType(t, rhs); got != "ToDateTime" {
 		t.Errorf("MixedLeft: right operand = %q, want ToDateTime", got)
 	}
 
-	operands, _ = exprOf(t, r, "MixedRight")["operand"].([]interface{})
-	lhs, _ := operands[0].(map[string]interface{})
+	operands, _ = exprOf(t, r, "MixedRight")["operand"].([]any)
+	lhs, _ := operands[0].(map[string]any)
 	if got := nodeType(t, lhs); got != "ToDateTime" {
 		t.Errorf("MixedRight: left operand = %q, want ToDateTime", got)
 	}
 
-	operands, _ = exprOf(t, r, "BothDates")["operand"].([]interface{})
+	operands, _ = exprOf(t, r, "BothDates")["operand"].([]any)
 	for i, o := range operands {
-		m, _ := o.(map[string]interface{})
+		m, _ := o.(map[string]any)
 		if got := nodeType(t, m); got == "ToDateTime" {
 			t.Errorf("BothDates: operand %d was promoted; two Dates compare as Dates", i)
 		}
 	}
 
 	// The interval literal is promoted through its bounds, not as a whole.
-	operands, _ = exprOf(t, r, "InDateInterval")["operand"].([]interface{})
-	iv, _ := operands[1].(map[string]interface{})
+	operands, _ = exprOf(t, r, "InDateInterval")["operand"].([]any)
+	iv, _ := operands[1].(map[string]any)
 	if got := nodeType(t, iv); got != "Interval" {
 		t.Fatalf("InDateInterval: right operand = %q, want Interval", got)
 	}
 	for _, bound := range []string{"low", "high"} {
-		m, _ := iv[bound].(map[string]interface{})
+		m, _ := iv[bound].(map[string]any)
 		if got := nodeType(t, m); got != "ToDateTime" {
 			t.Errorf("InDateInterval: %s bound = %q, want ToDateTime", bound, got)
 		}
@@ -510,7 +510,7 @@ func TestTranslatorOptionsReporting(t *testing.T) {
 	if len(r.Library.Annotation) == 0 {
 		t.Fatal("expected library annotation")
 	}
-	var info map[string]interface{}
+	var info map[string]any
 	if err := json.Unmarshal(r.Library.Annotation[0], &info); err != nil {
 		t.Fatalf("unmarshal CqlToElmInfo: %v", err)
 	}
@@ -557,26 +557,26 @@ include FHIRHelpers version '4.0.1'
 context Patient
 define "LineIn": exists ((Patient.address) A where 'Main St' in A.line)`)
 
-	operands, _ := exprOf(t, r, "LineIn")["operand"].(map[string]interface{})["where"].(map[string]interface{})["operand"].([]interface{})
+	operands, _ := exprOf(t, r, "LineIn")["operand"].(map[string]any)["where"].(map[string]any)["operand"].([]any)
 	if len(operands) != 2 {
 		t.Fatalf("expected two In operands, got %d", len(operands))
 	}
-	rhs, _ := operands[1].(map[string]interface{})
+	rhs, _ := operands[1].(map[string]any)
 	if got := nodeType(t, rhs); got != "Query" {
 		t.Fatalf("right operand = %q, want an implicit conversion Query", got)
 	}
-	sources, _ := rhs["source"].([]interface{})
+	sources, _ := rhs["source"].([]any)
 	if len(sources) != 1 {
 		t.Fatalf("expected one query source, got %d", len(sources))
 	}
-	if alias, _ := sources[0].(map[string]interface{})["alias"].(string); alias != "X" {
+	if alias, _ := sources[0].(map[string]any)["alias"].(string); alias != "X" {
 		t.Errorf("conversion query alias = %q, want X", alias)
 	}
-	ret, _ := rhs["return"].(map[string]interface{})
+	ret, _ := rhs["return"].(map[string]any)
 	if distinct, ok := ret["distinct"].(bool); !ok || distinct {
 		t.Errorf("conversion query return distinct = %v, want false", ret["distinct"])
 	}
-	fn, _ := ret["expression"].(map[string]interface{})
+	fn, _ := ret["expression"].(map[string]any)
 	if nodeType(t, fn) != "FunctionRef" || fn["name"] != "ToString" {
 		t.Errorf("conversion expression = %v, want FHIRHelpers.ToString", fn)
 	}
@@ -600,7 +600,7 @@ define "N": 1 + 2`
 	if got, _ := on["resultTypeName"].(string); got != "{urn:hl7-org:elm-types:r1}Integer" {
 		t.Errorf("definition resultTypeName = %q, want Integer", got)
 	}
-	expr, _ := on["expression"].(map[string]interface{})
+	expr, _ := on["expression"].(map[string]any)
 	if got, _ := expr["resultTypeName"].(string); got != "{urn:hl7-org:elm-types:r1}Integer" {
 		t.Errorf("expression resultTypeName = %q, want Integer", got)
 	}
@@ -624,16 +624,16 @@ define "G": Patient.gender = 'female'`, func(o *translator.Options) {
 		o.EnableResultTypes = true
 	})
 
-	operands, _ := exprOf(t, r, "G")["operand"].([]interface{})
-	conv, _ := operands[0].(map[string]interface{})
+	operands, _ := exprOf(t, r, "G")["operand"].([]any)
+	conv, _ := operands[0].(map[string]any)
 	if nodeType(t, conv) != "FunctionRef" {
 		t.Fatalf("expected a FHIRHelpers conversion, got %q", nodeType(t, conv))
 	}
 	if _, present := conv["resultTypeName"]; present {
 		t.Error("the synthesized conversion should carry no result type")
 	}
-	inner, _ := conv["operand"].([]interface{})
-	prop, _ := inner[0].(map[string]interface{})
+	inner, _ := conv["operand"].([]any)
+	prop, _ := inner[0].(map[string]any)
 	if got, _ := prop["resultTypeName"].(string); got != "{http://hl7.org/fhir}AdministrativeGender" {
 		t.Errorf("property resultTypeName = %q, want the declared FHIR type", got)
 	}

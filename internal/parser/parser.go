@@ -131,7 +131,7 @@ type diagnosticListener struct {
 
 func (d *diagnosticListener) SyntaxError(
 	_ antlr.Recognizer,
-	_ interface{},
+	_ any,
 	line, col int,
 	msg string,
 	_ antlr.RecognitionException,

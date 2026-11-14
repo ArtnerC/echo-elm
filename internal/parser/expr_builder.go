@@ -397,6 +397,10 @@ func (b *astBuilder) buildExprTermInner(ctx cqlparser.IExpressionTermContext) as
 		var perClause ast.Expr
 		if len(exprs) > 1 {
 			perClause = b.buildExpr(exprs[1])
+		} else if dp := c.DateTimePrecision(); dp != nil {
+			// `per day` is the quantity 1.0 'day'.
+			// Left without a location: it is synthesized, not written.
+			perClause = &ast.QuantityLiteral{Value: "1.0", Unit: strings.ToLower(b.singularizePrecision(dp.GetText()))}
 		}
 		return &ast.SetAggregateExpr{Op: op, Operand: operand, PerClause: perClause}
 
@@ -579,7 +583,7 @@ func (b *astBuilder) buildLiteralInner(ctx cqlparser.ILiteralContext) ast.Expr {
 		if strings.Contains(text, ".") {
 			return &ast.DecimalLiteral{Value: text}
 		}
-		return &ast.IntegerLiteral{Value: parseInt(text)}
+		return &ast.IntegerLiteral{Value: parseInt(text), Text: text}
 
 	case *cqlparser.LongNumberLiteralContext:
 		text := c.GetText()
@@ -991,7 +995,7 @@ func (b *astBuilder) buildStartingClause(ctx *cqlparser.StartingClauseContext) a
 			if strings.Contains(text, ".") {
 				lit = &ast.DecimalLiteral{Value: text}
 			} else {
-				lit = &ast.IntegerLiteral{Value: parseInt(text)}
+				lit = &ast.IntegerLiteral{Value: parseInt(text), Text: text}
 			}
 		default:
 			return nil

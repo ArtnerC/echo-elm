@@ -15,7 +15,7 @@ func expressionNodeTypes() []Expression {
 	return []Expression{
 		&NullaryOperatorNode{Operator: "Now"},
 		&OperandRefNode{}, &LiteralNode{}, &NullNode{}, &ExpressionRefNode{},
-		&ParameterRefNode{}, &ValueSetRefNode{}, &InValueSetNode{}, &CalculateAgeNode{},
+		&ParameterRefNode{}, &ValueSetRefNode{}, &InValueSetNode{}, &AnyInValueSetNode{}, &CalculateAgeNode{},
 		&ToConceptNode{}, &SplitNode{}, &LastNode{}, &CodeSystemRefNode{},
 		&CodeRefNode{}, &ConceptRefNode{}, &FunctionRefNode{}, &OperatorExpressionNode{},
 		&PropertyNode{}, &RetrieveNode{}, &SingletonFromNode{}, &QuantityNode{},
@@ -47,7 +47,7 @@ func TestMarshalPreservesResultType(t *testing.T) {
 			if err != nil {
 				t.Fatalf("%s: marshal: %v", typeName, err)
 			}
-			var got map[string]interface{}
+			var got map[string]any
 			if err := json.Unmarshal(b, &got); err != nil {
 				t.Fatalf("%s: unmarshal %s: %v", typeName, b, err)
 			}

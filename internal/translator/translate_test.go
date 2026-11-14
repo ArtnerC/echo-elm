@@ -567,7 +567,7 @@ define Over18: (List{1, 2, 3, 20, 25}) X where X > 18`
 	if stmts == nil {
 		t.Fatal("expected statements")
 	}
-	var over18 *struct{ Expression interface{} }
+	var over18 *struct{ Expression any }
 	for _, s := range stmts.Def {
 		if s.Name == "Over18" {
 			if s.Expression == nil {

@@ -545,6 +545,33 @@ func (n *InValueSetNode) MarshalJSON() ([]byte, error) {
 	})
 }
 
+// AnyInValueSetNode: `codes in "VS"` where codes is a list — true when any
+// element is in the value set.
+type AnyInValueSetNode struct {
+	LocalID             string           `json:"localId,omitempty"`
+	Locator             string           `json:"locator,omitempty"`
+	Annotation          json.RawMessage  `json:"annotation,omitempty"`
+	ResultTypeName      string           `json:"resultTypeName,omitempty"`
+	ResultTypeSpecifier TypeSpecifier    `json:"resultTypeSpecifier,omitempty"`
+	Signature           json.RawMessage  `json:"signature,omitempty"`
+	Codes               Expression       `json:"codes"`
+	ValueSet            *ValueSetRefNode `json:"valueset"`
+}
+
+func (*AnyInValueSetNode) isExpression() {}
+func (n *AnyInValueSetNode) MarshalJSON() ([]byte, error) {
+	// As in InValueSet, the valueset field carries no "type" discriminator.
+	type vsAlias ValueSetRefNode
+	type alias AnyInValueSetNode
+	return marshalWithType("AnyInValueSet", struct {
+		*alias
+		ValueSet *vsAlias `json:"valueset"`
+	}{
+		alias:    (*alias)(n),
+		ValueSet: (*vsAlias)(n.ValueSet),
+	})
+}
+
 // CalculateAgeNode: expands AgeInYears/AgeInMonths/etc. in a Patient context.
 // Extends UnaryExpression — operand is a single object (not array).
 type CalculateAgeNode struct {
@@ -1518,6 +1545,26 @@ func (n *MinMaxValueNode) MarshalJSON() ([]byte, error) {
 // -----------------------------------------------------------------------
 // Annotation types
 // -----------------------------------------------------------------------
+
+// CqlToElmError is a translator diagnostic recorded in the ELM library's
+// annotations, as the CQF translator records its warnings and errors. Location
+// fields are omitted for a diagnostic that has none.
+type CqlToElmError struct {
+	LibraryID      string `json:"libraryId,omitempty"`
+	LibraryVersion string `json:"libraryVersion,omitempty"`
+	StartLine      int    `json:"startLine,omitempty"`
+	StartChar      int    `json:"startChar,omitempty"`
+	EndLine        int    `json:"endLine,omitempty"`
+	EndChar        int    `json:"endChar,omitempty"`
+	Message        string `json:"message"`
+	ErrorType      string `json:"errorType"`
+	ErrorSeverity  string `json:"errorSeverity"`
+}
+
+func (c *CqlToElmError) MarshalJSON() ([]byte, error) {
+	type alias CqlToElmError
+	return marshalWithType("CqlToElmError", (*alias)(c))
+}
 
 // CqlToElmInfo is the standard translator annotation injected into the Library.
 type CqlToElmInfo struct {

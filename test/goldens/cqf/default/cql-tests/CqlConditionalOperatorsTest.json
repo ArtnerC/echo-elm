@@ -1,0 +1,736 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "CqlConditionalOperatorsTest",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Greater"
+            },
+            "else": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "then": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "If"
+          },
+          "name": "if-then-else.IfTrue1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Equal"
+            },
+            "else": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Subtract"
+            },
+            "then": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Add"
+            },
+            "type": "If"
+          },
+          "name": "if-then-else.IfFalse1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                  "operand": {
+                    "annotation": [],
+                    "type": "Null"
+                  },
+                  "signature": [],
+                  "type": "As"
+                }
+              ],
+              "signature": [],
+              "type": "Equal"
+            },
+            "else": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "then": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "type": "If"
+          },
+          "name": "if-then-else.IfNull1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Greater"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Greater"
+                }
+              }
+            ],
+            "else": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Integer",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Case"
+          },
+          "name": "standard case.StandardCase1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Greater"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equal"
+                }
+              }
+            ],
+            "else": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Subtract"
+            },
+            "type": "Case"
+          },
+          "name": "standard case.StandardCase2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                      "operand": {
+                        "annotation": [],
+                        "type": "Null"
+                      },
+                      "signature": [],
+                      "type": "As"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                      "operand": {
+                        "annotation": [],
+                        "type": "Null"
+                      },
+                      "signature": [],
+                      "type": "As"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equivalent"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                      "operand": {
+                        "annotation": [],
+                        "type": "Null"
+                      },
+                      "signature": [],
+                      "type": "As"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Equivalent"
+                }
+              }
+            ],
+            "else": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Add"
+            },
+            "type": "Case"
+          },
+          "name": "standard case.StandardCase3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "when": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "comparand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "else": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Subtract"
+            },
+            "type": "Case"
+          },
+          "name": "selected case.SelectedCase1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "when": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "comparand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "10",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "else": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Subtract"
+            },
+            "type": "Case"
+          },
+          "name": "selected case.SelectedCase2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "12",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "when": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "operand": [
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "10",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    },
+                    {
+                      "annotation": [],
+                      "type": "Literal",
+                      "value": "5",
+                      "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                    }
+                  ],
+                  "signature": [],
+                  "type": "Add"
+                },
+                "when": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              }
+            ],
+            "comparand": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Add"
+            },
+            "else": {
+              "annotation": [],
+              "operand": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "10",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "5",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              ],
+              "signature": [],
+              "type": "Subtract"
+            },
+            "type": "Case"
+          },
+          "name": "selected case.SelectedCase3"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

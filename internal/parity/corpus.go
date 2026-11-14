@@ -4,18 +4,23 @@ package parity
 import (
 	"fmt"
 	"os"
+	"slices"
 
 	"gopkg.in/yaml.v3"
 )
 
 // OptionProfile defines a named set of translator options and their CQF CLI flag equivalents.
 type OptionProfile struct {
-	Description       string                 `yaml:"description"`
-	CLIFlags          []string               `yaml:"cliFlags"`
-	TranslatorOptions map[string]interface{} `yaml:"translatorOptions"`
+	Description       string         `yaml:"description"`
+	CLIFlags          []string       `yaml:"cliFlags"`
+	TranslatorOptions map[string]any `yaml:"translatorOptions"`
 	// PendingImplementation marks profiles whose corresponding echo-elm feature is
 	// not yet implemented. TestGoldenCorpus skips these profiles rather than failing.
 	PendingImplementation bool `yaml:"pendingImplementation"`
+	// OptIn profiles are not part of a fixture's "all": they run only for
+	// fixtures that name them. For option combinations whose behavior is
+	// verified on purpose-built fixtures rather than across the whole corpus.
+	OptIn bool `yaml:"optIn"`
 }
 
 // Fixture is a single test entry from corpus.yaml.
@@ -25,12 +30,16 @@ type Fixture struct {
 	ExpectedStatus string `yaml:"expectedStatus"`
 	// Profiles is either the string "all" or a list of profile names from option_profiles.
 	// If absent, defaults to ["default"].
-	RawProfiles interface{} `yaml:"profiles"`
+	RawProfiles any `yaml:"profiles"`
 	// ExcludeProfiles lists profile names to exclude even when Profiles is "all".
 	// Use this when the upstream CQF CLI itself produces no output for a given
 	// fixture+profile combination (upstream-error), so no golden can exist.
 	ExcludeProfiles []string `yaml:"excludeProfiles"`
 	Tags            []string `yaml:"tags"`
+	// Diagnostics opts the fixture into comparing CqlToElmError annotations,
+	// which are otherwise normalized away. For fixtures whose every CQF
+	// diagnostic echo-elm reproduces; see issues #8.
+	Diagnostics bool `yaml:"diagnostics"`
 
 	// Options is retained for backward compatibility but superseded by Profiles.
 	Options map[string]string `yaml:"options"`
@@ -69,13 +78,15 @@ func (fix *Fixture) ProfileNames(allProfiles map[string]OptionProfile) []string 
 			// gopkg.in/yaml.v3 preserves insertion order for maps decoded into
 			// map[string]T, but map iteration order in Go is random — so we
 			// collect from the profiles map and sort.
-			for k := range allProfiles {
-				names = append(names, k)
+			for k, prof := range allProfiles {
+				if !prof.OptIn {
+					names = append(names, k)
+				}
 			}
 			return filter(names)
 		}
 		return filter([]string{v})
-	case []interface{}:
+	case []any:
 		names := make([]string, 0, len(v))
 		for _, item := range v {
 			if s, ok := item.(string); ok {
@@ -119,10 +130,5 @@ func LoadCorpus(dir string) (*Corpus, error) {
 
 // HasTag reports whether the fixture has the given tag.
 func (fix *Fixture) HasTag(tag string) bool {
-	for _, t := range fix.Tags {
-		if t == tag {
-			return true
-		}
-	}
-	return false
+	return slices.Contains(fix.Tags, tag)
 }

@@ -1,0 +1,2277 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Unfiltered"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "CqlStringOperatorsTest",
+      "version": "1.0"
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              },
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Combine"
+          },
+          "name": "Combine.CombineNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "let": [],
+              "relationship": [],
+              "return": {
+                "annotation": [],
+                "distinct": false,
+                "expression": {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}String",
+                  "operand": {
+                    "annotation": [],
+                    "name": "X",
+                    "type": "AliasRef"
+                  },
+                  "signature": [],
+                  "type": "As"
+                }
+              },
+              "source": [
+                {
+                  "alias": "X",
+                  "annotation": [],
+                  "expression": {
+                    "annotation": [],
+                    "element": [],
+                    "type": "List"
+                  }
+                }
+              ],
+              "type": "Query"
+            },
+            "type": "Combine"
+          },
+          "name": "Combine.CombineEmptyList"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "c",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Combine"
+          },
+          "name": "Combine.CombineABC"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "separator": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "-",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "element": [
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "a",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "b",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                },
+                {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "c",
+                  "valueType": "{urn:hl7-org:elm-types:r1}String"
+                }
+              ],
+              "type": "List"
+            },
+            "type": "Combine"
+          },
+          "name": "Combine.CombineABCSepDash"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "Concatenate.ConcatenateNullNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "Concatenate.ConcatenateANull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "Concatenate.ConcatenateNullB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "Concatenate.ConcatenateAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Concatenate"
+          },
+          "name": "Concatenate.ConcatenateABWithAdd"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "EndsWith"
+          },
+          "name": "EndsWith.EndsWithNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Chris Schuler is the man!!",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "n!!",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "EndsWith"
+          },
+          "name": "EndsWith.EndsWithTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Chris Schuler is the man!!",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "n!",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "EndsWith"
+          },
+          "name": "EndsWith.EndsWithFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asTypeSpecifier": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "NamedTypeSpecifier"
+                },
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "strict": false,
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerNullNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}Integer",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerANull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asTypeSpecifier": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "NamedTypeSpecifier"
+                },
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "strict": false,
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerNull1String"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "ab",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "0",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerAB0"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "ab",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerAB1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "ab",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerAB2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "ab",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Negate"
+              }
+            ],
+            "signature": [],
+            "type": "Indexer"
+          },
+          "name": "Indexer.IndexerABNeg1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "LastPositionOf"
+          },
+          "name": "LastPositionOf.LastPositionOfNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "hi",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "LastPositionOf"
+          },
+          "name": "LastPositionOf.LastPositionOfNull1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "hi",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "LastPositionOf"
+          },
+          "name": "LastPositionOf.LastPositionOfNull2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "hi",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "Ohio is the place to be!",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "LastPositionOf"
+          },
+          "name": "LastPositionOf.LastPositionOf1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "hi",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "Say hi to Ohio!",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "LastPositionOf"
+          },
+          "name": "LastPositionOf.LastPositionOf2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              },
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "strict": false,
+              "type": "As"
+            },
+            "signature": [],
+            "type": "Length"
+          },
+          "name": "Length.LengthNullString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Length"
+          },
+          "name": "Length.LengthEmptyString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Length"
+          },
+          "name": "Length.LengthA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Length"
+          },
+          "name": "Length.LengthAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "name": "Lower.LowerNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "name": "Lower.LowerEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "A",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "name": "Lower.LowerA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "b",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "name": "Lower.LowerB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "Ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Lower"
+          },
+          "name": "Lower.LowerAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": ".*\\d+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesNumberFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost - circa 2017",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": ".*\\d+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesNumberTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": ".*",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesAllTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "[\\w|\\s]+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesWordsAndSpacesTrue"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost - circa 2017",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "^[\\w\\s]+$",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesWordsAndSpacesFalse"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "   ",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "\\W+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesNotWords"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": " \n\t",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "\\s+",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "Matches"
+          },
+          "name": "Matches.MatchesWhiteSpace"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf.PositionOfNullNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf.PositionOfANull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf.PositionOfNullA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf.PositionOfAInAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "b",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf.PositionOfBInAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "pattern": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "c",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "string": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "PositionOf"
+          },
+          "name": "PositionOf.PositionOfCInAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "But I am...",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "ReplaceMatches"
+          },
+          "name": "ReplaceMatches.ReplaceMatchesNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Not all who wander are lost",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "But still waters run deep",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "ReplaceMatches"
+          },
+          "name": "ReplaceMatches.ReplaceMatchesAll"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Who put the bop in the bop she bop she bop?",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "bop",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "bang",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "ReplaceMatches"
+          },
+          "name": "ReplaceMatches.ReplaceMatchesMany"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "All that glitters is not gold",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "\\s",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "\\$",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "ReplaceMatches"
+          },
+          "name": "ReplaceMatches.ReplaceMatchesSpaces"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "separator": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Split"
+          },
+          "name": "Split.SplitNullNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "separator": {
+              "annotation": [],
+              "type": "Literal",
+              "value": ",",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Split"
+          },
+          "name": "Split.SplitNullComma"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "separator": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a,b",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Split"
+          },
+          "name": "Split.SplitABNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "separator": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "-",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a,b",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Split"
+          },
+          "name": "Split.SplitABDash"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "separator": {
+              "annotation": [],
+              "type": "Literal",
+              "value": ",",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "stringToSplit": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a,b",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Split"
+          },
+          "name": "Split.SplitABComma"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "name": "StartsWith.StartsWithNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "hi",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "name": "StartsWith.StartsWithNull1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "asType": "{urn:hl7-org:elm-types:r1}String",
+                "operand": {
+                  "annotation": [],
+                  "type": "Null"
+                },
+                "signature": [],
+                "type": "As"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "hi",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "name": "StartsWith.StartsWithNull2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Breathe deep the gathering gloom",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Bre",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "name": "StartsWith.StartsWithTrue1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "Breathe deep the gathering gloom",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "bre",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "signature": [],
+            "type": "StartsWith"
+          },
+          "name": "StartsWith.StartsWithFalse1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Integer",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringNullNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Integer",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringANull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringNull1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringAB0"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringAB1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "2",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringAB2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Negate"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringABNeg1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringEmptyAnd0"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "length": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringAB0To1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "length": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "abc",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringABC1To1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "length": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "3",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "signature": [],
+            "startIndex": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "0",
+              "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+            },
+            "stringToSub": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "ab",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "Substring"
+          },
+          "name": "Substring.SubstringAB0To3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "type": "Null"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "name": "Upper.UpperNull"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "name": "Upper.UpperEmpty"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "a",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "name": "Upper.UpperA"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "B",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "name": "Upper.UpperB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "aB",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "type": "Upper"
+          },
+          "name": "Upper.UpperAB"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "type": "Quantity",
+              "unit": "cm",
+              "value": 125
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "toString tests.QuantityToString"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2000",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "toString tests.DateTimeToString1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "15",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "millisecond": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "300",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "25",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "25",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "DateTime",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2000",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "toString tests.DateTimeToString2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "day": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "hour": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "8",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "millisecond": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "300",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "25",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "month": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "25",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "timezoneOffset": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "7",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                  },
+                  "signature": [],
+                  "type": "Negate"
+                },
+                "signature": [],
+                "type": "ToDecimal"
+              },
+              "type": "DateTime",
+              "year": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2000",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "toString tests.DateTimeToString3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Unfiltered",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "hour": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "9",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "millisecond": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "minute": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "30",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "second": {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              "signature": [],
+              "type": "Time"
+            },
+            "signature": [],
+            "type": "ToString"
+          },
+          "name": "toString tests.TimeToString1"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        }
+      ]
+    }
+  }
+}

@@ -12,21 +12,21 @@ import (
 
 // typeSpec represents a CQL type specifier used in ELM signature output.
 type typeSpec interface {
-	toJSONValue() interface{}
+	toJSONValue() any
 }
 
 // namedTS is a NamedTypeSpecifier: {"type":"NamedTypeSpecifier","name":"..."}
 type namedTS struct{ name string }
 
-func (n namedTS) toJSONValue() interface{} {
+func (n namedTS) toJSONValue() any {
 	return map[string]string{"type": "NamedTypeSpecifier", "name": n.name}
 }
 
 // intervalTS is an IntervalTypeSpecifier: {"type":"IntervalTypeSpecifier","pointType":{...}}
 type intervalTS struct{ point typeSpec }
 
-func (i intervalTS) toJSONValue() interface{} {
-	return map[string]interface{}{
+func (i intervalTS) toJSONValue() any {
+	return map[string]any{
 		"type":      "IntervalTypeSpecifier",
 		"pointType": i.point.toJSONValue(),
 	}
@@ -35,8 +35,8 @@ func (i intervalTS) toJSONValue() interface{} {
 // listTS is a ListTypeSpecifier: {"type":"ListTypeSpecifier","elementType":{...}}
 type listTS struct{ elem typeSpec }
 
-func (l listTS) toJSONValue() interface{} {
-	return map[string]interface{}{
+func (l listTS) toJSONValue() any {
+	return map[string]any{
 		"type":        "ListTypeSpecifier",
 		"elementType": l.elem.toJSONValue(),
 	}
@@ -53,15 +53,15 @@ type tupleField struct {
 	ts   typeSpec
 }
 
-func (t tupleTS) toJSONValue() interface{} {
-	els := make([]interface{}, 0, len(t.fields))
+func (t tupleTS) toJSONValue() any {
+	els := make([]any, 0, len(t.fields))
 	for _, f := range t.fields {
-		els = append(els, map[string]interface{}{
+		els = append(els, map[string]any{
 			"name":        f.name,
 			"elementType": f.ts.toJSONValue(),
 		})
 	}
-	return map[string]interface{}{
+	return map[string]any{
 		"type":    "TupleTypeSpecifier",
 		"element": els,
 	}
@@ -71,12 +71,12 @@ func (t tupleTS) toJSONValue() interface{} {
 // see sortChoiceTS.
 type choiceTS struct{ alts []typeSpec }
 
-func (c choiceTS) toJSONValue() interface{} {
-	alts := make([]interface{}, 0, len(c.alts))
+func (c choiceTS) toJSONValue() any {
+	alts := make([]any, 0, len(c.alts))
 	for _, a := range c.alts {
 		alts = append(alts, a.toJSONValue())
 	}
-	return map[string]interface{}{"type": "ChoiceTypeSpecifier", "choice": alts}
+	return map[string]any{"type": "ChoiceTypeSpecifier", "choice": alts}
 }
 
 func (t tupleTS) field(name string) (typeSpec, bool) {
@@ -254,6 +254,18 @@ func (t *Translator) computeSig(op string, operands []elm.Expression) json.RawMe
 		return t.cqfEmptyArrayField()
 	}
 
+	// Differing records a signature exactly when the resolved signature differs
+	// from the argument types — that is, when resolution converted or cast an
+	// operand. A FHIRHelpers call whose argument already has the parameter's
+	// type gets none; `E.period.start during MP` does, because E.period.start
+	// was converted. (Probed rechecking the early sig-overloads gap.)
+	if level == "Differing" {
+		if t.anyConverted(operands) || t.formalDiffers(op, operands) {
+			return t.buildInferredSig(operands)
+		}
+		return t.cqfEmptyArrayField()
+	}
+
 	// FunctionRef (user-defined function call) always gets an inferred signature
 	// in Overloads mode and above.
 	if op == "FunctionRef" {
@@ -261,7 +273,7 @@ func (t *Translator) computeSig(op string, operands []elm.Expression) json.RawMe
 	}
 
 	switch level {
-	case "Overloads", "Differing":
+	case "Overloads":
 		if overloadedOps[op] {
 			return t.buildInferredSig(operands)
 		}
@@ -374,6 +386,12 @@ func (t *Translator) computeInSig(lhs, rhs elm.Expression, listPromoted bool) js
 	if level == "All" {
 		return t.buildInferredSig([]elm.Expression{lhs, rhs})
 	}
+	if level == "Differing" {
+		if listPromoted || t.anyConverted([]elm.Expression{lhs, rhs}) {
+			return t.buildInferredSig([]elm.Expression{lhs, rhs})
+		}
+		return t.cqfEmptyArrayField()
+	}
 	if listPromoted || hasNullIntervalBound(rhs) {
 		return t.buildInferredSig([]elm.Expression{lhs, rhs})
 	}
@@ -416,7 +434,9 @@ func (t *Translator) buildSigFromTypes(op string, specs []typeSpec) json.RawMess
 		return t.cqfEmptyArrayField()
 	}
 	level := t.opts.SignatureLevel
-	if level == "" || level == "None" {
+	// The formal types given here are the argument types by construction, so
+	// there is nothing differing to record.
+	if level == "" || level == "None" || level == "Differing" {
 		return t.cqfEmptyArrayField()
 	}
 	if level == "Overloads" || level == "Differing" {
@@ -520,7 +540,7 @@ func hasIntervalOperand(operands []elm.Expression) bool {
 
 // buildInferredSig builds a signature array by inferring the type of each operand.
 func (t *Translator) buildInferredSig(operands []elm.Expression) json.RawMessage {
-	specs := make([]interface{}, 0, len(operands))
+	specs := make([]any, 0, len(operands))
 	for _, op := range operands {
 		specs = append(specs, t.inferTypeSpec(op).toJSONValue())
 	}
@@ -529,7 +549,7 @@ func (t *Translator) buildInferredSig(operands []elm.Expression) json.RawMessage
 
 // buildFixedSig builds a signature array from pre-determined formal types.
 func (t *Translator) buildFixedSig(specs []typeSpec) json.RawMessage {
-	vals := make([]interface{}, 0, len(specs))
+	vals := make([]any, 0, len(specs))
 	for _, s := range specs {
 		vals = append(vals, s.toJSONValue())
 	}
@@ -538,7 +558,7 @@ func (t *Translator) buildFixedSig(specs []typeSpec) json.RawMessage {
 
 // buildVariadicSig builds a signature array with n copies of the same type.
 func (t *Translator) buildVariadicSig(n int, ts typeSpec) json.RawMessage {
-	vals := make([]interface{}, n)
+	vals := make([]any, n)
 	for i := range vals {
 		vals[i] = ts.toJSONValue()
 	}
@@ -703,6 +723,9 @@ func elmTypeSpecToTypeSpec(ts elm.TypeSpecifier) typeSpec {
 func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 	if e == nil {
 		return anyTS
+	}
+	if ts := t.inferSystemOperator(e); ts != nil {
+		return ts
 	}
 	switch v := e.(type) {
 	case *elm.LiteralNode:
@@ -918,6 +941,16 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 					}
 				}
 			}
+			// A field of a FHIR element has its declared FHIR type.
+			if local := fhirLocalTypeName(t.sortElementTS); local != "" {
+				if fhirType, ok := typesystem.FHIRPropertyTypeOf(local, v.Name); ok {
+					var ts typeSpec = namedTS{"{http://hl7.org/fhir}" + fhirType}
+					if typesystem.IsFHIRListPropertyOf(local, v.Name) {
+						ts = listTS{ts}
+					}
+					return ts
+				}
+			}
 		}
 	case *elm.CodeRefNode:
 		return namedTS{typesystem.TypeCode}
@@ -949,12 +982,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return t.inferTypeSpec(v.Aggregate.Expression)
 		}
 		// Query result type = List<returnElementType>; default = List<sourceElementType>.
+		// A query over a single value yields a single value.
+		singular := t.isSingularQuery(v)
 		if v.Return != nil && v.Return.Expression != nil {
+			if singular {
+				return t.nodeResultTS(v.Return.Expression)
+			}
 			return listTS{t.nodeResultTS(v.Return.Expression)}
 		}
 		if len(v.Source) > 0 && v.Source[0] != nil {
-			if lt, ok := t.nodeResultTS(v.Source[0].Expression).(listTS); ok {
+			st := t.nodeResultTS(v.Source[0].Expression)
+			if lt, ok := st.(listTS); ok {
 				return lt
+			}
+			if singular {
+				return st
 			}
 		}
 		return listTS{anyTS}
@@ -980,6 +1022,9 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		case "Concatenate":
 			return strTS
 		case "Coalesce":
+			if t.definitelyAny(v) {
+				return anyTS
+			}
 			// The result is the common type of the alternatives. A bare null
 			// among them leaves no common type but Any; a null already cast to
 			// the type an earlier operand established does not. (issues/06)
@@ -1046,7 +1091,7 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			return intTS
 		}
 		return boolTS
-	case *elm.InValueSetNode:
+	case *elm.InValueSetNode, *elm.AnyInValueSetNode:
 		return boolTS
 	case *elm.FunctionRefNode:
 		// A call to a function declared in this library resolves to its
@@ -1122,6 +1167,10 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 			fields = append(fields, tupleField{name: el.Name, ts: t.inferTypeSpec(el.Value)})
 		}
 		return tupleTS{fields: fields}
+	case *elm.InstanceNode:
+		if v.ClassType != "" {
+			return namedTS{v.ClassType}
+		}
 	case *elm.SingletonFromNode:
 		// singleton from List<T> → T. Its own ELM node rather than a
 		// UnaryExpression, so it reached neither operator branch and came out
@@ -1156,9 +1205,15 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 		// FHIR/QICore property-type lookup: when source is a context expression
 		// (e.g. "Patient"), consult FHIRPropertyType for the CQL type.
 		if srcContext != "" && v.Path != "" {
-			key := srcContext + "." + v.Path
-			if fhirType, ok := typesystem.FHIRPropertyType[key]; ok {
-				return fhirTypeToCQLTypeSpec(fhirType)
+			if fhirType, ok := typesystem.FHIRPropertyTypeOf(srcContext, v.Path); ok {
+				ts := fhirTypeToCQLTypeSpec(fhirType)
+				// A list-valued element is a list: Patient.name is
+				// List<HumanName>. Dropping that made list traversal and
+				// indexing unable to see the list at all.
+				if typesystem.IsFHIRListPropertyOf(srcContext, v.Path) {
+					ts = listTS{namedTS{"{http://hl7.org/fhir}" + fhirType}}
+				}
+				return ts
 			}
 		}
 		// Same lookup when the source is model-typed rather than a context
@@ -1380,7 +1435,7 @@ func choiceTSKey(ts typeSpec) string {
 // marshalSig serializes a signature's type specifiers. In CQF mode each one —
 // and each tuple element definition inside one — carries the empty annotation
 // container every ELM Element does.
-func (t *Translator) marshalSig(vals []interface{}) json.RawMessage {
+func (t *Translator) marshalSig(vals []any) json.RawMessage {
 	if t.opts.CQFMode {
 		for i, v := range vals {
 			vals[i] = withEmptyAnnotation(v)
@@ -1392,24 +1447,24 @@ func (t *Translator) marshalSig(vals []interface{}) json.RawMessage {
 
 // withEmptyAnnotation adds "annotation": [] to a type specifier's JSON value and
 // to the specifiers and element definitions nested in it.
-func withEmptyAnnotation(v interface{}) interface{} {
+func withEmptyAnnotation(v any) any {
 	switch m := v.(type) {
 	case map[string]string:
-		out := make(map[string]interface{}, len(m)+1)
+		out := make(map[string]any, len(m)+1)
 		for k, s := range m {
 			out[k] = s
 		}
-		out["annotation"] = []interface{}{}
+		out["annotation"] = []any{}
 		return out
-	case map[string]interface{}:
-		out := make(map[string]interface{}, len(m)+1)
+	case map[string]any:
+		out := make(map[string]any, len(m)+1)
 		for k, x := range m {
 			switch k {
 			case "elementType", "pointType":
 				out[k] = withEmptyAnnotation(x)
 			case "choice", "element":
-				if xs, ok := x.([]interface{}); ok {
-					ys := make([]interface{}, len(xs))
+				if xs, ok := x.([]any); ok {
+					ys := make([]any, len(xs))
 					for i, y := range xs {
 						ys[i] = withEmptyAnnotation(y)
 					}
@@ -1421,8 +1476,52 @@ func withEmptyAnnotation(v interface{}) interface{} {
 				out[k] = x
 			}
 		}
-		out["annotation"] = []interface{}{}
+		out["annotation"] = []any{}
 		return out
 	}
 	return v
+}
+
+// anyConverted reports an operand that resolution had to convert or cast — a
+// node the translator synthesized for that purpose (see markConverted).
+func (t *Translator) anyConverted(operands []elm.Expression) bool {
+	for _, o := range operands {
+		if t.converted[o] {
+			return true
+		}
+	}
+	return false
+}
+
+// markConverted records a synthesized conversion or cast, so that signature
+// levels which depend on whether one occurred can ask. Whether a node was
+// synthesized cannot be read off the node itself: with locators off, a
+// source-written FHIRHelpers.ToInterval(x) looks exactly like an inserted one.
+func (t *Translator) markConverted(e elm.Expression) elm.Expression {
+	if t.converted == nil {
+		t.converted = map[elm.Expression]bool{}
+	}
+	t.converted[e] = true
+	return e
+}
+
+// formalDiffers reports an operator with fixed formal types — IsNull(Any),
+// Not(Boolean) — called with an argument of another type. That is a differing
+// signature even though nothing was converted: IsNull(”) passes a String
+// where the formal is Any.
+func (t *Translator) formalDiffers(op string, operands []elm.Expression) bool {
+	formals, ok := fixedFormalTypes[op]
+	if !ok || len(formals) != len(operands) {
+		return false
+	}
+	for i, o := range operands {
+		actual := knownTS(t.inferTypeSpec(o))
+		if actual == nil {
+			continue
+		}
+		if !typeSpecEqual(actual, formals[i]) {
+			return true
+		}
+	}
+	return false
 }

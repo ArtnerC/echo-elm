@@ -38,7 +38,7 @@ func main() {
 			return "FAIL (list): " + string(listOut)
 		}
 		var pkgs []string
-		for _, p := range strings.Split(strings.TrimSpace(string(listOut)), "\n") {
+		for p := range strings.SplitSeq(strings.TrimSpace(string(listOut)), "\n") {
 			p = strings.TrimSpace(p)
 			if p != "" && !strings.Contains(p, "/cqlparser") {
 				pkgs = append(pkgs, p)

@@ -161,7 +161,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 	type translateCQLIn struct {
 		Content string            `json:"content"`
 		Format  string            `json:"format,omitempty"`
-		Options translatorOptions `json:"options,omitempty"`
+		Options translatorOptions `json:"options,omitempty"` // omitempty keeps it optional in the MCP input schema
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name: "translate_cql",
@@ -184,7 +184,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 	type translateFileIn struct {
 		Path    string            `json:"path"`
 		Format  string            `json:"format,omitempty"`
-		Options translatorOptions `json:"options,omitempty"`
+		Options translatorOptions `json:"options,omitempty"` // omitempty keeps it optional in the MCP input schema
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name: "translate_file",
@@ -331,7 +331,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 		CqfScript string `json:"cqfScript,omitempty"` // absolute path to run.bat / run.sh wrapper
 		CqfElm    string `json:"cqfElm,omitempty"`    // pre-computed ELM JSON from CQF (paste-in)
 		// Translator options for the echo-elm side.
-		Options translatorOptions `json:"options,omitempty"`
+		Options translatorOptions `json:"options,omitempty"` // omitempty keeps it optional in the MCP input schema
 	}
 	mcp.AddTool(srv, &mcp.Tool{
 		Name: "compare_with_cqf",
@@ -377,7 +377,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 				Shareable: fmt.Sprintf("echo-elm translation error: %v", err),
 			})
 		}
-		echoBytes, _ := json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "  ")
+		echoBytes, _ := json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
 		echoNorm := parity.NormalizeForGolden(string(echoBytes))
 		diags := toDiagOuts(result.Diagnostics)
 
@@ -426,7 +426,7 @@ func registerTools(srv *mcp.Server, opts Options) {
 					Shareable:   "No CQF instance available. Provide cqfJar, cqfScript, or cqfElm.",
 				})
 			}
-			cqfBytes, _ := json.MarshalIndent(map[string]interface{}{"library": cqfResult.Library}, "", "  ")
+			cqfBytes, _ := json.MarshalIndent(map[string]any{"library": cqfResult.Library}, "", "  ")
 			cqfRaw = string(cqfBytes)
 			cqfMode = "echo-elm-cqf-mode"
 		}
@@ -485,8 +485,8 @@ func runCQF(launcher, cqlPath string) (jsonOut, stderr string, err error) {
 	_ = os.Remove(outJSON)
 
 	var cmd *exec.Cmd
-	if strings.HasPrefix(launcher, "jar:") {
-		jar := strings.TrimPrefix(launcher, "jar:")
+	if after, ok := strings.CutPrefix(launcher, "jar:"); ok {
+		jar := after
 		cmd = exec.CommandContext(context.Background(), "java", "-jar", jar, "--input", cqlPath, "--format", "JSON")
 	} else {
 		if isWindowsPath(launcher) {

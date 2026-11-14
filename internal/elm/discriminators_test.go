@@ -14,7 +14,7 @@ import (
 func typeAt(t *testing.T, doc map[string]any, path string) string {
 	t.Helper()
 	var cur any = doc
-	for _, seg := range strings.Split(path, ".") {
+	for seg := range strings.SplitSeq(path, ".") {
 		if strings.HasPrefix(seg, "[") {
 			idx := 0
 			if _, err := fmt.Sscanf(seg, "[%d]", &idx); err != nil {

@@ -174,7 +174,7 @@ func translateWithProfileAndLibDir(cqlPath string, opts translator.Options, libD
 	if err != nil {
 		return nil, err
 	}
-	return json.MarshalIndent(map[string]interface{}{"library": result.Library}, "", "  ")
+	return json.MarshalIndent(map[string]any{"library": result.Library}, "", "  ")
 }
 
 // CQFTranslateFunc returns a translateFn that runs echo-elm in CQF-compatible mode
@@ -287,7 +287,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.UpstreamJSON = normalizeShape(upJSON, cfgShape)
+	r.UpstreamJSON = normalizeFixture(upJSON, cfgShape, fix.Diagnostics)
 
 	// Run echo-elm.
 	echoBytes, err := translateFn(cqlPath)
@@ -297,7 +297,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.EchoJSON = normalizeShape(string(echoBytes), cfgShape)
+	r.EchoJSON = normalizeFixture(string(echoBytes), cfgShape, fix.Diagnostics)
 
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
@@ -406,7 +406,7 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 				continue
 			}
 
-			normalized := normalizeJSON(jsonOut)
+			normalized := normalizeJSONOpt(jsonOut, fix.Diagnostics)
 			if err2 := os.WriteFile(outPath, []byte(normalized), 0o644); err2 != nil {
 				return written, nil, fmt.Errorf("write %s: %w", outPath, err2)
 			}
@@ -451,12 +451,18 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 // annotations at all yet; that gap is tracked in issues/03-cqf-parity-gaps.md
 // rather than being silently absorbed here.
 func normalizeJSON(s string) string {
-	var v interface{}
+	return normalizeJSONOpt(s, false)
+}
+
+// normalizeJSONOpt is normalizeJSON, optionally keeping CqlToElmError
+// diagnostics for fixtures that opt into comparing them.
+func normalizeJSONOpt(s string, keepDiagnostics bool) string {
+	var v any
 	if err := json.Unmarshal([]byte(s), &v); err != nil {
 		return strings.TrimSpace(s)
 	}
-	if m, ok := v.(map[string]interface{}); ok {
-		stripVolatileFields(m)
+	if m, ok := v.(map[string]any); ok {
+		stripVolatileFieldsOpt(m, keepDiagnostics)
 	}
 	elm.StripImpliedTypesTree(v)
 	sortAnnotationTags(v)
@@ -469,17 +475,17 @@ func normalizeJSON(s string) string {
 // annotation s-trees to their text. See normalizeJSON for the full rationale;
 // TestAnnotationTextInvariant checks that the retained text is in fact the
 // def's source, so the reduction is not a blank cheque.
-func canonicalizeAnnotationFields(v interface{}) {
+func canonicalizeAnnotationFields(v any) {
 	switch node := v.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		delete(node, "localId")
 		// Recognize Annotation entries and collapse their s-tree.
 		if t, _ := node["type"].(string); t == "Annotation" {
 			if sv, ok := node["s"]; ok {
 				text := collectAnnotationText(sv)
-				node["s"] = map[string]interface{}{
-					"s": []interface{}{
-						map[string]interface{}{"value": []interface{}{text}},
+				node["s"] = map[string]any{
+					"s": []any{
+						map[string]any{"value": []any{text}},
 					},
 				}
 				_ = ok
@@ -488,7 +494,7 @@ func canonicalizeAnnotationFields(v interface{}) {
 		for _, child := range node {
 			canonicalizeAnnotationFields(child)
 		}
-	case []interface{}:
+	case []any:
 		for _, item := range node {
 			canonicalizeAnnotationFields(item)
 		}
@@ -497,17 +503,17 @@ func canonicalizeAnnotationFields(v interface{}) {
 
 // collectAnnotationText returns the concatenation of every leaf "value" string
 // found anywhere inside an annotation s-tree node.
-func collectAnnotationText(v interface{}) string {
+func collectAnnotationText(v any) string {
 	var sb strings.Builder
-	var walk func(x interface{})
-	walk = func(x interface{}) {
+	var walk func(x any)
+	walk = func(x any) {
 		switch node := x.(type) {
-		case map[string]interface{}:
+		case map[string]any:
 			if val, ok := node["value"]; ok {
 				switch vv := val.(type) {
 				case string:
 					sb.WriteString(vv)
-				case []interface{}:
+				case []any:
 					for _, s := range vv {
 						if str, ok := s.(string); ok {
 							sb.WriteString(str)
@@ -518,7 +524,7 @@ func collectAnnotationText(v interface{}) string {
 			if s, ok := node["s"]; ok {
 				walk(s)
 			}
-		case []interface{}:
+		case []any:
 			for _, item := range node {
 				walk(item)
 			}
@@ -534,11 +540,11 @@ func normalizeShape(s string, bundleShaped bool) string {
 	if !bundleShaped {
 		return normalizeJSON(s)
 	}
-	var v interface{}
+	var v any
 	if err := json.Unmarshal([]byte(s), &v); err != nil {
 		return strings.TrimSpace(s)
 	}
-	if m, ok := v.(map[string]interface{}); ok {
+	if m, ok := v.(map[string]any); ok {
 		stripVolatileFields(m)
 		stripSignatureLevel(m)
 	}
@@ -562,18 +568,18 @@ var bundleOmittedCollections = []string{
 }
 
 // stripEmptyBundleCollections removes those fields wherever they are empty.
-func stripEmptyBundleCollections(v interface{}) {
+func stripEmptyBundleCollections(v any) {
 	switch node := v.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		for _, field := range bundleOmittedCollections {
-			if arr, ok := node[field].([]interface{}); ok && len(arr) == 0 {
+			if arr, ok := node[field].([]any); ok && len(arr) == 0 {
 				delete(node, field)
 			}
 		}
 		for _, child := range node {
 			stripEmptyBundleCollections(child)
 		}
-	case []interface{}:
+	case []any:
 		for _, item := range node {
 			stripEmptyBundleCollections(item)
 		}
@@ -583,17 +589,17 @@ func stripEmptyBundleCollections(v interface{}) {
 // stripSignatureLevel drops the CqlToElmInfo signatureLevel on the bundle path.
 // The CLI writes it unconditionally; the bundle shape omits it, so it cannot be
 // compared there. It is still compared on every CLI-sourced path.
-func stripSignatureLevel(m map[string]interface{}) {
-	lib, ok := m["library"].(map[string]interface{})
+func stripSignatureLevel(m map[string]any) {
+	lib, ok := m["library"].(map[string]any)
 	if !ok {
 		return
 	}
-	anns, ok := lib["annotation"].([]interface{})
+	anns, ok := lib["annotation"].([]any)
 	if !ok {
 		return
 	}
 	for _, a := range anns {
-		if ann, ok := a.(map[string]interface{}); ok {
+		if ann, ok := a.(map[string]any); ok {
 			if t, _ := ann["type"].(string); t == "CqlToElmInfo" {
 				delete(ann, "signatureLevel")
 			}
@@ -606,21 +612,21 @@ func stripSignatureLevel(m map[string]interface{}) {
 // objects — and sorts non-empty tag arrays. Used on the bundle path only: the
 // JAXB/MOXy writer behind Library.content[] omits the containers the cql-to-elm
 // CLI writes, so there they carry no signal.
-func stripEmptyAnnotations(v interface{}) {
+func stripEmptyAnnotations(v any) {
 	switch node := v.(type) {
-	case map[string]interface{}:
-		if arr, ok := node["annotation"].([]interface{}); ok && len(arr) == 0 {
+	case map[string]any:
+		if arr, ok := node["annotation"].([]any); ok && len(arr) == 0 {
 			delete(node, "annotation")
 		}
 		// Strip empty tag array from Annotation nodes; sort non-empty t arrays by name.
 		if typ, _ := node["type"].(string); typ == "Annotation" {
-			if arr, ok := node["t"].([]interface{}); ok {
+			if arr, ok := node["t"].([]any); ok {
 				if len(arr) == 0 {
 					delete(node, "t")
 				} else {
 					sort.SliceStable(arr, func(i, j int) bool {
-						mi, _ := arr[i].(map[string]interface{})
-						mj, _ := arr[j].(map[string]interface{})
+						mi, _ := arr[i].(map[string]any)
+						mj, _ := arr[j].(map[string]any)
 						ni, _ := mi["name"].(string)
 						nj, _ := mj["name"].(string)
 						return ni < nj
@@ -631,7 +637,7 @@ func stripEmptyAnnotations(v interface{}) {
 		for _, child := range node {
 			stripEmptyAnnotations(child)
 		}
-	case []interface{}:
+	case []any:
 		for _, item := range node {
 			stripEmptyAnnotations(item)
 		}
@@ -640,12 +646,18 @@ func stripEmptyAnnotations(v interface{}) {
 
 // stripVolatileFields removes fields that differ between translators/runs
 // but are not semantically meaningful for parity checks.
-func stripVolatileFields(m map[string]interface{}) {
-	if lib, ok := m["library"].(map[string]interface{}); ok {
-		if anns, ok := lib["annotation"].([]interface{}); ok {
-			var kept []interface{}
+func stripVolatileFields(m map[string]any) {
+	stripVolatileFieldsOpt(m, false)
+}
+
+// stripVolatileFieldsOpt is stripVolatileFields, optionally keeping the
+// CqlToElmError diagnostics for a fixture that compares them.
+func stripVolatileFieldsOpt(m map[string]any, keepDiagnostics bool) {
+	if lib, ok := m["library"].(map[string]any); ok {
+		if anns, ok := lib["annotation"].([]any); ok {
+			var kept []any
 			for _, a := range anns {
-				if ann, ok := a.(map[string]interface{}); ok {
+				if ann, ok := a.(map[string]any); ok {
 					// translatorVersion is the only genuinely volatile field here:
 					// it names the producing translator. translatorOptions and
 					// signatureLevel describe how the ELM was produced and are
@@ -653,7 +665,7 @@ func stripVolatileFields(m map[string]interface{}) {
 					// echo-elm does not yet emit; see the parity notes in
 					// issues/03-cqf-parity-gaps.md.
 					delete(ann, "translatorVersion")
-					if t, _ := ann["type"].(string); t == "CqlToElmError" {
+					if t, _ := ann["type"].(string); t == "CqlToElmError" && !keepDiagnostics {
 						continue
 					}
 				}
@@ -670,10 +682,7 @@ func simpleDiff(want, got string) string {
 	gLines := strings.Split(got, "\n")
 
 	var sb strings.Builder
-	maxLines := len(wLines)
-	if len(gLines) > maxLines {
-		maxLines = len(gLines)
-	}
+	maxLines := max(len(gLines), len(wLines))
 
 	diffCount := 0
 	for i := 0; i < maxLines && diffCount < 20; i++ {
@@ -734,14 +743,14 @@ func resolveProfileNames(fixProfiles, allProfiles []string) []string {
 
 // sortAnnotationTags orders every non-empty "t" tag array by tag name. Tag
 // content is compared; the order CQF happens to emit tags in is not.
-func sortAnnotationTags(v interface{}) {
+func sortAnnotationTags(v any) {
 	switch node := v.(type) {
-	case map[string]interface{}:
+	case map[string]any:
 		if typ, _ := node["type"].(string); typ == "Annotation" {
-			if arr, ok := node["t"].([]interface{}); ok && len(arr) > 1 {
+			if arr, ok := node["t"].([]any); ok && len(arr) > 1 {
 				sort.SliceStable(arr, func(i, j int) bool {
-					mi, _ := arr[i].(map[string]interface{})
-					mj, _ := arr[j].(map[string]interface{})
+					mi, _ := arr[i].(map[string]any)
+					mj, _ := arr[j].(map[string]any)
 					ni, _ := mi["name"].(string)
 					nj, _ := mj["name"].(string)
 					return ni < nj
@@ -751,9 +760,18 @@ func sortAnnotationTags(v interface{}) {
 		for _, child := range node {
 			sortAnnotationTags(child)
 		}
-	case []interface{}:
+	case []any:
 		for _, item := range node {
 			sortAnnotationTags(item)
 		}
 	}
+}
+
+// normalizeFixture normalizes one side of a fixture comparison. Diagnostics are
+// kept only for a fixture that opts in, and never on the bundle path.
+func normalizeFixture(s string, bundleShaped, keepDiagnostics bool) string {
+	if keepDiagnostics && !bundleShaped {
+		return normalizeJSONOpt(s, true)
+	}
+	return normalizeShape(s, bundleShaped)
 }
