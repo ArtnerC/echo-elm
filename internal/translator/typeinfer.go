@@ -1264,6 +1264,21 @@ func (t *Translator) inferTypeSpec(e elm.Expression) typeSpec {
 				return ts
 			}
 		}
+		// `.value` on a property of a context reference — Patient.birthDate.value.
+		// The context branch below answers that property with the System type
+		// it converts to, so the FHIR primitive is looked up here instead.
+		if v.Path == "value" {
+			if src, ok := v.Source.(*elm.PropertyNode); ok {
+				if er, ok := src.Source.(*elm.ExpressionRefNode); ok && er.LibraryName == "" {
+					if fhirType, ok := typesystem.FHIRPropertyTypeOf(er.Name, src.Path); ok &&
+						!typesystem.IsFHIRListPropertyOf(er.Name, src.Path) {
+						if sys := fhirPrimitiveSystemType(fhirType); sys != "" {
+							return namedTS{sys}
+						}
+					}
+				}
+			}
+		}
 		// FHIR/QICore property-type lookup: when source is a context expression
 		// (e.g. "Patient"), consult FHIRPropertyType for the CQL type.
 		if srcContext != "" && v.Path != "" {

@@ -398,6 +398,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			if ts := t.declaredTypeSpec(*s.ReturnType); ts != nil {
 				t.localFuncReturns[s.Name] = ts
 				ov.returns = ts
+				ov.definitelyAny = namedName(ts) == anyTS.name
 			}
 		}
 		t.recordLocalOverload(s.Name, ov)
@@ -825,12 +826,11 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 		// Recover library qualifiers before ordering, so the dependency analysis
 		// and the emitted nodes agree about what each call refers to.
 		t.resolveLibraryQualifiedCalls(lib.Statements)
-		ordered := statementEmissionOrder(lib.Statements)
-		stmts := &elm.StatementDefs{Def: leadingAccessors(&accessors, ordered)}
-		for _, s := range ordered {
-			// Emit any accessor whose context declaration precedes this statement
-			// in the source before the statement itself.
-			stmts.Def = append(stmts.Def, accessorsBefore(&accessors, s.Loc().Start)...)
+		// Bodies are translated dependencies first, so each can read the types
+		// of what it references; they are emitted in CQF's order, which places
+		// a function ahead of its own dependencies.
+		translated := make(map[*ast.ExpressionDefinition]*elm.StatementDef, len(lib.Statements))
+		for _, s := range statementTranslationOrder(lib.Statements) {
 			stmtCtx := s.Context
 			if stmtCtx == "" {
 				stmtCtx = "Unfiltered"
@@ -917,6 +917,7 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 				// Every overload gets its body's type, so a call can resolve to the
 				// right one by argument type — overloaded or not.
 				ov.returns = t.inferTypeSpec(sd.Expression)
+				ov.definitelyAny = t.definitelyAnyBranch(sd.Expression)
 			}
 			if s.IsFunction && t.localFuncCounts[s.Name] == 1 {
 				// Record the inferred return type so callers in *other* libraries
@@ -930,7 +931,15 @@ func (t *Translator) Translate(lib *ast.Library, sourceName string) *Result {
 			}
 			t.functionParamScope = nil
 			t.operandTypeSpecs = nil
-			stmts.Def = append(stmts.Def, sd)
+			translated[s] = sd
+		}
+		ordered := statementEmissionOrder(lib.Statements)
+		stmts := &elm.StatementDefs{Def: leadingAccessors(&accessors, ordered)}
+		for _, s := range ordered {
+			// Emit any accessor whose context declaration precedes this statement
+			// in the source before the statement itself.
+			stmts.Def = append(stmts.Def, accessorsBefore(&accessors, s.Loc().Start)...)
+			stmts.Def = append(stmts.Def, translated[s])
 		}
 		// Any accessor whose declaration sits after every statement.
 		stmts.Def = append(stmts.Def, drainAccessors(&accessors)...)
@@ -1904,6 +1913,17 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 				thenExpr = t.castNullTo(thenExpr, ts)
 			}
 		}
+		// A branch that is Any by construction — a call to a helper wrapping
+		// Message — is cast to the other branch's type, as a null is.
+		if t.definitelyAnyBranch(elseExpr) && !t.definitelyAnyBranch(thenExpr) {
+			if ts := knownTS(t.inferTypeSpec(thenExpr)); ts != nil {
+				elseExpr = t.castNullTo(elseExpr, ts)
+			}
+		} else if t.definitelyAnyBranch(thenExpr) && !t.definitelyAnyBranch(elseExpr) {
+			if ts := knownTS(t.inferTypeSpec(elseExpr)); ts != nil {
+				thenExpr = t.castNullTo(thenExpr, ts)
+			}
+		}
 		return &elm.IfNode{
 			Annotation: ann,
 			Condition:  condition,
@@ -2616,6 +2636,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		t.typeNullFromSibling(lhs, rhs)
 		t.typeNullFromSibling(rhs, lhs)
 	}
+	lhs, rhs = t.rebalanceSetOperation(op, lhs, rhs)
 
 	operands := []elm.Expression{lhs, rhs}
 	// For Equivalent (~): when one side is a CodeableConcept (coerces to Concept via ToConcept)
@@ -2678,6 +2699,38 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 		Signature:  sig,
 		Operator:   op,
 		Operand:    operands,
+	}
+}
+
+// rebalanceSetOperation regroups a chain of unions, or of intersects, as CQF's
+// resolveUnion and resolveIntersect do: when the left operand is Op(LL, LR)
+// with LL an Op and LR not, the result is Op(LL, Op(LR, right)). So
+// `a union b union c union d` is (a ∪ b) ∪ (c ∪ d), not ((a ∪ b) ∪ c) ∪ d.
+// The regrouped inner node is synthesized: no locator and no result type.
+// Except is left-deep in CQF too, and its grouping changes the result.
+// (issues/08 M3)
+func (t *Translator) rebalanceSetOperation(op string, lhs, rhs elm.Expression) (elm.Expression, elm.Expression) {
+	if op != "Union" && op != "Intersect" {
+		return lhs, rhs
+	}
+	isOp := func(e elm.Expression) bool {
+		n, ok := e.(*elm.OperatorExpressionNode)
+		return ok && n.Operator == op && len(n.Operand) == 2
+	}
+	if !isOp(lhs) {
+		return lhs, rhs
+	}
+	left := lhs.(*elm.OperatorExpressionNode)
+	ll, lr := left.Operand[0], left.Operand[1]
+	if !isOp(ll) || isOp(lr) {
+		return lhs, rhs
+	}
+	inner := []elm.Expression{lr, rhs}
+	return ll, &elm.OperatorExpressionNode{
+		Annotation: t.cqfAnnotation(),
+		Signature:  t.computeSig(op, inner),
+		Operator:   op,
+		Operand:    inner,
 	}
 }
 
@@ -2905,7 +2958,7 @@ func (t *Translator) boundTypeName(other ast.Expr, translated elm.Expression) st
 func (t *Translator) unifyCaseBranches(thens []elm.Expression, elseExpr elm.Expression) typeSpec {
 	var result typeSpec
 	for _, e := range append(append([]elm.Expression{}, thens...), elseExpr) {
-		if e == nil || isNullLike(e) || isDefinitelyAnyBranch(e) {
+		if e == nil || isNullLike(e) || t.definitelyAnyBranch(e) {
 			continue
 		}
 		ts := knownTS(t.inferTypeSpec(e))
@@ -2975,7 +3028,7 @@ func (t *Translator) castCaseBranch(e elm.Expression, result typeSpec) elm.Expre
 		}
 		return t.castNullTo(e, result)
 	}
-	if isDefinitelyAnyBranch(e) {
+	if t.definitelyAnyBranch(e) {
 		return t.castNullTo(e, result)
 	}
 	return e
@@ -3010,6 +3063,27 @@ func choiceWithin(ts typeSpec, within choiceTS) bool {
 func isDefinitelyAnyBranch(e elm.Expression) bool {
 	n, ok := e.(*elm.NamedOperatorExpressionNode)
 	return ok && n.Operator == "Message" && isNullLike(namedOperand(n, "source"))
+}
+
+// definitelyAnyBranch is isDefinitelyAnyBranch, or a call to a function whose
+// return type is Any by construction — a helper wrapping Message, say. CQF
+// casts such a branch to the type of the others like a Message written in
+// place. (issues/08 appendix: an `if` whose else calls an included Error
+// helper)
+func (t *Translator) definitelyAnyBranch(e elm.Expression) bool {
+	if isDefinitelyAnyBranch(e) {
+		return true
+	}
+	fr, ok := e.(*elm.FunctionRefNode)
+	if !ok {
+		return false
+	}
+	args := make([]typeSpec, len(fr.Operand))
+	for i, o := range fr.Operand {
+		args[i] = t.inferTypeSpec(o)
+	}
+	ov := t.overloadForCall(fr.LibraryName, fr.Name, args)
+	return ov != nil && ov.definitelyAny
 }
 
 // castNullOperand wraps a bare null operand of a same-type binary operator in

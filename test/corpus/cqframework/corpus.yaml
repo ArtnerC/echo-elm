@@ -784,3 +784,29 @@ fixtures:
     expectedStatus: success
     profiles: [measure-bundle]
     tags: [issue-08, issue-09, measure-families]
+
+  # ── issues/08 appendix shapes (found reviewing the first-difference appendix) ──
+
+  - path: measure-families/FunctionOrder.cql
+    description: "a function is emitted before what it references; a define after"
+    expectedStatus: success
+    profiles: [measure-bundle, default]
+    tags: [issue-08, measure-families]
+
+  - path: measure-families/SetOperationChains.cql
+    description: "issues/08 M3: union and intersect chains regrouped right-leaning bushy, as CQF's resolveUnion does"
+    expectedStatus: success
+    profiles: [measure-bundle, default]
+    tags: [issue-08, operators, measure-families]
+
+  - path: measure-families/AnyBranchHelpers.cql
+    description: "helpers returning Any by construction, for AnyBranchCast"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-08, measure-families]
+
+  - path: measure-families/AnyBranchCast.cql
+    description: "a branch calling a helper that returns Any is cast to the other branch's type"
+    expectedStatus: success
+    profiles: [measure-bundle, default]
+    tags: [issue-08, measure-families]

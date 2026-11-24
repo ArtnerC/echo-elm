@@ -311,6 +311,13 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 	}
 }
 
+// statementTranslationOrder returns the statements dependencies first, with
+// source order as the tiebreaker, so every body is translated after what it
+// references and can read their types.
+func statementTranslationOrder(stmts []*ast.ExpressionDefinition) []*ast.ExpressionDefinition {
+	return dependencyOrder(stmts, false)
+}
+
 // statementEmissionOrder returns the statements in the order CQF emits them.
 //
 // CQF resolves definitions lazily: translating a body that references another
@@ -318,9 +325,20 @@ func (t *Translator) resolveLibraryQualifiedCalls(stmts []*ast.ExpressionDefinit
 // result is dependency order, with source order as the tiebreaker, so a define
 // that forward-references a later one appears after it in the ELM.
 //
+// A function is the exception: CQF adds its FunctionDef to the library before
+// translating the body, so it precedes what it references. A chain Top → F1 →
+// F2 → F3 of functions is emitted F1, F2, F3, Top, not F3, F2, F1, Top.
+func statementEmissionOrder(stmts []*ast.ExpressionDefinition) []*ast.ExpressionDefinition {
+	return dependencyOrder(stmts, true)
+}
+
+// dependencyOrder orders stmts by their local references, in source order
+// otherwise. With functionsFirst, a function is placed before what it
+// references rather than after.
+//
 // A reference cycle is invalid CQL; if one is present the statements involved
 // keep source order rather than looping.
-func statementEmissionOrder(stmts []*ast.ExpressionDefinition) []*ast.ExpressionDefinition {
+func dependencyOrder(stmts []*ast.ExpressionDefinition, functionsFirst bool) []*ast.ExpressionDefinition {
 	byName := make(map[string]*ast.ExpressionDefinition, len(stmts))
 	for _, s := range stmts {
 		if _, dup := byName[s.Name]; !dup {
@@ -338,12 +356,19 @@ func statementEmissionOrder(stmts []*ast.ExpressionDefinition) []*ast.Expression
 			return
 		}
 		visiting[s] = true
+		first := functionsFirst && s.IsFunction
+		if first {
+			emitted[s] = true
+			out = append(out, s)
+		}
 		for _, dep := range localReferences(s, byName) {
 			emit(dep)
 		}
 		visiting[s] = false
-		emitted[s] = true
-		out = append(out, s)
+		if !first {
+			emitted[s] = true
+			out = append(out, s)
+		}
 	}
 	for _, s := range stmts {
 		emit(s)

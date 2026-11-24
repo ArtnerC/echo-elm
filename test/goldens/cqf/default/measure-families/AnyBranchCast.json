@@ -1,0 +1,515 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "AnyBranchCast",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "Common",
+          "path": "AnyBranchHelpers",
+          "version": "1.0"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "birthDate",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            },
+            "else": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Date",
+              "operand": {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "Raise",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "no birth date",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "then": {
+              "annotation": [],
+              "path": "value",
+              "source": {
+                "annotation": [],
+                "path": "birthDate",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              "type": "Property"
+            },
+            "type": "If"
+          },
+          "name": "Else calls helper"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "path": "birthDate",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              "signature": [],
+              "type": "IsNull"
+            },
+            "else": {
+              "annotation": [],
+              "path": "value",
+              "source": {
+                "annotation": [],
+                "path": "birthDate",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              "type": "Property"
+            },
+            "then": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}Date",
+              "operand": {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "Raise",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "no birth date",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "type": "If"
+          },
+          "name": "Then calls helper"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "path": "birthDate",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              "signature": [],
+              "type": "IsNull"
+            },
+            "else": {
+              "annotation": [],
+              "asTypeSpecifier": {
+                "annotation": [],
+                "pointType": {
+                  "annotation": [],
+                  "name": "{urn:hl7-org:elm-types:r1}Date",
+                  "type": "NamedTypeSpecifier"
+                },
+                "type": "IntervalTypeSpecifier"
+              },
+              "operand": {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "Raise",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "unexpected",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "then": {
+              "annotation": [],
+              "high": {
+                "annotation": [],
+                "day": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2021",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              "highClosed": true,
+              "low": {
+                "annotation": [],
+                "day": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "month": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "1",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                },
+                "signature": [],
+                "type": "Date",
+                "year": {
+                  "annotation": [],
+                  "type": "Literal",
+                  "value": "2020",
+                  "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+                }
+              },
+              "lowClosed": true,
+              "type": "Interval"
+            },
+            "type": "If"
+          },
+          "name": "Interval branch"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "active",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            },
+            "else": {
+              "annotation": [],
+              "asType": "{urn:hl7-org:elm-types:r1}String",
+              "operand": {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "Declared any",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "no flag",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "signature": [],
+              "type": "As"
+            },
+            "then": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "active",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "type": "If"
+          },
+          "name": "Declared Any"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "condition": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "operand": {
+                  "annotation": [],
+                  "path": "active",
+                  "source": {
+                    "annotation": [],
+                    "name": "Patient",
+                    "type": "ExpressionRef"
+                  },
+                  "type": "Property"
+                },
+                "signature": [],
+                "type": "IsNull"
+              },
+              "signature": [],
+              "type": "Not"
+            },
+            "else": {
+              "annotation": [],
+              "operand": {
+                "annotation": [],
+                "libraryName": "Common",
+                "name": "Typed",
+                "operand": [
+                  {
+                    "annotation": [],
+                    "type": "Literal",
+                    "value": "2.5",
+                    "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+                  }
+                ],
+                "signature": [],
+                "type": "FunctionRef"
+              },
+              "signature": [],
+              "type": "ToDecimal"
+            },
+            "then": {
+              "annotation": [],
+              "type": "Literal",
+              "value": "1.5",
+              "valueType": "{urn:hl7-org:elm-types:r1}Decimal"
+            },
+            "type": "If"
+          },
+          "name": "Typed helper is not cast"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "caseItem": [
+              {
+                "annotation": [],
+                "then": {
+                  "annotation": [],
+                  "asType": "{urn:hl7-org:elm-types:r1}Date",
+                  "operand": {
+                    "annotation": [],
+                    "libraryName": "Common",
+                    "name": "Raise",
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "type": "Literal",
+                        "value": "no birth date",
+                        "valueType": "{urn:hl7-org:elm-types:r1}String"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "FunctionRef"
+                  },
+                  "signature": [],
+                  "type": "As"
+                },
+                "when": {
+                  "annotation": [],
+                  "operand": {
+                    "annotation": [],
+                    "path": "birthDate",
+                    "source": {
+                      "annotation": [],
+                      "name": "Patient",
+                      "type": "ExpressionRef"
+                    },
+                    "type": "Property"
+                  },
+                  "signature": [],
+                  "type": "IsNull"
+                }
+              }
+            ],
+            "else": {
+              "annotation": [],
+              "path": "value",
+              "source": {
+                "annotation": [],
+                "path": "birthDate",
+                "source": {
+                  "annotation": [],
+                  "name": "Patient",
+                  "type": "ExpressionRef"
+                },
+                "type": "Property"
+              },
+              "type": "Property"
+            },
+            "type": "Case"
+          },
+          "name": "Case with helper"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "path": "value",
+            "source": {
+              "annotation": [],
+              "path": "birthDate",
+              "source": {
+                "annotation": [],
+                "name": "Patient",
+                "type": "ExpressionRef"
+              },
+              "type": "Property"
+            },
+            "type": "Property"
+          },
+          "name": "Birth date value"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

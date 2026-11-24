@@ -1,0 +1,249 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "AnyBranchHelpers",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "5:1-5:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "7:1-7:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "7:1-7:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "code": {
+              "annotation": [],
+              "locator": "10:23-10:46",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "type": "Literal",
+              "value": "AnyBranchHelpers.Error",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "condition": {
+              "annotation": [],
+              "locator": "10:17-10:20",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "locator": "10:3-10:61",
+            "message": {
+              "annotation": [],
+              "locator": "10:58-10:60",
+              "name": "msg",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "type": "OperandRef"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "severity": {
+              "annotation": [],
+              "locator": "10:49-10:55",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "type": "Literal",
+              "value": "Error",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "locator": "10:11-10:14",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+              "type": "Null"
+            },
+            "type": "Message"
+          },
+          "locator": "9:1-10:61",
+          "name": "Raise",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "msg",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "9:29-9:34",
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "code": {
+              "annotation": [],
+              "locator": "13:23-13:49",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "type": "Literal",
+              "value": "AnyBranchHelpers.Declared",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "condition": {
+              "annotation": [],
+              "locator": "13:17-13:20",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Boolean",
+              "type": "Literal",
+              "value": "true",
+              "valueType": "{urn:hl7-org:elm-types:r1}Boolean"
+            },
+            "locator": "13:3-13:64",
+            "message": {
+              "annotation": [],
+              "locator": "13:61-13:63",
+              "name": "msg",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "type": "OperandRef"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+            "severity": {
+              "annotation": [],
+              "locator": "13:52-13:58",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+              "type": "Literal",
+              "value": "Error",
+              "valueType": "{urn:hl7-org:elm-types:r1}String"
+            },
+            "signature": [],
+            "source": {
+              "annotation": [],
+              "locator": "13:11-13:14",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+              "type": "Null"
+            },
+            "type": "Message"
+          },
+          "locator": "12:1-13:64",
+          "name": "Declared any",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "msg",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "12:36-12:41",
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Any",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "15:42-15:57",
+            "operand": {
+              "annotation": [],
+              "locator": "15:51-15:56",
+              "name": "amount",
+              "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+              "type": "OperandRef"
+            },
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Truncate"
+          },
+          "locator": "15:1-15:57",
+          "name": "Typed",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "amount",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "15:32-15:38",
+                "name": "{urn:hl7-org:elm-types:r1}Decimal",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Decimal",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+          "type": "FunctionDef"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "4:1-4:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}
