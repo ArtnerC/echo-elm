@@ -1735,10 +1735,13 @@ func (t *Translator) translateExprCore(expr ast.Expr) elm.Expression {
 			}
 		}
 		t.checkFluentOnlyCall(v, lib, operands)
-		t.noteOverloadedCall(lib, v.Name)
+		sig := t.computeFunctionRefSig(lib, v.Name, operands)
+		if t.opts.SignatureLevel != "Differing" || isEmptySig(sig) {
+			t.noteOverloadedCall(lib, v.Name)
+		}
 		return &elm.FunctionRefNode{
 			Annotation:  ann,
-			Signature:   t.computeFunctionRefSig(lib, v.Name, operands),
+			Signature:   sig,
 			Name:        v.Name,
 			LibraryName: lib,
 			Operand:     operands,
@@ -2518,6 +2521,7 @@ func (t *Translator) translateBinaryExpr(v *ast.BinaryExpr) elm.Expression {
 
 	op := t.demotePointInclusionOp(v.Op, v.Left, lhs)
 	t.noteInclusionDemotion(op, v.Left, v.Right, lhs, rhs)
+	t.noteInclusionPromotion(op, lhs, rhs)
 
 	// For the "In" operator, apply either interval promotion or list promotion when
 	// the RHS cannot already satisfy an In overload for the LHS type. The check uses

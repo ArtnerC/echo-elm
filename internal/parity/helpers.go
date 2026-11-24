@@ -10,9 +10,9 @@ func NormalizeForGolden(s string) string {
 }
 
 // NormalizeForGoldenFixture is NormalizeForGolden for a fixture, keeping its
-// CqlToElmError diagnostics when it opts into comparing them.
+// CqlToElmError diagnostics unless it records a gap in them.
 func NormalizeForGoldenFixture(s string, fix *Fixture) string {
-	return normalizeJSONOpt(s, fix != nil && fix.Diagnostics)
+	return normalizeJSONOpt(s, fix.ComparesDiagnostics())
 }
 
 // SimpleDiff returns a naive line-by-line diff summary for use in test

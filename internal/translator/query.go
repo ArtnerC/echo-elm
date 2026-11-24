@@ -290,6 +290,13 @@ func (t *Translator) translateQuery(q *ast.QueryExpression) elm.Expression {
 				// `sort asc` / `sort desc` — direction only, no by-expression.
 			} else if id, ok := item.Expression.(*ast.IdentifierRef); ok && id != nil {
 				sortItem.Path = id.Name
+				// CQF tries the field as an expression, twice, applying its
+				// FHIRHelpers conversion each time, before settling on a bare
+				// ByColumn; an overloaded conversion warns for both. (#8)
+				if fhirFunc, _ := t.sortFieldCoercion(id.Name, false); fhirFunc != "" {
+					t.noteOverloadedCall(t.fhirHelpersLocalName, fhirFunc)
+					t.noteOverloadedCall(t.fhirHelpersLocalName, fhirFunc)
+				}
 			} else {
 				prevSortScope := t.inSortScope
 				t.inSortScope = true
