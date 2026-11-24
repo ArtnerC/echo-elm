@@ -247,6 +247,13 @@ resolves twice (aggregate lifts, and `during` / `included in` on a converted ope
 reproducing that means mirroring CQF's resolution attempts. Details are on
 [#8](https://github.com/ArtnerC/echo-elm/issues/8).
 
+**Update (November 24, 2026):** the global exclusion is gone. Diagnostics are compared for
+every fixture by default, and a fixture opts out with a written `diagnosticsGap` reason.
+The only one that does is `measure-families/FHIRHelpers.cql`: it is missing CQF's
+identifier-hiding warning, which is still open on #8. The double-resolution counts, the
+`Differing`-level overload warning and the interval-demotion warning are emitted. Against
+fresh CQF 5.0.0: 418 match, 0 differ, 1 divergent (by decision).
+
 ---
 
 ## Status
@@ -256,10 +263,10 @@ reproducing that means mirroring CQF's resolution attempts. Details are on
 | PR #3 measure-shape fixes | Merged to `main` |
 | PR #4 issue-06 fixes and stale-reference warning | Merged to `main` |
 | Bundle publisher remediation | External dependency — #5 open |
-| Fresh main-branch HEDIS re-measurement | Complete: 407 fresh-CQF comparisons, 95 match / 312 differ / 0 errors — #6 open for remediation |
-| Property → ExpressionRef trigger | Waiting for licence-clean evidence — #7 open |
+| Fresh main-branch HEDIS re-measurement | Complete: 407 fresh-CQF comparisons, 95 match / 312 differ / 0 errors — #6 closed; follow-up run in issue 08 |
+| Property → ExpressionRef trigger | Trigger found in issue 08 (W1) and fixed in #16 — #7 closed |
 | Fresh-CQF families 1–3 | **Fixed**, with synthetic fixtures under `layered/` — see Part 2 |
-| CQF diagnostic annotation parity | Census done; two of three kinds emitted; eight fixtures opted in — #8 open for the double-resolution counts |
+| CQF diagnostic annotation parity | Compared for every fixture by default; only identifier-hiding warnings remain — #8 open |
 
 ## Actions
 
@@ -272,7 +279,7 @@ reproducing that means mirroring CQF's resolution attempts. Details are on
   propagation, then compare it to CQF 5.0.0 (#6).
 - [x] Add separate synthetic fixtures for `Concatenate` versus `Add` and conversion-wrapper
   lowering after the cross-library metadata fixture is resolved (#6).
-- [ ] Provide a licence-clean trigger description or `StructuralDiff` path for
-      Property → ExpressionRef (#7).
+- [x] Provide a licence-clean trigger description or `StructuralDiff` path for
+      Property → ExpressionRef (#7). Delivered in issue 08 (W1).
 - [x] Census raw CQF diagnostics and add opt-in diagnostic parity fixtures (#8).
-- [ ] Re-measure the licensed bundles against the new `main` (#6).
+- [x] Re-measure the licensed bundles against the new `main` (#6). Delivered in issue 08.

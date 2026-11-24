@@ -363,7 +363,10 @@ func (t *Translator) buildMedicationReferenceSubQuery(localType, refTarget strin
 		TemplateID:  fhirBase + refTarget,
 	}
 
-	// The Medication resource id, converted to a string.
+	// The Medication resource id, converted to a string. CQF resolves both
+	// ToString calls below like any other, so each warns. (#8)
+	t.noteOverloadedCall(t.fhirHelpersLocalName, "ToString")
+	t.noteOverloadedCall(t.fhirHelpersLocalName, "ToString")
 	mIDProp := &elm.PropertyNode{Annotation: ann, Path: "id", Scope: mAlias}
 	mIDStr := &elm.FunctionRefNode{
 		Annotation:  ann,
@@ -464,7 +467,7 @@ func (t *Translator) convertFHIRCast(asNode *elm.AsNode, ts elm.TypeSpecifier, l
 	if fn == "" {
 		return nil
 	}
-	return t.fhirConversionWrapper(asNode, fhirType, fn, loc)
+	return t.markConverted(t.fhirConversionWrapper(asNode, fhirType, fn, loc))
 }
 
 // aliasRefNode references a query alias, converting it through FHIRHelpers when
@@ -507,6 +510,7 @@ func (t *Translator) fhirConversionWrapper(inner elm.Expression, fhirType, fn, l
 		elm.SetResultType(inner, "{http://hl7.org/fhir}"+fhirType, nil)
 	}
 	t.skipResultTypeStamp = true
+	t.noteOverloadedCall(t.fhirHelpersLocalName, fn)
 	return &elm.FunctionRefNode{
 		Annotation:  t.cqfAnnotation(),
 		Signature:   t.buildSigFromTypes("FunctionRef", []typeSpec{namedTS{"{http://hl7.org/fhir}" + fhirType}}),
@@ -543,6 +547,9 @@ func (t *Translator) liftFHIRListOperand(op string, src elm.Expression) (elm.Exp
 	if fhirFunc == "" {
 		return nil, false
 	}
+	// CQF resolves the element conversion twice while lifting it, so an
+	// overloaded one warns twice; fhirListConversionQuery notes the other. (#8)
+	t.noteOverloadedCall(t.fhirHelpersLocalName, fhirFunc)
 	return t.fhirListConversionQuery(src, fhirFunc, fhirLocalTypeName(lt.elem)), true
 }
 

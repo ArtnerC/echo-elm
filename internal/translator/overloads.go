@@ -24,7 +24,11 @@ type funcOverload struct {
 	// returns is the declared return type, or else the type inferred from the
 	// body once the definition has been translated. Nil until then.
 	returns typeSpec
-	fluent  bool
+	// definitelyAny marks a return type that is Any by construction — declared
+	// `returns Any`, or a body that is a Message over null — rather than one
+	// the body's type could not be inferred for.
+	definitelyAny bool
+	fluent        bool
 	// library is the include alias that declares it, "" for this library.
 	library string
 }

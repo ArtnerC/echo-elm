@@ -1,0 +1,657 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "SetOperationChains",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "parameters": {
+      "def": [
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "name": "Period",
+          "parameterTypeSpecifier": {
+            "annotation": [],
+            "pointType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}DateTime",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "IntervalTypeSpecifier"
+          }
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "L1"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "2",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "L2"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "3",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "L3"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "4",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "L4"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "5",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              },
+              {
+                "annotation": [],
+                "type": "Literal",
+                "value": "6",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "type": "List"
+          },
+          "name": "L5"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L1",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L2",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              },
+              {
+                "annotation": [],
+                "name": "L3",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "Union of three"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L1",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L2",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L3",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L4",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "Union of four"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "L1",
+                        "type": "ExpressionRef"
+                      },
+                      {
+                        "annotation": [],
+                        "name": "L2",
+                        "type": "ExpressionRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Union"
+                  },
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "L3",
+                        "type": "ExpressionRef"
+                      },
+                      {
+                        "annotation": [],
+                        "name": "L4",
+                        "type": "ExpressionRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Union"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              },
+              {
+                "annotation": [],
+                "name": "L5",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "Union of five"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L1",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L2",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L3",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L4",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "Pipe of four"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L1",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L2",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Intersect"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L3",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L4",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Intersect"
+              }
+            ],
+            "signature": [],
+            "type": "Intersect"
+          },
+          "name": "Intersect of four"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "operand": [
+                      {
+                        "annotation": [],
+                        "name": "L1",
+                        "type": "ExpressionRef"
+                      },
+                      {
+                        "annotation": [],
+                        "name": "L2",
+                        "type": "ExpressionRef"
+                      }
+                    ],
+                    "signature": [],
+                    "type": "Except"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L3",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Except"
+              },
+              {
+                "annotation": [],
+                "name": "L4",
+                "type": "ExpressionRef"
+              }
+            ],
+            "signature": [],
+            "type": "Except"
+          },
+          "name": "Except of four"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "Period",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "Period",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Intersect"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "Period",
+                    "type": "ParameterRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "Period",
+                    "type": "ParameterRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Intersect"
+              }
+            ],
+            "signature": [],
+            "type": "Intersect"
+          },
+          "name": "Interval intersect of four"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L1",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L2",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "name": "L3",
+                    "type": "ExpressionRef"
+                  },
+                  {
+                    "annotation": [],
+                    "name": "L4",
+                    "type": "ExpressionRef"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "Parenthesized"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": [
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  },
+                  {
+                    "annotation": [],
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              },
+              {
+                "annotation": [],
+                "operand": [
+                  {
+                    "annotation": [],
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  },
+                  {
+                    "annotation": [],
+                    "codeFilter": [],
+                    "dataType": "{http://hl7.org/fhir}Encounter",
+                    "dateFilter": [],
+                    "include": [],
+                    "otherFilter": [],
+                    "templateId": "http://hl7.org/fhir/StructureDefinition/Encounter",
+                    "type": "Retrieve"
+                  }
+                ],
+                "signature": [],
+                "type": "Union"
+              }
+            ],
+            "signature": [],
+            "type": "Union"
+          },
+          "name": "Retrieves of four"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}

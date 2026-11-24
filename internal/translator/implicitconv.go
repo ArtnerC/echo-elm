@@ -190,6 +190,9 @@ func (t *Translator) definitelyAny(e elm.Expression) bool {
 	switch v := e.(type) {
 	case *elm.LetRefNode:
 		return t.anyAccumulators[v.Name]
+	case *elm.FunctionRefNode:
+		// A call to a function that returns Any by construction.
+		return t.definitelyAnyBranch(v)
 	case *elm.OperatorExpressionNode:
 		if len(v.Operand) == 0 {
 			return false

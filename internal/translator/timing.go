@@ -238,6 +238,7 @@ func (t *Translator) translateTimingExpr(v *ast.TimingExpr) elm.Expression {
 
 	rhs := t.boundary(t.translateExpr(v.Right), v.RightBoundary, locatorStr(v.RightBoundaryLoc))
 	t.noteInclusionDemotion(op, v.Left, v.Right, lhs, rhs)
+	t.noteInclusionPromotion(op, lhs, rhs)
 	op = t.demotePointContainsOp(op, rhs)
 	promotedLHS, promotedRHS := t.promoteDateToDateTime(op, lhs, rhs)
 	promotedLHS, promotedRHS = t.promotePointToInterval(op, v, promotedLHS, promotedRHS)

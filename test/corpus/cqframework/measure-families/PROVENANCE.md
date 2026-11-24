@@ -13,3 +13,9 @@ copied unchanged. It is byte-identical to `../layered/FHIRHelpers.cql`.
 
 The goldens under `test/goldens/cqf/measure-bundle/measure-families/` are reference ELM from
 the pinned CQF 5.0.0 CLI under the `measure-bundle` option profile.
+
+`FunctionOrder.cql`, `SetOperationChains.cql`, `AnyBranchCast.cql` and `AnyBranchHelpers.cql`
+were written for this repository after reviewing the issue 08 first-difference appendix. They
+reproduce three shapes the appendix showed in licensed content (statement order around forward
+function references, regrouped union chains, and an `if` branch calling an included helper that
+returns Any) from one-sentence construct descriptions. They contain no measure content.

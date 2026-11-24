@@ -219,7 +219,6 @@ fixtures:
     description: Library with inline comments, FHIR model, queries, and function definition
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, debug, sig-overloads, sig-all, disable-list-demotion, disable-list-promotion, compat-1.4]
-    diagnostics: true
     tags: [cqf-corpus, comments, fhir]
 
   - path: cqf-tests/TestPatientContext.cql
@@ -232,7 +231,6 @@ fixtures:
     description: Comprehensive translation tests using QUICK model
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, sig-overloads, sig-all, compat-1.4]
-    diagnostics: true
     tags: [cqf-corpus, translation]
 
   - path: cqf-tests/ArithmeticOpsTest.cql
@@ -402,7 +400,6 @@ fixtures:
     description: Inclusive relationships, boundary selectors and quantity offsets in timing phrases (issues/06)
     expectedStatus: success
     profiles: [default, measure-bundle]
-    diagnostics: true
     tags: [measure-shapes]
 
   - path: measure-shapes/NullCasts.cql
@@ -421,7 +418,6 @@ fixtures:
     description: Choice alternative order, result types and argument casts (issues/06)
     expectedStatus: success
     profiles: [default, measure-bundle]
-    diagnostics: true
     tags: [measure-shapes]
 
   - path: measure-shapes/FHIRConversionSites.cql
@@ -434,7 +430,6 @@ fixtures:
     description: within, trailing boundary keywords, includes against a point, point promotion (issues/06 follow-up)
     expectedStatus: success
     profiles: [default, measure-bundle]
-    diagnostics: true
     tags: [measure-shapes]
 
   - path: measure-shapes/AggregateConversions.cql
@@ -489,7 +484,6 @@ fixtures:
     description: Generated ModelInfo tables — property coverage, binding types, nested complex types, and Date/DateTime conversion
     expectedStatus: success
     profiles: [default, annotations, locators, annotations-locators, debug]
-    diagnostics: true
     tags: [elm-nodes, fhir, modelinfo]
 
   - path: elm-nodes/IntervalBoundPromotion.cql
@@ -554,7 +548,6 @@ fixtures:
     description: HL7 CQL conformance suite — CqlListOperatorsTest
     expectedStatus: success
     profiles: [default, debug]
-    diagnostics: true
     tags: [cql-tests]
 
   - path: cql-tests/CqlLogicalOperatorsTest.cql
@@ -604,7 +597,6 @@ fixtures:
     description: "Layered includes: the bottom library (choice-typed helper, fluent wrapper)"
     expectedStatus: success
     profiles: [default, measure-bundle]
-    diagnostics: true
     tags: [layered]
 
   - path: layered/Mid.cql
@@ -697,6 +689,7 @@ fixtures:
   - path: measure-families/FHIRHelpers.cql
     description: "#15 FHIRHelpers translated as a fixture under the measure-bundle profile"
     expectedStatus: success
+    diagnosticsGap: "CQF warns 'An operand identifier reference is hiding another identifier of the same name.' three times (LibraryBuilder.pushIdentifier, for an operand named like a global declared before it, e.g. reference(reference String)). echo-elm does not emit identifier-hiding warnings yet. (#8)"
     profiles: [measure-bundle]
     tags: [issue-15, measure-families]
 
@@ -791,3 +784,29 @@ fixtures:
     expectedStatus: success
     profiles: [measure-bundle]
     tags: [issue-08, issue-09, measure-families]
+
+  # ── issues/08 appendix shapes (found reviewing the first-difference appendix) ──
+
+  - path: measure-families/FunctionOrder.cql
+    description: "a function is emitted before what it references; a define after"
+    expectedStatus: success
+    profiles: [measure-bundle, default]
+    tags: [issue-08, measure-families]
+
+  - path: measure-families/SetOperationChains.cql
+    description: "issues/08 M3: union and intersect chains regrouped right-leaning bushy, as CQF's resolveUnion does"
+    expectedStatus: success
+    profiles: [measure-bundle, default]
+    tags: [issue-08, operators, measure-families]
+
+  - path: measure-families/AnyBranchHelpers.cql
+    description: "helpers returning Any by construction, for AnyBranchCast"
+    expectedStatus: success
+    profiles: [measure-bundle]
+    tags: [issue-08, measure-families]
+
+  - path: measure-families/AnyBranchCast.cql
+    description: "a branch calling a helper that returns Any is cast to the other branch's type"
+    expectedStatus: success
+    profiles: [measure-bundle, default]
+    tags: [issue-08, measure-families]

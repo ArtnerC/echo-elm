@@ -319,7 +319,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.UpstreamJSON = normalizeFixture(upJSON, cfgShape, fix.Diagnostics)
+	r.UpstreamJSON = normalizeFixture(upJSON, cfgShape, fix.ComparesDiagnostics())
 
 	// Run echo-elm.
 	echoBytes, err := translateFn(cqlPath)
@@ -329,7 +329,7 @@ func runFixtureWithRef(fix Fixture, corpusRoot, launcher string, extraFlags []st
 		r.Duration = time.Since(start)
 		return r
 	}
-	r.EchoJSON = normalizeFixture(string(echoBytes), cfgShape, fix.Diagnostics)
+	r.EchoJSON = normalizeFixture(string(echoBytes), cfgShape, fix.ComparesDiagnostics())
 
 	// Compare.
 	if r.UpstreamJSON == r.EchoJSON {
@@ -447,7 +447,7 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 			g.quiet = fr.fix.ExpectedStatus == "failure" || fr.fix.ExpectedStatus == "upstream-error"
 			return g
 		}
-		g.normalized = normalizeJSONOpt(jsonOut, fr.fix.Diagnostics)
+		g.normalized = normalizeJSONOpt(jsonOut, fr.fix.ComparesDiagnostics())
 		return g
 	}, func(i int, g golden) {
 		if firstErr != nil {
@@ -503,9 +503,9 @@ func generateGoldensInner(cfg Config, baseDir string) (written int, versionDiff 
 // real defect when it was: statement/definition ordering, resultTypeName and
 // resultTypeSpecifier, and translatorOptions/signatureLevel.
 //
-// CqlToElmError annotations are dropped because echo-elm emits no diagnostic
-// annotations at all yet; that gap is tracked in issues/03-cqf-parity-gaps.md
-// rather than being silently absorbed here.
+// CqlToElmError annotations are dropped here, for comparisons with no fixture
+// behind them (bundles); a fixture compares them through normalizeJSONOpt
+// unless it records a diagnosticsGap. (#8)
 func normalizeJSON(s string) string {
 	return normalizeJSONOpt(s, false)
 }
@@ -717,9 +717,8 @@ func stripVolatileFieldsOpt(m map[string]any, keepDiagnostics bool) {
 					// translatorVersion is the only genuinely volatile field here:
 					// it names the producing translator. translatorOptions and
 					// signatureLevel describe how the ELM was produced and are
-					// compared. CqlToElmError annotations carry diagnostics that
-					// echo-elm does not yet emit; see the parity notes in
-					// issues/03-cqf-parity-gaps.md.
+					// compared. CqlToElmError annotations carry diagnostics,
+					// compared unless the caller drops them.
 					delete(ann, "translatorVersion")
 					if t, _ := ann["type"].(string); t == "CqlToElmError" && !keepDiagnostics {
 						continue
@@ -824,7 +823,7 @@ func sortAnnotationTags(v any) {
 }
 
 // normalizeFixture normalizes one side of a fixture comparison. Diagnostics are
-// kept only for a fixture that opts in, and never on the bundle path.
+// kept unless the fixture records a gap in them, and never on the bundle path.
 func normalizeFixture(s string, bundleShaped, keepDiagnostics bool) string {
 	if keepDiagnostics && !bundleShaped {
 		return normalizeJSONOpt(s, true)

@@ -261,7 +261,7 @@ Against the committed CQF 5.0.0 goldens: **`match=18 differ=0 divergent=1 error=
 | #8 fluent called without fluent syntax | **Fixed** | Error with CQF's message verbatim, only when every declaration of that arity is fluent. |
 | M1 parameter tags | **Fixed** | Tags on parameters and on the library header; multi-line values keep their own spacing. |
 | M2 sort types | **Fixed** | `ByColumn` over a FHIR element carries the field's FHIR type. |
-| M3 n-ary union grouping | Not addressed | No reproduction; semantically equivalent. |
+| M3 n-ary union grouping | **Fixed** (PR #18) | Reproduced from the appendix locators: CQF's `resolveUnion` / `resolveIntersect` regroup a chain "right-leaning bushy", so four operands become `(a ∪ b) ∪ (c ∪ d)`; three-way chains, which every earlier repro attempt used, stay left-deep. The regrouped inner node has no locator or result type. `SetOperationChains`. |
 
 Harness (Part 7):
 
@@ -271,6 +271,24 @@ Harness (Part 7):
 - **Overload pairing:** `StructuralDiff` keys overloads by signature, then pairs leftovers by
   name and arity, so a signature difference (the old M4 shape) reads as one field difference.
 - **Known-gap status:** `expectedStatus: divergent` plus a required `divergence` reason.
+
+### Appendix review (PR #18)
+
+Every line of the first-difference appendix (2,723 lines, 2025.3.0) was grouped by shape.
+Almost all of it belongs to the families above. Three shapes did not, and each was
+reproduced from a one-sentence construct description and fixed:
+
+| Shape in the appendix | Cause | Fixture |
+|---|---|---|
+| "definitions appear in a different order" | CQF adds a function to the library *before* translating its body, but an expression definition after. echo-elm emitted every statement dependencies first, so a chain of functions came out reversed. | `FunctionOrder` |
+| Locators of nested `union` operands differ (`Eligible coverages …` in 8 libraries) | M3, above. | `SetOperationChains` |
+| `else.operand`: object vs list, with `else.name`/`libraryName` only in echo-elm | An `if` branch calling an included helper that returns Any by construction (a `Message` over null) is cast to the other branch's type. Separately, `.value` on a context property (`Patient.birthDate.value`) was untyped. | `AnyBranchCast`, `AnyBranchHelpers` |
+
+The review also found two CQF diagnostics that real content will draw, both recorded on #8.
+A function compiled lazily inside another's body sees the caller's operands, so a forward chain
+that reuses an operand name warns "An operand identifier x is hiding another identifier…".
+A string literal equal to a declared name, such as `'Error'` passed to `Message` inside a
+function named `Error`, warns "String literal 'Error' matches the identifier Error…".
 
 **Remeasure** with the measure bundles before scoping further work. T2–T4 (typed nulls, the
 result-type cascade, point `In`) were expected to fall out of W3/W4/T1/W10 and have no

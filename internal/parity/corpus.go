@@ -47,13 +47,19 @@ type Fixture struct {
 	// where echo-elm deliberately does not reproduce what CQF emits. It must
 	// say why, so the decision can be revisited rather than rediscovered.
 	Divergence string `yaml:"divergence,omitempty"`
-	// Diagnostics opts the fixture into comparing CqlToElmError annotations,
-	// which are otherwise normalized away. For fixtures whose every CQF
-	// diagnostic echo-elm reproduces; see issues #8.
-	Diagnostics bool `yaml:"diagnostics"`
+	// DiagnosticsGap names a CQF diagnostic echo-elm does not yet reproduce for
+	// this fixture, and why. CqlToElmError annotations are compared for every
+	// fixture without one; a fixture with one has them normalized away. (#8)
+	DiagnosticsGap string `yaml:"diagnosticsGap,omitempty"`
 
 	// Options is retained for backward compatibility but superseded by Profiles.
 	Options map[string]string `yaml:"options"`
+}
+
+// ComparesDiagnostics reports whether the fixture's CqlToElmError annotations
+// are compared.
+func (fix *Fixture) ComparesDiagnostics() bool {
+	return fix != nil && fix.DiagnosticsGap == ""
 }
 
 // ProfileNames returns the resolved list of profile names for this fixture,

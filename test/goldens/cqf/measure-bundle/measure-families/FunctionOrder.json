@@ -1,0 +1,582 @@
+{
+  "library": {
+    "annotation": [
+      {
+        "signatureLevel": "None",
+        "translatorOptions": "EnableLocators,EnableResultTypes,DisableListTraversal,DisableListDemotion,DisableListPromotion",
+        "type": "CqlToElmInfo"
+      }
+    ],
+    "contexts": {
+      "def": [
+        {
+          "annotation": [],
+          "locator": "14:1-14:15",
+          "name": "Patient"
+        }
+      ]
+    },
+    "identifier": {
+      "id": "FunctionOrder",
+      "version": "1.0"
+    },
+    "includes": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "FHIRHelpers",
+          "locator": "12:1-12:54",
+          "path": "FHIRHelpers",
+          "version": "4.0.1"
+        }
+      ]
+    },
+    "schemaIdentifier": {
+      "id": "urn:hl7-org:elm",
+      "version": "r1"
+    },
+    "statements": {
+      "def": [
+        {
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "operand": {
+              "annotation": [],
+              "codeFilter": [],
+              "dataType": "{http://hl7.org/fhir}Patient",
+              "dateFilter": [],
+              "include": [],
+              "locator": "14:1-14:15",
+              "otherFilter": [],
+              "templateId": "http://hl7.org/fhir/StructureDefinition/Patient",
+              "type": "Retrieve"
+            },
+            "signature": [],
+            "type": "SingletonFrom"
+          },
+          "locator": "14:1-14:15",
+          "name": "Patient"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "18:40-18:52",
+            "name": "Step two",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "18:51",
+                "name": "a",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "OperandRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "18:1-18:52",
+          "name": "Step one",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "a",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "18:30-18:36",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "20:40-20:54",
+            "name": "Step three",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "20:53",
+                "name": "b",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "OperandRef"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "20:1-20:54",
+          "name": "Step two",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "b",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "20:30-20:36",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "22:42-22:46",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "22:42",
+                "name": "c",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "OperandRef"
+              },
+              {
+                "annotation": [],
+                "locator": "22:46",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "Add"
+          },
+          "locator": "22:1-22:46",
+          "name": "Step three",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "c",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "locator": "22:32-22:38",
+                "name": "{urn:hl7-org:elm-types:r1}Integer",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "NamedTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "16:15-16:27",
+            "name": "Step one",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "16:26",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+                "type": "Literal",
+                "value": "1",
+                "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+              }
+            ],
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "16:1-16:27",
+          "name": "Top",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "element": [
+              {
+                "annotation": [],
+                "locator": "24:23-24:25",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "Literal",
+                "value": "a",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              },
+              {
+                "annotation": [],
+                "locator": "24:28-24:30",
+                "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                "type": "Literal",
+                "value": "b",
+                "valueType": "{urn:hl7-org:elm-types:r1}String"
+              }
+            ],
+            "locator": "24:21-24:32",
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "List"
+          },
+          "locator": "24:1-24:32",
+          "name": "Base list",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "30:50-30:67",
+            "name": "Map inner",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "30:62-30:66",
+                "name": "items",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "OperandRef"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "30:1-30:67",
+          "name": "Map outer",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "items",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "locator": "30:40-30:45",
+                  "name": "{urn:hl7-org:elm-types:r1}String",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "NamedTypeSpecifier"
+                },
+                "locator": "30:35-30:46",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          },
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "32:51-32:56",
+            "name": "values",
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "type": "OperandRef"
+          },
+          "locator": "32:1-32:56",
+          "name": "Map inner",
+          "operand": [
+            {
+              "annotation": [],
+              "name": "values",
+              "operandTypeSpecifier": {
+                "annotation": [],
+                "elementType": {
+                  "annotation": [],
+                  "locator": "32:41-32:46",
+                  "name": "{urn:hl7-org:elm-types:r1}String",
+                  "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                  "type": "NamedTypeSpecifier"
+                },
+                "locator": "32:36-32:47",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ListTypeSpecifier"
+              }
+            }
+          ],
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          },
+          "type": "FunctionDef"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "28:18-28:41",
+            "name": "Map outer",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "28:30-28:40",
+                "name": "Base list",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "signature": [],
+            "type": "FunctionRef"
+          },
+          "locator": "28:1-28:41",
+          "name": "Mapped",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "26:20-26:41",
+            "operand": [
+              {
+                "annotation": [],
+                "locator": "26:20-26:27",
+                "name": "Mapped",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "ExpressionRef"
+              },
+              {
+                "annotation": [],
+                "element": [
+                  {
+                    "annotation": [],
+                    "locator": "26:37-26:39",
+                    "resultTypeName": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "Literal",
+                    "value": "z",
+                    "valueType": "{urn:hl7-org:elm-types:r1}String"
+                  }
+                ],
+                "locator": "26:35-26:41",
+                "resultTypeSpecifier": {
+                  "annotation": [],
+                  "elementType": {
+                    "annotation": [],
+                    "name": "{urn:hl7-org:elm-types:r1}String",
+                    "type": "NamedTypeSpecifier"
+                  },
+                  "type": "ListTypeSpecifier"
+                },
+                "type": "List"
+              }
+            ],
+            "resultTypeSpecifier": {
+              "annotation": [],
+              "elementType": {
+                "annotation": [],
+                "name": "{urn:hl7-org:elm-types:r1}String",
+                "type": "NamedTypeSpecifier"
+              },
+              "type": "ListTypeSpecifier"
+            },
+            "signature": [],
+            "type": "Union"
+          },
+          "locator": "26:1-26:41",
+          "name": "Reported",
+          "resultTypeSpecifier": {
+            "annotation": [],
+            "elementType": {
+              "annotation": [],
+              "name": "{urn:hl7-org:elm-types:r1}String",
+              "type": "NamedTypeSpecifier"
+            },
+            "type": "ListTypeSpecifier"
+          }
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "38:25",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "Literal",
+            "value": "3",
+            "valueType": "{urn:hl7-org:elm-types:r1}Integer"
+          },
+          "locator": "38:1-38:25",
+          "name": "Define bottom",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "36:25-36:39",
+            "name": "Define bottom",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "ExpressionRef"
+          },
+          "locator": "36:1-36:39",
+          "name": "Define middle",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        },
+        {
+          "accessLevel": "Public",
+          "annotation": [],
+          "context": "Patient",
+          "expression": {
+            "annotation": [],
+            "locator": "34:24-34:38",
+            "name": "Define middle",
+            "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer",
+            "type": "ExpressionRef"
+          },
+          "locator": "34:1-34:38",
+          "name": "Define chain",
+          "resultTypeName": "{urn:hl7-org:elm-types:r1}Integer"
+        }
+      ]
+    },
+    "usings": {
+      "def": [
+        {
+          "annotation": [],
+          "localIdentifier": "System",
+          "uri": "urn:hl7-org:elm-types:r1"
+        },
+        {
+          "annotation": [],
+          "localIdentifier": "FHIR",
+          "locator": "11:1-11:26",
+          "uri": "http://hl7.org/fhir",
+          "version": "4.0.1"
+        }
+      ]
+    }
+  }
+}
